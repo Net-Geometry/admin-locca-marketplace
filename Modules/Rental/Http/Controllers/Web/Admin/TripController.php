@@ -384,7 +384,7 @@ class TripController extends Controller
             'trip_id' => 'required',
         ]);
 
-        $trip = $this->trips->findOrFail($request->trip_id);
+        $trip = $this->trips->find($request->trip_id);
 
         if (!$trip) {
             return response()->json(['success' => false,
@@ -397,23 +397,28 @@ class TripController extends Controller
         }
 
         $pickup = [
-            'lat' => $request->pickup_lat ?? $trip ? $trip->pickup_location['lat'] : null,
-            'lng' => $request->pickup_lng ?? $trip ? $trip->pickup_location['lng'] : null,
-            'location_name' => $request->pickup_location ?? $trip ? $trip->pickup_location['location_name'] : null,
+            'lat' => $request->pickup_lat ??  $trip->pickup_location['lat']?? null,
+            'lng' => $request->pickup_lng ?? $trip->pickup_location['lng']??null,
+            'location_name' => $request->pickup_location ?? $trip->pickup_location['location_name']?? null,
         ];
 
         $destination = [
-            'lat' => $request->destination_lat ?? $trip ? $trip->destination_location['lat'] : null,
-            'lng' => $request->destination_lng ?? $trip ? $trip->destination_location['lng'] : null,
-            'location_name' => $request->destination_location ?? $trip ? $trip->destination_location['location_name'] : null,
+            'lat' => $request->destination_lat ??  $trip->destination_location['lat'] ?? null,
+            'lng' => $request->destination_lng ??  $trip->destination_location['lng'] ?? null,
+            'location_name' => $request->destination_location ??  $trip->destination_location['location_name'] ?? null,
         ];
 
-        $destinationLocation = $request->destination_location ? json_encode($pickup) :json_encode($trip->destination_location);
-        $pickupLocation = $request->pickup_location  ? json_encode($destination)  : json_encode($trip->pickup_location);
+        $destinationLocation = $request->destination_location ? json_encode($destination) :json_encode($trip->destination_location);
+        $pickupLocation = $request->pickup_location  ? json_encode($pickup)  : json_encode($trip->pickup_location);
         $scheduleAt = $request->schedule_at ? Carbon::parse($request->schedule_at) : Carbon::parse($trip->schedule_at);
 
         $estimatedHours = $request->estimated_hours ?? $trip->estimated_hours;
-        $distance = $request->distance ?? $trip->distance;
+
+        $distance = $trip->distance;
+
+        if($request->distance && is_string($request->distance)){
+            $distance =floatval($request->distance);
+        }
         $scheduled = $request->scheduled ?? $trip->scheduled;
 
         $estimatedTripEndTime = $scheduleAt->copy()->addHours(

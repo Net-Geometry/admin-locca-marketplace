@@ -52,11 +52,18 @@
                                 <div>
                                     <h1 class="page-header-title d-flex align-items-center __gap-5px">
                                         {{translate('Trip ID')}} # {{ $trip->id }}
+                                        @if ($trip->edited)
+                                        <span class="badge badge--pending text-capitalize">
+                                            {{ translate('messages.edited') }}
+                                        </span>
+                                        @endif
                                     </h1>
                                     <span class="mt-2 d-block d-flex align-items-center __gap-5px">
                                         {{ translate('Placed on') }} {{ $trip->BookingDate }} {{ $trip->BookingTime }}
+                                        @if ($trip->scheduled)
                                         <br>
                                         {{ translate('Schedule At') }} {{ $trip->ScheduleDate }} {{ $trip->ScheduleTime }}
+                                        @endif
                                     </span>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
                                         <span>{{translate('Provider')}}</span> <span>:</span>
@@ -69,16 +76,21 @@
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
                                         <span>{{translate('Trip Type')}}</span> <span>:</span>
                                         <span class="font-bold">{{ translate($trip->trip_type) }}</span>
-                                        <span>({{ $trip->scheduled ? translate('messages.Instant') : translate('messages.scheduled') }})</span>
+                                        <span>({{ !$trip->scheduled ? translate('messages.Instant_Booking') : translate('messages.scheduled') }})</span>
                                     </div>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
-                                        <span>{{translate('Total ')}} {{ $trip->trip_type == 'hourly' ? 'Hour' : 'KM' }}</span> <span>:</span>
-                                        <span class="font-bold">{{ $trip->estimated_hours }} {{ $trip->trip_type == 'hourly' ? 'hrs' : 'KM' }}</span>
+                                        @if ($trip->trip_type == 'hourly')
+                                        <span>{{translate('Total ')}} {{ translate('Hour')}}</span> <span>:</span>
+                                        <span class="font-bold">{{ $trip->estimated_hours }} {{ translate('hrs') }}</span>
+                                        @else
+                                        <span>{{translate('Total ')}} {{ translate('KM') }}</span> <span>:</span>
+                                        <span class="font-bold">{{ $trip->distance }} {{  translate('KM')  }}</span>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="d-sm-none">
                                     <a class="btn btn--primary print--btn font-regular d-flex align-items-center __gap-5px"
-                                       href="#">
+                                       href="{{route("vendor.trip.generate-invoice",["id" => $trip->id])}}">
                                         <i class="tio-print mr-sm-1"></i>
                                         <span>{{ translate('messages.print_invoice') }}</span>
                                     </a>
@@ -92,30 +104,29 @@
                                             <i class="tio-edit mr-sm-1"></i> {{translate('Edit Trip')}}
                                         </button>
                                     @endif
-                                    <a class="btn btn--primary print--btn font-bold d-none d-sm-block" href="#">
+                                    <a class="btn btn--primary print--btn font-bold d-none d-sm-block" href="{{route("vendor.trip.generate-invoice",["id" => $trip->id])}}">
                                         <i class="tio-print mr-sm-1"></i> <span>{{translate('Print invoice')}}</span>
                                     </a>
                                 </div>
                                 <div class="text-right mt-3 order-invoice-right-contents text-capitalize">
                                     <h6>
                                         <span>{{translate('Trip Status')}}</span> <span>:</span>
-                                        <span class="badge badge--accepted ml-2 ml-sm-3 text-capitalize">
+                                        <span class="badge {{ $trip->trip_status  !== 'canceled' ? 'badge--accepted' :'badge--cancel' }} ml-2 ml-sm-3 text-capitalize">
                                             {{ translate($trip->trip_status) }}
                                         </span>
                                     </h6>
                                     <h6>
                                         <span>{{translate('Payment status')}}</span> <span>:</span>
-                                        <strong class="text-danger">{{ translate($trip->payment_status) }}</strong>
+                                        <strong class="{{ $trip->payment_status  == 'paid' ? 'text-success' :'text-danger' }}">{{ translate($trip->payment_status) }}</strong>
 
                                     </h6>
+                                    @if ($trip->payment_method)
                                     <h6>
                                         <span>{{translate('Payment method')}}</span> <span>:</span>
                                         <span class="font-semibold">{{ translate($trip->payment_method ?? 'cash payment') }}</span>
                                     </h6>
-                                    {{-- <h6>
-                                        <span>{{translate('Reference Code')}} </span> <span>:</span>
-                                        <span class="font-semibold">{{ $trip->transaction_reference }}</span>
-                                    </h6> --}}
+                                    @endif
+
                                 </div>
                             </div>
                         </div>
@@ -176,8 +187,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            @if($trip->trip_status != 'pending')
-                                                @if($detail?->tripVehicleDetails->isEmpty())
+                                            @if($detail?->tripVehicleDetails->isEmpty())
+                                                @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']))
                                                     <div class="mt-2">
                                                         <button
                                                             class="btn btn--primary btn-outline-primary p-5px rounded-20 d-flex align-items-center gap-1 assign-vehicle-btn"
@@ -200,67 +211,74 @@
                                                                     class="tio-add-circle"></i></span>
                                                         </button>
                                                     </div>
-                                                @else
-                                                    <div class="mt-2 bg--F6F6F6 p-2 radius-15 mb-4 d-inline-block">
+                                                @endif
+                                            @else
+                                                <div class="mt-2 bg--F6F6F6 p-2 radius-15 mb-4 d-inline-block">
                                                     <div class="d-flex justify-content-between mb-10px text--title">
                                                         {{translate('Assigned Vehicle')}}
-                                                        <button
-                                                            class="btn btn--primary p-5px rounded-circle d-flex align-items-center justify-content-center assign-vehicle-btn"
-                                                            type="button"
-                                                            data-toggle="modal"
-                                                            data-target="#assignVehicleModal"
-                                                            data-details_id = "{{ $detail->id }}"
-                                                            data-trip_id = "{{ $detail->trip_id }}"
-                                                            data-vehicle_id = "{{ $detail->vehicle_id }}"
-                                                            data-quantity = "{{ $detail->quantity }}"
-                                                            data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
-                                                            data-name = "{{ $detail?->vehicle_details['name'] }}"
-                                                            data-vendor = "{{ $trip?->provider->name }}"
-                                                            data-category = "{{ $detail?->vehicle?->category?->name }}"
-                                                            data-brand = "{{ $detail?->vehicle?->brand?->name }}"
-                                                            data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
-                                                            data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
-                                                        >
-                                                            <i class="tio-edit fs-12"></i>
-                                                        </button>
+                                                        @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']))
+                                                            <button
+                                                                class="btn btn--primary p-5px rounded-circle d-flex align-items-center justify-content-center assign-vehicle-btn"
+                                                                type="button"
+                                                                data-toggle="modal"
+                                                                data-target="#assignVehicleModal"
+                                                                data-details_id = "{{ $detail->id }}"
+                                                                data-trip_id = "{{ $detail->trip_id }}"
+                                                                data-vehicle_id = "{{ $detail->vehicle_id }}"
+                                                                data-quantity = "{{ $detail->quantity }}"
+                                                                data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
+                                                                data-name = "{{ $detail?->vehicle_details['name'] }}"
+                                                                data-vendor = "{{ $trip?->provider->name }}"
+                                                                data-category = "{{ $detail?->vehicle?->category?->name }}"
+                                                                data-brand = "{{ $detail?->vehicle?->brand?->name }}"
+                                                                data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
+                                                                data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
+                                                            >
+                                                                <i class="tio-edit fs-12"></i>
+                                                            </button>
+                                                        @endif
                                                     </div>
-                                                        <div class="text-wrap">
-                                                            @php
-                                                                $licensePlates = $detail->tripVehicleDetails->map(function($tripVehicleDetails) {
-                                                                    return $tripVehicleDetails->vehicle_identity_data->license_plate_number;
-                                                                });
-                                                                $licensePlatesString = $licensePlates->implode(', ');
-                                                            @endphp
-                                                            {{ $licensePlatesString }}
-                                                        </div>
+                                                    <div class="text-wrap">
+                                                        @php
+                                                            $licensePlates = $detail?->tripVehicleDetails->map(function($tripVehicleDetails) {
+                                                                return $tripVehicleDetails->vehicle_identity_data->license_plate_number;
+                                                            });
+                                                            $licensePlatesString = $licensePlates->implode(', ');
+                                                        @endphp
+                                                        {{ $licensePlatesString }}
                                                     </div>
-                                                @endif
+                                                </div>
                                             @endif
                                         </td>
+
                                         <td>
                                             <div class="fs-14 text--title">
-                                                {{ \App\CentralLogics\Helpers::format_currency($detail->price) }}
+                                                {{ \App\CentralLogics\Helpers::format_currency($detail->rental_type == 'hourly' ? $detail->vehicle_details['hourly_price'] : $detail->vehicle_details['distance_price']) }}
                                                 {{ translate($detail->rental_type) }}
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="fs-14 text--title font-bold">
+                                            <div class="fs-14  text--title font-bold">
                                                 {{ $detail->quantity }}
                                             </div>
                                         </td>
                                         <td>
                                             <div class="fs-14 text--title">
-                                                {{ $detail->estimated_hours }} {{ translate($detail->rental_type) }}
+                                                @if ($trip->trip_type == 'hourly')
+                                                {{ $trip->estimated_hours }} {{ translate('hrs') }}
+                                                @else
+                                                {{ $trip->distance }} {{  translate('KM')  }}
+                                                @endif
                                             </div>
                                         </td>
                                         <td class="text-right">
                                             <div class="fs-14 text--title">
-                                                {{ \App\CentralLogics\Helpers::format_currency($detail->price * $detail->quantity) }}
+                                                {{ \App\CentralLogics\Helpers::format_currency($detail->calculated_price) }}
                                             </div>
                                         </td>
                                     </tr>
                                     @php
-                                        $subtotal += $detail->price * $detail->quantity;
+                                        $subtotal += $detail->calculated_price;
                                     @endphp
                                 @endforeach
                                 <!-- End Media -->
@@ -326,86 +344,89 @@
                 </div>
                 <!-- End Card -->
             </div>
-
+            @php
+                $tripDrivers = $trip?->vehicle_identity->whereNotNull('vehicle_driver_id');
+                $tripVehicles = $trip?->vehicle_identity->whereNotNull('vehicle_identity_id')->count();
+                $driverCount = $tripDrivers->count()
+            @endphp
             <div class="col-lg-4 order-print-area-right">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">{{ translate('trip_setup') }}</h5>
-                    </div>
-                    <div class="card-body">
-                        @if($trip->trip_status != 'completed')
+                @if($trip->trip_status != 'completed' || $trip->payment_status != 'paid' )
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ translate('trip_setup') }}</h5>
+                        </div>
+                        <div class="card-body">
+                            @if($trip->trip_status != 'completed')
+                                <div class="hs-unfold w-100 mb-20">
+                                    <label for="" class="font-semibold text-title">{{ translate('Trip Status') }}</label>
+                                    <div class="dropdown">
+                                        <button
+                                            class="form-control h--45px dropdown-toggle d-flex justify-content-between align-items-center w-100"
+                                            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            {{ translate($trip->trip_status) }}
+                                        </button>
+                                        <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
+                                            @php
+                                                $statuses = ['pending', 'confirmed', 'ongoing', 'completed', 'canceled'];
+                                            @endphp
+                                            @foreach ($statuses as $status)
+                                                @if ($status !== strtolower($trip->trip_status))
+                                                    <a class="dropdown-item route-alert"
+                                                       data-url="{{ route('vendor.trip.status', ['id' => $trip['id'], 'status' => $status]) }}"
+                                                       data-message="Change status to {{ $status }}?" href="javascript:">
+                                                        {{ translate($status) }}
+                                                    </a>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
                             <div class="hs-unfold w-100 mb-20">
-                                <label for="" class="font-semibold text-title">{{ translate('Trip Status') }}</label>
+                                <label for="" class="font-semibold text-title">{{translate('Payment Status')}}</label>
                                 <div class="dropdown">
                                     <button
                                         class="form-control h--45px dropdown-toggle d-flex justify-content-between align-items-center w-100"
                                         type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        {{ translate($trip->trip_status) }}
+                                        {{ translate($trip->payment_status) }}
                                     </button>
                                     <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
                                         @php
-                                            $statuses = ['pending', 'confirmed', 'ongoing', 'completed', 'canceled'];
+                                            $paymentStatuses = ['paid', 'unpaid'];
                                         @endphp
-                                        @foreach ($statuses as $status)
-                                            @if ($status !== strtolower($trip->trip_status))
+                                        @foreach ($paymentStatuses as $status)
+                                            @if ($status !== strtolower($trip->payment_status))
                                                 <a class="dropdown-item route-alert"
-                                                   data-url="{{ route('vendor.trip.status', ['id' => $trip['id'], 'status' => $status]) }}"
-                                                   data-message="Change status to {{ $status }}?" href="javascript:">
-                                                    {{ ucfirst($status) }}
+                                                   data-url="{{ route('vendor.trip.payment.status', ['id' => $trip['id'], 'status' => $status]) }}"
+                                                   data-message="Change status to {{ translate($status) }}?" href="javascript:">
+                                                    {{ translate($status) }}
                                                 </a>
                                             @endif
                                         @endforeach
                                     </div>
                                 </div>
                             </div>
-                        @endif
-
-                        <div class="hs-unfold w-100 mb-20">
-                            <label for="" class="font-semibold text-title">{{translate('Payment Status')}}</label>
-                            <div class="dropdown">
-                                <button
-                                    class="form-control h--45px dropdown-toggle d-flex justify-content-between align-items-center w-100"
-                                    type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ ucfirst($trip->payment_status) }}
+                            @if($driverCount <= 0 && $tripVehicles > 0)
+                                <button type="button"
+                                        class="btn btn--primary w-100"
+                                        data-toggle="modal" data-target="#assignDriverModal">
+                                    <i class="tio-bike"></i>
+                                    <span class="ml-2">{{translate('Assign Driver')}}</span>
                                 </button>
-                                <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
-                                    @php
-                                        $paymentStatuses = ['paid', 'unpaid'];
-                                    @endphp
-                                    @foreach ($paymentStatuses as $status)
-                                        @if ($status !== strtolower($trip->payment_status))
-                                            <a class="dropdown-item route-alert"
-                                               data-url="{{ route('vendor.trip.payment.status', ['id' => $trip['id'], 'status' => $status]) }}"
-                                               data-message="Change status to {{ ucfirst($status) }}?" href="javascript:">
-                                                {{ ucfirst($status) }}
-                                            </a>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </div>
+                            @endif
                         </div>
-                        @php
-                            $tripDrivers = $trip?->vehicle_identity->whereNotNull('vehicle_driver_id');
-                            $tripVehicles = $trip?->vehicle_identity->whereNotNull('vehicle_identity_id')->count();
-                            $driverCount = $tripDrivers->count()
-                        @endphp
-                        @if($driverCount <= 0 && $tripVehicles > 0)
-                            <button type="button"
-                                    class="btn btn--primary w-100"
-                                    data-toggle="modal" data-target="#assignDriverModal">
-                                <i class="tio-bike"></i>
-                                <span class="ml-2">{{translate('Assign Driver')}}</span>
-                            </button>
-                        @endif
                     </div>
-                </div>
+                @endif
                 @if($driverCount > 0)
                     <div class="card mt-2">
                         <div class="card-header">
                             <h5 class="mb-0">{{translate('Driver List')}}</h5>
-                            <a href="#" class="btn action-btn btn--primary btn-outline-primary p-0 assign-driver-modal">
-                                <i class="tio-edit"></i>
-                            </a>
+                            @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']))
+                                <a href="#" class="btn action-btn btn--primary btn-outline-primary p-0 assign-driver-modal">
+                                    <i class="tio-edit"></i>
+                                </a>
+                            @endif
                         </div>
                         <div class="card-body">
                             <button class="btn btn--reset font-medium w-100 d-flex justify-content-between align-items-center px-3 driverListCollapseBtn" type="button" data-toggle="collapse" data-target="#driverListCollapse" aria-expanded="false" aria-controls="driverListCollapse">
@@ -482,12 +503,12 @@
                         </h5>
 
                         @if ($trip->customer)
-                            <a class="media align-items-center deco-none customer--information-single" href="{{ route('admin.users.customer.view', $trip->user_id) }}">
+                            <a class="media align-items-center deco-none customer--information-single" href="#">
                                 <div class="avatar avatar-circle">
                                     <img class="avatar-img onerror-image"
-                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                        src="{{ $trip->customer['imageFullUrl'] }}"
-                                        alt="Image Description">
+                                         data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                         src="{{ $trip->customer['imageFullUrl'] }}"
+                                         alt="Image Description">
                                 </div>
                                 <div class="media-body">
                                     <span class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">{{ $trip->customer->fullName }}</span>
@@ -552,7 +573,6 @@
                         @endif
                     </div>
                 </div>
-
             </div>
         </div>
         <!-- End Row -->
@@ -614,7 +634,7 @@
                                                             data-placeholder="{{ translate('messages.select_vehicle_transmission') }}"
                                                             id="driver_{{ $vehicleDetails->id }}">
                                                         <option value="" selected disabled>
-                                                            <span class="fs-12 text--title">Select Vendors</span>
+                                                            <span class="fs-12 text--title">{{ translate('Select Vendors') }}</span>
                                                         </option>
                                                         @foreach($trip->provider->vehicleDriver as $providerDriver)
                                                             <option value="{{ $providerDriver->id }}"
@@ -784,7 +804,7 @@
                                     <div class="position-relative w-100 d-flex align-items-center">
                                         <input type="text" name="pickup_location" id="pickup-input" class="form-control pr-2"
                                                placeholder="Enter your pickup location"
-                                               value="Home: Road 9/a, house - 666, Dhaka">
+                                               value="{{ $trip?->pickup_location['location_name'] }}">
                                         <div class="input-icon fs-20 opacity-60">
                                             <i class="tio-poi"></i>
                                         </div>
@@ -797,7 +817,7 @@
                                     <div class="position-relative w-100 d-flex align-items-center">
                                         <input type="text" name="destination_location" id="destination-input" class="form-control pr-2"
                                                placeholder="Enter your destination location"
-                                               value="50 lake circus, kolabagan, Dhanmondi">
+                                               value="{{ $trip?->destination_location['location_name'] }}">
                                         <div class="input-icon fs-20 opacity-60">
                                             <i class="tio-navigate-outlined rotate-45 d-block"></i>
                                         </div>
@@ -890,7 +910,7 @@
                                             </td>
                                             <td class="text-right">
                                                 <div class="d-flex flex-column gap-1 align-items-end">
-                                                    <span class="eta_amount_mt d-none "> {{ translate('*EST_Fare:') }}
+                                                    <span class="eta_amount_mt d-none "> {{ translate('*System_EST_Fare:') }}
                                                         <small class="fare-old-value text--warning"> </small>
                                                     </span>
                                                     <input type="text" name="price" min="1" max="999999999"
@@ -898,15 +918,15 @@
                                                            class="form-control w--120px text-right fs-14 text--title fare-total"
                                                            data-id="{{ $editDetail->id }}"
                                                            data-vehicle_id="{{ $editDetail->vehicle_id }}"
-                                                           data-old-value="{{ $editDetail->price }}"
+                                                           data-old-value="{{ $editDetail->calculated_price }}"
                                                            data-quantity="{{ $editDetail->quantity }}"
-                                                           value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->price * $editDetail->quantity) }}"
+                                                           value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->calculated_price) }}"
                                                            placeholder="fare">
                                                 </div>
                                             </td>
                                         </tr>
                                             @php
-                                            $subtotal += $editDetail->price * $editDetail->quantity;
+                                            $subtotal += $editDetail->calculated_price;
                                             @endphp
                                         @endforeach
                                         <!-- End Media -->
@@ -971,10 +991,8 @@
                     </div>
                     <div class="modal-footer border-0 flex-shrink-0 px-4">
                         <div class="btn--container justify-content-end">
-                            <button type="reset" id="reset_btn" data-dismiss="modal" aria-label="Close"
-                                    class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
-                            <button type="submit"
-                                    class="btn btn--primary min-w-120px">{{ translate('messages.update') }}</button>
+                            <button type="reset" id="reset_btn" data-dismiss="modal" aria-label="Close"  class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
+                            <button id="edit-trip" type="button"  class="btn btn--primary  min-w-120px">{{ translate('messages.update') }}</button>
                         </div>
                     </div>
                 </form>
@@ -1067,12 +1085,12 @@
                 const providerMarker = new google.maps.Marker({
                     position: providerLocation,
                     map: map,
-                    title: "Provider Location",
+                    title: "{{ Str::limit($trip?->provider?->name, 15, '...') }}",
                     icon: "{{ asset('public/assets/admin/img/icons/pickup.svg') }}",
                 });
 
                 google.maps.event.addListener(providerMarker, "click", function() {
-                    infowindow.setContent('<div class="fs-12 font-medium">Provider Location</div>');
+                    infowindow.setContent("<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ $trip?->provider?->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}'></div> <div style='float:right; padding: 10px;'><b>{{ Str::limit($trip?->provider?->name, 15, '...') }}</b><br /> {{ $trip?->provider?->address }}</div>");
                     infowindow.open(map, providerMarker);
                 });
             }
@@ -1529,86 +1547,6 @@
     </script>
 {{--edit--}}
     <script>
-        $(document).on('input', '.quantity-input', function () {
-            let quantity = $(this).val();
-            let row = $(this).closest('tr');
-            let id = $(this).data('id');
-            let vehicleId = $(this).data('vehicle_id');
-            let max_quantity = $(this).data('max_quantity');
-            let max_original_quantity = $(this).data('max_original_quantity');
-            let distance = $('#distance-input').val();
-
-            if (quantity > max_quantity) {
-                toastr.warning(`You can select up to ${max_quantity} vehicles only.`, '', {
-                    closeButton: true,
-                    progressBar: true
-                });
-                $(this).val(max_original_quantity);
-                quantity = max_original_quantity;
-            }
-            $.ajax({
-                url: "{{ route('vendor.trip.get-calculation') }}",
-                type: 'get',
-                data: {
-                    id: id,
-                    distance: distance,
-                    vehicle_id: vehicleId,
-                    quantity: quantity,
-                    _token: "{{ csrf_token() }}"
-                },
-                success: function(response) {
-                    let totalFare = response.calculationSingleData;
-                    let formattedFare =  (totalFare * quantity).toFixed(2);
-                    row.find('.fare-total').val(formatCurrency(formattedFare));
-                    row.find('.fare-old-value').text(formatCurrency(formattedFare));
-                    row.find('.eta_amount').removeClass('d-none').addClass('mt-3');
-                    row.find('.eta_amount_mt').removeClass('d-none');
-                    updateOverallTotal(response);
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error:', error);
-                }
-            });
-        });
-
-        $(document).on('input', '.fare-total', function () {
-            let currentFare = $(this).val();
-            let quantity = $('.quantity-input').val();
-            let row = $(this).closest('tr');
-            let oldValue = $(this).data('old-value');
-            let oldQuantity = $(this).data('quantity');
-
-            let id = $(this).data('id');
-            let vehicleId = $(this).data('vehicle_id');
-            let distance = $('#distance-input').val();
-
-
-            $.ajax({
-                url: "{{ route('vendor.trip.get-calculation') }}",
-                type: 'get',
-                data: {
-                    id: id,
-                    distance: distance,
-
-                    vehicle_id: vehicleId,
-                    modified_prices: currentFare,
-                    _token: "{{ csrf_token() }}"
-                },
-                success: function(response) {
-
-                    let totalFare = response.calculationSingleData;
-                    let newQuantity = response.quantity;
-                    let formattedFare = (oldValue * oldQuantity).toFixed(2);
-                    let formattedTotalFare = (response.calculationSingleData).toFixed(2);
-                    row.find('.fare-total').val(formatCurrency(formattedTotalFare));
-                    updateOverallTotal(response);
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error:', error);
-                }
-            });
-        });
-
         function updateOverallTotal(response) {
             let overallTotal = 0;
 
@@ -1619,8 +1557,7 @@
                 }
             });
 
-            let discount = parseFloat($('#coupon-discount').data('value')) || 0;
-            let tax = parseFloat($('#vat-tax').data('value')) || 0;
+
 
             let subtotal = response.subTotal;
             let grandTotal = response.grandTotal;
@@ -1628,56 +1565,130 @@
             $('.total_fare').text(formatCurrency(subtotal));
             $('.subtotal').text(formatCurrency(subtotal));
             $('.grand-total').text(formatCurrency(response.grandTotal));
-            $('.coupon_discount_amount').text(formatCurrency(response.couponDiscount));
-            $('.discount_amount').text(formatCurrency(response.discount));
-            $('.tax_amount').text(formatCurrency(response.taxAmount));
-            $('.ref_bonus_amount').text(formatCurrency(response.refBonus));
-            $('.additional_charge').text(formatCurrency(response.additionalCharge));
+            $('.coupon_discount_amount').text( '-'+ formatCurrency(response.couponDiscount));
+            $('.discount_amount').text('-'+ formatCurrency(response.discount));
+            $('.tax_amount').text("{{ \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first()->value ?  '': '+' }}"+ formatCurrency(response.taxAmount));
+            $('.ref_bonus_amount').text( '-'+ formatCurrency(response.refBonus));
+            $('.additional_charge').text('+'+ formatCurrency(response.additionalCharge));
         }
 
         function formatCurrency(value) {
             return "{{ \App\CentralLogics\Helpers::currency_symbol() }}" + value;
         }
     </script>
-{{--//update--}}
+
     <script>
-        $(document).ready(function () {
-            $('#updateForm').on('submit', function (e) {
-                e.preventDefault();
 
-                const $form = $(this);
-                const $inputs = $form.find('.quantity-input');
-                const $prices = $form.find('.fare-total');
+    $(document).ready(function() {
 
-                $inputs.each(function () {
-                    const $input = $(this);
-                    const vehicleId = $input.data('vehicle_id');
-                    const value = $input.val();
+        $('#edit-trip').on('click', function () {
 
-                    const hiddenInput = $('<input>')
-                        .attr('type', 'hidden')
-                        .attr('name', `update_quantity[${vehicleId}]`)
-                        .val(value);
-
-                    $form.append(hiddenInput);
-                });
-
-                $prices.each(function () {
-                    const $price = $(this);
-                    const vehicleId = $price.data('vehicle_id');
-                    const value = $price.val();
-
-                    const hiddenInput = $('<input>')
-                        .attr('type', 'hidden')
-                        .attr('name', `update_price[${vehicleId}]`)
-                        .val(value);
-
-                    $form.append(hiddenInput);
-                });
-
-                this.submit();
-            });
+            updateCalculations(quantityUpdate = false,upadet_data= 1);
+            $('#edit-trip').attr("disabled", true);
         });
+        let originalValues = {};
+        $('.quantity-input, .fare-total').each(function() {
+            const id = $(this).data('id');
+            originalValues[id] = {
+                quantity: $(this).data('max_original_quantity') || $(this).val(),
+                price: $(this).data('old-value') || $(this).val()
+            };
+        });
+
+        $('.quantity-input').on('input', function() {
+            const $this = $(this);
+            const maxQuantity = parseInt($this.data('max_quantity'));
+            const tripDetailId = $this.data('id');
+            const vehicleId = $this.data('vehicle_id');
+            let quantity = parseInt($this.val());
+            $this.closest('tr').find('.eta_amount_mt').addClass('d-none');
+            $this.closest('tr').find('.eta_amount').removeClass('mt-3');
+            if (quantity > maxQuantity) {
+                quantity = maxQuantity;
+                $this.val(maxQuantity);
+                toastr.warning('{{ translate('Maximum available quantity is') }} ' + maxQuantity);
+            }
+
+            updateCalculations(vehicleId,false);
+        });
+
+        $('.fare-total').on('input', function() {
+            const $this = $(this);
+            const tripDetailId = $this.data('id');
+            const vehicleId = $this.data('vehicle_id');
+            const originalPrice = parseFloat($this.data('old-value'));
+
+            const $fareOld = $this.closest('td').find('.fare-old-value');
+            $fareOld.text(originalPrice.toFixed(2));
+            $this.closest('td').find('.eta_amount_mt').removeClass('d-none');
+            $this.closest('tr').find('.eta_amount').removeClass('d-none').addClass('mt-3');
+
+            updateCalculations(quantityUpdate = false,upadet_data= false);
+        });
+
+        $('#pickup-input, #destination-input').on('change', function() {
+            updateCalculations(quantityUpdate = false,upadet_data= false);
+        });
+
+        function updateCalculations(quantityUpdate = false,upadet_data= false) {
+            const formData = new FormData($('#updateForm')[0]);
+
+            formData.append('update', upadet_data);
+
+            $('.quantity-input').each(function() {
+                formData.append('quantityUpdate', quantityUpdate);
+                formData.append('quantities[]', $(this).val());
+                formData.append('trip_detail_ids[]', $(this).data('id'));
+                formData.append('vehicle_ids[]', $(this).data('vehicle_id'));
+            });
+
+            $('.fare-total').each(function() {
+                formData.append('prices[]', $(this).val().replace(/[^0-9.]/g, ''));
+            });
+
+            $.ajax({
+                url: '{{ route("vendor.trip.get-calculation") }}',
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+
+                    if (response.status === 'success') {
+                        updateOverallTotal(response);
+                        if (response.details) {
+                            response.details.forEach(detail => {
+                                $(`[data-id="${detail.id}"].fare-total`).val(detail.calculated_price);
+                            });
+                        }
+                    }
+                    else if(response.status === 'updated'){
+                        toastr.success(response.message);
+                        location.reload();
+                    }
+                    else {
+                        toastr.error(response.message || 'Calculation failed');
+                        $('#edit-trip').attr("disabled", false);
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error('Failed to update calculations');
+                    console.error(xhr);
+                    $('#edit-trip').attr("disabled", false);
+                }
+            });
+    }
+
+    $('#reset_btn').on('click', function() {
+        Object.keys(originalValues).forEach(id => {
+            $(`.quantity-input[data-id="${id}"]`).val(originalValues[id].quantity);
+            $(`.fare-total[data-id="${id}"]`).val(originalValues[id].price);
+        });
+        $('.eta_amount_mt').addClass('d-none');
+        $('.fare-old-value').text('');
+    });
+});
+
 
     </script>
 @endpush

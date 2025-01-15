@@ -57,13 +57,12 @@ Route::group([ 'middleware' => ['vendor']], function () {
     Route::group(['prefix' => 'trip', 'as' => 'trip.'], function () {
         Route::get('/', [TripController::class,'list'])->name('list');
         Route::get('details/{id}', [TripController::class,'details'])->name('details');
-        Route::post('details/{id}', [TripController::class,'update']);
         Route::get('status/{id}/{status}', [TripController::class,'status'])->name('status');
         Route::get('payment/status/{id}/{status}', [TripController::class,'paymentStatus'])->name('payment.status');
         Route::post('assign/vehicle', [TripController::class,'assignVehicle'])->name('assign.vehicle');
         Route::post('assign/driver', [TripController::class,'assignDriver'])->name('assign.driver');
         Route::get('export', [TripController::class, 'export'])->name('export');
-        Route::get('get-calculation', [TripController::class, 'getCalculation'])->name('get-calculation');
+        Route::post('get-calculation', [TripController::class, 'update'])->name('get-calculation');
         Route::get('generate-invoice/{id}', [TripController::class, 'generateInvoice'])->name('generate-invoice');
         Route::get('print-invoice/{id}', [TripController::class, 'printInvoice'])->name('print-invoice');
     });

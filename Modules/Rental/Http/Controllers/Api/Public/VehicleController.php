@@ -40,6 +40,7 @@ class VehicleController extends Controller
         $offset = $request['offset'] ?? 1;
 
         $vehicles = $this->vehicle->whereIn('zone_id', $zone_id)->with('provider:id,name,address,tax','provider.discount')->withcount('vehicleIdentities as total_vehicle_count')
+            ->orderBy('avg_rating', 'desc')
             ->orderBy('total_trip', 'desc')
             ->latest()
             ->paginate($limit, ['*'], 'page', $offset);

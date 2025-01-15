@@ -1205,6 +1205,16 @@ class Helpers
         }else{
             $module_id = '';
         }
+        if(isset($data['order_id'])){
+            $order_id = $data['order_id'];
+        }else{
+            $order_id = '';
+        }
+        if(isset($data['trip_id'])){
+            $trip_id = $data['trip_id'];
+        }else{
+            $trip_id = '';
+        }
         if(isset($data['order_type'])){
             $order_type = $data['order_type'];
         }else{
@@ -1230,7 +1240,8 @@ class Helpers
                     "title" => (string)$data['title'],
                     "body" => (string)$data['description'],
                     "image" => (string)$data['image'],
-                    "order_id" => (string)$data['order_id'],
+                    "order_id" => (string)$order_id,
+                    "trip_id" => (string)$trip_id,
                     "type" => (string)$data['type'],
                     "data_id" => (string)$data_id,
                     "advertisement_id" => (string)$advertisement_id,
