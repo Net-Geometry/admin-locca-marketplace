@@ -28,7 +28,7 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::get('commission-overview', [ProviderDashBoardController::class, 'commissionOverview'])->name('commissionOverview');
     });
 
-    Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.'], function () {
+    Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.', 'middleware' => ['module:vehicle']], function () {
         Route::get('list', [VehicleController::class, 'index'])->name('list');
         Route::get('create', [VehicleController::class, 'create'])->name('create');
         Route::post('create', [VehicleController::class, 'store']);
@@ -48,13 +48,13 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::POST('bulk-export', [VehicleController::class, 'bulkExportData']);
     });
 
-    Route::group(['prefix' => 'vehicle-category', 'as' => 'vehicle_category.'], function () {
+    Route::group(['prefix' => 'vehicle-category', 'as' => 'vehicle_category.', 'middleware' => ['module:vehicle']], function () {
         Route::get('list', [ProviderController::class, 'categoryList'])->name('list');
         Route::get('export', [ProviderController::class, 'categoryExport'])->name('export');
     });
 
 
-    Route::group(['prefix' => 'trip', 'as' => 'trip.'], function () {
+    Route::group(['prefix' => 'trip', 'as' => 'trip.', 'middleware' => ['module:trip']], function () {
         Route::get('/', [TripController::class,'list'])->name('list');
         Route::get('details/{id}', [TripController::class,'details'])->name('details');
         Route::get('status/{id}/{status}', [TripController::class,'status'])->name('status');
@@ -67,12 +67,12 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::get('print-invoice/{id}', [TripController::class, 'printInvoice'])->name('print-invoice');
     });
 
-    Route::group(['prefix' => 'vehicle-brand', 'as' => 'vehicle_brand.'], function () {
+    Route::group(['prefix' => 'vehicle-brand', 'as' => 'vehicle_brand.', 'middleware' => ['module:vehicle']], function () {
         Route::get('list', [ProviderController::class, 'brandList'])->name('list');
         Route::get('export', [ProviderController::class, 'brandExport'])->name('export');
     });
 
-    Route::group(['prefix' => 'rental-banner', 'as' => 'rental_banner.', 'middleware' => ['module:banner']], function () {
+    Route::group(['prefix' => 'rental-banner', 'as' => 'rental_banner.', 'middleware' => ['module:marketing']], function () {
         Route::get('/', [BannerController::class,'list'])->name('list');
         Route::post('/', [BannerController::class,'store']);
         Route::get('edit/{banner}', [BannerController::class,'edit'])->name('edit');
@@ -83,7 +83,7 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::get('export', [BannerController::class, 'export'])->name('export');
     });
 
-    Route::group(['prefix' => 'rental-coupon', 'as' => 'rental_coupon.', 'middleware' => ['module:coupon']], function () {
+    Route::group(['prefix' => 'rental-coupon', 'as' => 'rental_coupon.', 'middleware' => ['module:marketing']], function () {
         Route::get('/', [CouponController::class,'list'])->name('list');
         Route::post('/', [CouponController::class,'store']);
         Route::get('edit/{id}', [CouponController::class,'edit'])->name('edit');
@@ -93,7 +93,7 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::get('export', [CouponController::class, 'export'])->name('export');
     });
 
-    Route::group(['prefix' => 'driver', 'as' => 'driver.'], function () {
+    Route::group(['prefix' => 'driver', 'as' => 'driver.', 'middleware' => ['module:driver']], function () {
         Route::get('list', [DriverController::class, 'list'])->name('list');
         Route::get('/create', [DriverController::class, 'create'])->name('create');
         Route::post('/create', [DriverController::class, 'store']);
@@ -105,14 +105,19 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::get('export', [DriverController::class, 'export'])->name('export');
     });
 
-    Route::group(['prefix' => 'report', 'as' => 'report.', 'middleware' => ['module:report' ,'subscription:report']], function () {
+    Route::group(['prefix' => 'report', 'as' => 'report.', 'middleware' => ['module:rental_report' ,'subscription:report']], function () {
         Route::get('trip-report', [ReportController::class, 'tripReport'])->name('trip-report');
         Route::get('trip-report-export', [ReportController::class, 'tripReportExport'])->name('trip-report-export');
     });
 
+    Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:rental_employees']], function () {
+        Route::get('list', [ProviderController::class, 'role'])->name('list');
+        Route::get('update/{id}', [ProviderController::class, 'update'])->name('update');
+    });
 
-    Route::get('rental-reviews', [ProviderController::class, 'reviews'])->name('rental.reviews');
-    Route::post('rental-review/{id}', [ProviderController::class, 'reviewReply'])->name('rental.review.reply');
+
+    Route::get('rental-reviews', [ProviderController::class, 'reviews'])->name('rental.reviews')->middleware('module:reviews');
+    Route::post('rental-review/{id}', [ProviderController::class, 'reviewReply'])->name('rental.review.reply')->middleware('module:reviews');
 });
 
 

@@ -248,10 +248,66 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btn--container justify-content-end mt-4">
-                            <button type="reset" id="reset-btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                            <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
-                        </div>
+                        @if (rental_module_published_status('rental'))
+                            <div class="pt-5">
+                                <h4>{{translate('Rental Role')}}</h4>
+                            </div>
+                            <div class="check--item-wrapper">
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="trip" class="form-check-input"
+                                               id="trip">
+                                        <label class="form-check-label qcont text-dark" for="trip">{{translate('messages.Trip')}}</label>
+                                    </div>
+                                </div>
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="promotion" class="form-check-input"
+                                               id="promotion">
+                                        <label class="form-check-label qcont text-dark" for="promotion">{{translate('messages.Promotion')}}</label>
+                                    </div>
+                                </div>
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="vehicle" class="form-check-input"
+                                               id="vehicle">
+                                        <label class="form-check-label qcont text-dark" for="vehicle">{{translate('messages.Vehicle')}}</label>
+                                    </div>
+                                </div>
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="provider" class="form-check-input"
+                                               id="provider">
+                                        <label class="form-check-label qcont text-dark" for="provider">{{translate('messages.Provider')}}</label>
+                                    </div>
+                                </div>
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="driver" class="form-check-input"
+                                               id="driver">
+                                        <label class="form-check-label qcont text-dark" for="driver">{{translate('messages.Driver')}}</label>
+                                    </div>
+                                </div>
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="download_app" class="form-check-input"
+                                               id="download_app">
+                                        <label class="form-check-label qcont text-dark" for="download_app">{{translate('messages.Download app')}}</label>
+                                    </div>
+                                </div>
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="rental_report" class="form-check-input"
+                                               id="rental_report">
+                                        <label class="form-check-label qcont text-dark" for="rental_report">{{translate('messages.Report')}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="btn--container justify-content-end mt-4">
+                                <button type="reset" id="reset-btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
+                                <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                            </div>
+                        @endif
                     </form>
                 </div>
             </div>

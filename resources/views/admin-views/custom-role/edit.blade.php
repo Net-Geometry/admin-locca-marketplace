@@ -270,6 +270,62 @@
                                 </div>
                             </div>
                         </div>
+                        @if (rental_module_published_status('rental'))
+                            <div class="pt-5">
+                                <h4>{{translate('Rental Role')}}</h4>
+                            </div>
+                            <div class="check--item-wrapper">
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="trip" class="form-check-input"
+                                               id="trip" {{in_array('trip',(array)json_decode($role['modules']))?'checked':''}}>
+                                        <label class="form-check-label qcont text-dark" for="trip">{{translate('messages.Trip')}}</label>
+                                    </div>
+                                </div>
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="promotion" class="form-check-input"
+                                               id="promotion" {{in_array('promotion',(array)json_decode($role['modules']))?'checked':''}}>
+                                        <label class="form-check-label qcont text-dark" for="promotion">{{translate('messages.Promotion')}}</label>
+                                    </div>
+                                </div>
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="vehicle" class="form-check-input"
+                                               id="vehicle" {{in_array('vehicle',(array)json_decode($role['modules']))?'checked':''}}>
+                                        <label class="form-check-label qcont text-dark" for="vehicle">{{translate('messages.Vehicle')}}</label>
+                                    </div>
+                                </div>
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="provider" class="form-check-input"
+                                               id="provider" {{in_array('provider',(array)json_decode($role['modules']))?'checked':''}}>
+                                        <label class="form-check-label qcont text-dark" for="provider">{{translate('messages.Provider')}}</label>
+                                    </div>
+                                </div>
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="driver" class="form-check-input"
+                                               id="driver" {{in_array('driver',(array)json_decode($role['modules']))?'checked':''}}>
+                                        <label class="form-check-label qcont text-dark" for="driver">{{translate('messages.Driver')}}</label>
+                                    </div>
+                                </div>
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="download_app" class="form-check-input"
+                                               id="download_app" {{in_array('download_app',(array)json_decode($role['modules']))?'checked':''}}>
+                                        <label class="form-check-label qcont text-dark" for="download_app">{{translate('messages.Download app')}}</label>
+                                    </div>
+                                </div>
+                                <div class="check-item">
+                                    <div class="form-group form-check form--check">
+                                        <input type="checkbox" name="modules[]" value="rental_report" class="form-check-input"
+                                               id="rental_report" {{in_array('rental_report',(array)json_decode($role['modules']))?'checked':''}}>
+                                        <label class="form-check-label qcont text-dark" for="rental_report">{{translate('messages.Report')}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         <div class="btn--container justify-content-end mt-4">
                             <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
                             <button type="submit" class="btn btn--primary">{{translate('messages.update')}}</button>

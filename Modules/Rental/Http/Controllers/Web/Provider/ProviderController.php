@@ -2,6 +2,8 @@
 
 namespace Modules\Rental\Http\Controllers\Web\Provider;
 
+use App\CentralLogics\Helpers;
+use App\Models\EmployeeRole;
 use App\Models\Translation;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\View\Factory;
@@ -24,11 +26,13 @@ class ProviderController extends Controller
     private VehicleCategory $category;
     private VehicleBrand $brand;
     private VehicleReview $vehicleReview;
-    public function __construct(VehicleCategory $category, VehicleBrand $brand, VehicleReview $vehicleReview)
+    private EmployeeRole $employeeRole;
+    public function __construct(VehicleCategory $category, VehicleBrand $brand, VehicleReview $vehicleReview, EmployeeRole $employeeRole)
     {
         $this->category = $category;
         $this->brand = $brand;
         $this->vehicleReview = $vehicleReview;
+        $this->employeeRole = $employeeRole;
     }
 
     /**
@@ -181,5 +185,40 @@ class ProviderController extends Controller
 
         Toastr::success(translate('messages.review_reply_updated'));
         return back();
+    }
+
+    /**
+     * @param Request $request
+     * @return Factory|View|Application
+     */
+    public function role(Request $request):Factory|View|Application
+    {
+        $key = explode(' ', $request['search']);
+        $roles = $this->employeeRole->where('store_id',Helpers::get_store_id())->orderBy('name')
+            ->when( isset($key) , function($query) use($key){
+                $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('name', 'like', "%{$value}%");
+                    }
+                });
+            }
+            )
+            ->paginate(config('default_pagination'));
+
+        return view('rental::provider.employee.list', compact('roles'));
+    }
+
+    /**
+     * @param $id
+     * @return View|Application|Factory
+     */
+    public function update($id): View|Application|Factory
+    {
+        $role = $this->employeeRole
+            ->withoutGlobalScope('translate')
+            ->where('store_id',Helpers::get_store_id())
+            ->where(['id'=>$id])->first(['id','name','modules']);
+
+        return view('rental::provider.employee.edit',compact('role'));
     }
 }

@@ -57,22 +57,22 @@
                         </a>
                     </li>
 
-<?php
-$tripCount = Illuminate\Support\Facades\DB::select("SELECT
-        COUNT(*) AS total_trips,
-        SUM(CASE WHEN scheduled = 1 THEN 1 ELSE 0 END) AS scheduled_trips,
-        SUM(CASE WHEN trip_status = 'pending' THEN 1 ELSE 0 END) AS pending_trips,
-        SUM(CASE WHEN trip_status = 'confirmed' THEN 1 ELSE 0 END) AS confirmed_trips,
-        SUM(CASE WHEN trip_status = 'ongoing' THEN 1 ELSE 0 END) AS ongoing_trips,
-        SUM(CASE WHEN trip_status = 'completed' THEN 1 ELSE 0 END) AS completed_trips,
-        SUM(CASE WHEN trip_status = 'canceled' THEN 1 ELSE 0 END) AS canceled_trips,
-        SUM(CASE WHEN trip_status = 'payment_failed' THEN 1 ELSE 0 END) AS payment_failed_trips
-    FROM trips  WHERE  provider_id = :provider_id", ['provider_id' => \App\CentralLogics\Helpers::get_store_id()]);
+                    <?php
+                    $tripCount = Illuminate\Support\Facades\DB::select("SELECT
+                            COUNT(*) AS total_trips,
+                            SUM(CASE WHEN scheduled = 1 THEN 1 ELSE 0 END) AS scheduled_trips,
+                            SUM(CASE WHEN trip_status = 'pending' THEN 1 ELSE 0 END) AS pending_trips,
+                            SUM(CASE WHEN trip_status = 'confirmed' THEN 1 ELSE 0 END) AS confirmed_trips,
+                            SUM(CASE WHEN trip_status = 'ongoing' THEN 1 ELSE 0 END) AS ongoing_trips,
+                            SUM(CASE WHEN trip_status = 'completed' THEN 1 ELSE 0 END) AS completed_trips,
+                            SUM(CASE WHEN trip_status = 'canceled' THEN 1 ELSE 0 END) AS canceled_trips,
+                            SUM(CASE WHEN trip_status = 'payment_failed' THEN 1 ELSE 0 END) AS payment_failed_trips
+                        FROM trips  WHERE  provider_id = :provider_id", ['provider_id' => \App\CentralLogics\Helpers::get_store_id()]);
 
-    $tripCount=(array) $tripCount[0];
-?>
+                        $tripCount=(array) $tripCount[0];
+                    ?>
 
-                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('Trip'))
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('trip'))
                         <li class="nav-item">
                             <small class="nav-subtitle">{{ translate('messages.Trip_management') }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
@@ -193,116 +193,119 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                         </li>
                         <!-- Order refund End-->
                     @endif
-                    <li class="nav-item">
-                        <small class="nav-subtitle">{{ translate('messages.vehicle_management') }}</small>
-                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                    </li>
-                    <li
-                        class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/vehicle/*') ? 'active' : '' }}">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                            title="{{ translate('Vehicle Setup') }}">
-                            <i class="tio-car nav-icon"></i>
-                            <span
-                                class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate text-capitalize">{{ translate('Vehicle Setup') }}</span>
-                        </a>
-                        <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                            style="display:{{ Request::is('vendor-panel/vehicle/*') ? 'block' : 'none' }}">
-                            <li
-                                class="nav-item {{ Request::is('vendor-panel/vehicle/create') || Request::is('vendor-panel/vehicle/edit/*') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('vendor.vehicle.create') }}"
-                                    title="{{ translate('messages.create_new') }}">
-                                    <span class="tio-circle nav-indicator-icon"></span>
-                                    <span class="text-truncate">{{ translate('messages.create_new') }}</span>
-                                </a>
-                            </li>
-                            <li
-                                class="nav-item {{ Request::is('vendor-panel/vehicle/list') || Request::is('vendor-panel/vehicle/edit/*') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('vendor.vehicle.list') }}"
-                                    title="{{ translate('messages.vehicle_list') }}">
-                                    <span class="tio-circle nav-indicator-icon"></span>
-                                    <span class="text-truncate">{{ translate('messages.list') }}</span>
-                                </a>
-                            </li>
-                            <li
-                                class="nav-item {{ Request::is('vendor-panel/vehicle/bulk-import') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('vendor.vehicle.bulk_import') }}"
-                                    title="{{ translate('messages.bulk_import') }}">
-                                    <span class="tio-circle nav-indicator-icon"></span>
-                                    <span
-                                        class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
-                                </a>
-                            </li>
-                            <li
-                                class="nav-item {{ Request::is('vendor-panel/vehicle/bulk-export') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('vendor.vehicle.bulk-export-index') }}"
-                                    title="{{ translate('messages.bulk_export') }}">
-                                    <span class="tio-circle nav-indicator-icon"></span>
-                                    <span
-                                        class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
 
-                    <li
-                        class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/vehicle-category*') ? 'active' : '' }}">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('vendor.vehicle_category.list') }}"
-                            title="{{ translate('messages.category list') }}">
-                            <i class="tio-category nav-icon"></i>
-                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('messages.categories') }}
-                            </span>
-                        </a>
-                    </li>
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('vehicle'))
+                        <li class="nav-item">
+                            <small class="nav-subtitle">{{ translate('messages.vehicle_management') }}</small>
+                            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                        </li>
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/vehicle/*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
+                                title="{{ translate('Vehicle Setup') }}">
+                                <i class="tio-car nav-icon"></i>
+                                <span
+                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate text-capitalize">{{ translate('Vehicle Setup') }}</span>
+                            </a>
+                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
+                                style="display:{{ Request::is('vendor-panel/vehicle/*') ? 'block' : 'none' }}">
+                                <li
+                                    class="nav-item {{ Request::is('vendor-panel/vehicle/create') || Request::is('vendor-panel/vehicle/edit/*') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('vendor.vehicle.create') }}"
+                                        title="{{ translate('messages.create_new') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">{{ translate('messages.create_new') }}</span>
+                                    </a>
+                                </li>
+                                <li
+                                    class="nav-item {{ Request::is('vendor-panel/vehicle/list') || Request::is('vendor-panel/vehicle/edit/*') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('vendor.vehicle.list') }}"
+                                        title="{{ translate('messages.vehicle_list') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">{{ translate('messages.list') }}</span>
+                                    </a>
+                                </li>
+                                <li
+                                    class="nav-item {{ Request::is('vendor-panel/vehicle/bulk-import') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('vendor.vehicle.bulk_import') }}"
+                                        title="{{ translate('messages.bulk_import') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span
+                                            class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
+                                    </a>
+                                </li>
+                                <li
+                                    class="nav-item {{ Request::is('vendor-panel/vehicle/bulk-export') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('vendor.vehicle.bulk-export-index') }}"
+                                        title="{{ translate('messages.bulk_export') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span
+                                            class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
-                    <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/vehicle-brand*') ? 'active' : '' }}">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('vendor.vehicle_brand.list') }}" title="{{ translate('messages.Brand list') }}">
-                            <i class="tio-medal nav-icon"></i>
-                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('messages.Brands') }}
-                            </span>
-                        </a>
-                    </li>
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/vehicle-category*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('vendor.vehicle_category.list') }}"
+                                title="{{ translate('messages.category list') }}">
+                                <i class="tio-category nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    {{ translate('messages.categories') }}
+                                </span>
+                            </a>
+                        </li>
 
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/vehicle-brand*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('vendor.vehicle_brand.list') }}" title="{{ translate('messages.Brand list') }}">
+                                <i class="tio-medal nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    {{ translate('messages.Brands') }}
+                                </span>
+                            </a>
+                        </li>
+                    @endif
+
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('driver'))
                     <!-- driver -->
-                    <li class="nav-item">
-                        <small class="nav-subtitle"
-                            title="{{ translate('messages.driver_section') }}">{{ translate('messages.driver_section') }}</small>
-                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                    </li>
-                    <li
-                        class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/driver/create') ? 'active' : '' }}">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('vendor.driver.create') }}"
-                            title="{{ translate('messages.add_driver') }}">
-                            <i class="tio-running nav-icon"></i>
-                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('messages.add_driver') }}
-                            </span>
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <small class="nav-subtitle"
+                                title="{{ translate('messages.driver_section') }}">{{ translate('messages.driver_section') }}</small>
+                            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                        </li>
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/driver/create') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('vendor.driver.create') }}"
+                                title="{{ translate('messages.add_driver') }}">
+                                <i class="tio-running nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    {{ translate('messages.add_driver') }}
+                                </span>
+                            </a>
+                        </li>
 
-                    <li
-                        class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/driver/list') ? 'active' : '' }}">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('vendor.driver.list') }}" title="{{ translate('messages.driver') }}">
-                            <i class="tio-filter-list nav-icon"></i>
-                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('messages.driver list') }}
-                            </span>
-                        </a>
-                    </li>
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/driver/list') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                href="{{ route('vendor.driver.list') }}" title="{{ translate('messages.driver') }}">
+                                <i class="tio-filter-list nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    {{ translate('messages.driver list') }}
+                                </span>
+                            </a>
+                        </li>
+                    @endif
 
-                    <li class="nav-item">
-                        <small class="nav-subtitle">{{ translate('messages.marketing_section') }}</small>
-                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                    </li>
-                    <!-- End Campaign -->
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('marketing'))
+                        <li class="nav-item">
+                            <small class="nav-subtitle">{{ translate('messages.marketing_section') }}</small>
+                            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                        </li>
 
-                    <!-- Coupon -->
-                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('coupon'))
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/rental-coupon*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
@@ -313,10 +316,6 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.coupons') }}</span>
                             </a>
                         </li>
-                    @endif
-                    <!-- End Coupon -->
-                    <!-- Coupon -->
-                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('banner'))
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/rental-banner*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
@@ -328,16 +327,14 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                             </a>
                         </li>
                     @endif
-                    <!-- End Coupon -->
-
-                    <!-- Business Section-->
-                    <li class="nav-item">
-                        <small class="nav-subtitle"
-                            title="{{ translate('messages.business_section') }}">{{ translate('messages.business_section') }}</small>
-                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                    </li>
 
                     @if (\App\CentralLogics\Helpers::employee_module_permission_check('store_setup'))
+                        <li class="nav-item">
+                            <small class="nav-subtitle"
+                                title="{{ translate('messages.business_section') }}">{{ translate('messages.business_section') }}</small>
+                            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                        </li>
+
                         <li
                             class="nav-item {{ Request::is('vendor-panel/business-settings/store-setup') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('vendor.business-settings.store-setup') }}"
@@ -382,8 +379,7 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                         </a>
                     </li>
 
-
-                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('wallet'))
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('my_wallet'))
                         <!-- StoreWallet -->
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/wallet') ? 'active' : '' }}">
@@ -408,7 +404,7 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                             </a>
                         </li>
                     @endif
-                    <!-- End StoreWallet -->
+
                     @if (\App\CentralLogics\Helpers::employee_module_permission_check('reviews'))
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/rental-reviews') ? 'active' : '' }}">
@@ -421,7 +417,7 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                             </a>
                         </li>
                     @endif
-                    <!-- End Business Settings -->
+
                     @if (\App\CentralLogics\Helpers::employee_module_permission_check('chat'))
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/message*') ? 'active' : '' }}">
@@ -442,7 +438,7 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
 
-                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('report'))
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('rental_report'))
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/report/expense-report') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('vendor.report.expense-report') }}"
@@ -469,27 +465,22 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                         </li>
                     @endif
 
-                    <!-- Employee-->
-                    <li class="nav-item">
-                        <small class="nav-subtitle"
-                            title="{{ translate('messages.employee_section') }}">{{ translate('messages.employee_section') }}</small>
-                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                    </li>
-
-                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('custom_role'))
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('rental_employees'))
+                        <li class="nav-item">
+                            <small class="nav-subtitle"
+                                title="{{ translate('messages.employee_section') }}">{{ translate('messages.employee_section') }}</small>
+                            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                        </li>
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/custom-role*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                href="{{ route('vendor.custom-role.create') }}"
+                                href="{{ route('vendor.custom-role.list') }}"
                                 title="{{ translate('messages.employee_Role') }}">
                                 <i class="tio-incognito nav-icon"></i>
                                 <span
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.employee_Role') }}</span>
                             </a>
                         </li>
-                    @endif
-
-                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('employee'))
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/employee*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
