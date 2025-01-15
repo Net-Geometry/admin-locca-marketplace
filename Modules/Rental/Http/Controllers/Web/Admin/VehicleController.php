@@ -127,8 +127,32 @@ class VehicleController extends Controller
             'fuel_type' => 'required|string|max:50',
             'transmission_type' => 'required|string|max:50',
             'hourly_price' => 'nullable|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0',
-            'discount_type' => 'nullable|string|max:50',
+            'discount_price' => [
+                'nullable',
+                'numeric',
+                function ($attribute, $value, $fail) use ($request) {
+                    $hourlyPrice = floatval($request->hourly_price ?? 0);
+                    $distancePrice = floatval($request->distance_price ?? 0);
+                    $applicablePrice = 0;
+
+                    if ($request->trip_hourly && $request->trip_distance) {
+                        $applicablePrice = min($hourlyPrice, $distancePrice);
+                    } elseif ($request->trip_hourly) {
+                        $applicablePrice = $hourlyPrice;
+                    } elseif ($request->trip_distance) {
+                        $applicablePrice = $distancePrice;
+                    }
+
+                    if ($request->discount_type === 'percent' && $value > 100) {
+                        $fail(translate('messages.discount_cannot_exceed_100_percent'));
+                    }
+
+                    if ($request->discount_type === 'amount' && $value > $applicablePrice) {
+                        $fail(translate('messages.discount_cannot_exceed_price'));
+                    }
+                },
+            ],
+            'discount_type' => 'required|in:percent,amount',
             'tag' => 'nullable|array',
             'tag.*' => 'string|max:50',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
@@ -262,8 +286,32 @@ class VehicleController extends Controller
             'fuel_type' => 'required|string|max:50',
             'transmission_type' => 'required|string|max:50',
             'hourly_price' => 'nullable|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0',
-            'discount_type' => 'nullable|string|max:50',
+            'discount_price' => [
+                'nullable',
+                'numeric',
+                function ($attribute, $value, $fail) use ($request) {
+                    $hourlyPrice = floatval($request->hourly_price ?? 0);
+                    $distancePrice = floatval($request->distance_price ?? 0);
+                    $applicablePrice = 0;
+
+                    if ($request->trip_hourly && $request->trip_distance) {
+                        $applicablePrice = min($hourlyPrice, $distancePrice);
+                    } elseif ($request->trip_hourly) {
+                        $applicablePrice = $hourlyPrice;
+                    } elseif ($request->trip_distance) {
+                        $applicablePrice = $distancePrice;
+                    }
+
+                    if ($request->discount_type === 'percent' && $value > 100) {
+                        $fail(translate('messages.discount_cannot_exceed_100_percent'));
+                    }
+
+                    if ($request->discount_type === 'amount' && $value > $applicablePrice) {
+                        $fail(translate('messages.discount_cannot_exceed_price'));
+                    }
+                },
+            ],
+            'discount_type' => 'required|in:percent,amount',
             'tag' => 'nullable|array',
             'tag.*' => 'string|max:50',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
