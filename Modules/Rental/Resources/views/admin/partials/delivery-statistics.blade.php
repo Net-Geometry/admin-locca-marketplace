@@ -13,7 +13,7 @@
                 <!-- Card -->
                 <a class="resturant-card dashboard--card __dashboard-card card--bg-1" href="{{ route('admin.rental.trip.list') }}?status=pending">
                         <span class="meter">
-                            <span style="height:50%"></span>
+                            <span style="height:{{ $totalCount > 0 ? ($pendingCount / $totalCount) * 100 : 0 }}%"></span>
                         </span>
                     <h4 class="title">{{ $pendingCount }}</h4>
                     <span class="subtitle font-regular">{{ translate('messages.pending_trip') }}</span>
@@ -26,7 +26,7 @@
                 <!-- Card -->
                 <a class="resturant-card dashboard--card __dashboard-card card--bg-2" href="{{ route('admin.rental.trip.list') }}?status=ongoing">
                         <span class="meter">
-                            <span style="height:50%"></span>
+                            <span style="height:{{ $totalCount > 0 ? ($ongoingCount / $totalCount) * 100 : 0 }}%"></span>
                         </span>
                     <h4 class="title">{{ $ongoingCount }}</h4>
                     <span class="subtitle font-regular"> {{ translate('messages.Ongoing_Trip') }}
@@ -40,7 +40,7 @@
                 <!-- Card -->
                 <a class="resturant-card dashboard--card __dashboard-card bg-F1E8FA" href="{{ route('admin.rental.trip.list') }}?status=completed">
                         <span class="meter">
-                            <span style="height:70%"></span>
+                            <span style="height:{{ $totalCount > 0 ? ($completedCount / $totalCount) * 100 : 0 }}%"></span>
                         </span>
                     <h4 class="title text-success">{{ $completedCount }}</h4>
                     <span class="subtitle font-regular"> {{ translate('messages.Completed') }}
@@ -54,7 +54,7 @@
                 <!-- Card -->
                 <a class="resturant-card dashboard--card __dashboard-card card--bg-4" href="{{ route('admin.rental.trip.list') }}?status=canceled">
                         <span class="meter">
-                            <span style="height:60%"></span>
+                            <span style="height:{{ $totalCount > 0 ? ($canceledCount / $totalCount) * 100 : 0 }}%"></span>
                         </span>
                     <h4 class="title">{{ $canceledCount }}</h4>
                     <span class="subtitle font-regular"> {{ translate('messages.Canceled_Trip') }}
