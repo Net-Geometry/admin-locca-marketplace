@@ -200,10 +200,10 @@ class BannerController extends Controller
         $storeId = $request->vendor->stores[0]->id ?? 0;
         $zoneId = $request->vendor->stores[0]->zone_id ?? 0;
         $moduleId = $request->vendor->stores[0]->module_id ?? null;
-        $defaultLangKey = array_search('default', $request->lang ?? []);
+        $data = json_decode($request->translations, true);
 
         $banner = $this->banner;
-        $banner->title = $request->title[$defaultLangKey] ?? 'Default Title';
+        $banner->title = $data[0]['value'];
         $banner->zone_id = $zoneId;
         $banner->data = $storeId;
         $banner->image = $this->upload('banner/', 'png', $request->file('image'));
@@ -221,7 +221,8 @@ class BannerController extends Controller
         $storeId = $request->vendor->stores[0]->id ?? 0;
         $zoneId = $request->vendor->stores[0]->zone_id ?? 0;
         $moduleId = $request->vendor->stores[0]->module_id ?? null;
-        $defaultLangKey = array_search('default', $request->lang ?? []);
+
+        $data = json_decode($request->translations, true);
 
         $banner = $this->banner->findOrFail($id);
 
@@ -229,7 +230,7 @@ class BannerController extends Controller
             $banner->image = $this->updateAndUpload('banner/', $banner->image ,'png', $request->file('image'));
         }
 
-        $banner->title = $request->title[$defaultLangKey] ?? 'Default Title';
+        $banner->title = $data[0]['value'];
         $banner->type = 'store_wise';
         $banner->zone_id = $zoneId;
         $banner->data = $storeId;
