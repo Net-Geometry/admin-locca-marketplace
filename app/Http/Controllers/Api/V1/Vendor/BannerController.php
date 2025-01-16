@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Models\Banner;
+use App\Models\Translation;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class BannerController extends Controller
@@ -47,7 +47,16 @@ class BannerController extends Controller
         $banner->created_by = 'store';
         $banner->save();
 
-        Helpers::add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Banner', data_id: $banner->id, data_value: $banner->title);
+
+        foreach ($data as $key=>$item) {
+            Translation::updateOrInsert(
+                ['translationable_type' => Banner::class,
+                    'translationable_id' => $banner->id,
+                    'locale' => $item['locale'],
+                    'key' => $item['key']],
+                ['value' => $item['value']]
+            );
+        }
 
         return response()->json(['message' => translate('messages.banner_added_successfully')], 200);
     }
@@ -68,14 +77,21 @@ class BannerController extends Controller
 
         $data = json_decode($request->translations, true);
 
-        $vendor = $request['vendor'];
         $banner = Banner::find($request->id);
         $banner->title = $data[0]['value'];
         $banner->image = $request->has('image') ? Helpers::update('banner/', $banner->image, 'png', $request->file('image')) : $banner->image;
         $banner->default_link = $request->default_link;
         $banner->save();
 
-        Helpers::add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Banner', data_id: $banner->id, data_value: $banner->title);
+        foreach ($data as $key=>$item) {
+            Translation::updateOrInsert(
+                ['translationable_type' => Banner::class,
+                    'translationable_id' => $banner->id,
+                    'locale' => $item['locale'],
+                    'key' => $item['key']],
+                ['value' => $item['value']]
+            );
+        }
 
         return response()->json(['message' => translate('messages.banner_updated_successfully')], 200);
     }

@@ -11,16 +11,15 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Rental\Entities\Vehicle;
 use Illuminate\Support\Facades\Validator;
-use MatanYadaev\EloquentSpatial\Objects\Point;
 use Modules\Rental\Entities\VehicleBrand;
+use Modules\Rental\Entities\VehicleReview;
+use MatanYadaev\EloquentSpatial\Objects\Point;
 
 class VehicleController extends Controller
 {
-
-
-
-    public function __construct(private Vehicle $vehicle, private Helpers $helpers)
+    public function __construct(private Vehicle $vehicle, private VehicleReview $review, private Helpers $helpers)
     {
+        $this->review = $review;
         $this->vehicle = $vehicle;
         $this->helpers = $helpers;
     }
@@ -40,7 +39,7 @@ class VehicleController extends Controller
         $limit = $request['limit'] ?? 25;
         $offset = $request['offset'] ?? 1;
 
-        $vehicles = $this->vehicle->whereIn('zone_id', $zone_id)->with('provider:id,name,address,tax','provider.discount')->withcount('vehicleIdentities as total_vehicle_count')
+        $vehicles = $this->vehicle->whereIn('zone_id', $zone_id)->with('provider:id,name,address,tax', 'provider.discount')->withcount('vehicleIdentities as total_vehicle_count')
             ->orderBy('avg_rating', 'desc')
             ->orderBy('total_trip', 'desc')
             ->latest()
@@ -66,11 +65,11 @@ class VehicleController extends Controller
         $pick_up_lat = data_get($pickup_location, 'lat') ?? null;
         $pick_up_lng = data_get($pickup_location, 'lng') ?? null;
 
-        if($pick_up_lat && $pick_up_lng){
+        if ($pick_up_lat && $pick_up_lng) {
             $zones = Zone::whereContains('coordinates', new Point($pick_up_lat, $pick_up_lng, POINT_SRID))->pluck('id')->toArray();
         }
 
-        if($pick_up_lat && $pick_up_lng && count($zones) == 0){
+        if ($pick_up_lat && $pick_up_lng && count($zones) == 0) {
             $errors = [];
             array_push($errors, ['code' => 'zone', 'message' => translate('messages.Out_of_pick_up_zone')]);
             return response()->json([
@@ -79,7 +78,7 @@ class VehicleController extends Controller
         }
 
 
-        $vehicles = $this->getVelicleListData($request,$zones??[],$pick_up_lat,$pick_up_lng)->paginate($limit, ['*'], 'page', $offset);
+        $vehicles = $this->getVelicleListData($request, $zones ?? [], $pick_up_lat, $pick_up_lng)->paginate($limit, ['*'], 'page', $offset);
         $data = $this->helpers->preparePaginatedResponse(pagination: $vehicles, limit: $limit, offset: $offset, key: 'vehicles', extraData: []);
         return response()->json($data, 200);
     }
@@ -158,7 +157,7 @@ class VehicleController extends Controller
         return response()->json($vehicle, 200);
     }
 
-    private function getVelicleListData($request,$zones=[],$pick_up_lat=null,$pick_up_lng=null)
+    private function getVelicleListData($request, $zones = [], $pick_up_lat = null, $pick_up_lng = null)
     {
         $zone_id = $request->header('zoneId');
         $zone_id = json_decode($zone_id, true);
@@ -166,7 +165,7 @@ class VehicleController extends Controller
 
         $brand_ids = json_decode($request->brand_ids, true) ?? null;
         $category_ids = json_decode($request->category_ids, true) ?? null;
-        $seating_capacity = json_decode($request->seating_capacity)?? null;
+        $seating_capacity = json_decode($request->seating_capacity) ?? null;
         $vehicles = $this->vehicle
             ->when($pick_up_lat &&  $pick_up_lng && count($zones) > 0, function ($query) use ($zones) {
                 $query->whereHas('provider', function ($query) use ($zones) {
@@ -179,27 +178,26 @@ class VehicleController extends Controller
                     });
                 });
             })
-            ->with('provider:id,name,address,tax','provider.discount');
-            if($request?->date){
-                $vehicles = $vehicles->withCount([
-                    'vehicleIdentities as total_vehicle_count' => function ($query) use($request) {
-                        $query->where(function ($query) use($request) {
-                            $query->whereHas('vehicle_trip_details', function ($subQuery) use($request) {
-                                $subQuery->where('estimated_trip_end_time', '<', \Carbon\Carbon::parse($request?->date) ?? now());
-                            })
+            ->with('provider:id,name,address,tax', 'provider.discount');
+        if ($request?->date) {
+            $vehicles = $vehicles->withCount([
+                'vehicleIdentities as total_vehicle_count' => function ($query) use ($request) {
+                    $query->where(function ($query) use ($request) {
+                        $query->whereHas('vehicle_trip_details', function ($subQuery) use ($request) {
+                            $subQuery->where('estimated_trip_end_time', '<', \Carbon\Carbon::parse($request?->date) ?? now());
+                        })
                             ->orWhereDoesntHave('vehicle_trip_details');
-                        });
-                    },
-                ])
-                ->having('total_vehicle_count' ,'>', 0);
+                    });
+                },
+            ])
+                ->having('total_vehicle_count', '>', 0);
+        } else {
+            $vehicles = $vehicles->withcount('vehicleIdentities as total_vehicle_count');
+        }
 
-            } else{
-                $vehicles = $vehicles->withcount('vehicleIdentities as total_vehicle_count');
-            }
-
-            $vehicles = $vehicles->when($request->provider_id, function ($query) use ($request) {
-                $query->where('provider_id', $request->provider_id);
-            })
+        $vehicles = $vehicles->when($request->provider_id, function ($query) use ($request) {
+            $query->where('provider_id', $request->provider_id);
+        })
             ->when($request->trip_type == 'hourly', function ($query) {
                 $query->where('trip_hourly', 1);
             })
@@ -233,10 +231,10 @@ class VehicleController extends Controller
                 $query->whereIn('category_id', $category_ids);
             })
             ->when($seating_capacity, function ($query) use ($seating_capacity) {
-                $query->where(function($q) use ($seating_capacity) {
+                $query->where(function ($q) use ($seating_capacity) {
                     foreach ($seating_capacity as $range) {
                         $limits = explode('-', $range);
-                     $q->orWhereBetween('seating_capacity', [(int) $limits[0], (int)$limits[1]]);
+                        $q->orWhereBetween('seating_capacity', [(int) $limits[0], (int)$limits[1]]);
                     }
                 });
             })
@@ -252,15 +250,15 @@ class VehicleController extends Controller
             ->when($request->fuel_type, function ($query) use ($request) {
                 $query->where('fuel_type', $request->fuel_type);
             })
-            ->when($request->top_rated == 1, function ($query){
+            ->when($request->top_rated == 1, function ($query) {
                 $query->orderBy('total_trip', 'desc');
             })
-            ->when(in_array($request->sortby_price,['asc','desc']), function ($query) use ($request){
+            ->when(in_array($request->sortby_price, ['asc', 'desc']), function ($query) use ($request) {
 
-                if($request->trip_type == 'distance_wise'){
+                if ($request->trip_type == 'distance_wise') {
                     info($request->sortby_price);
                     return  $query->orderBy('distance_price', $request->sortby_price);
-                } elseif($request->trip_type == 'hourly'){
+                } elseif ($request->trip_type == 'hourly') {
                     info($request->sortby_price);
                     return  $query->orderBy('hourly_price', $request->sortby_price);
                 }
@@ -273,14 +271,67 @@ class VehicleController extends Controller
     }
 
 
-    public function getPopularSearchlist(){
-        $brands = VehicleBrand::where('status',1)->select(['id', 'name'])
-        ->withSum('vehicles', 'total_trip')
-        ->orderBy('vehicles_sum_total_trip', 'desc')
-        ->take(10)
-        ->get();
+    public function getPopularSearchlist()
+    {
+        $brands = VehicleBrand::where('status', 1)->select(['id', 'name'])
+            ->withSum('vehicles', 'total_trip')
+            ->orderBy('vehicles_sum_total_trip', 'desc')
+            ->take(10)
+            ->get();
         return response()->json($brands, 200);
+    }
+    public function getVehicleReviews(Request $request, $id)
+    {
+        $limit = $request['limit'] ?? 25;
+        $offset = $request['offset'] ?? 1;
+        $key = explode(' ', $request['search']);
 
+
+        $reviews = $this->review->with(['customer', 'vehicle'])->where('vehicle_id', $id)
+            ->when(isset($key), function ($query) use ($key, $request) {
+                $query->where(function ($query) use ($key, $request) {
+                    $query->whereHas('vehicle', function ($query) use ($key) {
+                        foreach ($key as $value) {
+                            $query->where('name', 'like', "%{$value}%");
+                        }
+                    })->orWhereHas('customer', function ($query) use ($key) {
+                        foreach ($key as $value) {
+                            $query->where('f_name', 'like', "%{$value}%")->orwhere('l_name', 'like', "%{$value}%");
+                        }
+                    })->orwhere('rating', $request['search'])->orwhere('review_id', $request['search']);
+                });
+            })
+            ->latest()
+            ->paginate($limit, ['*'], 'page', $offset);
+
+        $storage = [];
+        foreach ($reviews as $item) {
+            $item['attachment'] = json_decode($item['attachment']);
+            $item['vehicle_name'] = null;
+            $item['vehicle_image'] = null;
+            $item['customer_name'] = null;
+            if ($item->vehicle) {
+                $item['vehicle_name'] = $item->vehicle->name;
+                $item['vehicle_image'] = $item->vehicle->image;
+                $item['vehicle_image_full_url'] = $item->vehicle->image_full_url;
+            }
+
+            if ($item->customer) {
+                $item['customer_name'] = $item->customer->f_name . ' ' . $item->customer->l_name;
+            }
+
+            unset($item['vehicle']);
+            unset($item['customer']);
+            array_push($storage, $item);
+        }
+
+        $data = [
+            'total_size' => (int) $reviews->total(),
+            'limit' => (int) $limit,
+            'offset' => (int) $offset,
+            'reviews' => $storage,
+        ];
+
+        return response()->json($data, 200);
     }
 }
-
