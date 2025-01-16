@@ -77,14 +77,18 @@
                 <td>{{ $key+1}}</td>
                 <td>{{ $ot->trip_id }}</td>
                 <td >
-                    {{Str::limit($ot->trip->provider->name,25,'...')}}
+                    {{Str::limit($ot->trip?->provider?->name,25,'...')}}
                 </td>
                 <td>
                     @if ($ot->trip->customer)
-                      {{ $ot->trip->customer['f_name'] . ' ' . $ot->trip->customer['l_name'] }}
-                    @else
-                        {{ translate('messages.invalid_customer_data') }}
-                    @endif
+                    <strong>{{ $ot->trip->customer['f_name'] . ' ' . $ot->trip->customer['l_name'] }}</strong>
+
+                @elseif($ot->trip?->user_info['contact_person_name'])
+                <strong>{{ $ot->trip?->user_info['contact_person_name'] }}</strong>
+
+                @else
+                    {{ translate('messages.Guest_user') }}
+                @endif
                 </td>
                 {{--total_trip_amount --}}
                 <td>{{ \App\CentralLogics\Helpers::format_currency($ot->trip_amount) }}</td>
@@ -102,7 +106,7 @@
                 <td>{{ \App\CentralLogics\Helpers::format_currency($ot->tax) }}</td>
 
                 {{--admin_commission --}}
-                <td>{{ \App\CentralLogics\Helpers::format_currency($ot->admin_commission- $ot->additional_charge) }}</td>
+                <td>{{ \App\CentralLogics\Helpers::format_currency($ot->admin_commission) }}</td>
 
 
                 <td>{{ \App\CentralLogics\Helpers::format_currency(($ot->additional_charge)) }}</td>
@@ -111,7 +115,7 @@
 
 
                 {{--admin_net_income --}}
-                <td>{{ \App\CentralLogics\Helpers::format_currency(($ot->admin_commission)) }}</td>
+                <td>{{ \App\CentralLogics\Helpers::format_currency(($ot->admin_net_income)) }}</td>
                 {{--store_discount --}}
                 <td>{{ \App\CentralLogics\Helpers::format_currency($ot->store_expense) }}</td>
                 {{--store_net_income --}}

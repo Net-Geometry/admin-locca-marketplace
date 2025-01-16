@@ -141,6 +141,7 @@ trait RentalPushNotification
             'order_id' => $trip->id,
             'module_id' => $trip->module_id,
             'order_type' => $order_type,
+            'status' => $trip->trip_status,
             'image' => '',
             'type' => $type,
             'zone_id' => $trip->zone_id,

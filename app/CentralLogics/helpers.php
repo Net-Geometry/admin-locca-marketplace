@@ -1190,49 +1190,15 @@ class Helpers
 
     public static function send_push_notif_to_device($fcm_token, $data, $web_push_link = null)
     {
-
-        if(isset($data['conversation_id'])){
-            $conversation_id = $data['conversation_id'];
-        }else{
-            $conversation_id = '';
-        }
-        if(isset($data['sender_type'])){
-            $sender_type = $data['sender_type'];
-        }else{
-            $sender_type = '';
-        }
-        if(isset($data['module_id'])){
-            $module_id = $data['module_id'];
-        }else{
-            $module_id = '';
-        }
-        if(isset($data['order_id'])){
-            $order_id = $data['order_id'];
-        }else{
-            $order_id = '';
-        }
-        if(isset($data['trip_id'])){
-            $trip_id = $data['trip_id'];
-        }else{
-            $trip_id = '';
-        }
-        if(isset($data['order_type'])){
-            $order_type = $data['order_type'];
-        }else{
-            $order_type = '';
-        }
-        if(isset($data['data_id'])){
-            $data_id = $data['data_id'];
-        }else{
-            $data_id = '';
-        }
-
-        if(isset($data['advertisement_id'])){
-            $advertisement_id = $data['advertisement_id'];
-        }else{
-            $advertisement_id = '';
-        }
-
+        $conversation_id = $data['conversation_id'] ?? '';
+        $sender_type = $data['sender_type'] ?? '';
+        $module_id = $data['module_id'] ?? '';
+        $order_id = $data['order_id'] ?? '';
+        $trip_id = $data['trip_id'] ?? '';
+        $order_type = $data['order_type'] ?? '';
+        $data_id = $data['data_id'] ?? '';
+        $status = $data['status'] ?? '';
+        $advertisement_id = $data['advertisement_id'] ?? '';
 
         $postData = [
             'message' => [
@@ -1243,6 +1209,7 @@ class Helpers
                     "image" => (string)$data['image'],
                     "order_id" => (string)$order_id,
                     "trip_id" => (string)$trip_id,
+                    "status" => (string)$status,
                     "type" => (string)$data['type'],
                     "data_id" => (string)$data_id,
                     "advertisement_id" => (string)$advertisement_id,

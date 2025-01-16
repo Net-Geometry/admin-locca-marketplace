@@ -2,16 +2,17 @@
 
 namespace Modules\Rental\Entities;
 
-use App\Models\Module;
-use App\Models\Store;
-use App\Models\Vendor;
 use App\Models\Zone;
+use App\Models\Store;
+use App\Models\Module;
+use App\Models\Vendor;
+use App\Traits\ReportFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TripTransaction extends Model
 {
-    use HasFactory;
+    use HasFactory, ReportFilter;
 
     protected $guarded = ['id'];
     protected $casts = [

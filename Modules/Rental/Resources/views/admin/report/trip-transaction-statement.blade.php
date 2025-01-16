@@ -289,12 +289,12 @@
                 <tr>
                     <td>1</td>
                     <td>{{translate('messages.total_vehicle_amount')}}</td>
-                    <td>{{ \App\CentralLogics\Helpers::format_currency($trip_transaction->trip['trip_amount'] - $trip_transaction->additional_charge - $trip_transaction['tax']  + $trip_transaction->trip['coupon_discount_amount'] + $trip_transaction->trip['discount_on_trip'] + $trip_transaction->trip['ref_bonus_amount']) }}</td>
+                    <td>{{ \App\CentralLogics\Helpers::format_currency($trip_transaction->trip->trip_details()->sum(DB::raw('calculated_price'))) }}</td>
                 </tr>
                 <tr>
                     <td>2</td>
                     <td>{{translate('messages.vehicle_discount')}}</td>
-                    <td>{{ \App\CentralLogics\Helpers::format_currency($trip_transaction->trip->trip_details()->sum(DB::raw('discount_on_trip * quantity'))) }}</td>
+                    <td>{{ \App\CentralLogics\Helpers::format_currency($trip_transaction->trip->discount_on_trip) }}</td>
                 </tr>
                 <tr>
                     <td>3</td>
@@ -309,7 +309,7 @@
                 <tr>
                     <td>5</td>
                     <td>{{translate('messages.total_discounted_amount')}}</td>
-                    <td>{{ \App\CentralLogics\Helpers::format_currency($trip_transaction->trip['coupon_discount_amount'] + $trip_transaction->trip->trip_details()->sum(DB::raw('discount_on_trip * quantity')) +$trip_transaction->trip['ref_bonus_amount']) }}</td>
+                    <td>{{ \App\CentralLogics\Helpers::format_currency($trip_transaction->trip['coupon_discount_amount'] + $trip_transaction->trip->discount_on_trip +$trip_transaction->trip['ref_bonus_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>6</td>

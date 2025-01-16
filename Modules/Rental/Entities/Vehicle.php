@@ -6,6 +6,7 @@ use App\Models\Store;
 use App\Models\Storage;
 use App\Scopes\ZoneScope;
 use App\Models\Translation;
+use Illuminate\Support\Str;
 use App\Traits\ReportFilter;
 use App\CentralLogics\Helpers;
 use Illuminate\Database\Eloquent\Model;
@@ -234,6 +235,31 @@ class Vehicle extends Model
             $builder->with(['translations' => function($query){
                 return $query->where('locale', app()->getLocale());
             }]);
+        });
+    }
+
+    private function generateSlug($name)
+    {
+        $slug = Str::slug($name);
+        if ($max_slug = static::where('slug', 'like',"{$slug}%")->latest('id')->value('slug')) {
+
+            if($max_slug == $slug) return "{$slug}-2";
+
+            $max_slug = explode('-',$max_slug);
+            $count = array_pop($max_slug);
+            if (isset($count) && is_numeric($count)) {
+                $max_slug[]= ++$count;
+                return implode('-', $max_slug);
+            }
+        }
+        return $slug;
+    }
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($item) {
+            $item->slug = $item->generateSlug($item->name);
+            $item->save();
         });
     }
 }

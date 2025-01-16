@@ -148,9 +148,17 @@ class VehicleController extends Controller
         return response()->json($data, 200);
     }
 
-    public function getVehicleDetails(Vehicle $vehicle)
+    public function getVehicleDetails($id)
     {
-        $vehicle = $vehicle->load('brand:id,name,image', 'provider:id,name,logo,cover_photo,rating,address,delivery_time')->loadCount('vehicleIdentities as total_vehicles');
+        if (!$id) {
+            return response()->json(['errors' => 'Id_or_Slug_is_required'], 404);
+        }
+        $vehicle =  $this->vehicle->where(function ($query) use ($id) {
+            $query->where('id', $id)->orWhere('slug', $id);
+        })->with('brand:id,name,image', 'provider:id,name,logo,cover_photo,rating,address,delivery_time')->withCount('vehicleIdentities as total_vehicles')->first();
+        if (!$vehicle) {
+            return response()->json(['error' => 'vehicle_not_found'], 404);
+        }
         $ratings = StoreLogic::calculate_store_rating($vehicle['provider']['rating']);
         $vehicle['provider']['avg_rating'] = $ratings['rating'];
         $vehicle['provider']['rating_count'] = $ratings['total'];

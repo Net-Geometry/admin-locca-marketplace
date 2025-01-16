@@ -46,6 +46,7 @@ class CreateVehiclesTable extends Migration
             $table->decimal('avg_rating')->default(0.00);
             $table->string('rating')->nullable();
             $table->integer('total_reviews')->default(0);
+            $table->string('slug')->nullable();
             $table->timestamps();
         });
     }

@@ -27,12 +27,12 @@ class ReportController extends Controller
 {
     public function transactionReport(Request $request)
     {
-        $key = explode(' ', $request['search']);
 
         if (session()->has('from_date') == false) {
             session()->put('from_date', date('Y-m-01'));
             session()->put('to_date', date('Y-m-30'));
         }
+        $key = explode(' ', $request['search']);
         $from = session('from_date');
         $to = session('to_date');
         $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
@@ -41,156 +41,84 @@ class ReportController extends Controller
         $provider = is_numeric($provider_id) ? Store::findOrFail($provider_id) : null;
         $filter = $request->query('filter', 'all_time');
 
-        $tripTransactions = TripTransaction::with('trip', 'trip.trip_details', 'trip.customer', 'trip.provider')->when(isset($zone), function ($query) use ($zone) {
-            return $query->where('zone_id', $zone->id);
-        })
-            ->when(isset($key), function ($query) use ($key) {
-                return $query->where(function ($q) use ($key) {
-                    foreach ($key as $value) {
-                        $q->orWhere('trip_id', 'like', "%{$value}%");
-                    }
-                });
-            })
-            ->when(isset($provider), function ($query) use ($provider) {
-                return $query->where('provider_id', $provider->id);
-            })
-            ->when(request('module_id'), function ($query) {
-                return $query->module(request('module_id'));
-            })
-            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
-                return $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
-            })
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                return $query->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('created_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })->orderBy('created_at', 'desc')
-            ->paginate(config('default_pagination'))->withQueryString();
 
-        $adminEarned = TripTransaction::with('trip', 'trip.trip_details', 'trip.customer', 'trip.provider')->when(isset($zone), function ($query) use ($zone) {
-            return $query->where('zone_id', $zone->id);
-        })
-            ->when(isset($key), function ($query) use ($key) {
-                return $query->where(function ($q) use ($key) {
-                    foreach ($key as $value) {
-                        $q->orWhere('trip_id', 'like', "%{$value}%");
-                    }
-                });
-            })
-            ->when(isset($provider), function ($query) use ($provider) {
-                return $query->where('provider_id', $provider->id);
-            })
-            ->when(request('module_id'), function ($query) {
-                return $query->module(request('module_id'));
-            })
-            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
-                return $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
-            })
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                return $query->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('created_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })
-            ->sum(DB::raw('admin_net_income'));
+        $data=$this->getTransactionData($request);
+        $tripTransactions = $data['tripTransactions']->paginate(config('default_pagination'))->withQueryString();
 
-        $providerEarned = TripTransaction::with('trip', 'trip.trip_details', 'trip.customer', 'trip.provider')->when(isset($zone), function ($query) use ($zone) {
-            return $query->where('zone_id', $zone->id);
-        })
-            ->when(isset($key), function ($query) use ($key) {
-                return $query->where(function ($q) use ($key) {
-                    foreach ($key as $value) {
-                        $q->orWhere('trip_id', 'like', "%{$value}%");
-                    }
-                });
-            })
-            ->when(isset($provider), function ($query) use ($provider) {
-                return $query->where('provider_id', $provider->id);
-            })
-            ->when(request('module_id'), function ($query) {
-                return $query->module(request('module_id'));
-            })
-            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
-                return $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
-            })
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                return $query->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('created_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })
-            ->sum(DB::raw('store_amount'));
-
-        $totalAmount = TripTransaction::with('trip', 'trip.trip_details', 'trip.customer', 'trip.provider')->when(isset($zone), function ($query) use ($zone) {
-            return $query->where('zone_id', $zone->id);
-        })
-            ->when(isset($key), function ($query) use ($key) {
-                return $query->where(function ($q) use ($key) {
-                    foreach ($key as $value) {
-                        $q->orWhere('trip_id', 'like', "%{$value}%");
-                    }
-                });
-            })
-            ->when(isset($provider), function ($query) use ($provider) {
-                return $query->where('provider_id', $provider->id);
-            })
-            ->when(request('module_id'), function ($query) {
-                return $query->module(request('module_id'));
-            })
-            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
-                return $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
-            })
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                return $query->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('created_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })
-            ->sum(DB::raw('trip_amount'));
+        $adminEarned = $data['earnings']->admin_earned;
+        $providerEarned =  $data['earnings']->provider_earned;
+        $totalAmount =  $data['earnings']->total_amount;
 
         return view('rental::admin.report.transaction-report', compact('tripTransactions', 'zone', 'provider', 'filter', 'adminEarned', 'providerEarned','key','totalAmount'));
     }
+
+
+        private function getTransactionData($request){
+
+            if (session()->has('from_date') == false) {
+                session()->put('from_date', date('Y-m-01'));
+                session()->put('to_date', date('Y-m-30'));
+            }
+            $key = explode(' ', $request['search']);
+            $from = session('from_date');
+            $to = session('to_date');
+            $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
+            $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
+            $provider_id = $request->query('provider_id', 'all');
+            $provider = is_numeric($provider_id) ? Store::findOrFail($provider_id) : null;
+            $filter = $request->query('filter', 'all_time');
+
+
+            $tripTransactions = TripTransaction::with('trip', 'trip.trip_details', 'trip.customer', 'trip.provider')->when(isset($zone), function ($query) use ($zone) {
+                return $query->where('zone_id', $zone->id);
+            })
+                ->when(isset($key), function ($query) use ($key) {
+                    return $query->where(function ($q) use ($key) {
+                        foreach ($key as $value) {
+                            $q->orWhere('trip_id', 'like', "%{$value}%");
+                        }
+                    });
+                })
+                ->when(isset($provider), function ($query) use ($provider) {
+                    return $query->where('provider_id', $provider->id);
+                })
+                ->when(request('module_id'), function ($query) {
+                    return $query->module(request('module_id'));
+                })
+                ->applyDateFilter($filter, $from, $to)
+                ->orderBy('created_at', 'desc');
+
+
+            $earnings = TripTransaction::when(isset($zone), function ($query) use ($zone) {
+                return $query->where('zone_id', $zone->id);
+            })
+            ->when(isset($key), function ($query) use ($key) {
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('trip_id', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->when(isset($provider), function ($query) use ($provider) {
+                return $query->where('provider_id', $provider->id);
+            })
+            ->when(request('module_id'), function ($query) {
+                return $query->module(request('module_id'));
+            })
+            ->applyDateFilter($filter, $from, $to)
+            ->select(
+                DB::raw('SUM(admin_net_income) as admin_earned'),
+                DB::raw('SUM(store_amount) as provider_earned'),
+                DB::raw('SUM(trip_amount) as total_amount')
+            )
+            ->first();
+
+            return [ 'tripTransactions'=>$tripTransactions, 'earnings'=> $earnings];
+        }
+
+
     public function transactionExport(Request $request)
     {
-        $key = explode(' ', $request['search']);
-
         if (session()->has('from_date') == false) {
             session()->put('from_date', date('Y-m-01'));
             session()->put('to_date', date('Y-m-30'));
@@ -198,154 +126,15 @@ class ReportController extends Controller
         $from = session('from_date');
         $to = session('to_date');
         $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
-        $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
         $provider_id = $request->query('provider_id', 'all');
-        $provider = is_numeric($provider_id) ? Store::findOrFail($provider_id) : null;
         $filter = $request->query('filter', 'all_time');
 
-        $tripTransactions = TripTransaction::with('trip', 'trip.trip_details', 'trip.customer', 'trip.provider')->when(isset($zone), function ($query) use ($zone) {
-            return $query->where('zone_id', $zone->id);
-        })
-            ->when(isset($key), function ($query) use ($key) {
-                return $query->where(function ($q) use ($key) {
-                    foreach ($key as $value) {
-                        $q->orWhere('trip_id', 'like', "%{$value}%");
-                    }
-                });
-            })
-            ->when(isset($provider), function ($query) use ($provider) {
-                return $query->where('provider_id', $provider->id);
-            })
-            ->when(request('module_id'), function ($query) {
-                return $query->module(request('module_id'));
-            })
-            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
-                return $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
-            })
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                return $query->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('created_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })->orderBy('created_at', 'desc')
-            ->get();
+        $data=$this->getTransactionData($request);
+        $tripTransactions = $data['tripTransactions']->get();
 
-        $adminEarned = TripTransaction::with('trip', 'trip.trip_details', 'trip.customer', 'trip.provider')->when(isset($zone), function ($query) use ($zone) {
-            return $query->where('zone_id', $zone->id);
-        })
-            ->when(isset($key), function ($query) use ($key) {
-                return $query->where(function ($q) use ($key) {
-                    foreach ($key as $value) {
-                        $q->orWhere('trip_id', 'like', "%{$value}%");
-                    }
-                });
-            })
-            ->when(isset($provider), function ($query) use ($provider) {
-                return $query->where('provider_id', $provider->id);
-            })
-            ->when(request('module_id'), function ($query) {
-                return $query->module(request('module_id'));
-            })
-            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
-                return $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
-            })
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                return $query->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('created_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })
-            ->sum(DB::raw('admin_net_income'));
-
-        $providerEarned = TripTransaction::with('trip', 'trip.trip_details', 'trip.customer', 'trip.provider')->when(isset($zone), function ($query) use ($zone) {
-            return $query->where('zone_id', $zone->id);
-        })
-            ->when(isset($key), function ($query) use ($key) {
-                return $query->where(function ($q) use ($key) {
-                    foreach ($key as $value) {
-                        $q->orWhere('trip_id', 'like', "%{$value}%");
-                    }
-                });
-            })
-            ->when(isset($provider), function ($query) use ($provider) {
-                return $query->where('provider_id', $provider->id);
-            })
-            ->when(request('module_id'), function ($query) {
-                return $query->module(request('module_id'));
-            })
-            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
-                return $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
-            })
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                return $query->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('created_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })
-            ->sum(DB::raw('store_amount'));
-
-        $totalAmount = TripTransaction::with('trip', 'trip.trip_details', 'trip.customer', 'trip.provider')->when(isset($zone), function ($query) use ($zone) {
-            return $query->where('zone_id', $zone->id);
-        })
-            ->when(isset($key), function ($query) use ($key) {
-                return $query->where(function ($q) use ($key) {
-                    foreach ($key as $value) {
-                        $q->orWhere('trip_id', 'like', "%{$value}%");
-                    }
-                });
-            })
-            ->when(isset($provider), function ($query) use ($provider) {
-                return $query->where('provider_id', $provider->id);
-            })
-            ->when(request('module_id'), function ($query) {
-                return $query->module(request('module_id'));
-            })
-            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
-                return $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
-            })
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                return $query->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('created_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })
-            ->sum(DB::raw('trip_amount'));
+        $adminEarned = $data['earnings']->admin_earned;
+        $providerEarned =  $data['earnings']->provider_earned;
+        $totalAmount =  $data['earnings']->total_amount;
 
         $data = [
             'tripTransactions'=>$tripTransactions,
@@ -366,6 +155,7 @@ class ReportController extends Controller
             return Excel::download(new TransactionReportExport($data), 'TransactionReport.csv');
         }
     }
+
     public function tripReport(Request $request)
     {
         $key = explode(' ', $request['search']);
@@ -1925,7 +1715,7 @@ class ReportController extends Controller
         $company_email = BusinessSetting::where('key', 'email_address')->first()->value;
         $company_name = BusinessSetting::where('key', 'business_name')->first()->value;
         $company_web_logo = BusinessSetting::where('key', 'logo')->first()->value;
-        $footer_text = \App\Models\BusinessSetting::where(['key' => 'footer_text'])->first()->value;
+        $footer_text =BusinessSetting::where(['key' => 'footer_text'])->first()->value;
 
         $trip_transaction = TripTransaction::with('trip', 'trip.trip_details', 'trip.customer', 'trip.provider')->where('id', $id)->first();
         $data["email"] = $trip_transaction->trip->customer != null ? $trip_transaction->trip->customer["email"] : translate('email_not_found');

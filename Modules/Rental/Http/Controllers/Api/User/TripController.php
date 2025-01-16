@@ -557,7 +557,7 @@ class TripController extends Controller
                 $identity->license_plate_number = $identity?->vehicle_identity_data?->license_plate_number;
                 $identity->vehicle_name = $identity?->vehicles?->name;
                 $identity->vehicle_thumbnail= $identity?->vehicles?->thumbnail_full_url;
-                $review=  VehicleReview::where(['vehicle_identity_id'=> $identity->vehicle_identity_data->id ,'trip_id' => $identity->trip_id])->first();
+                $review=  VehicleReview::where(['vehicle_identity_id'=> $identity->vehicle_identity_data?->id ,'trip_id' => $identity->trip_id])->first();
                     $identity->rating = $review?->rating;
                     $identity->comment = $review?->comment;
                     $identity->reply = $review?->reply;

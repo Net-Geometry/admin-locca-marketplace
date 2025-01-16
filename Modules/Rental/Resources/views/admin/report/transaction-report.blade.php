@@ -16,9 +16,9 @@
                 <span>
                     {{ translate('messages.transection_report') }}
                     @if (isset($filter) && $filter != 'all_time')
-                    <span class="mb-0 h6 badge badge-soft-success ml-2"
-                        id="itemCount">( {{ session('from_date') }} - {{ session('to_date') }} )</span>
-                        @endif
+                        <span class="mb-0 h6 badge badge-soft-success ml-2" id="itemCount">( {{ session('from_date') }} -
+                            {{ session('to_date') }} )</span>
+                    @endif
                 </span>
             </h1>
         </div>
@@ -30,9 +30,10 @@
                     @csrf
                     <div class="row g-3">
                         <div class="col-sm-6 col-md-3">
-                            <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
+                            <select name="zone_id" class="form-control js-select2-custom set-filter"
+                                data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
                                 <option value="all">{{ translate('messages.All_Zones') }}</option>
-                                @foreach (\App\Models\Zone::orderBy('name')->get() as $z)
+                                @foreach (\App\Models\Zone::orderBy('name')->get(['id', 'name']) as $z)
                                     <option value="{{ $z['id'] }}"
                                         {{ isset($zone) && $zone->id == $z['id'] ? 'selected' : '' }}>
                                         {{ $z['name'] }}
@@ -53,7 +54,8 @@
                         </div>
 
                         <div class="col-sm-6 col-md-3">
-                            <select class="form-control set-filter" name="filter" data-url="{{ url()->full() }}" data-filter="filter">
+                            <select class="form-control set-filter" name="filter" data-url="{{ url()->full() }}"
+                                data-filter="filter">
                                 <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
                                     {{ translate('messages.All Time') }}</option>
                                 <option value="this_year" {{ isset($filter) && $filter == 'this_year' ? 'selected' : '' }}>
@@ -102,7 +104,8 @@
                             <a class="__card-3 h-100" href="#">
                                 <img src="{{ asset('/public/assets/admin/img/report/new/trx1.png') }}" class="icon"
                                     alt="report/new">
-                                <h3 class="title text-008958">{{ \App\CentralLogics\Helpers::number_format_short($totalAmount) }}
+                                <h3 class="title text-008958">
+                                    {{ \App\CentralLogics\Helpers::number_format_short($totalAmount) }}
                                 </h3>
                                 <h6 class="subtitle">{{ translate('Completed Transaction') }}</h6>
                                 <div class="info-icon" data-toggle="tooltip" data-placement="top"
@@ -116,7 +119,8 @@
                             <a class="__card-3 h-100" href="#">
                                 <img src="{{ asset('/public/assets/admin/img/report/new/trx7.png') }}" class="icon"
                                     alt="report/new">
-                                <h3 class="title text-006AE5">{{ \App\CentralLogics\Helpers::number_format_short($adminEarned) }}
+                                <h3 class="title text-006AE5">
+                                    {{ \App\CentralLogics\Helpers::number_format_short($adminEarned) }}
                                 </h3>
                                 <h6 class="subtitle">{{ translate('Admin Earning') }}</h6>
                                 <div class="info-icon" data-toggle="tooltip" data-placement="top"
@@ -130,7 +134,8 @@
                             <a class="__card-3 h-100" href="#">
                                 <img src="{{ asset('/public/assets/admin/img/report/new/trx6.png') }}" class="icon"
                                     alt="report/new">
-                                <h3 class="title text-success">{{ \App\CentralLogics\Helpers::number_format_short($providerEarned) }}
+                                <h3 class="title text-success">
+                                    {{ \App\CentralLogics\Helpers::number_format_short($providerEarned) }}
                                 </h3>
                                 <h6 class="subtitle">{{ translate('Provider Earning') }}</h6>
                                 <div class="info-icon" data-toggle="tooltip" data-placement="top"
@@ -152,14 +157,15 @@
             <div class="card-header border-0 py-2">
                 <div class="search--button-wrapper">
                     <h3 class="card-title">
-                        {{ translate('messages.trip_transactions') }} <span
-                            class="badge badge-soft-secondary" id="countItems">{{ $tripTransactions->total() }}</span>
+                        {{ translate('messages.trip_transactions') }} <span class="badge badge-soft-secondary"
+                            id="countItems">{{ $tripTransactions->total() }}</span>
                     </h3>
                     <form>
                         <!-- Search -->
                         <div class="input--group input-group input-group-merge input-group-flush">
-                            <input class="form-control" placeholder="{{ translate('Search by Trip ID') }}" value="{{ request()?->search ?? null}}" name="search">
-                            <button  class="btn btn--secondary"><i class="tio-search"></i></button>
+                            <input class="form-control" placeholder="{{ translate('Search by Trip ID') }}"
+                                value="{{ request()?->search ?? null }}" name="search">
+                            <button class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
                     </form>
@@ -218,13 +224,16 @@
                                 <th class="border-0">{{ translate('messages.discounted_amount') }}</th>
                                 <th class="border-0">{{ translate('messages.vat/tax') }}</th>
                                 <th class="border-0">{{ translate('messages.admin_commission') }}</th>
-                                <th class="border-0">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</th>
+                                <th class="border-0">
+                                    {{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name') ?? translate('messages.additional_charge') }}
+                                </th>
                                 <th class="border-0">{{ translate('messages.admin_discount') }}</th>
                                 <th class="min-w-140 text-capitalize">{{ translate('admin_net_income') }}</th>
                                 <th class="border-0">{{ translate('messages.provider_discount') }}</th>
                                 <th class="min-w-140 text-capitalize">{{ translate('provider_net_income') }}</th>
                                 <th class="border-0 min-w-120">{{ translate('messages.amount_received_by') }}</th>
-                                <th class="border-top border-bottom text-capitalize">{{ translate('messages.payment_method') }}</th>
+                                <th class="border-top border-bottom text-capitalize">
+                                    {{ translate('messages.payment_method') }}</th>
                                 <th class="border-0">{{ translate('messages.payment_status') }}</th>
                                 <th class="border-0">{{ translate('messages.action') }}</th>
                             </tr>
@@ -236,8 +245,8 @@
                                     <td><a
                                             href="{{ route('admin.transactions.rental.trip.details', $ot->trip_id) }}">{{ $ot->trip_id }}</a>
                                     </td>
-                                    <td  class="text-capitalize">
-                                        {{Str::limit($ot->trip->provider->name,25,'...')}}
+                                    <td class="text-capitalize">
+                                        {{ Str::limit($ot->trip->provider->name, 25, '...') }}
                                     </td>
                                     <td class="white-space-nowrap">
                                         @if ($ot->trip->customer)
@@ -245,57 +254,81 @@
                                                 href="{{ route('admin.users.customer.view', [$ot->trip['user_id']]) }}">
                                                 <strong>{{ $ot->trip->customer['f_name'] . ' ' . $ot->trip->customer['l_name'] }}</strong>
                                             </a>
+                                        @elseif($ot->trip?->user_info['contact_person_name'])
+                                            <a class="text-body text-capitalize" href="#">
+                                                <strong>{{ $ot->trip?->user_info['contact_person_name'] }}</strong>
+                                            </a>
                                         @else
-                                            <label class="badge badge-danger">{{ translate('messages.invalid_customer_data') }}</label>
+                                            {{ translate('messages.Guest_user') }}
                                         @endif
+
                                     </td>
-                                    {{--total_trip_amount --}}
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->trip_amount) }}</td>
+                                    {{-- total_trip_amount --}}
+                                    <td class="white-space-nowrap">
+                                        {{ \App\CentralLogics\Helpers::format_currency($ot->trip_amount) }}</td>
 
-                                    {{--vehicle_discount --}}
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->trip->discount_on_trip) }}</td>
+                                    {{-- vehicle_discount --}}
+                                    <td class="white-space-nowrap">
+                                        {{ \App\CentralLogics\Helpers::format_currency($ot->trip->discount_on_trip) }}</td>
 
-                                    {{--coupon_discount --}}
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->trip['coupon_discount_amount']) }}</td>
-                                    {{--referral_discount --}}
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->trip['ref_bonus_amount']) }}</td>
-                                    {{--discounted_amount --}}
-                                    <td class="white-space-nowrap">  {{ \App\CentralLogics\Helpers::format_currency($ot->trip['coupon_discount_amount'] + $ot->trip['ref_bonus_amount'] + $ot->trip->discount_on_trip) }}</td>
+                                    {{-- coupon_discount --}}
+                                    <td class="white-space-nowrap">
+                                        {{ \App\CentralLogics\Helpers::format_currency($ot->trip['coupon_discount_amount']) }}
+                                    </td>
+                                    {{-- referral_discount --}}
+                                    <td class="white-space-nowrap">
+                                        {{ \App\CentralLogics\Helpers::format_currency($ot->trip['ref_bonus_amount']) }}
+                                    </td>
+                                    {{-- discounted_amount --}}
+                                    <td class="white-space-nowrap">
+                                        {{ \App\CentralLogics\Helpers::format_currency($ot->trip['coupon_discount_amount'] + $ot->trip['ref_bonus_amount'] + $ot->trip->discount_on_trip) }}
+                                    </td>
 
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->tax) }}</td>
+                                    <td class="white-space-nowrap">
+                                        {{ \App\CentralLogics\Helpers::format_currency($ot->tax) }}</td>
 
-                                    {{--admin_commission --}}
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->admin_commission- $ot->additional_charge) }}</td>
-
-
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency(($ot->additional_charge)) }}</td>
-                                    {{--admin_discount --}}
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->admin_expense) }}</td>
+                                    {{-- admin_commission --}}
+                                    <td class="white-space-nowrap">
+                                        {{ \App\CentralLogics\Helpers::format_currency($ot->admin_commission) }}</td>
 
 
-                                    {{--admin_net_income --}}
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency(($ot->admin_net_income)) }}</td>
-                                    {{--store_discount --}}
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->store_expense) }}</td>
-                                    {{--store_net_income --}}
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->store_amount - $ot->tax) }}</td>
+                                    <td class="white-space-nowrap">
+                                        {{ \App\CentralLogics\Helpers::format_currency($ot->additional_charge) }}</td>
+                                    {{-- admin_discount --}}
+                                    <td class="white-space-nowrap">
+                                        {{ \App\CentralLogics\Helpers::format_currency($ot->admin_expense) }}</td>
+
+
+                                    {{-- admin_net_income --}}
+                                    <td class="white-space-nowrap">
+                                        {{ \App\CentralLogics\Helpers::format_currency($ot->admin_net_income) }}</td>
+                                    {{-- store_discount --}}
+                                    <td class="white-space-nowrap">
+                                        {{ \App\CentralLogics\Helpers::format_currency($ot->store_expense) }}</td>
+                                    {{-- store_net_income --}}
+                                    <td class="white-space-nowrap">
+                                        {{ \App\CentralLogics\Helpers::format_currency($ot->store_amount - $ot->tax) }}
+                                    </td>
                                     @if ($ot->received_by == 'admin')
-                                        <td class="text-capitalize white-space-nowrap">{{ translate('messages.admin') }}</td>
+                                        <td class="text-capitalize white-space-nowrap">{{ translate('messages.admin') }}
+                                        </td>
                                     @elseif ($ot->received_by == 'vendor')
-                                        <td class="text-capitalize white-space-nowrap">{{ translate('messages.provider') }}</td>
+                                        <td class="text-capitalize white-space-nowrap">
+                                            {{ translate('messages.provider') }}</td>
                                     @endif
                                     <td class="mw--85px text-capitalize min-w-120 ">
-                                            {{ translate(str_replace('_', ' ', $ot->trip['payment_method'])) }}
+                                        {{ translate(str_replace('_', ' ', $ot->trip['payment_method'])) }}
                                     </td>
                                     <td class="text-capitalize white-space-nowrap">
                                         <span class="badge badge-soft-success">
-                                            {{translate('messages.completed')}}
-                                          </span>
+                                            {{ translate('messages.completed') }}
+                                        </span>
                                     </td>
 
                                     <td>
                                         <div class="btn--container justify-content-center">
-                                            <a class="btn btn-outline-success square-btn btn-sm mr-1 action-btn"  href="{{route('admin.transactions.rental.report.generate-statement',[$ot['id']])}}">
+                                            <a class="btn btn-outline-success square-btn btn-sm mr-1 action-btn"
+                                                href="{{ route('admin.transactions.rental.report.generate-statement', [$ot['id']]) }}">
                                                 <i class="tio-download-to"></i>
                                             </a>
                                         </div>
