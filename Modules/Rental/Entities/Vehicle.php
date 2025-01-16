@@ -4,10 +4,12 @@ namespace Modules\Rental\Entities;
 
 use App\Models\Store;
 use App\Models\Storage;
+use App\Scopes\ZoneScope;
 use App\Models\Translation;
 use App\Traits\ReportFilter;
 use App\CentralLogics\Helpers;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -197,4 +199,42 @@ class Vehicle extends Model
         return $images;
     }
 
+    public function getNameAttribute($value){
+        if (count($this->translations) > 0) {
+            foreach ($this->translations as $translation) {
+                if ($translation['key'] == 'name') {
+                    return $translation['value'];
+                }
+            }
+        }
+
+        return $value;
+    }
+
+    public function getDescriptionAttribute($value){
+        if (count($this->translations) > 0) {
+            foreach ($this->translations as $translation) {
+                if ($translation['key'] == 'description') {
+                    return $translation['value'];
+                }
+            }
+        }
+
+        return $value;
+    }
+
+
+    protected static function booted()
+    {
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
+
+        static::addGlobalScope('translate', function (Builder $builder) {
+            $builder->with(['translations' => function($query){
+                return $query->where('locale', app()->getLocale());
+            }]);
+        });
+    }
 }
+

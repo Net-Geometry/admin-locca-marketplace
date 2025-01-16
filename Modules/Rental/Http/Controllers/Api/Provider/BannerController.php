@@ -2,18 +2,19 @@
 
 namespace Modules\Rental\Http\Controllers\Api\Provider;
 
-use App\CentralLogics\Helpers;
-use App\Models\Banner;
-use App\Models\Store;
-use App\Traits\FileManagerTrait;
 use Exception;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\JsonResponse;
+use App\Models\Store;
+use App\Models\Banner;
+use App\Models\Translation;
 use Illuminate\Http\Request;
+use App\CentralLogics\Helpers;
+use App\Traits\FileManagerTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Support\Renderable;
 
 class BannerController extends Controller
 {
@@ -50,9 +51,9 @@ class BannerController extends Controller
 
         $limit = $request['limit'];
         $offset = $request['offset'];
-        $providerId = $request->vendor->stores[0]->id;
+        $providerId = $request->vendor->store->id;
         $moduleId = $request->vendor->stores[0]->module_id;
-        $banners =  $this->banner->where('data', $providerId)->where('created_by', 'store')
+        $banners =  $this->banner->with('translations')->where('data', $providerId)->where('created_by', 'store')
             ->when($request->has('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request['search']);
                 foreach ($keys as $key) {
@@ -74,13 +75,15 @@ class BannerController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->validateRequest($request);
+
+       $validity= $this->validateRequest($request);
+        if($validity !== true){
+            return response()->json(['error' => $validity['errors']], 403);
+        }
+
         try {
             DB::beginTransaction();
-
-            $banner = $this->createBanner($request);
-            $this->helpers->add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Banner', data_id: $banner->id, data_value: $banner->title);
-
+            $this->createBanner($request);
             DB::commit();
 
             return response()->json(['message' => translate('messages.banner_created_successfully.')], 200);
@@ -99,14 +102,14 @@ class BannerController extends Controller
      */
     public function update(Request $request, $id): JsonResponse
     {
-        $this->validateRequest($request, false, $id);
+       $validity= $this->validateRequest($request, false, $id);
+        if($validity !== true){
+            return response()->json(['error' => $validity['errors']], 403);
+        }
 
         try {
             DB::beginTransaction();
-
-            $banner = $this->updateBanner($request, $id);
-            $this->helpers->add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Banner', data_id: $banner->id, data_value: $banner->title);
-
+            $this->updateBanner($request, $id);
             DB::commit();
             return response()->json(['message' => translate('messages.banner_updated_successfully.')], 200);
 
@@ -181,15 +184,33 @@ class BannerController extends Controller
      * @param null $id
      * @return void
      */
-    private function validateRequest(Request $request, bool $image = true, $id = null): void
+    private function validateRequest(Request $request, bool $image = true, $id = null)
     {
-        $request->validate(
-            [
-                'title' => 'required|max:191',
-                'image' => $image ? 'required' : 'nullable',
-            ]
-        );
+        $validator = Validator::make($request->all(), [
+            'image' => $image ? 'required' : 'nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return ['errors' => $this->helpers->error_processor($validator)];
+        }
+
+        return true;
     }
+
+
+
+    public function edit($id): JsonResponse
+    {
+        $banner = $this->banner->withoutGlobalScope('translate')->with('translations')->find($id);
+
+        if ($banner) {
+            $banner->load('translations');
+            return response()->json($banner, 200);
+        }
+
+        return response()->json(['message' => translate('messages.coupon_not_found.')], 400);
+    }
+
 
     /**
      * @param Request $request
@@ -212,6 +233,16 @@ class BannerController extends Controller
         $banner->default_link = $request->default_link;
         $banner->created_by = 'store';
         $banner->save();
+
+        foreach ($data as $key=>$item) {
+            Translation::updateOrInsert(
+                ['translationable_type' => 'App\Models\Banner',
+                    'translationable_id' => $banner->id,
+                    'locale' => $item['locale'],
+                    'key' => $item['key']],
+                ['value' => $item['value']]
+            );
+        }
 
         return $banner;
     }
@@ -237,6 +268,16 @@ class BannerController extends Controller
         $banner->module_id = $moduleId;
         $banner->default_link = $request->default_link;
         $banner->save();
+
+        foreach ($data as $key=>$item) {
+            Translation::updateOrInsert(
+                ['translationable_type' => 'App\Models\Banner',
+                    'translationable_id' => $banner->id,
+                    'locale' => $item['locale'],
+                    'key' => $item['key']],
+                ['value' => $item['value']]
+            );
+        }
 
         return $banner;
     }

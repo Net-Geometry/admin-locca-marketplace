@@ -88,6 +88,9 @@
                                                             if($t->locale == $lang && $t->key=="name"){
                                                                 $translate[$lang]['name'] = $t->value;
                                                             }
+                                                            if($t->locale == $lang && $t->key=="description"){
+                                                                $translate[$lang]['description'] = $t->value;
+                                                            }
                                                         }
                                                     }
                                                     ?>

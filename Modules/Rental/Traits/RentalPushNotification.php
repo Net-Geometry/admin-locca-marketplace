@@ -128,6 +128,10 @@ trait RentalPushNotification
         }
         return true;
     }
+    public static function sendTripPaymentNotificationCustomer($trip) {
+        Helpers::sendTripPaymentNotificationCustomerMain($trip);
+        return true;
+    }
 
     public static function makeNotifyData($title, $description, $trip, $order_type, $type)
     {

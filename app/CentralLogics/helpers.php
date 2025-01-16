@@ -33,14 +33,15 @@ use App\Models\ItemCampaign;
 use App\Models\FlashSaleItem;
 use Illuminate\Support\Carbon;
 use App\Models\BusinessSetting;
+use App\Models\UserNotification;
 use App\CentralLogics\StoreLogic;
 use App\Models\StoreSubscription;
 use Illuminate\Support\Facades\DB;
 use App\Mail\OrderVerificationMail;
 use App\Models\NotificationMessage;
 use App\Models\NotificationSetting;
-use App\Models\SubscriptionPackage;
 
+use App\Models\SubscriptionPackage;
 use App\Traits\PaymentGatewayTrait;
 use Illuminate\Support\Facades\App;
 use App\Mail\SubscriptionSuccessful;
@@ -3402,9 +3403,15 @@ class Helpers
 
 
 
-    public static function add_or_update_translations($request, $key_data,$name_field ,$model_name, $data_id,$data_value ){
+    public static function add_or_update_translations($request, $key_data,$name_field ,$model_name, $data_id,$data_value , $model_class = false){
         try{
-            $model = 'App\\Models\\'.$model_name;
+
+            if($model_class === true){
+                $model=  $model_name;
+            }else{
+                $model = 'App\\Models\\'.$model_name;
+            }
+
             $default_lang = str_replace('_', '-', app()->getLocale());
             foreach ($request->lang as $index => $key) {
                 if ($default_lang == $key && !($request->{$name_field}[$index])) {
@@ -4483,6 +4490,35 @@ class Helpers
         ];
 
         return array_merge($response, $extraData);
+    }
+    public static function sendTripPaymentNotificationCustomerMain($trip)
+    {
+        if($trip->is_guest){
+            $user_fcm = $trip?->guest?->fcm_token;
+        }else{
+            $user_fcm = $trip?->customer?->cm_firebase_token;
+        }
+        $value = $trip->payment_status == 'paid' ? translate('your_trip_has_been_marked_as_paid'):translate('your_trip_payment_status_has_been_updated');
+
+        if (Helpers::getRentalNotificationStatusData('customer','customer_trip_notification','push_notification_status') &&  $value && $user_fcm) {
+            $data = [
+                'title' => translate('Trip_Notification_payment'),
+                'description' => $value,
+                'order_id' => $trip->id,
+                'module_id' => $trip->module_id,
+                'order_type' => 'trip',
+                'image' => '',
+                'type' => 'trip_status',
+                'zone_id' => $trip->zone_id,
+            ];
+            self::send_push_notif_to_device($user_fcm, $data);
+            UserNotification::create([
+                'data' => json_encode($data),
+                'user_id' => $trip->user_id,
+                'order_type' => 'trip',
+            ]);
+        }
+        return true;
     }
 
 }

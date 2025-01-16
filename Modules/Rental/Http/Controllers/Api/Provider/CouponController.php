@@ -2,13 +2,12 @@
 
 namespace Modules\Rental\Http\Controllers\Api\Provider;
 
-use App\CentralLogics\Helpers;
+
 use App\Models\Coupon;
-use App\Models\User;
-use App\Models\Zone;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\JsonResponse;
+use App\Models\Translation;
 use Illuminate\Http\Request;
+use App\CentralLogics\Helpers;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 
@@ -109,7 +108,16 @@ class CouponController extends Controller
         $coupon->module_id = $moduleId;
         $coupon->save();
 
-        $this->helpers->add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Coupon', data_id: $coupon->id, data_value: $coupon->title);
+
+        foreach ($data as $key=>$item) {
+            Translation::updateOrInsert(
+                ['translationable_type' => 'App\Models\Coupon',
+                    'translationable_id' => $coupon->id,
+                    'locale' => $item['locale'],
+                    'key' => $item['key']],
+                ['value' => $item['value']]
+            );
+        }
 
         return response()->json(['message' => translate('messages.coupon_created_successfully')], 200);
     }
@@ -176,7 +184,15 @@ class CouponController extends Controller
         $coupon->customer_id = json_encode($customerId);
         $coupon->save();
 
-        $this->helpers->add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Coupon', data_id: $coupon->id, data_value: $coupon->title);
+        foreach ($data as $key=>$item) {
+            Translation::updateOrInsert(
+                ['translationable_type' => 'App\Models\Coupon',
+                    'translationable_id' => $coupon->id,
+                    'locale' => $item['locale'],
+                    'key' => $item['key']],
+                ['value' => $item['value']]
+            );
+        }
 
         return response()->json(['message' => translate('messages.coupon_updated_successfully')], 200);
     }

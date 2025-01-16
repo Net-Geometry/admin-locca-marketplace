@@ -2,22 +2,21 @@
 
 namespace Modules\Rental\Http\Controllers\Api\Provider;
 
-use App\CentralLogics\Helpers;
-use App\Models\Store;
-use App\Traits\FileManagerTrait;
 use Exception;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\JsonResponse;
+use App\Models\Store;
+use App\Models\Translation;
 use Illuminate\Http\Request;
+use App\CentralLogics\Helpers;
+use App\Traits\FileManagerTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Modules\Rental\Entities\Vehicle;
+use Illuminate\Support\Facades\Validator;
 use Modules\Rental\Entities\VehicleBrand;
+use Modules\Rental\Entities\VehicleReview;
 use Modules\Rental\Entities\VehicleCategory;
 use Modules\Rental\Entities\VehicleIdentity;
-use Modules\Rental\Entities\VehicleReview;
 
 class VehicleController extends Controller
 {
@@ -234,8 +233,16 @@ class VehicleController extends Controller
                 ]);
             }
 
-            $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Vehicle', data_id: $vehicle->id, data_value: $vehicle->name);
-            $this->helpers->add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: 'Vehicle', data_id: $vehicle->id, data_value: $vehicle->description);
+
+            foreach ($data as $key=>$item) {
+                Translation::updateOrInsert(
+                    ['translationable_type' => Vehicle::class,
+                        'translationable_id' => $vehicle->id,
+                        'locale' => $item['locale'],
+                        'key' => $item['key']],
+                    ['value' => $item['value']]
+                );
+            }
 
             DB::commit();
             return response()->json(['message' => translate('messages.vehicle_created_successfully.')], 200);
@@ -419,9 +426,16 @@ class VehicleController extends Controller
                 ->whereNotIn('vin_number', $requestVinNumbers)
                 ->delete();
 
-            $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Vehicle', data_id: $vehicle->id, data_value: $vehicle->name);
-            $this->helpers->add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: 'Vehicle', data_id: $vehicle->id, data_value: $vehicle->description);
 
+            foreach ($data as $key=>$item) {
+                Translation::updateOrInsert(
+                    ['translationable_type' => Vehicle::class,
+                        'translationable_id' => $vehicle->id,
+                        'locale' => $item['locale'],
+                        'key' => $item['key']],
+                    ['value' => $item['value']]
+                );
+            }
             DB::commit();
             return response()->json(['message' => translate('messages.vehicle_updated_successfully.')], 200);
 
@@ -439,8 +453,8 @@ class VehicleController extends Controller
      */
     public function details($id): JsonResponse
     {
-        $vehicle = $this->vehicle->with('provider', 'category', 'brand', 'vehicleIdentities')->findOrFail($id);
-        if (isset($vehicle)) {
+        $vehicle = $this->vehicle->with('provider', 'category', 'brand', 'vehicleIdentities')->find($id);
+        if ($vehicle) {
             $vehicle['tag'] = json_decode($vehicle['tag']);
             return response()->json($vehicle, 200);
         }
@@ -448,6 +462,16 @@ class VehicleController extends Controller
         return response()->json(['message' => translate('messages.vehicle_not_found.')], 400);
     }
 
+
+    public function edit($id): JsonResponse
+    {
+        $vehicle = $this->vehicle->with(['provider', 'category', 'brand', 'vehicleIdentities','translations'])->withoutGlobalScope('translate')->find($id);
+        if ($vehicle) {
+            $vehicle['tag'] = json_decode($vehicle['tag']);
+            return response()->json($vehicle, 200);
+        }
+        return response()->json(['message' => translate('messages.vehicle_not_found.')], 400);
+    }
     /**
      * @param Request $request
      * @param $id

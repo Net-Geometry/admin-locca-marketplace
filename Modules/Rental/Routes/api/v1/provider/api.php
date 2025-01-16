@@ -45,6 +45,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
 
         Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.'], function () {
             Route::get('list', [VehicleController::class, 'list']);
+            Route::get('edit/{id}', [VehicleController::class, 'edit']);
             Route::post('create', [VehicleController::class, 'store']);
             Route::post('update/{id}', [VehicleController::class, 'update']);
             Route::get('details/{id}', [VehicleController::class, 'details']);
@@ -57,6 +58,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
 
         Route::group(['prefix' => 'banner', 'as' => 'vehicle.'], function () {
             Route::get('list', [BannerController::class, 'list']);
+            Route::get('edit/{id}', [BannerController::class, 'edit']);
             Route::post('create', [BannerController::class, 'store']);
             Route::post('update/{id}', [BannerController::class, 'update']);
             Route::get('status/{id}', [BannerController::class, 'status']);

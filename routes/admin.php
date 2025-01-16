@@ -31,7 +31,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             // return view('admin-views.car-rental.home-page-setup.vendor-registration');
             // return view('admin-views.car-rental.home-page-setup.download-app');
         });
-        Route::get('drivemond-panel', 'DriveMondController@drivemondExternalLogin')->name('drivemond-panel');
+        // Route::get('drivemond-panel', 'DriveMondController@drivemondExternalLogin')->name('drivemond-panel');
         Route::get('get-all-stores', 'VendorController@get_all_stores')->name('get_all_stores');
         Route::get('lang/{locale}', 'LanguageController@lang')->name('lang');
         Route::get('settings', 'SystemController@settings')->name('settings');

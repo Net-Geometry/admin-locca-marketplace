@@ -18,11 +18,12 @@ use Modules\Rental\Entities\TripDetails;
 use Modules\Rental\Traits\TripLogicTrait;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Rental\Entities\TripVehicleDetails;
+use Modules\Rental\Traits\RentalPushNotification;
 
 class TripController extends Controller
 {
 
-    use TripLogicTrait;
+    use TripLogicTrait, RentalPushNotification;
     private Trips $trips;
     private TripDetails $tripDetails;
     private TripVehicleDetails $tripVehicleDetails;
@@ -155,7 +156,7 @@ class TripController extends Controller
                     return back();
                 }
             }
-
+            $this->sendTripNotificationCustomer($trip);
             DB::commit();
 
             Toastr::success(translate('messages.trip_status_updated_successfully'));
@@ -199,7 +200,7 @@ class TripController extends Controller
                     return back();
                 }
             }
-
+            $this->sendTripPaymentNotificationCustomer($trip);
             DB::commit();
 
             Toastr::success(translate('messages.trip_payment_status_updated_successfully'));

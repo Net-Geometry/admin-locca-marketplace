@@ -8,13 +8,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Modules\Rental\Entities\Trips;
 use Modules\Rental\Entities\Vehicle;
-use Modules\Rental\Traits\TripLogicTrait;
 use Illuminate\Support\Facades\Validator;
+use Modules\Rental\Traits\TripLogicTrait;
 use Modules\Rental\Entities\TripVehicleDetails;
+use Modules\Rental\Traits\RentalPushNotification;
 
 class ProviderTripController extends Controller
 {
-    use TripLogicTrait;
+    use TripLogicTrait , RentalPushNotification;
     public function __construct(private Trips $trips, private Helpers $helpers)
     {
         $this->trips = $trips;
@@ -91,6 +92,7 @@ class ProviderTripController extends Controller
         }
         $trip[$request->trip_status] = now();
         $trip->save();
+        $this->sendTripNotificationCustomer($trip);
         return response()->json(['message' => translate('Trip_successfully_updated')], 200);
     }
 
@@ -122,7 +124,8 @@ class ProviderTripController extends Controller
                 return response()->json(['errors' => translate('Failed_to_create_Transaction')], 403);
             };
         }
-
+        $this->sendTripPaymentNotificationCustomer($trip);
+        
         return response()->json(['message' => translate('Trip_payment_status_updated')], 200);
     }
 

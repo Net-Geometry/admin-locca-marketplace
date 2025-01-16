@@ -211,8 +211,8 @@ class VehicleController extends Controller
             }
         }
 
-        $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Vehicle', data_id: $vehicle->id, data_value: $vehicle->name);
-        $this->helpers->add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: 'Vehicle', data_id: $vehicle->id, data_value: $vehicle->description);
+        $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: Vehicle::class, data_id: $vehicle->id, data_value: $vehicle->name,model_class:true);
+        $this->helpers->add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: Vehicle::class, data_id: $vehicle->id, data_value: $vehicle->description ,model_class:true);
 
         Toastr::success(translate('messages.vehicle_added_successfully'));
         return back();
@@ -225,7 +225,8 @@ class VehicleController extends Controller
      */
     public function edit($id): Renderable
     {
-        $vehicle = $this->vehicle->findOrFail($id);
+        
+        $vehicle = $this->vehicle->withoutGlobalScope('translate')->with('translations')->findOrFail($id);
         $categories = $this->vehicleCategory->ofStatus(1)->latest()->get();
         $brands = $this->vehicleBrand->ofStatus(1)->latest()->get();
 
@@ -393,8 +394,9 @@ class VehicleController extends Controller
             }
         }
 
-        $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Vehicle', data_id: $vehicle->id, data_value: $vehicle->name);
-        $this->helpers->add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: 'Vehicle', data_id: $vehicle->id, data_value: $vehicle->description);
+
+        $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: Vehicle::class, data_id: $vehicle->id, data_value: $vehicle->name,model_class:true);
+        $this->helpers->add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: Vehicle::class, data_id: $vehicle->id, data_value: $vehicle->description ,model_class:true);
 
         Toastr::success(translate('messages.vehicle_updated_successfully'));
         return back();

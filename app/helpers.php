@@ -11,10 +11,8 @@ use App\CentralLogics\OrderLogic;
 use App\Models\AccountTransaction;
 use Illuminate\Support\Facades\DB;
 use App\Mail\OrderVerificationMail;
-use Illuminate\Support\Facades\App;
 use App\CentralLogics\CustomerLogic;
 use Illuminate\Support\Facades\Mail;
-use App\Models\SubscriptionTransaction;
 use App\Models\SubscriptionBillingAndRefundHistory;
 use Brian2694\Toastr\Facades\Toastr;
 use Modules\Rental\Entities\Trips;
@@ -173,29 +171,9 @@ if (! function_exists('trip_payment_success')) {
             $trip?->provider?->store_sub?->decrement('max_order' , 1);
         }
 
+        Helpers::sendTripPaymentNotificationCustomerMain($trip);
 
-            OrderLogic::update_unpaid_trip_payment(trip_id:$trip->id, payment_method:$data->payment_method);
-
-
-        // try {
-        //     Helpers::send_order_notification($order);
-        //     $address = json_decode($order->delivery_address, true);
-
-
-        //     if(Helpers::getNotificationStatusData('customer','customer_delivery_verification','mail_status')  && Helpers::get_mail_status('order_verification_mail_status_user') == 1 && config('mail.status')){
-
-        //         if ( config('order_delivery_verification') == 1  && $order->is_guest == 0) {
-        //             Mail::to($order->customer->email)->send(new OrderVerificationMail($order->otp,$order->customer->f_name));
-        //         }
-
-        //         if ($order->is_guest == 1   && isset($address['contact_person_email'])) {
-        //             Mail::to($address['contact_person_email'])->send(new OrderVerificationMail($order->otp,$order?->customer?->f_name));
-        //         }
-        //     }
-        // } catch (\Exception $e) {
-        //     info($e);
-        // }
-
+        OrderLogic::update_unpaid_trip_payment(trip_id:$trip->id, payment_method:$data->payment_method);
     }
 
 }

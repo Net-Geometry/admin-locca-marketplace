@@ -2,30 +2,31 @@
 
 namespace Modules\Rental\Http\Controllers\Web\Admin;
 
-use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Validator;
-use Modules\Rental\Entities\TripDetails;
-use Modules\Rental\Entities\Trips;
-use Modules\Rental\Entities\TripVehicleDetails;
-use Modules\Rental\Entities\Vehicle;
-use Maatwebsite\Excel\Facades\Excel;
-use Modules\Rental\Exports\TripExport;
-use Modules\Rental\Traits\TripLogicTrait;
 use Illuminate\Support\Facades\DB;
+use Modules\Rental\Entities\Trips;
+use Illuminate\Contracts\View\View;
+use Brian2694\Toastr\Facades\Toastr;
+use Maatwebsite\Excel\Facades\Excel;
+use Modules\Rental\Entities\Vehicle;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Foundation\Application;
+use Modules\Rental\Exports\TripExport;
+use Modules\Rental\Entities\TripDetails;
+use Illuminate\Support\Facades\Validator;
+use Modules\Rental\Traits\TripLogicTrait;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Rental\Entities\TripVehicleDetails;
+use Modules\Rental\Traits\RentalPushNotification;
 
 class TripController extends Controller
 {
 
-    use TripLogicTrait;
+    use TripLogicTrait,RentalPushNotification;
     private Trips $trips;
     private TripDetails $tripDetails;
     private TripVehicleDetails $tripVehicleDetails;
@@ -173,6 +174,8 @@ class TripController extends Controller
                 }
             }
 
+            $this->sendTripNotificationCustomer($trip);
+
             DB::commit();
 
             Toastr::success(translate('messages.trip_status_updated_successfully'));
@@ -215,7 +218,7 @@ class TripController extends Controller
                     return back();
                 }
             }
-
+            $this->sendTripPaymentNotificationCustomer($trip);
             DB::commit();
 
             Toastr::success(translate('messages.trip_payment_status_updated_successfully'));
