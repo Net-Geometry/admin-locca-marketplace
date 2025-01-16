@@ -164,7 +164,7 @@
                         </td>
                         <td>
                             <div class="text--title font-medium w--150px white--space-initial">
-                                {{ $trip->provider->name }}
+                                {{ $trip?->provider?->name }}
                             </div>
                         </td>
                         @php
@@ -242,10 +242,10 @@
                         <td>
                             <div class="text--title">
                                 <div class="font-medium">
-                                    {{ $trip->trip_type }}
+                                    {{ translate($trip->trip_type) }}
                                 </div>
                                 <div class="opacity-lg">
-                                    {{ $trip->scheduled ? translate('messages.Instant') : translate('messages.scheduled') }}
+                                    {{ $trip->scheduled ?translate('messages.scheduled'): translate('messages.Instant')  }}
                                 </div>
                             </div>
                         </td>
@@ -255,14 +255,14 @@
                                     {{ \App\CentralLogics\Helpers::format_currency($trip->trip_amount) }}
                                 </div>
                                 <div class="opacity-lg font-medium text--success">
-                                    {{ ucwords($trip->payment_status) }}
+                                    {{ translate($trip->payment_status) }}
                                 </div>
                             </div>
                         </td>
                         <td>
                             <div class="d-flex justify-content-center">
                                 <label class="badge badge-soft-info border-0">
-                                    {{ ucwords($trip->trip_status) }}
+                                    {{ translate($trip->trip_status) }}
                                 </label>
                             </div>
                         </td>

@@ -126,6 +126,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
             Route::get('get-vehicle-details/{vehicle}', [Vehicle::class, 'getVehicleDetails']);
             Route::get('category-list/', [VehicleCategory::class, 'vehicleCategoryList']);
             Route::get('brand-list/', [VehicleBrand::class, 'vehicleBrandList']);
+            Route::get('popular-suggestion/', [Vehicle::class, 'getPopularSearchlist']);
         });
 
         Route::group(['prefix' => 'provider'], function () {

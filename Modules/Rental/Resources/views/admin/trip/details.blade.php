@@ -816,8 +816,8 @@
 
     <!--Show Edit trip Modal -->
     <div class="modal fade" id="editTripModal" tabindex="-1" role="dialog" aria-labelledby="editTripModalLabel">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content modal-scroll">
                 <div class="modal-header pt-4 px-4 flex-shrink-0">
                     <h4 class="modal-title" id="editTripModalLabel">{{ translate('messages.Trip ID # ') }}  {{ $trip->id }}</h4>
                     <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
@@ -864,7 +864,8 @@
                             <div class="col-md-6">
                                 <div class="form-group text-title">
                                     <label class="input-label font-semibold" for="">{{translate('Trip Type')}}</label>
-                                    <input type="text" class="form-control pr-2" name="trip_type" value="{{ $trip->trip_type }}" disabled>
+                                    <input type="text" class="form-control pr-2" name="trip_type" value="{{ $trip->trip_type }}" hidden>
+                                    <input type="text" class="form-control pr-2"  value="{{ translate($trip->trip_type) }}" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -891,6 +892,7 @@
                                             <th class="border-0">{{translate('Vehicle Details')}}</th>
                                             <th class="border-0">{{translate('Unite Fair')}}</th>
                                             <th class="border-0 text-center">{{translate('Quantity')}}</th>
+                                            <th class="border-0">{{translate('Total Hour/Km')}}</th>
                                             <th class="text-right  border-0">{{translate('Fare')}}</th>
                                         </tr>
                                         </thead>
@@ -931,31 +933,41 @@
                                                 <div class="fs-14 eta_amount text--title">
 
                                                     {{ \App\CentralLogics\Helpers::format_currency($editDetail->rental_type == 'hourly' ? $editDetail->vehicle_details['hourly_price'] : $editDetail->vehicle_details['distance_price']) }}
-                                                    {{ $editDetail->rental_type }}
+                                                    ({{ translate($editDetail->rental_type) }})
                                                 </div>
                                             </td>
+
                                             <td>
                                                 <div class="d-flex flex-column gap-1 align-items-end">
                                                     <span class="eta_amount  d-none"> </span>
                                                 <input type="number" name="quantity" class="form-control fs-14 text--title w--60px quantity-input" min="1" max="{{ $editDetail->vehicle_variations_count }}"
                                                 data-max_quantity="{{ $editDetail->vehicle_variations_count }}"
                                                 data-max_original_quantity="{{ $editDetail->quantity }}"
-                                                data-id="{{ $editDetail->id }}"
-                                                       data-vehicle_id="{{ $editDetail->vehicle_id }}"
-                                                       value="{{ $editDetail->quantity }}" placeholder="EX:5">
+                                                data-id="{{ $editDetail->id }}" data-vehicle_id="{{ $editDetail->vehicle_id }}"  value="{{ $editDetail->quantity }}" placeholder="EX:5">
                                             </div>
                                             </td>
+                                            <td>
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="eta_amount  d-none"> </span>
+                                                    @if ($trip->trip_type == 'hourly')
+                                                    <span> {{ $trip->estimated_hours }} {{ translate('hrs') }}</span>
+                                                    @else
+                                                    <span class="distance-input">  {{ $trip->distance }} {{  translate('KM')  }}</span>
+                                                    @endif
+                                                </div>
+                                            </td>
+
                                             <td class="text-right">
                                                 <div class="d-flex flex-column gap-1 align-items-end">
                                                     <span class="eta_amount_mt d-none "> {{ translate('*System_EST_Fare:') }}
-                                                        <small class="fare-old-value text--warning"> </small>
+                                                        <small id="est_{{ $editDetail->id }}" class=" text--warning"> </small>
                                                     </span>
                                                     <input type="text" name="price" min="1" max="999999999"
                                                            data-price="{{ $editDetail->price }}"
                                                            class="form-control w--120px text-right fs-14 text--title fare-total"
                                                            data-id="{{ $editDetail->id }}"
                                                            data-vehicle_id="{{ $editDetail->vehicle_id }}"
-                                                           data-old-value="{{ $editDetail->calculated_price }}"
+                                                           data-old-value="{{ $editDetail->original_price  * $editDetail->quantity}}"
                                                            data-quantity="{{ $editDetail->quantity }}"
                                                            value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->calculated_price) }}"
                                                            placeholder="fare">
@@ -1563,6 +1575,9 @@
                     if (status === google.maps.DistanceMatrixStatus.OK) {
                         const distance = response.rows[0].elements[0].distance.text;
                         $('#distance-input').val(distance);
+                        $('.distance-input').text(distance);
+
+                        updateCalculations(quantityUpdate = false,upadet_data= false,update_distance =1);
                     } else {
                         alert('Error calculating distance: ' + status);
                     }
@@ -1580,10 +1595,7 @@
                     }
                 });
             }
-        });
-    </script>
-{{--edit--}}
-    <script>
+
         function updateOverallTotal(response) {
             let overallTotal = 0;
 
@@ -1607,16 +1619,12 @@
             $('.tax_amount').text("{{ \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first()->value ?  '': '+' }}"+ formatCurrency(response.taxAmount));
             $('.ref_bonus_amount').text( '-'+ formatCurrency(response.refBonus));
             $('.additional_charge').text('+'+ formatCurrency(response.additionalCharge));
+            // $(`.fare-total[data-id="${id}"]`).val(originalValues[id].price);
         }
 
         function formatCurrency(value) {
             return "{{ \App\CentralLogics\Helpers::currency_symbol() }}" + value;
         }
-    </script>
-
-    <script>
-
-    $(document).ready(function() {
 
         $('#edit-trip').on('click', function () {
 
@@ -1656,21 +1664,24 @@
             const vehicleId = $this.data('vehicle_id');
             const originalPrice = parseFloat($this.data('old-value'));
 
-            const $fareOld = $this.closest('td').find('.fare-old-value');
-            $fareOld.text(originalPrice.toFixed(2));
+            // const $fareOld = $this.closest('td').find('.fare-old-value');
+            // $fareOld.text(originalPrice.toFixed(2));
             $this.closest('tr').find('.eta_amount').removeClass('d-none').addClass('mt-3');
             $this.closest('td').find('.eta_amount_mt').removeClass('d-none');
             updateCalculations(quantityUpdate = false,upadet_data= false);
         });
 
         $('#pickup-input, #destination-input').on('change', function() {
+
+
             updateCalculations(quantityUpdate = false,upadet_data= false);
         });
 
-        function updateCalculations(quantityUpdate = false,upadet_data= false) {
+        function updateCalculations(quantityUpdate = false,upadet_data= false, update_distance=false) {
             const formData = new FormData($('#updateForm')[0]);
 
             formData.append('update', upadet_data);
+            formData.append('update_distance', update_distance);
 
             $('.quantity-input').each(function() {
                 formData.append('quantityUpdate', quantityUpdate);
@@ -1696,6 +1707,7 @@
                         if (response.details) {
                             response.details.forEach(detail => {
                                 $(`[data-id="${detail.id}"].fare-total`).val(detail.calculated_price);
+                                $(`#est_${detail.id}`).text(detail.originalPrice * detail.quantity);
                             });
                         }
                     }
@@ -1722,8 +1734,10 @@
             $(`.fare-total[data-id="${id}"]`).val(originalValues[id].price);
         });
         $('.eta_amount_mt').addClass('d-none');
-        $('.fare-old-value').text('');
+        // $('.fare-old-value').text('');
     });
+
+
 });
 
 

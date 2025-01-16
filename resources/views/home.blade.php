@@ -1745,7 +1745,7 @@
     @if (isset($counter) && $counter['status'] == '1')
         <section class="counter-section  mb--186px">
             <div class="container">
-                <div class="counter-wrapper">
+                <div class="counter-wrapper position-relative">
                     <div class="contact-wrapper-inner">
                         <div class="left-side">
                             <div class="counter-item wow fadeInUp">

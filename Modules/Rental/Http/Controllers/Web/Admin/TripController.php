@@ -419,6 +419,7 @@ class TripController extends Controller
         if($request->distance && is_string($request->distance)){
             $distance =floatval($request->distance);
         }
+
         $scheduled = $request->scheduled ?? $trip->scheduled;
 
         $estimatedTripEndTime = $scheduleAt->copy()->addHours(
@@ -440,6 +441,7 @@ class TripController extends Controller
             'modifiedPrices' => $modifiedPrices,
             'taxPercentage' => $trip?->provider?->tax,
             'quantityUpdate' => $request->quantityUpdate,
+            'updateDistance' => $request->update_distance ?? null,
         ];
 
             $calculationData = $this->getUpdatedTrip($request, $trip, $data, $request->update == 1 ? true : false);

@@ -529,7 +529,7 @@ class TripController extends Controller
 
         $trip = $this->trips->where(['user_id' => $user_id, 'is_guest' => $is_guest, 'id' => $request->trip_id])
             ->with([
-                'trip_details:id,trip_id,quantity,vehicle_details',
+                'trip_details',
                 'vehicle_identity.driver_data:id,first_name,last_name,email,phone,image',
                 'vehicle_identity.vehicle_identity_data:id,vin_number,license_plate_number',
                 'vehicle_identity.vehicles:id,name,thumbnail',

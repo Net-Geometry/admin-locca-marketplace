@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Rental\Entities\Vehicle;
 use Illuminate\Support\Facades\Validator;
 use MatanYadaev\EloquentSpatial\Objects\Point;
+use Modules\Rental\Entities\VehicleBrand;
 
 class VehicleController extends Controller
 {
@@ -69,7 +70,6 @@ class VehicleController extends Controller
             $zones = Zone::whereContains('coordinates', new Point($pick_up_lat, $pick_up_lng, POINT_SRID))->pluck('id')->toArray();
         }
 
-// dd($zones);
         if($pick_up_lat && $pick_up_lng && count($zones) == 0){
             $errors = [];
             array_push($errors, ['code' => 'zone', 'message' => translate('messages.Out_of_pick_up_zone')]);
@@ -166,8 +166,7 @@ class VehicleController extends Controller
 
         $brand_ids = json_decode($request->brand_ids, true) ?? null;
         $category_ids = json_decode($request->category_ids, true) ?? null;
-        $seating_capacity = json_decode($request->seating_capacity, true) ?? null;
-
+        $seating_capacity = json_decode($request->seating_capacity)?? null;
         $vehicles = $this->vehicle
             ->when($pick_up_lat &&  $pick_up_lng && count($zones) > 0, function ($query) use ($zones) {
                 $query->whereHas('provider', function ($query) use ($zones) {
@@ -215,9 +214,17 @@ class VehicleController extends Controller
             })
             ->when($request->filled('name'), function ($query) use ($request) {
                 $keys = explode(' ', $request->input('name'));
-                foreach ($keys as $key) {
-                    $query->orWhere('name', 'LIKE', '%' . $key . '%')->orWhere('tag', 'LIKE', '%' . $key . '%');
-                }
+                $query->where(function ($query) use ($keys) {
+                    foreach ($keys as $value) {
+                        $query->orWhere('name', 'LIKE', '%' . $value . '%')->orWhere('tag', 'LIKE', '%' . $value . '%');
+                    }
+                    $relationships = [
+                        'translations' => 'name',
+                        'category' => 'name',
+                        'brand' => 'name',
+                    ];
+                    $query->applyRelationShipSearch(relationships: $relationships, searchParameter: $keys);
+                });
             })
             ->when($brand_ids, function ($query) use ($brand_ids) {
                 $query->whereIn('brand_id', $brand_ids);
@@ -226,7 +233,12 @@ class VehicleController extends Controller
                 $query->whereIn('category_id', $category_ids);
             })
             ->when($seating_capacity, function ($query) use ($seating_capacity) {
-                $query->whereIn('seating_capacity', $seating_capacity);
+                $query->where(function($q) use ($seating_capacity) {
+                    foreach ($seating_capacity as $range) {
+                        $limits = explode('-', $range);
+                     $q->orWhereBetween('seating_capacity', [(int) $limits[0], (int)$limits[1]]);
+                    }
+                });
             })
             ->when($request->air_condition, function ($query) {
                 $query->where('air_condition', 1);
@@ -244,13 +256,31 @@ class VehicleController extends Controller
                 $query->orderBy('total_trip', 'desc');
             })
             ->when(in_array($request->sortby_price,['asc','desc']), function ($query) use ($request){
-                $query->orderBy('hourly_price', $request->sortby_price)->orderBy('distance_price', $request->sortby_price);
-            })
 
+                if($request->trip_type == 'distance_wise'){
+                    info($request->sortby_price);
+                    return  $query->orderBy('distance_price', $request->sortby_price);
+                } elseif($request->trip_type == 'hourly'){
+                    info($request->sortby_price);
+                    return  $query->orderBy('hourly_price', $request->sortby_price);
+                }
+            })
             ->latest();
 
 
 
         return $vehicles;
     }
+
+
+    public function getPopularSearchlist(){
+        $brands = VehicleBrand::where('status',1)->select(['id', 'name'])
+        ->withSum('vehicles', 'total_trip')
+        ->orderBy('vehicles_sum_total_trip', 'desc')
+        ->take(10)
+        ->get();
+        return response()->json($brands, 200);
+
+    }
 }
+
