@@ -310,9 +310,13 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                 <table class="w-100">
                                                     <thead class="bg-section-2">
                                                         <tr>
+                                                            <th class="text-left p-1 px-3">{{ translate('#') }}
+                                                            </th>
                                                             <th class="text-left p-1 px-3">{{ translate('Vehicle') }}
                                                             </th>
-                                                            <th class="text-right p-1 px-3">{{ translate('Price') }}
+                                                            <th class="text-left p-1 px-3">{{ translate('Hour/Km') }}
+                                                            </th>
+                                                            <th class="text-right p-1 px-3">{{ translate('Fare') }}
                                                             </th>
                                                         </tr>
                                                     </thead>
@@ -320,10 +324,13 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
 
                                                         @foreach ($trip->trip_details as $key => $details)
                                                             <?php
-                                                            $subtotal += $details['price'] * $details->quantity;
+                                                            $subtotal += $details['calculated_price'];
                                                             $item_details = $details->vehicle_details;
                                                             ?>
                                                             <tr>
+                                                                <td class="text-left p-1 px-3">
+                                                                    {{ $key + 1 }}
+                                                                </td>
                                                                 <td class="text-left p-2 px-3">
                                                                     <span style="font-size: 14px;">
                                                                         {{ Str::limit($item_details['name'], 40, '...') }}
@@ -332,16 +339,23 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
 
                                                                     <span>x {{ $details->quantity }}</span>
                                                                 </td>
+
+
+                                                                <td class=" p-2 px-3">
+                                                                    {{ \App\CentralLogics\Helpers::format_currency($details->rental_type == 'hourly' ? $details->vehicle_details['hourly_price']   : $details->vehicle_details['distance_price']) }}  x   {{ $details->rental_type == 'hourly' ?  $trip->estimated_hours .' '. translate('hrs') : $trip->distance .' '. translate('KM') }}
+                                                                </td>
+
+
                                                                 <td class="text-right p-2 px-3">
                                                                     <h4>
-                                                                        {{ \App\CentralLogics\Helpers::format_currency($details['price'] * $details->quantity) }}
+                                                                        {{ \App\CentralLogics\Helpers::format_currency($details['calculated_price']) }}
                                                                     </h4>
                                                                 </td>
                                                             </tr>
                                                         @endforeach
 
                                                         <tr>
-                                                            <td colspan="2">
+                                                            <td colspan="4">
                                                                 <hr class="mt-0">
                                                                 <table class="w-100">
                                                                     <tr>
@@ -417,6 +431,16 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                             </td>
                                                                         </tr> --}}
                                                                     @endif
+
+                                                                    <tr>
+                                                                        <td style="width: 40%"></td>
+                                                                        <td class="p-1 px-3">
+                                                                            {{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}
+                                                                        </td>
+                                                                        <td class="text-right p-1 px-3">
+                                                                            {{ \App\CentralLogics\Helpers::format_currency($trip->additional_charge) }}
+                                                                        </td>
+                                                                    </tr>
 
                                                                     <tr>
                                                                         <td style="width: 40%"></td>

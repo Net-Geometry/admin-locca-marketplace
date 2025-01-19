@@ -1728,6 +1728,18 @@ class ReportController extends Controller
         Helpers::gen_mpdf($mpdf_view, 'trip_trans_statement', $trip_transaction->id);
     }
 
+    public function tripInvoice($id)
+    {
+        $id = base64_decode($id);
+        $BusinessData = ['footer_text', 'email_address'];
+        $trip = Trips::findOrFail($id);
+        $BusinessData = BusinessSetting::whereIn('key', $BusinessData)->pluck('value', 'key');
+        $logo = BusinessSetting::where('key', "logo")->first();
+        // return view('rental::admin.trip-invoice', compact('trip', 'BusinessData', 'logo'));
+        $mpdf_view = View::make('rental::admin.trip-invoice', compact('trip', 'BusinessData', 'logo'));
+        Helpers::gen_mpdf(view: $mpdf_view, file_prefix: 'TripInvoice', file_postfix: $id);
+        return back();
+    }
 
 }
 

@@ -7085,4 +7085,6 @@ Smartly or Earn. ',
   'My shop' => 'My shop',
   'role_deleted_successfully' => 'Role deleted successfully',
   'Role name already taken!' => 'Role name already taken!',
+  'Hour/Km' => 'Hour/Km',
+  'User Info' => 'User Info',
 );
