@@ -79,7 +79,7 @@ class VendorLoginController extends Controller
                 $vendor->save();
                 $role = $vendor->role ? json_decode($vendor->role->modules):[];
                 return response()->json(['token' => $token, 'zone_wise_topic'=> $vendor->store->zone->store_wise_topic, 'role'=>$role,
-                    'module_type' => $vendor?->stores[0]?->module?->module_type], 200);
+                    'module_type' => $vendor?->store?->module_type], 200);
             } else {
                 $errors = [];
                 array_push($errors, ['code' => 'auth-001', 'message' => translate('Credential_do_not_match,_please_try_again')]);

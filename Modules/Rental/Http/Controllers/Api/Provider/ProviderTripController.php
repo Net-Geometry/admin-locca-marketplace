@@ -76,6 +76,20 @@ class ProviderTripController extends Controller
         if (in_array($trip->trip_status, ['completed', 'canceled'])) {
             return response()->json(['errors' => translate('You_can_not_change_this_trip_status')], 403);
         }
+
+
+        $totalVehicle = count($trip->assignedVehicle);
+            $is_deleted = 0;
+            $trip->trip_details->each(function ($details) use (&$is_deleted) {
+                if (!$details->vehicle) {
+                    $is_deleted = 1;
+                }
+            });
+
+            if (in_array($request->trip_status, ['ongoing', 'completed']) && $totalVehicle <= 0 && $is_deleted !=1) {
+                return response()->json(['message' => translate('at_first_assign_a_vehicle')], 403);
+            }
+
         $trip->trip_status = $request->trip_status;
         if ($request->trip_status == 'canceled') {
             $trip->canceled_by = 'vendor';
@@ -125,7 +139,7 @@ class ProviderTripController extends Controller
             };
         }
         $this->sendTripPaymentNotificationCustomer($trip);
-        
+
         return response()->json(['message' => translate('Trip_payment_status_updated')], 200);
     }
 

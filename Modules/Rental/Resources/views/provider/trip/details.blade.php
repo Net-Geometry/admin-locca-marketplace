@@ -98,7 +98,7 @@
                             </div>
                             <div class="order-invoice-right mt-3 mt-sm-0">
                                 <div class="btn--container ml-auto align-items-center justify-content-end">
-                                    @if($trip->trip_status == 'pending')
+                                    @if($trip->trip_status == 'pending' && $is_deleted != 1)
                                         <button class="btn btn--primary btn-outline-primary font-bold" type="button"
                                                 data-toggle="modal" data-target="#editTripModal">
                                             <i class="tio-edit mr-sm-1"></i> {{translate('Edit Trip')}}
@@ -173,7 +173,7 @@
                                             <div class="media media--sm">
                                                 <a class="avatar avatar-xl mr-3" href="{{ route('vendor.vehicle.details', $detail->vehicle_id) }}">
                                                     <img class="img-fluid rounded aspect-ratio-1 onerror-image"
-                                                         src="{{ $detail->vehicle['thumbnailFullUrl'] }}"
+                                                         src="{{ data_get($detail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}"
                                                          data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                          alt="Image Description">
                                                 </a>
@@ -181,14 +181,19 @@
                                                     <div class="fs-12 text--title">
                                                         <div class="fz-12 font-semibold line--limit-1">
                                                             {{ $detail?->vehicle_details['name'] }}</div>
-                                                        <div><span class="font-semibold mr-2">{{translate('Category')}} :</span>{{ $detail?->vehicle?->category?->name }}</div>
-                                                        <div><span class="font-semibold mr-2">{{translate('Brand')}} :</span>{{ $detail?->vehicle?->brand?->name }}</div>
+                                                            @if ($detail?->vehicle)
 
+                                                            <div><span class="font-semibold mr-2">{{translate('Category')}} :</span>{{ $detail?->vehicle?->category?->name }}</div>
+                                                            <div><span class="font-semibold mr-2">{{translate('Brand')}} :</span>{{ $detail?->vehicle?->brand?->name }}</div>
+                                                            @else
+                                                            <div><span class="text--danger mr-2">{{translate('Vehicle_Not_Found_!!!')}} </span></div>
+
+                                                            @endif
                                                     </div>
                                                 </div>
                                             </div>
                                             @if($detail?->tripVehicleDetails->isEmpty())
-                                                @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']))
+                                                @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']) && $is_deleted != 1)
                                                     <div class="mt-2">
                                                         <button
                                                             class="btn btn--primary btn-outline-primary p-5px rounded-20 d-flex align-items-center gap-1 assign-vehicle-btn"
@@ -199,12 +204,12 @@
                                                             data-trip_id = "{{ $detail->trip_id }}"
                                                             data-vehicle_id = "{{ $detail->vehicle_id }}"
                                                             data-quantity = "{{ $detail->quantity }}"
-                                                            data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
+                                                            data-img = "{{ data_get($detail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}"
                                                             data-name = "{{ $detail?->vehicle_details['name'] }}"
                                                             data-vendor = "{{ $trip?->provider->name }}"
                                                             data-category = "{{ $detail?->vehicle?->category?->name }}"
                                                             data-brand = "{{ $detail?->vehicle?->brand?->name }}"
-                                                            data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
+                                                            data-list="{{ json_encode($detail?->vehicle?->vehicleIdentities) }}"
                                                             data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
                                                         >
                                                             {{translate('Assign Vehicle')}} <span class="fs-24"><i
@@ -226,7 +231,7 @@
                                                                 data-trip_id = "{{ $detail->trip_id }}"
                                                                 data-vehicle_id = "{{ $detail->vehicle_id }}"
                                                                 data-quantity = "{{ $detail->quantity }}"
-                                                                data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
+                                                                data-img = "{{ data_get($detail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}"
                                                                 data-name = "{{ $detail?->vehicle_details['name'] }}"
                                                                 data-vendor = "{{ $trip?->provider->name }}"
                                                                 data-category = "{{ $detail?->vehicle?->category?->name }}"
@@ -615,7 +620,7 @@
                                                 <div class="media media--sm">
                                                     <a class="mr-3" href="#">
                                                         <img width="60" height="40" class="img--ratio-2 onerror-image rounded h--40px"
-                                                             src="{{ $vehicleDetails?->vehicles['thumbnailFullUrl'] }}"
+                                                             src="{{ data_get($vehicleDetails?->vehicles,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}"
                                                              data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                              alt="Image Description">
                                                     </a>
@@ -876,8 +881,8 @@
 
                                                     <a class="avatar avatar-xl mr-3" href="{{ route('vendor.vehicle.details', $editDetail->vehicle_id) }}">
                                                         <img class="img-fluid rounded aspect-ratio-1 onerror-image"
-                                                             src="{{ $editDetail->vehicle['thumbnailFullUrl'] }}"
-                                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                        src="{{ data_get($editDetail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}"
+                                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                              alt="Image Description">
                                                     </a>
                                                     <div class="media-body">

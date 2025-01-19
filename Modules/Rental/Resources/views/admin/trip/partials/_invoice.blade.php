@@ -92,7 +92,7 @@
                                             <div class="d-flex gap-2">
                                                 <div>{{ $loop->iteration }}.</div>
                                                 <div class="opacity-70">
-                                                    <strong class="d-block mb-1">{{ $details?->vehicle?->name }}</strong>
+                                                    <strong class="d-block mb-1">{{ $details?->vehicle_details['name'] }}</strong>
                                                     <span class="fs-9">
                                                         {{ \App\CentralLogics\Helpers::format_currency($details['price']) }}/{{ $details?->rental_type }},
                                                         {{ $details->quantity }} {{ translate('Vehicle') }},
