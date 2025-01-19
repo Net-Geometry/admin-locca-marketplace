@@ -108,24 +108,24 @@
                     </div>
                     <div class="check-item">
                         <div class="form-group form-check form--check">
-                            <input type="checkbox" name="modules[]" value="my_wallet" class="form-check-input"
-                                    id="my_wallet">
-                            <label class="form-check-label input-label " for="my_wallet">{{translate('messages.My wallet')}}</label>
+                            <input type="checkbox" name="modules[]" value="wallet" class="form-check-input"
+                                    id="wallet">
+                            <label class="form-check-label input-label " for="wallet">{{translate('messages.My wallet')}}</label>
                         </div>
                     </div>
                     <div class="check-item">
                         <div class="form-group form-check form--check">
-                            <input type="checkbox" name="modules[]" value="profile" class="form-check-input"
-                                    id="profile">
-                            <label class="form-check-label input-label " for="profile">{{translate('messages.Profile')}}</label>
+                            <input type="checkbox" name="modules[]" value="bank_info" class="form-check-input"
+                                    id="bank_info">
+                            <label class="form-check-label input-label " for="bank_info">{{translate('messages.Profile')}}</label>
                         </div>
                     </div>
 
                     <div class="check-item">
                         <div class="form-group form-check form--check">
-                            <input type="checkbox" name="modules[]" value="rental_employees" class="form-check-input"
-                                    id="rental_employees">
-                            <label class="form-check-label input-label " for="rental_employees">{{translate('messages.Employees')}}</label>
+                            <input type="checkbox" name="modules[]" value="employee" class="form-check-input"
+                                    id="employee">
+                            <label class="form-check-label input-label " for="employee">{{translate('messages.Employees')}}</label>
                         </div>
                     </div>
                     <div class="check-item">
@@ -151,9 +151,9 @@
                     </div>
                     <div class="check-item">
                         <div class="form-group form-check form--check">
-                            <input type="checkbox" name="modules[]" value="rental_report" class="form-check-input"
-                                    id="rental_report">
-                            <label class="form-check-label input-label " for="rental_report">{{translate('messages.Report')}}</label>
+                            <input type="checkbox" name="modules[]" value="report" class="form-check-input"
+                                    id="report">
+                            <label class="form-check-label input-label " for="report">{{translate('messages.Report')}}</label>
                         </div>
                     </div>
                 </div>

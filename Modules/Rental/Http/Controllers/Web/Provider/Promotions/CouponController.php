@@ -24,11 +24,17 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class CouponController extends Controller
 {
-    public function __construct(private Coupon $coupon, private Zone $zone,private User $user)
+    private Coupon $coupon;
+    private Zone $zone;
+    private User $user;
+    private Helpers $helpers;
+
+    public function __construct(Coupon $coupon, Zone $zone, User $user, Helpers $helpers)
     {
         $this->coupon = $coupon;
         $this->zone = $zone;
         $this->user = $user;
+        $this->helpers = $helpers;
     }
 
     public function list(Request $request)
@@ -256,7 +262,7 @@ class CouponController extends Controller
 
     private function getListData($request)
     {
-        $storeId = auth('vendor')->user()->stores[0]->id;
+        $storeId = $this->helpers->get_store_id();
         $key = explode(' ', $request['search']);
         $coupons =  $this->coupon->where('created_by','vendor')
         ->where('store_id', $storeId)

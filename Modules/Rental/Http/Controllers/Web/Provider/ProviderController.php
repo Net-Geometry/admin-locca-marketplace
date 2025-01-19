@@ -27,12 +27,15 @@ class ProviderController extends Controller
     private VehicleBrand $brand;
     private VehicleReview $vehicleReview;
     private EmployeeRole $employeeRole;
-    public function __construct(VehicleCategory $category, VehicleBrand $brand, VehicleReview $vehicleReview, EmployeeRole $employeeRole)
+    private Helpers $helpers;
+
+    public function __construct(VehicleCategory $category, VehicleBrand $brand, VehicleReview $vehicleReview, EmployeeRole $employeeRole, Helpers $helpers)
     {
         $this->category = $category;
         $this->brand = $brand;
         $this->vehicleReview = $vehicleReview;
         $this->employeeRole = $employeeRole;
+        $this->helpers = $helpers;
     }
 
     /**
@@ -143,7 +146,7 @@ class ProviderController extends Controller
      */
     public function reviews(Request $request): Renderable
     {
-        $providerId = auth('vendor')->user()->stores[0]->id;
+        $providerId = $this->helpers->get_store_id();
         $reviews = $this->vehicleReview
             ->where('provider_id', $providerId)
             ->when($request->has('search'), function ($query) use ($request) {

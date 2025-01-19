@@ -192,11 +192,11 @@ class ProviderController extends Controller
     /**
      * @param Request $request
      * @param $store_id
-     * @param $tab
-     * @param $sub_tab
-     * @return Factory|\Illuminate\Foundation\Application|View|Application
+     * @param null $tab
+     * @param string $sub_tab
+     * @return Application|Factory|View|\Illuminate\Foundation\Application|RedirectResponse
      */
-    public function details(Request $request, $store_id, $tab=null, $sub_tab='cash'): Factory|\Illuminate\Foundation\Application|View|Application
+    public function details(Request $request, $store_id, $tab=null, $sub_tab='cash'): Application|Factory|View|RedirectResponse
     {
         $filter= $request?->filter;
         $key = explode(' ', request()->search);
@@ -221,6 +221,11 @@ class ProviderController extends Controller
             return view('rental::admin.provider.details.settings', compact('store'));
         }
         else if ($tab == 'driver'){
+            if (!$this->helpers->module_permission_check('driver')){
+                Toastr::error(translate('messages.Access denied'));
+                return back();
+            }
+
             $query = $this->vehicleDriver->where('provider_id', $store_id);
             $totalDrivers = $query->count();
             $activeDrivers = (clone $query)->ofStatus(1)->count();
@@ -240,6 +245,11 @@ class ProviderController extends Controller
             return view('rental::admin.provider.details.driver-list', compact('store', 'drivers', 'totalDrivers', 'activeDrivers', 'inactiveDrivers'));
         }
         else if ($tab == 'vehicle'){
+            if (!$this->helpers->module_permission_check('vehicle')){
+                Toastr::error(translate('messages.Access denied'));
+                return back();
+            }
+
             $query = $this->vehicle->where('provider_id', $store_id);
             $totalVehicles = $query->count();
             $activeVehicles = (clone $query)->ofStatus(1)->count();
@@ -259,6 +269,10 @@ class ProviderController extends Controller
         }
         else if($tab == 'order')
         {
+            if (!$this->helpers->module_permission_check('trip')){
+                Toastr::error(translate('messages.Access denied'));
+                return back();
+            }
             $trips = $this->trips->where('provider_id', $store->id)->latest()
                 ->when(isset($key ), function ($q) use ($key){
                     $q->where(function ($q) use ($key) {
@@ -269,53 +283,20 @@ class ProviderController extends Controller
                 })->latest()->paginate(config('default_pagination'));
             return view('rental::admin.provider.details.trip', compact('store','trips'));
         }
-        else if($tab == 'item')
-        {
-            if($sub_tab == 'pending-items' || $sub_tab == 'rejected-items' ){
-
-                $foods = $this->tempProduct->withoutGlobalScope(\App\Scopes\StoreScope::class)->where('store_id', $store->id)
-                    ->when(isset($key) , function($q) use($key){
-                        $q->where(function ($q) use ($key) {
-                            foreach ($key as $value) {
-                                $q->where('name', 'like', "%{$value}%");
-                            }
-                        });
-                    })
-                    ->when($sub_tab == 'pending-items' , function($q){
-                        $q->where('is_rejected' , 0);
-                    })
-                    ->when($sub_tab == 'rejected-items' , function($q){
-                        $q->where('is_rejected' , 1);
-                    })
-                    ->latest()->paginate(25);
-            }
-            else{
-
-                $foods = $this->item->withoutGlobalScope(\App\Scopes\StoreScope::class)->where('store_id', $store->id)
-                    ->when(isset($key) , function($q) use($key){
-                        $q->where(function ($q) use ($key) {
-                            foreach ($key as $value) {
-                                $q->where('name', 'like', "%{$value}%");
-                            }
-                        });
-                    })
-                    ->when($sub_tab == 'active-items' , function($q){
-                        $q->where('status' , 1);
-                    })
-                    ->when($sub_tab == 'inactive-items' , function($q){
-                        $q->where('status' , 0);
-                    })
-                    ->latest()->paginate(25);
-            }
-
-            return view('rental::admin.provider.details.product', compact('store','foods','sub_tab'));
-        }
         else if($tab == 'discount')
         {
+            if (!$this->helpers->module_permission_check('promotion')){
+                Toastr::error(translate('messages.Access denied'));
+                return back();
+            }
             return view('rental::admin.provider.details.discount', compact('store'));
         }
         else if($tab == 'transaction')
         {
+            if (!$this->helpers->module_permission_check('rental_report')){
+                Toastr::error(translate('messages.Access denied'));
+                return back();
+            }
             return view('rental::admin.provider.details.transaction', compact('store', 'sub_tab'));
         }
 
@@ -361,7 +342,6 @@ class ProviderController extends Controller
             return view('rental::admin.provider.details.disbursement', compact('store','disbursements'));
 
         } else if ($tab == 'business_plan') {
-
 
             $store= $this->store->where('id',$store->id)->with([
                 'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations'

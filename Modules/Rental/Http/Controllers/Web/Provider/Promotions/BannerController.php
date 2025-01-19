@@ -24,11 +24,15 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class BannerController extends Controller
 {
     private Banner $banner;
+    private Helpers $helpers;
+
+
     use FileManagerTrait;
 
-    public function __construct(Banner $banner)
+    public function __construct(Banner $banner, Helpers $helpers)
     {
         $this->banner = $banner;
+        $this->helpers = $helpers;
     }
 
     /**
@@ -178,9 +182,10 @@ class BannerController extends Controller
      */
     private function createBanner(Request $request): Banner
     {
-        $storeId = auth('vendor')->user()->stores[0]->id ?? 0;
-        $zoneId = auth('vendor')->user()->stores[0]->zone_id ?? 0;
-        $moduleId = auth('vendor')->user()->stores[0]->module_id ?? null;
+        $store = $this->helpers->get_store_data();
+        $storeId = $store->id;
+        $zoneId = $store->zone_id ?? 0;
+        $moduleId = $store->module_id ?? null;
 
         $banner = $this->banner;
         $banner->title = $request->title;
@@ -198,9 +203,10 @@ class BannerController extends Controller
 
     private function updateBanner(Request $request, Banner $banner): void
     {
-        $storeId = auth('vendor')->user()->stores[0]->id ?? 0;
-        $zoneId = auth('vendor')->user()->stores[0]->zone_id ?? 0;
-        $moduleId = auth('vendor')->user()->stores[0]->module_id ?? null;
+        $store = $this->helpers->get_store_data() ?? 0;
+        $storeId = $store->id ?? 0;
+        $zoneId = $store->zone_id ?? 0;
+        $moduleId = $store->module_id ?? null;
 
         if ($request->hasFile('image')) {
             $banner->image = $this->updateAndUpload('banner/', $banner->image ,'png', $request->file('image'));
@@ -213,7 +219,7 @@ class BannerController extends Controller
 
     private function getListData($request)
     {
-        $providerId = auth('vendor')->user()->id;
+        $providerId = $this->helpers->get_store_id();
         return $this->banner
             ->when($request->filled('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request->input('search'));

@@ -10,7 +10,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\Rental\Entities\TripVehicleDetails;
 use Modules\Rental\Entities\VehicleDriver;
+use Modules\Rental\Exports\DriverTripExport;
 use Modules\Rental\Exports\VehicleDriverExport;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -19,15 +21,18 @@ class DriverController extends Controller
     use FileManagerTrait;
     private VehicleDriver $driver;
     private Helpers $helpers;
+    private TripVehicleDetails $tripVehicleDetails;
 
-    public function __construct(VehicleDriver $driver, Helpers $helpers)
+    public function __construct(VehicleDriver $driver, Helpers $helpers, TripVehicleDetails $tripVehicleDetails)
     {
         $this->driver = $driver;
         $this->helpers = $helpers;
+        $this->tripVehicleDetails = $tripVehicleDetails;
     }
 
     /**
      * Show the form for creating a new resource.
+     * @param Request $request
      * @return Renderable
      */
     public function list(Request $request): Renderable
@@ -39,7 +44,7 @@ class DriverController extends Controller
                     $query->orWhere('first_name', 'LIKE', '%' . $key . '%')->orWhere('last_name', 'LIKE', '%' . $key . '%');
                 }
             })
-            ->where('provider_id', auth('vendor')->user()->stores[0]->id)
+            ->where('provider_id', $this->helpers->get_store_id())
             ->latest()->paginate(config('default_pagination'));
         return view('rental::provider.driver.list', compact('drivers'));
     }
@@ -78,7 +83,7 @@ class DriverController extends Controller
         }
 
         $driver = $this->driver;
-        $driver->provider_id = auth('vendor')->user()->stores[0]->id ;
+        $driver->provider_id = $this->helpers->get_store_id();
         $driver->first_name = $request->first_name;
         $driver->last_name = $request->last_name;
         $driver->email = $request->email;
@@ -102,7 +107,15 @@ class DriverController extends Controller
     public function details($id): Renderable
     {
         $driver = $this->driver->findOrFail($id);
-        return view('rental::provider.driver.details', compact('driver'));
+        $driverTrips = $this->tripVehicleDetails
+            ->where('vehicle_driver_id', $id)
+            ->when(request('search'), function ($query) {
+                return $query->whereHas('trip', function ($query) {
+                    return $query->where('id', request('search'));
+                });
+            })
+            ->latest()->paginate(config('default_pagination'));
+        return view('rental::provider.driver.details', compact('driver', 'driverTrips'));
     }
 
     /**
@@ -221,7 +234,7 @@ class DriverController extends Controller
     public function export(Request $request): BinaryFileResponse
     {
         $drivers = $this->driver
-            ->where('provider_id', auth('vendor')->user()->stores[0]->id)
+            ->where('provider_id', $this->helpers->get_store_id())
             ->when($request->has('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request['search']);
                 foreach ($keys as $key) {
@@ -240,5 +253,27 @@ class DriverController extends Controller
             return Excel::download(new VehicleDriverExport($data), 'Drivers.csv');
         }
         return Excel::download(new VehicleDriverExport($data), 'Drivers.xlsx');
+    }
+
+    public function tripExport(Request $request): BinaryFileResponse
+    {
+        $driverTrips = $this->tripVehicleDetails
+            ->where('vehicle_driver_id', $request->id)
+            ->when(request('search'), function ($query) {
+                return $query->whereHas('trip', function ($query) {
+                    return $query->where('id', request('search'));
+                });
+            })
+            ->latest()->get();
+
+        $data = [
+            'data' => $driverTrips,
+            'search' => $request['search'] ?? null,
+        ];
+
+        if ($request['type'] == 'csv') {
+            return Excel::download(new DriverTripExport($data), 'DriverTrips.csv');
+        }
+        return Excel::download(new DriverTripExport($data), 'DriversTrips.xlsx');
     }
 }

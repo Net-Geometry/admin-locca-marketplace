@@ -128,24 +128,24 @@
                     </div>
                     <div class="check-item">
                         <div class="form-group form-check form--check">
-                            <input type="checkbox" name="modules[]" value="my_wallet" class="form-check-input"
-                                   id="my_wallet" {{in_array('my_wallet',(array)json_decode($role['modules']))?'checked':''}}>
-                            <label class="form-check-label input-label " for="my_wallet">{{translate('messages.My wallet')}}</label>
+                            <input type="checkbox" name="modules[]" value="wallet" class="form-check-input"
+                                   id="wallet" {{in_array('wallet',(array)json_decode($role['modules']))?'checked':''}}>
+                            <label class="form-check-label input-label " for="wallet">{{translate('messages.My wallet')}}</label>
                         </div>
                     </div>
                     <div class="check-item">
                         <div class="form-group form-check form--check">
-                            <input type="checkbox" name="modules[]" value="profile" class="form-check-input"
-                                   id="profile" {{in_array('profile',(array)json_decode($role['modules']))?'checked':''}}>
-                            <label class="form-check-label input-label " for="profile">{{translate('messages.Profile')}}</label>
+                            <input type="checkbox" name="modules[]" value="bank_info" class="form-check-input"
+                                   id="bank_info" {{in_array('bank_info',(array)json_decode($role['modules']))?'checked':''}}>
+                            <label class="form-check-label input-label " for="bank_info">{{translate('messages.Profile')}}</label>
                         </div>
                     </div>
 
                     <div class="check-item">
                         <div class="form-group form-check form--check">
-                            <input type="checkbox" name="modules[]" value="rental_employees" class="form-check-input"
-                                   id="rental_employees" {{in_array('rental_employees',(array)json_decode($role['modules']))?'checked':''}}>
-                            <label class="form-check-label input-label " for="rental_employees">{{translate('messages.Employees')}}</label>
+                            <input type="checkbox" name="modules[]" value="employee" class="form-check-input"
+                                   id="employee" {{in_array('employee',(array)json_decode($role['modules']))?'checked':''}}>
+                            <label class="form-check-label input-label " for="employee">{{translate('messages.Employees')}}</label>
                         </div>
                     </div>
                     <div class="check-item">
@@ -171,9 +171,9 @@
                     </div>
                     <div class="check-item">
                         <div class="form-group form-check form--check">
-                            <input type="checkbox" name="modules[]" value="rental_report" class="form-check-input"
-                                   id="rental_report" {{in_array('rental_report',(array)json_decode($role['modules']))?'checked':''}}>
-                            <label class="form-check-label input-label " for="rental_report">{{translate('messages.Report')}}</label>
+                            <input type="checkbox" name="modules[]" value="report" class="form-check-input"
+                                   id="report" {{in_array('report',(array)json_decode($role['modules']))?'checked':''}}>
+                            <label class="form-check-label input-label " for="report">{{translate('messages.Report')}}</label>
                         </div>
                     </div>
                 </div>

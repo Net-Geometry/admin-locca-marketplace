@@ -103,14 +103,16 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::get('status/{id}', [DriverController::class, 'status'])->name('status');
         Route::delete('delete/{id}', [DriverController::class, 'destroy'])->name('delete');
         Route::get('export', [DriverController::class, 'export'])->name('export');
+        Route::get('trip-export', [DriverController::class, 'tripExport'])->name('trip.export');
+
     });
 
-    Route::group(['prefix' => 'report', 'as' => 'report.', 'middleware' => ['module:rental_report' ,'subscription:report']], function () {
+    Route::group(['prefix' => 'report', 'as' => 'report.', 'middleware' => ['module:report' ,'subscription:report']], function () {
         Route::get('trip-report', [ReportController::class, 'tripReport'])->name('trip-report');
         Route::get('trip-report-export', [ReportController::class, 'tripReportExport'])->name('trip-report-export');
     });
 
-    Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:rental_employees']], function () {
+    Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:employee']], function () {
         Route::get('list', [ProviderController::class, 'role'])->name('list');
         Route::get('update/{id}', [ProviderController::class, 'update'])->name('update');
     });

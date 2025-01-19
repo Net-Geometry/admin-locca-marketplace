@@ -8,7 +8,7 @@
 
 @section('content')
     @php
-        $vendor = auth('vendor')?->user()?->store?->module_type;
+        $vendor = $store->module_type;
         $title = $vendor == 'rental' ? 'Provider' : 'Store';
         $orderOrTrip = $vendor == 'rental' ? 'trip' : 'order';
         $approxTime = $vendor == 'rental' ? 'Pickup' : 'Delivery';

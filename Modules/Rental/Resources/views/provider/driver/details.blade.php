@@ -57,36 +57,36 @@
                         </div>
                         <div class="media-body text--title d-flex flex-column flex-lg-row gap-3">
                             <div class="mr-0 mr-lg-5">
-                                <h3 class="fs-20 mb-0">{{ $driver->fullName }}</h3>
+                                <h3 class="fs-20 mb-0">{{ $driver?->fullName }}</h3>
                                 <div class="d-flex gap-3">
-                                    <span class="min-w-110px">Phone</span>
+                                    <span class="min-w-110px">{{translate('Phone')}}</span>
                                     <span>: {{ $driver->phone }}</span>
                                 </div>
                                 <div class="d-flex gap-3">
-                                    <span class="min-w-110px">Email</span>
+                                    <span class="min-w-110px">{{translate('Email')}}</span>
                                     <span>: {{ $driver->email }}</span>
                                 </div>
                             </div>
                             <div class="mr-0 mr-lg-5">
-                                <h5 class="">Identity Information</h5>
+                                <h5 class="">{{translate('Identity Information')}}</h5>
                                 <div class="d-flex gap-3">
-                                    <span class="min-w-110px">Identity Type</span>
+                                    <span class="min-w-110px">{{translate('Identity Type')}}</span>
                                     <span>: {{ ucwords($driver->identity_type) }}</span>
                                 </div>
                                 <div class="d-flex gap-3">
-                                    <span class="min-w-110px">Identity Number</span>
+                                    <span class="min-w-110px">{{translate('Identity Number')}}</span>
                                     <span>: {{ $driver->identity_number }}</span>
                                 </div>
                             </div>
                             <div>
-                                <h5 class="">Provider Info</h5>
+                                <h5 class="">{{translate('Provider Info')}}</h5>
                                 <div class="align-items-center d-flex gap-2 resturant--information-single text-left">
-                                    <img height="45" class="aspect-ratio-1 onerror-image rounded" src="{{ $driver?->provider['image_full_url'] }}" alt="Image Description">
+                                    <img height="45" class="aspect-ratio-1 onerror-image rounded" src="{{ $driver?->provider?->logo_full_url }}" alt="{{translate('Image Description')}}">
                                     <div class="text--title">
                                         <h5 class="text-capitalize font-semibold text-hover-primary d-block mb-1">
                                             {{ $driver?->provider?->name }}
                                             <span class="btn btn--warning fs-12 rounded-20 text-white py-1 px-2 ml-1">
-                                                <i class="tio-star mr-1"></i>4.78
+                                                <i class="tio-star mr-1"></i>{{ number_format($driver?->provider?->vehicle_reviews->avg('rating')) ?? 0.00 }}
                                             </span>
                                         </h5>
                                         <span class="opacity-lg">
@@ -102,9 +102,9 @@
                     <h5 class="text--title mb-20">{{translate('Identity Image')}}</h5>
                     <div class="d-flex gap-4 flex-wrap">
                         @foreach($driver['identity_image_full_url'] as $img)
-                        <div>
-                            <img width="275" class="aspect-2-1 object--cover rounded-10" src="{{ $img }}" alt="Identity image">
-                        </div>
+                            <div>
+                                <img width="275" class="aspect-2-1 object--cover rounded-10" src="{{ $img }}" alt="Identity image">
+                            </div>
                         @endforeach
                     </div>
                 </div>
@@ -123,8 +123,8 @@
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"
                                    name="search" class="form-control"
-                                   placeholder="{{ translate('Search by trip ID, customer name...') }}"
-                                   aria-label="{{ translate('messages.Search by trip ID, customer name...') }}">
+                                   placeholder="{{ translate('Search by trip ID') }}"
+                                   aria-label="{{ translate('messages.Search by trip ID...') }}">
                             <button type="submit" class="btn btn--secondary bg--primary"><i
                                     class="tio-search"></i></button>
 
@@ -151,14 +151,14 @@
 
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item"
-                               href="{{ route('admin.store.export', ['type' => 'excel', request()->getQueryString()]) }}">
+                               href="{{ route('vendor.driver.trip.export', ['id' => request()->id,'type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                      alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
-                               href="{{ route('admin.store.export', ['type' => 'csv', request()->getQueryString()]) }}">
+                               href="{{ route('vendor.driver.trip.export', ['id' => request()->id, 'type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                      alt="Image Description">
@@ -167,11 +167,6 @@
 
                         </div>
                     </div>
-                    <!-- End Unfold -->
-                    <a href="#" class="text--title font-semibold"><i class="tio-filter-list"></i>
-                        {{ translate('messages.Filter') }}</a>
-                    <a href="#" class="text--title font-semibold"><i class="tio-column-view-outlined"></i>
-                        {{ translate('messages.Columns') }}</a>
                 </div>
             </div>
             <!-- End Header -->
@@ -201,95 +196,124 @@
                     </thead>
 
                     <tbody id="set-rows">
-                    <tr>
-                        <td>1</td>
-                        <td>
-                            <div class="text--title font-semibold">
-                                {{ translate('messages.1234567') }}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="text--title">
-                                24 August 2024
-                                <br>
-                                05:30 PM
-                            </div>
-                        </td>
-                        <td>
-                            <div class="text--title">
-                                24 August 2024
-                                <br>
-                                05:30 PM
-                            </div>
-                        </td>
-                        <td>
-                            <div class="text--title">
-                                <div class="font-medium">
-                                    {{ translate('messages.Cameron_Williamson') }}
+                    @foreach($driverTrips as $key => $driverTrip)
+                        <tr>
+                            <td>{{ $key+$driverTrips->firstItem() }}</td>
+                            <td>
+                                <div class="text--title font-semibold">
+                                    {{ $driverTrip?->trip?->id }}
                                 </div>
-                                <div class="opacity-lg">
-                                    jennings@example.com
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    {{ $driverTrip?->trip?->bookingDate }}
+                                    <br>
+                                    {{ $driverTrip?->trip?->bookingTime }}
                                 </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="text--title">
-                                <div class="font-medium">
-                                    {{ translate('messages.F Premio 2006') }}
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    {{ $driverTrip?->trip?->scheduleDate }}
+                                    <br>
+                                    {{ $driverTrip?->trip?->scheduleTime }}
                                 </div>
-                                <div class="opacity-lg">
-                                    {{ translate('messages.Nator Kha 21-3214') }}
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    @if ($driverTrip?->trip?->customer)
+                                        <div class="font-medium">
+                                            {{ $driverTrip?->trip?->customer?->fullName }}
+                                        </div>
+                                        <div class="opacity-lg">
+                                            {{ $driverTrip?->trip?->customer?->email }}
+                                        </div>
+
+                                    @elseif($driverTrip?->trip?->user_info['contact_person_name'])
+                                        <div class="font-medium">
+                                            {{$driverTrip?->trip?->user_info['contact_person_name'] }}
+                                        </div>
+                                        <div class="opacity-lg">
+                                            {{ $driverTrip?->trip?->user_info['contact_person_email'] }}
+                                        </div>
+                                    @else
+                                        {{ translate('messages.Guest_user') }}
+                                    @endif
                                 </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="text--title">
-                                <div class="font-medium">
-                                    {{ translate('messages.Hourly') }}
+                            </td>
+                            @php
+                                $maxDisplay = 3;
+                                $totalVehicle = count($driverTrip?->trip?->assignedVehicle);
+                            @endphp
+                            <td>
+                                @if($totalVehicle > 0)
+                                    <div class="text-primary text-underline font-weight-medium" data-html="true" data-toggle="tooltip"
+                                         title="<div class='d-flex flex-column p-2'>
+                                         @foreach($driverTrip?->trip?->trip_details as $index => $detail)
+                                            <div class='media gap-3 {{ !$loop->last ? 'border-bottom mb-2 pb-2' : '' }}'>
+                                                <img src='{{ $detail->vehicle['thumbnailFullUrl'] }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                                <div class='media-body'>
+                                                    <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ $detail->vehicle_details['name'] }}</h5>
+                                                    <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: {{ $detail->tripVehicleDetails->count() }}</div>
+                                                </div>
+                                            </div>
+                                         @endforeach
+                                    </div>">
+                                        {{ $totalVehicle }} {{ translate('messages.vehicles') }}
+                                    </div>
+                                @else
+                                    <div class="text--warning font-medium">
+                                        {{ translate('messages.Unassigned') }}
+                                    </div>
+                                @endif
+
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    <div class="font-medium">
+                                        {{ translate($driverTrip?->trip?->trip_type) }}
+                                    </div>
+                                    <div class="opacity-lg">
+                                        {{ $driverTrip?->trip?->scheduled ? translate('messages.scheduled'): translate('messages.Instant')  }}
+                                    </div>
                                 </div>
-                                <div class="opacity-lg">
-                                    {{ translate('messages.Instant') }}
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <label class="badge badge-soft-info border-0">
+                                        {{ translate($driverTrip?->trip?->trip_status) }}
+                                    </label>
                                 </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="d-flex justify-content-center">
-                                <label class="badge badge-soft-info border-0">
-                                    {{ translate('messages.Pending') }}
-                                </label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="btn--container justify-content-center">
-                                <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
-                                   title="{{ translate('messages.download') }}"><i class="tio-download-to"></i>
-                                </a>
-                                <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
-                                   title="{{ translate('messages.view') }}"><i class="tio-visible-outlined"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                            <td>
+                                <div class="btn--container justify-content-center">
+                                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{route("vendor.trip.generate-invoice",["id" => $driverTrip?->trip?->id])}}"
+                                       title="{{ translate('messages.download') }}"><i class="tio-download-to"></i>
+                                    </a>
+                                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{ route('vendor.trip.details', $driverTrip?->trip?->id) }}"
+                                       title="{{ translate('messages.view') }}"><i class="tio-visible-outlined"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
 
             </div>
-            <div class="page-area mt-3">
-                <nav>
-                    <ul class="pagination">
-                        <li class="page-item disabled" aria-disabled="true" aria-label="« Previous">
-                            <span class="page-link" aria-hidden="true">‹</span>
-                        </li>
-                        <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" rel="next" aria-label="Next »">›</a>
-                        </li>
-                    </ul>
-                </nav>
-
+            @if(count($driverTrips) !== 0)
+                <hr>
+            @endif
+            <div class="page-area">
+                {!! $driverTrips->appends($_GET)->links() !!}
             </div>
+            @if(count($driverTrips) === 0)
+                <div class="empty--data">
+                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <h5>
+                        {{translate('no_data_found')}}
+                    </h5>
+                </div>
+            @endif
             <!-- End Table -->
         </div>
         <!-- End Card -->

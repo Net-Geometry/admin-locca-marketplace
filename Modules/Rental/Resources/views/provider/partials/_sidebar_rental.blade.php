@@ -345,6 +345,7 @@
                         </li>
                     @endif
 
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('store_setup'))
                     <li
                         class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/business-settings/notification-setup') ? 'active' : '' }}">
                         <a class="nav-link " href="{{ route('vendor.business-settings.notification-setup') }}"
@@ -353,6 +354,7 @@
                             <span class="text-truncate">{{ translate('messages.notification_setup') }}</span>
                         </a>
                     </li>
+                    @endif
 
                     @if (\App\CentralLogics\Helpers::employee_module_permission_check('my_shop'))
                         <li
@@ -368,6 +370,7 @@
                         </li>
                     @endif
 
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('store_setup'))
                     <li class="navbar-vertical-aside-has-menu @yield('subscriberList')">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
                             href="{{ route('vendor.subscriptionackage.subscriberDetail') }}"
@@ -378,8 +381,9 @@
                             </span>
                         </a>
                     </li>
+                    @endif
 
-                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('my_wallet'))
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('wallet'))
                         <!-- StoreWallet -->
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/wallet') ? 'active' : '' }}">
@@ -432,13 +436,13 @@
                         </li>
                     @endif
 
-                    <li class="nav-item">
-                        <small class="nav-subtitle"
-                            title="{{ translate('messages.Report_section') }}">{{ translate('messages.Report_section') }}</small>
-                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                    </li>
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('report'))
+                        <li class="nav-item">
+                            <small class="nav-subtitle"
+                                       title="{{ translate('messages.Report_section') }}">{{ translate('messages.Report_section') }}</small>
+                            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                        </li>
 
-                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('rental_report'))
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/report/expense-report') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('vendor.report.expense-report') }}"
@@ -465,7 +469,7 @@
                         </li>
                     @endif
 
-                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('rental_employees'))
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('employee'))
                         <li class="nav-item">
                             <small class="nav-subtitle"
                                 title="{{ translate('messages.employee_section') }}">{{ translate('messages.employee_section') }}</small>

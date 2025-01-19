@@ -56,29 +56,31 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
 
         });
 
-        Route::group(['prefix' => 'provider', 'as' => 'provider.', 'middleware' => ['module:provider']], function () {
-            Route::get('list', [ProviderController::class, 'list'])->name('list');
-            Route::get('create', [ProviderController::class, 'create'])->name('create');
-            Route::post('create', [ProviderController::class, 'store']);
-            Route::get('edit-basic-setup/{id}', [ProviderController::class, 'editBasicSetup'])->name('edit-basic-setup');
-            Route::post('edit-basic-setup/{id}', [ProviderController::class, 'updateBasicSetup']);
-            Route::get('edit-business-setup/{id}', [ProviderController::class, 'editBusinessSetup'])->name('edit-business-setup');
-            Route::post('edit-business-setup/{id}', [ProviderController::class, 'updateBusinessSetup']);
-            Route::delete('delete/{id}', [ProviderController::class, 'destroy'])->name('delete');
-            Route::get('status/{id}', [ProviderController::class, 'status'])->name('status');
-            Route::get('details/{id}/{tab?}/{sub_tab?}', [ProviderController::class, 'details'])->name('details');
-            Route::post('update-settings/{id}', [ProviderController::class, 'updateSettings'])->name('update_settings');
-            Route::get('export-review', [ProviderController::class, 'exportReview'])->name('export-review');
-            Route::get('export-categories', [ProviderController::class, 'export'])->name('export-brands');
-            Route::get('new-requests', [ProviderController::class, 'newRequests'])->name('new-requests');
-            Route::get('new-requests-details/{id}', [ProviderController::class, 'newRequestsDetails'])->name('new-requests-details');
-            Route::get('approve-or-deny/{id}', [ProviderController::class, 'approveOrDeny'])->name('approve-or-deny');
-            Route::get('status/{store_id}', [ProviderController::class, 'status'])->name('status');
+        Route::group(['prefix' => 'provider', 'as' => 'provider.'], function () {
+            Route::group(['middleware' => ['module:provider']], function () {
+                Route::get('list', [ProviderController::class, 'list'])->name('list');
+                Route::get('create', [ProviderController::class, 'create'])->name('create');
+                Route::post('create', [ProviderController::class, 'store']);
+                Route::get('edit-basic-setup/{id}', [ProviderController::class, 'editBasicSetup'])->name('edit-basic-setup');
+                Route::post('edit-basic-setup/{id}', [ProviderController::class, 'updateBasicSetup']);
+                Route::get('edit-business-setup/{id}', [ProviderController::class, 'editBusinessSetup'])->name('edit-business-setup');
+                Route::post('edit-business-setup/{id}', [ProviderController::class, 'updateBusinessSetup']);
+                Route::delete('delete/{id}', [ProviderController::class, 'destroy'])->name('delete');
+                Route::get('status/{id}', [ProviderController::class, 'status'])->name('status');
+                Route::get('details/{id}/{tab?}/{sub_tab?}', [ProviderController::class, 'details'])->name('details');
+                Route::post('update-settings/{id}', [ProviderController::class, 'updateSettings'])->name('update_settings');
+                Route::get('export-review', [ProviderController::class, 'exportReview'])->name('export-review');
+                Route::get('export-categories', [ProviderController::class, 'export'])->name('export-brands');
+                Route::get('new-requests', [ProviderController::class, 'newRequests'])->name('new-requests');
+                Route::get('new-requests-details/{id}', [ProviderController::class, 'newRequestsDetails'])->name('new-requests-details');
+                Route::get('approve-or-deny/{id}', [ProviderController::class, 'approveOrDeny'])->name('approve-or-deny');
+                Route::get('status/{store_id}', [ProviderController::class, 'status'])->name('status');
 
-            Route::get('bulk-import', [ProviderController::class, 'bulkImportIndex'])->name('bulk_import');
-            Route::post('bulk-import', [ProviderController::class, 'bulkImportData']);
-            Route::get('bulk-export', [ProviderController::class, 'bulkExportIndex'])->name('bulk_export_index');
-            Route::post('bulk-export', [ProviderController::class, 'bulkExportData']);
+                Route::get('bulk-import', [ProviderController::class, 'bulkImportIndex'])->name('bulk_import');
+                Route::post('bulk-import', [ProviderController::class, 'bulkImportData']);
+                Route::get('bulk-export', [ProviderController::class, 'bulkExportIndex'])->name('bulk_export_index');
+                Route::post('bulk-export', [ProviderController::class, 'bulkExportData']);
+            });
 
             Route::group(['prefix' => 'driver', 'as' => 'driver.', 'middleware' => ['module:driver']], function () {
                 Route::get('create/{provider_id}', [DriverController::class, 'create'])->name('create');
@@ -89,6 +91,7 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
                 Route::get('status/{id}', [DriverController::class, 'status'])->name('status');
                 Route::delete('delete/{id}', [DriverController::class, 'destroy'])->name('delete');
                 Route::get('export', [DriverController::class, 'export'])->name('export');
+                Route::get('trip-export', [DriverController::class, 'tripExport'])->name('trip.export');
             });
 
             Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.', 'middleware' => ['module:vehicle']], function () {

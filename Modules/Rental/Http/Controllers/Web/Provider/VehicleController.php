@@ -62,7 +62,7 @@ class VehicleController extends Controller
      */
     public function index(Request $request): Renderable
     {
-        $providerId = auth('vendor')->user()->stores[0]->id;
+        $providerId = $this->helpers->get_store_id();
 
         $vehicles = $this->vehicle
             ->ofProvider($providerId)
@@ -162,7 +162,7 @@ class VehicleController extends Controller
             $documents = json_encode([]);
         }
 
-        $providerId = auth('vendor')->user()->stores[0]->id;
+        $providerId = $this->helpers->get_store_id();
         $providerZoneId = $this->store->where('id', $providerId)->value('zone_id') ?? 0;
         $vehicles = $request->input('vehicle');
         $vinNumbers = $vehicles['vin_number'];
@@ -225,7 +225,7 @@ class VehicleController extends Controller
      */
     public function edit($id): Renderable
     {
-        
+
         $vehicle = $this->vehicle->withoutGlobalScope('translate')->with('translations')->findOrFail($id);
         $categories = $this->vehicleCategory->ofStatus(1)->latest()->get();
         $brands = $this->vehicleBrand->ofStatus(1)->latest()->get();
@@ -326,7 +326,7 @@ class VehicleController extends Controller
 
         $documents = json_encode(array_values($docNames));
 
-        $providerId = auth('vendor')->user()->stores[0]->id;
+        $providerId = $this->helpers->get_store_id();
         $providerZoneId = $this->store->where('id', $providerId)->value('zone_id') ?? 0;
         $vehicles = $request->input('vehicle');
         $vinNumbers = $vehicles['vin_number'];
@@ -550,7 +550,7 @@ class VehicleController extends Controller
      */
     public function export(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
     {
-        $providerId = auth('vendor')->user()->stores[0]->id;
+        $providerId = $this->helpers->get_store_id();
         $vehicles = $this->vehicle
             ->ofProvider($providerId)
             ->when($request->has('search'), function ($query) use ($request) {
@@ -589,7 +589,7 @@ class VehicleController extends Controller
      */
     public function reviewExport(Request $request): BinaryFileResponse
     {
-        $providerId = auth('vendor')->user()->stores[0]->id;
+        $providerId = $this->helpers->get_store_id();
 
         $vehicles = $this->vehicleReview->where('provider_id', $providerId)->where('vehicle_id', $request->vehicle_id)->latest()->get();
 
@@ -667,7 +667,7 @@ class VehicleController extends Controller
                         'thumbnail' => $collection['Thumbnail'] ?? null,
                         'images' => $collection['Images'] ?? null,
                         'zone_id' => $collection['ZoneId'] ?? null,
-                        'provider_id' => auth('vendor')->user()->id,
+                        'provider_id' => $this->helpers->get_store_id(),
                         'brand_id' => $collection['BrandId'] ?? null,
                         'category_id' => $collection['CategoryId'] ?? null,
                         'model' => $collection['Model'] ?? null,
@@ -734,7 +734,7 @@ class VehicleController extends Controller
                     'thumbnail' => $collection['Thumbnail'] ?? null,
                     'images' => $collection['Images'] ?? null,
                     'zone_id' => $collection['ZoneId'] ?? null,
-                    'provider_id' => auth('vendor')->user()->id,
+                    'provider_id' => $this->helpers->get_store_id(),
                     'brand_id' => $collection['BrandId'] ?? null,
                     'category_id' => $collection['CategoryId'] ?? null,
                     'model' => $collection['Model'] ?? null,
@@ -822,7 +822,7 @@ class VehicleController extends Controller
             'to_date' => 'required_if:type,date_wise'
         ]);
 
-        $providerId = auth('vendor')->user()->id;
+        $providerId = $this->helpers->get_store_id();
         $moduleType = Config::get('module.current_module_type');
         $vehicles = $this->vehicle->where('provider_id', $providerId)->when($request['type'] == 'date_wise', function ($query) use ($request) {
             $query->whereBetween('created_at', [$request['from_date'] . ' 00:00:00', $request['to_date'] . ' 23:59:59']);
