@@ -7099,4 +7099,5 @@ Smartly or Earn. ',
   'rental employees' => 'Rental employees',
   'vehicle_not_found.' => 'Vehicle not found.',
   'vehicle not found' => 'Vehicle not found',
+  'discount_on_trip' => 'Discount on trip',
 );
