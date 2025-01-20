@@ -77,8 +77,8 @@ class VehicleController extends Controller
             ->when($request->filled('brand_id'), function ($query) use ($request) {
                 $query->where('brand_id', $request->input('brand_id'));
             })
-            ->when($request->filled('type'), function ($query) use ($request) {
-                $query->where('type', $request->input('type'));
+            ->when($request->filled('vehicle_type'), function ($query) use ($request) {
+                $query->where('type', $request->input('vehicle_type'));
             })
             ->ofProvider($providerId)
             ->latest()->paginate(config('default_pagination'));
@@ -552,12 +552,13 @@ class VehicleController extends Controller
     {
         $providerId = $this->helpers->get_store_id();
         $vehicles = $this->vehicle
-            ->ofProvider($providerId)
             ->when($request->has('search'), function ($query) use ($request) {
-                $keys = explode(' ', $request['search']);
-                foreach ($keys as $key) {
-                    $query->orWhere('name', 'LIKE', '%' . $key . '%');
-                }
+                $query->where(function($subQuery) use ($request) {
+                    $keys = explode(' ', $request['search']);
+                    foreach ($keys as $key) {
+                        $subQuery->orWhere('name', 'LIKE', '%' . $key . '%');
+                    }
+                });
             })
             ->when($request->filled('category_id'), function ($query) use ($request) {
                 $query->where('category_id', $request->input('category_id'));
@@ -565,9 +566,10 @@ class VehicleController extends Controller
             ->when($request->filled('brand_id'), function ($query) use ($request) {
                 $query->where('brand_id', $request->input('brand_id'));
             })
-            ->when($request->filled('type'), function ($query) use ($request) {
-                $query->where('type', $request->input('type'));
+            ->when($request->filled('vehicle_type'), function ($query) use ($request) {
+                $query->where('type', $request->input('vehicle_type'));
             })
+            ->ofProvider($providerId)
             ->latest()->get();
 
         $data = [

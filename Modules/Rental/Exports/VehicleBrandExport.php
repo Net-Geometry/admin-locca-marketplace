@@ -26,7 +26,7 @@ class VehicleBrandExport implements  FromView, ShouldAutoSize, WithStyles ,WithH
 
     public function view(): View
     {
-        return view('rental::file-exports.category-export', [
+        return view('rental::file-exports.brand-export', [
             'data' => $this->data,
         ]);
     }

@@ -173,15 +173,22 @@ class BusinessSettingsController extends Controller
             );
             $conf[$request->menu] = $request->status;
             $conf->save();
-
-            Toastr::success(translate('messages.store settings updated!'));
+            if($store->module->module_type == 'rental'){
+                Toastr::success(translate('messages.provider settings updated!'));
+            }else{
+                Toastr::success(translate('messages.store settings updated!'));
+            }
             return back();
         }
 
 
         $store[$request->menu] = $request->status;
         $store->save();
-        Toastr::success(translate('messages.store settings updated!'));
+        if($store->module->module_type == 'rental'){
+            Toastr::success(translate('messages.provider settings updated!'));
+        }else{
+            Toastr::success(translate('messages.store settings updated!'));
+        }
         return back();
     }
 

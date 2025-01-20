@@ -328,13 +328,13 @@
                         </li>
                     @endif
 
-                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('store_setup'))
-                        <li class="nav-item">
-                            <small class="nav-subtitle"
-                                title="{{ translate('messages.business_section') }}">{{ translate('messages.business_section') }}</small>
-                            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                        </li>
+                    <li class="nav-item">
+                        <small class="nav-subtitle"
+                            title="{{ translate('messages.business_section') }}">{{ translate('messages.business_section') }}</small>
+                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                    </li>
 
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('store_setup'))
                         <li
                             class="nav-item {{ Request::is('vendor-panel/business-settings/store-setup') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('vendor.business-settings.store-setup') }}"
