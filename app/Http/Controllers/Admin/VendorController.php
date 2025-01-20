@@ -844,17 +844,19 @@ class VendorController extends Controller
     public function get_providers(Request $request){
         $zone_ids = isset($request->zone_ids)?(count($request->zone_ids)>0?$request->zone_ids:[]):[];
 
-        $data = Store::when(count($zone_ids) > 0, function($query) use($zone_ids) {
-            $query->whereIn('stores.zone_id', $zone_ids);
+        $data = Store::wherehas('vendor',function($query){
+            $query->where('status',1);
+        })
+        ->when(count($zone_ids) > 0, function($query) use($zone_ids) {
+            $query->whereIn('zone_id', $zone_ids);
         })
         ->when($request->module_id, function($query)use($request){
             $query->where('module_id', $request->module_id);
         })
-        ->whereHas('module', function($q)use($request){
+        ->whereHas('module', function($q){
             $q->where('module_type', 'rental');
-
         })
-        ->where('stores.name', 'like', '%'.$request->q.'%')
+        ->where('name', 'like', '%'.$request->q.'%')
         ->limit(8)
         ->get()
         ->map(function ($store) {

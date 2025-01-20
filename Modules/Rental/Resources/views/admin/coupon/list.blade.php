@@ -46,7 +46,7 @@
                                                 (Default)
                                             </label>
                                             <input type="text" name="title[]" id="default_title"
-                                                class="form-control" placeholder="{{ translate('messages.new_coupon') }}" required>
+                                                class="form-control" pdlaceholder="{{ translate('messages.new_coupon') }}" required>
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
@@ -168,7 +168,7 @@
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </label>
-                                        <input type="number" step="0.01" min="1" max="999999999999.99" name="discount" id="discount" class="form-control" required>
+                                        <input type="number" step="0.01"   placeholder="{{ translate('messages.Ex :') }} 100" min="1" max="999999999999.99" name="discount" id="discount" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-3 col-sm-6">
