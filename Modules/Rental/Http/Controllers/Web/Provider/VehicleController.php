@@ -65,7 +65,6 @@ class VehicleController extends Controller
         $providerId = $this->helpers->get_store_id();
 
         $vehicles = $this->vehicle
-            ->ofProvider($providerId)
             ->when($request->has('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request['search']);
                 foreach ($keys as $key) {
@@ -81,6 +80,7 @@ class VehicleController extends Controller
             ->when($request->filled('type'), function ($query) use ($request) {
                 $query->where('type', $request->input('type'));
             })
+            ->ofProvider($providerId)
             ->latest()->paginate(config('default_pagination'));
 
         $categories = $this->vehicleCategory->ofStatus(1)->get();
@@ -318,7 +318,7 @@ class VehicleController extends Controller
 
         if (!empty($request->file('documents'))) {
             foreach ($request->documents as $doc) {
-                $extension = $img->getClientOriginalExtension();
+                $extension = $doc->getClientOriginalExtension();
                 $file= $this->updateAndUpload('vehicle/', $vehicle->images, $extension, $doc);
                 $docNames[] = ['img' => $file, 'storage' => $this->helpers->getDisk()];
             }

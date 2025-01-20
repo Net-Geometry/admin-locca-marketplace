@@ -119,6 +119,13 @@
                         </div>
                         <div class="col-lg-3 col-sm-6">
                             <div class="form-group">
+                                <label class="input-label" for="min_purchase">{{translate('messages.min_purchase')}}</label>
+                                <input id="min_purchase" type="number" step="0.01" name="min_purchase" value="0" min="0" max="999999999999.99" class="form-control"
+                                       placeholder="100">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6">
+                            <div class="form-group">
                                 <label class="input-label" for="discount_type">{{translate('messages.discount_type')}}</label>
                                 <select name="discount_type" class="form-control" id="discount_type">
                                     <option value="amount">
@@ -131,20 +138,13 @@
                         <div class="col-lg-3 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label" for="discount">{{translate('messages.discount')}} </label>
-                                <input type="number" step="0.01" min="1" max="999999999999.99" name="discount" id="discount" class="form-control" required>
+                                <input type="number" step="0.01" min="1" max="999999999999.99" name="discount" id="discount" class="form-control" placeholder="{{ translate('messages.Ex :') }} 100" required>
                             </div>
                         </div>
                         <div class="col-lg-3 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label" for="max_discount">{{translate('messages.max_discount')}}</label>
                                 <input type="number" step="0.01" min="0" value="0" max="999999999999.99" name="max_discount" id="max_discount" class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="form-group">
-                                <label class="input-label" for="min_purchase">{{translate('messages.min_purchase')}}</label>
-                                <input id="min_purchase" type="number" step="0.01" name="min_purchase" value="0" min="0" max="999999999999.99" class="form-control"
-                                       placeholder="100">
                             </div>
                         </div>
                     </div>
@@ -316,5 +316,55 @@
             $('#min_purchase').val(0);
             $('#select_customer').val(null).trigger('change');
         })
+
+        $('#discount_type').on('change', function() {
+            if ($(this).val() === 'amount') {
+                $('#discount').attr('max', $('#min_purchase').val() || 0);
+                validateDiscount();
+            } else {
+                $('#discount').attr('max', 100);
+            }
+        });
+
+        $('#min_purchase').on('input', function() {
+            if ($('#discount_type').val() === 'amount') {
+                $('#discount').attr('max', $(this).val() || 0);
+                if (parseFloat($('#discount').val()) > parseFloat($(this).val())) {
+                    toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
+                    $(this).val($(this).data('previous-value'));
+                }
+            }
+            $(this).data('previous-value', $(this).val());
+        });
+
+        $('#discount').on('input', function() {
+            if ($('#discount_type').val() === 'amount') {
+                let minPurchase = parseFloat($('#min_purchase').val()) || 0;
+                let discountValue = parseFloat($(this).val()) || 0;
+
+                if (discountValue > minPurchase) {
+                    toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
+                    $(this).val($(this).data('previous-value'));
+                }
+            }
+            $(this).data('previous-value', $(this).val());
+        });
+
+        function validateDiscount() {
+            let discountType = $('#discount_type').val();
+            let discountInput = $('#discount');
+            let minPurchase = parseFloat($('#min_purchase').val()) || 0;
+            let discountValue = parseFloat(discountInput.val()) || 0;
+
+            if (discountType === 'amount' && discountValue > minPurchase) {
+                discountInput.val(discountValue);
+                toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
+            }
+        }
+
+        $(document).ready(function() {
+            $('#min_purchase').data('previous-value', $('#min_purchase').val());
+            $('#discount').data('previous-value', $('#discount').val());
+        });
     </script>
 @endpush
