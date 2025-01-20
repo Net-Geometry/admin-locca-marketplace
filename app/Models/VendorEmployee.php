@@ -27,8 +27,11 @@ class VendorEmployee extends Authenticatable
         'auth_token',
         'remember_token',
     ];
+    
     protected $appends = ['image_full_url'];
-    public function getImageFullUrlAttribute(){
+
+    public function getImageFullUrlAttribute()
+    {
         $value = $this->image;
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {

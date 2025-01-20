@@ -17,7 +17,7 @@
                     <form class="search-form" method="get" action="">
                         <!-- Search -->
                         <div class="input-group input--group">
-                            <input type="search" name="search" value="{{ request()?->search ?? null }}" class="form-control min-height-45" placeholder="{{translate('messages.search_categories')}}" aria-label="{{translate('messages.ex_:_categories')}}">
+                            <input type="search" name="search" value="{{ request()?->search ?? null }}" class="form-control min-height-45" placeholder="{{translate('messages.search_by_brand_name')}}" aria-label="{{translate('messages.ex_:_categories')}}">
                             <button type="submit" class="btn btn--secondary min-height-45"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
@@ -70,6 +70,7 @@
                         <tr>
                             <th class="border-0">{{ translate('sl') }}</th>
                             <th class="border-0">{{ translate('messages.brand_id') }}</th>
+                            <th class="border-0">{{ translate('messages.brand_image') }}</th>
                             <th class="border-0">{{ translate('messages.brand_name') }}</th>
                         </tr>
                         </thead>
@@ -79,6 +80,11 @@
                             <tr>
                                 <td>{{ $key+$brands->firstItem() }}</td>
                                 <td>{{ $brand->id }}</td>
+                                <td>
+                                    <span class="media align-items-center">
+                                    <img class="w-auto h--50px aspect-2-1 rounded onerror-image" src="{{ $brand['image_full_url'] }}" data-onerror-image="{{ $brand['image_full_url'] }}" alt="{{translate('brand image')}}">
+                                </span>
+                                </td>
                                 <td>
                                     <span class="d-block font-size-sm text-body">
                                         {{ Str::limit($brand['name'], 20,'...') }}

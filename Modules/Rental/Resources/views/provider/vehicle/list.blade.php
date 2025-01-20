@@ -15,7 +15,7 @@
                         <span class="page-header-icon">
                             <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
                         </span>
-                        <span>{{ translate('messages.Auto_Focus_Car_Service') }}</span>
+                        <span>{{ App\CentralLogics\Helpers::get_store_data()->name }}</span>
                     </h1>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                             <div class="select-item">
                                 <label for="type-select" class="input-label">{{ translate('messages.type') }}</label>
                                 <select id="type-select" class="js-data-example-ajax form-control set-filter opacity-70"
-                                        name="type">
+                                        name="vehicle_type">
                                     <option value="" selected disabled>
                                         {{ translate('messages.select_vehicle_type') }}
                                     </option>
@@ -96,8 +96,8 @@
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"
                                    name="search" class="form-control"
-                                   placeholder="{{ translate('Search by provider name, owner info...') }}"
-                                   aria-label="{{ translate('messages.Search by provider name, owner info...') }}">
+                                   placeholder="{{ translate('messages.search_by_vehicle_name') }}"
+                                   aria-label="{{ translate('messages.search_by_vehicle_name') }}">
                             <button type="submit" class="btn btn--secondary bg--primary"><i
                                     class="tio-search"></i></button>
 
@@ -181,7 +181,9 @@
                             <td>
                                 <div class="text--title">
                                     <div class="font-medium">
-                                        {{ $vehicle->name }}
+                                        <a href="{{ route('vendor.vehicle.details', $vehicle->id)}}?vehicle_list=true">
+                                            {{ $vehicle->name }}
+                                        </a>
                                     </div>
                                     <div class="opacity-lg">
                                         {{ $vehicle->model }}

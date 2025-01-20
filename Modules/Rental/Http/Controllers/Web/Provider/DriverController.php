@@ -65,6 +65,15 @@ class DriverController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $request->validate([
+            'email' => 'required|unique:vehicle_drivers,email',
+            'phone' => 'required|unique:vehicle_drivers,phone',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'identity_type' => 'required',
+            'identity_number' => 'required',
+        ]);
+
         if ($request->has('image')) {
             $imageName = $this->upload('driver/', 'png', $request->file('image'));
         } else {
@@ -138,6 +147,15 @@ class DriverController extends Controller
     public function update(Request $request, $id): RedirectResponse
     {
         $driver = $this->driver->findOrFail($id);
+
+        $request->validate([
+            'email' => 'required|unique:vehicle_drivers,email,'.$id,
+            'phone' => 'required|unique:vehicle_drivers,phone,'.$id,
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'identity_type' => 'required',
+            'identity_number' => 'required',
+        ]);
 
         if ($request->has('image')) {
             $imageName = $this->updateAndUpload('driver/', $driver->image, 'png', $request->file('image'));
