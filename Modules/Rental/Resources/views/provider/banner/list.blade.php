@@ -292,6 +292,17 @@
                     reader.readAsDataURL(file);
                 }
             });
+
+            $('#reset_btn').on('click', function() {
+                var $uploadFile = $('.upload-file');
+                var $textbox = $uploadFile.find('.upload-file-textbox');
+                var $imgElement = $uploadFile.find('.upload-file-img');
+                var $fileInput = $uploadFile.find('.upload-file__input');
+
+                $textbox.show();
+                $imgElement.attr('src', '').hide();
+                $fileInput.val('');
+            });
         });
     </script>
 @endpush
