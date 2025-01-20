@@ -76,11 +76,11 @@
                                     {{ session()->has('to_date') ? 'value=' . session('to_date') : '' }} required>
 
                             </div>
+                            <div class="col-sm-6 col-md-3 ml-auto">
+                                <button type="submit"
+                                    class="btn btn-primary btn-block h--45px">{{ translate('Filter') }}</button>
+                            </div>
                         @endif
-                        <div class="col-sm-6 col-md-3 ml-auto">
-                            <button type="submit"
-                                class="btn btn-primary btn-block h--45px">{{ translate('Filter') }}</button>
-                        </div>
                     </div>
                 </form>
             </div>
@@ -235,8 +235,7 @@
                                         {{ $key + $trips->firstItem() }}
                                     </td>
                                     <td class="table-column-pl-0">
-                                        <a
-                                            href="{{ route('admin.rental.trip.details', $trip->id) }}">{{ $trip['id'] }}</a>
+                                        <a href="{{ route('vendor.trip.details', $trip->id) }}">{{ $trip->id }}</a>
                                     </td>
 {{--                                    <td  class="text-capitalize">--}}
 {{--                                        @if($trip->provider)--}}
@@ -369,11 +368,11 @@
                                     <td>
                                         <div class="btn--container justify-content-center">
                                             <a class="ml-2 btn btn-sm btn--warning btn-outline-warning action-btn"
-                                                href="{{ route('admin.rental.trip.details', $trip->id) }}">
+                                                href="{{ route('vendor.trip.details', $trip->id) }}">
                                                 <i class="tio-invisible"></i>
                                             </a>
                                             <a class="ml-2 btn btn-sm btn--primary btn-outline-primary action-btn"
-                                                href="{{ route('admin.transactions.rental.trip.generate-invoice', ['id' => $trip['id']]) }}">
+                                                href="{{route("vendor.trip.generate-invoice",["id" => $trip->id])}}">
                                                 <i class="tio-print"></i>
                                             </a>
                                         </div>

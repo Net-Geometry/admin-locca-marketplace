@@ -56,6 +56,7 @@ use App\Library\Payment as PaymentInfo;
 use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Storage;
 use App\Models\StoreNotificationSetting;
+use Modules\Rental\Traits\TripLogicTrait;
 use App\Traits\NotificationDataSetUpTrait;
 use Illuminate\Database\Eloquent\Collection;
 use MatanYadaev\EloquentSpatial\Objects\Point;
@@ -66,7 +67,7 @@ use Laravelpkg\Laravelchk\Http\Controllers\LaravelchkController;
 
 class Helpers
 {
-    use PaymentGatewayTrait , NotificationDataSetUpTrait;
+    use PaymentGatewayTrait , NotificationDataSetUpTrait , TripLogicTrait;
     public static function error_processor($validator)
     {
         $err_keeper = [];
@@ -4488,5 +4489,9 @@ class Helpers
         return true;
     }
 
+    public static function createTransactionForTrip($trip, $received_by = false, $status = null)
+    {
+        return self::create_transaction($trip, $received_by, $status);
+    }
 }
 

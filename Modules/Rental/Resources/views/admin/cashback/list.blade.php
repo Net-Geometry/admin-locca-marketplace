@@ -136,7 +136,7 @@
 
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Minimum_Purchase')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
+                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Min trip amount')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
                                         <input type="number" step="0.01" id="min_purchase" value="{{  old('min_purchase') }}" required name="min_purchase" value="0" min="0" max="999999999999.99" class="form-control"
                                              placeholder="{{ translate('messages.Ex:_100') }}">
                                     </div>
@@ -163,7 +163,7 @@
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Limit_for_Same_User')}}</label>
-                                        <input type="number" step="1" required  value="{{  old('same_user_limit') }}" name="same_user_limit" value="0" min="0" max="9999999" class="form-control"
+                                        <input type="number" step="1" required  value="{{  old('same_user_limit') }}" name="same_user_limit"  min="1" max="9999999" class="form-control"
                                              placeholder="{{ translate('messages.Ex:_5') }}">
                                     </div>
                                 </div>

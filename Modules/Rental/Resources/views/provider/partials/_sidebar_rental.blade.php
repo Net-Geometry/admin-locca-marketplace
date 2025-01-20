@@ -82,7 +82,7 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/trip*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
                                 title="{{ translate('messages.Trips') }}">
-                                <i class="tio-shopping-cart nav-icon"></i>
+                                <i class="tio-taxi nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                     {{ translate('messages.Trips') }}
                                 </span>
@@ -328,13 +328,13 @@
                         </li>
                     @endif
 
-                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('store_setup'))
-                        <li class="nav-item">
-                            <small class="nav-subtitle"
-                                title="{{ translate('messages.business_section') }}">{{ translate('messages.business_section') }}</small>
-                            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                        </li>
+                    <li class="nav-item">
+                        <small class="nav-subtitle"
+                            title="{{ translate('messages.business_section') }}">{{ translate('messages.business_section') }}</small>
+                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                    </li>
 
+                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('store_setup'))
                         <li
                             class="nav-item {{ Request::is('vendor-panel/business-settings/store-setup') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('vendor.business-settings.store-setup') }}"

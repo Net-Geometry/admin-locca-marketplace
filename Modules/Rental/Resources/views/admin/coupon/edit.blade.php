@@ -176,7 +176,7 @@
                                     </span>
                                 </label>
                                 <input type="number" id="discount" min="1" max="999999999999.99" step="0.01" value="{{$coupon['discount']}}"
-                                       name="discount" class="form-control" required>
+                                       name="discount" class="form-control"  placeholder="{{ translate('messages.Ex :') }} 100" required>
                             </div>
                         </div>
                         <div class="col-md-4 col-lg-3 col-sm-6">

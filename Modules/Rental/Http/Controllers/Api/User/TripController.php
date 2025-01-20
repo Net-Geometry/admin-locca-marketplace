@@ -622,7 +622,7 @@ class TripController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
+            return response()->json(['message' => $this->helpers->error_processor($validator)], 403);
         }
 
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
@@ -635,14 +635,14 @@ class TripController extends Controller
         ])->first();
 
         if (!$trip) {
-            return response()->json(['errors' => translate('trip_data_not_found')], 404);
+            return response()->json(['message' => translate('trip_data_not_found')], 404);
         }
 
         if ($is_guest && in_array($request->payment_method, ['wallet', 'partial_payment'])) {
-            return response()->json(['errors' => translate('This_payment_method_is_not_available_for_guest_users')], 403);
+            return response()->json(['message' => translate('This_payment_method_is_not_available_for_guest_users')], 403);
         }
 
-        $user = $request->user ?: $this->getGuestUserDetails($trip, $user_id);
+        $user = $request->user ? '': $this->getGuestUserDetails($trip, $user_id);
 
         switch ($request->payment_method) {
             case 'cash_payment':
@@ -654,17 +654,17 @@ class TripController extends Controller
 
             case 'wallet':
                 if ($user->wallet_balance < $trip->trip_amount) {
-                    return response()->json(['errors' => translate('insufficient_balance')], 403);
+                    return response()->json(['message' => translate('insufficient_balance')], 403);
                 }
                 $this->processWalletPayment($trip);
                 break;
 
             case 'partial_payment':
                 if ($user->wallet_balance > $trip->trip_amount) {
-                    return response()->json(['errors' => translate('trip_amount_must_be_greater_than_wallet_amount')], 403);
+                    return response()->json(['message' => translate('trip_amount_must_be_greater_than_wallet_amount')], 403);
                 }
                 if ($user->wallet_balance <= 0) {
-                    return response()->json(['errors' => translate('insufficient_balance_for_partial_amount')], 403);
+                    return response()->json(['message' => translate('insufficient_balance_for_partial_amount')], 403);
                 }
                 return $this->processPartialPayment($trip, $user, $request);
 
@@ -672,6 +672,11 @@ class TripController extends Controller
                 return response()->json(['message' => translate('something_went_wrong')], 403);
         }
 
+        if ($trip->trip_status == 'completed' && $trip->payment_status == 'paid' && !$trip->trip_transaction) {
+            if ($this->create_transaction($trip, 'vendor') === false) {
+                return response()->json(['message' => translate('Failed_to_create_Transaction')], 403);
+            };
+        }
         return response()->json(['message' => translate('payment_successful')], 200);
     }
 

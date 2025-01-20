@@ -363,7 +363,7 @@ class ItemController extends Controller
 
     public function view($id)
     {
-        $product = Item::withoutGlobalScope(StoreScope::class)->where(['id' => $id])->first();
+        $product = Item::withoutGlobalScope(StoreScope::class)->where(['id' => $id])->firstOrFail();
         $reviews = Review::where(['item_id' => $id])->latest()->paginate(config('default_pagination'));
         return view('admin-views.product.view', compact('product', 'reviews'));
     }

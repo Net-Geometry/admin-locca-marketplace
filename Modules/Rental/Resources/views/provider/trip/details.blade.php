@@ -151,7 +151,7 @@
                                 <tr>
                                     <th class="border-0">#</th>
                                     <th class="border-0">{{translate('Vehicle Details')}}</th>
-                                    <th class="border-0">{{translate('Unite Fair')}}</th>
+                                    <th class="border-0">{{translate('unit Fair')}}</th>
                                     <th class="border-0">{{translate('Quantity')}}</th>
                                     <th class="border-0">{{translate('Total Hour/Km')}}</th>
                                     <th class="text-right  border-0">{{translate('Fare')}}</th>
@@ -858,7 +858,7 @@
                                         <tr>
                                             <th class="border-0">#</th>
                                             <th class="border-0">{{translate('Vehicle Details')}}</th>
-                                            <th class="border-0">{{translate('Unite Fair')}}</th>
+                                            <th class="border-0">{{translate('unit Fair')}}</th>
                                             <th class="border-0 text-center">{{translate('Quantity')}}</th>
                                             <th class="border-0">{{translate('Total Hour/Km')}}</th>
                                             <th class="text-right  border-0">{{translate('Fare')}}</th>

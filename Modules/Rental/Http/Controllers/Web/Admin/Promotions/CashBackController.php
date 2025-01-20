@@ -67,7 +67,10 @@ class CashBackController extends Controller
          ]);
 
          $title = $request->title[array_search('default', $request->lang)];
-
+            if($request->cashback_type == 'percentage' && $request->cashback_amount > 100){
+                Toastr::error(translate('cashback_amount_must_be_under_100%'));
+                return back();
+            }
          $cashbackData = [
              'title' => $title,
              'customer_id' => json_encode($request->customer_id),
@@ -136,6 +139,10 @@ class CashBackController extends Controller
             'end_date' => 'required|date|after:start_date',
         ]);
 
+        if($request->cashback_type == 'percentage' && $request->cashback_amount > 100){
+            Toastr::error(translate('cashback_amount_must_be_under_100%'));
+            return back();
+        }
         $cashback = $this->cashback->findOrFail($id);
 
         $title = $request->title[array_search('default', $request->lang)];
