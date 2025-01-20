@@ -82,7 +82,7 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/trip*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
                                 title="{{ translate('messages.Trips') }}">
-                                <i class="tio-shopping-cart nav-icon"></i>
+                                <i class="tio-taxi nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                     {{ translate('messages.Trips') }}
                                 </span>

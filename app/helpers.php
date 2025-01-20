@@ -165,14 +165,14 @@ if (! function_exists('trip_payment_success')) {
         $trip->payment_status='paid';
         $trip->save();
 
-
-
         if( $trip?->provider?->is_valid_subscription == 1 && $trip?->provider?->store_sub?->max_order != "unlimited" && $trip?->provider?->store_sub?->max_order > 0){
             $trip?->provider?->store_sub?->decrement('max_order' , 1);
         }
 
+        if ($trip->trip_status == 'completed' && $trip->payment_status == 'paid' && !$trip->trip_transaction) {
+            Helpers::createTransactionForTrip($trip, 'admin');
+        }
         Helpers::sendTripPaymentNotificationCustomerMain($trip);
-
         OrderLogic::update_unpaid_trip_payment(trip_id:$trip->id, payment_method:$data->payment_method);
     }
 

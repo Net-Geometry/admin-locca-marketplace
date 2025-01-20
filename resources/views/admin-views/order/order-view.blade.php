@@ -505,7 +505,11 @@
                                                 if (!$editing) {
                                                     $detail->item = json_decode($detail->item_details, true);
                                                 }
-                                                $product = \App\Models\Item::where(['id' => $detail->item['id']])->first();
+                                                $product = \App\Models\Item::where(['id' => data_get($detail->item,'id')])->first();
+                                                        if(!$product){
+                                                            $detail->item = json_decode($detail->item_details, true);
+                                                        }
+
                                                 ?>
 
                                             <tr>
@@ -525,7 +529,7 @@
                                                                         class="avatar-status avatar-lg-status avatar-status-dark"><i
                                                                             class="tio-edit"></i></span>
                                                                 <img class="img-fluid rounded aspect-ratio-1 onerror-image"
-                                                                     src="{{ $product->image_full_url }}"
+                                                                     src="{{ $product?->image_full_url ??asset('public/assets/admin/img/100x100/2.png') }}"
                                                                      data-onerror-image="{{ asset('public/assets/admin/img/100x100/2.png') }}"
                                                                      alt="Image Description">
                                                             </div>
@@ -533,7 +537,7 @@
                                                             <a class="avatar avatar-xl mr-3"
                                                                href="{{ route('admin.item.view', [$detail->item['id'],'module_id' => $order->module_id]) }}">
                                                                 <img class="img-fluid rounded aspect-ratio-1 onerror-image"
-                                                                     src="{{ $product->image_full_url }}"
+                                                                     src="{{ $product?->image_full_url ?? asset('public/assets/admin/img/100x100/2.png') }}"
                                                                      data-onerror-image="{{ asset('public/assets/admin/img/100x100/2.png') }}"
                                                                      alt="Image Description">
                                                             </a>
