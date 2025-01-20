@@ -71,7 +71,7 @@
                                 <div class="text-center mb-auto">
                                     <img class="store-banner onerror-image" id="viewer"
                                          data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                         src="{{ $e['image_full_url'] }}"
+                                         src="{{ $e->image_full_url }}"
                                          alt="Employee thumbnail"/>
                                 </div>
 

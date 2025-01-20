@@ -27,21 +27,18 @@ class VendorEmployee extends Authenticatable
         'auth_token',
         'remember_token',
     ];
-    
     protected $appends = ['image_full_url'];
-
-    public function getImageFullUrlAttribute()
-    {
+    public function getImageFullUrlAttribute(){
         $value = $this->image;
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'image') {
-                    return Helpers::get_full_url('profile',$value,$storage['value']);
+                    return Helpers::get_full_url('vendor',$value,$storage['value']);
                 }
             }
         }
 
-        return Helpers::get_full_url('profile',$value,'public');
+        return Helpers::get_full_url('vendor',$value,'public');
     }
     public function store()
     {
