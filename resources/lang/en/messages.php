@@ -7169,4 +7169,7 @@ Smartly or Earn. ',
   'Brand_ID' => 'Brand ID',
   'provider settings updated!' => 'Provider settings updated!',
   'please_enter_valid_phone_number_with_country_code' => 'Please enter valid phone number with country code',
+  'unit Fair' => 'Unit Fair',
+  'wds' => 'Wds',
+  'ssd' => 'Ssd',
 );
