@@ -39,6 +39,7 @@
             <th>{{translate('messages.vehicle_name')}}</th>
             <th>{{translate('messages.provider_name')}}</th>
             <th>{{translate('messages.total_trip_count')}}</th>
+            <th>{{translate('messages.total_trip_vehicles')}}</th>
             <th>{{translate('messages.hourly_rate')}}</th>
             <th>{{translate('messages.distance_wise_rate')}}</th>
             <th>{{translate('messages.total_trip_amount')}}</th>
@@ -62,6 +63,9 @@
                 </td>
                 <td>
                     {{$vehicle->trips_count ?? 0}}
+                </td>
+                <td>
+                    {{$vehicle->trip_details_sum_quantity ?? 0}}
                 </td>
                 <td>
                     {{ \App\CentralLogics\Helpers::format_currency($vehicle->hourly_price) }}

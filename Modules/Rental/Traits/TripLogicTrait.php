@@ -82,7 +82,7 @@ trait TripLogicTrait
 
 
 
-        $trip_amount = $trip->trip_amount - $trip->additional_charge  -  $trip->tax_amount   + $trip->coupon_discount_amount + $discount_on_trip  + $ref_bonus_amount;
+        $trip_amount = $trip->trip_amount - $trip->additional_charge  -  $trip->tax_amount   + $trip->coupon_discount_amount + $discount_on_trip  + $ref_bonus_amount+$store_d_amount+$amount_admin;
 
 
         //final comission
@@ -630,7 +630,7 @@ trait TripLogicTrait
             'edited' => 1,
             'trip_amount' => $pricing['tripAmount'],
             'discount_on_trip' => $pricing['discount'],
-            'discount_on_trip_by' => $isAdminDiscount ? 'admin' : ($hasModifiedPrices ? 'none' : 'vendor'),
+            'discount_on_trip_by' => $isAdminDiscount ? 'admin' :  'vendor',
             'coupon_discount_amount' => $pricing['couponDiscount'],
             'tax_amount' => $pricing['taxAmount'],
             'tax_status' => self::taxStatus(),
