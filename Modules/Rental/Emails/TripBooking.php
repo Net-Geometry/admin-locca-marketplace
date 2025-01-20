@@ -30,8 +30,7 @@ class TripBooking extends Mailable
         $trip_id = $this->trip_id;
         $trip=Trips::where('id', $trip_id)->first();
 
-        $url=null;
-        // $url=route('order_invoice',['id' => base64_encode($trip_id) ,'type' =>'trip']);
+        $url=route('admin.trip_invoice',['id' => base64_encode($trip_id) ,'type' =>'trip']);
 
         $company_name = BusinessSetting::where('key', 'business_name')->first()->value;
         $data=RentalEmailTemplate::where('type','user')->where('email_type', 'new_order')->first();

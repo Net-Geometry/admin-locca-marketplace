@@ -157,7 +157,7 @@
                                 @if($module_type == 'rental')
                                     <td class="text-center" >
                                         @if (isset($exp['trip_id']))
-                                            <a href="{{route('vendor.order.details',['id'=>$exp['order_id']])}}">{{$exp['order_id']}}</a>
+                                            <a href="{{route('vendor.trip.details',['id'=>$exp['trip_id']])}}">{{$exp['trip_id']}}</a>
                                         @else
                                             <label class="badge badge-danger">{{translate('messages.invalid_trip_data')}}</label>
                                         @endif

@@ -109,9 +109,16 @@ class TripController extends Controller
         ->with(['trip_details' => function($query) {
             $query->withCount('vehicleVariations');
         }])->findOrFail($id);
-        session()->forget('vehicleQuantities as total_vehicles');
-        session()->forget('modifiedPrices');
-        return view('rental::provider.trip.details', compact('trip'));
+
+        $is_deleted = 0;
+
+        $trip->trip_details->each(function ($details) use (&$is_deleted) {
+            if (!$details->vehicle) {
+                $is_deleted = 1;
+            }
+        });
+
+        return view('rental::provider.trip.details', compact('trip','is_deleted'));
     }
 
     /**
@@ -139,8 +146,13 @@ class TripController extends Controller
             }
 
             $totalVehicle = count($trip->assignedVehicle);
-
-            if (in_array($status, ['ongoing', 'completed']) && $totalVehicle <= 0) {
+            $is_deleted = 0;
+            $trip->trip_details->each(function ($details) use (&$is_deleted) {
+                if (!$details->vehicle) {
+                    $is_deleted = 1;
+                }
+            });
+            if (in_array($status, ['ongoing', 'completed']) && $totalVehicle <= 0 && $is_deleted !=1) {
                 Toastr::error(translate('messages.at_first_assign_a_vehicle'));
                 return back();
             }

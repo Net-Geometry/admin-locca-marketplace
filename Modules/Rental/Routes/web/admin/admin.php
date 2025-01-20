@@ -205,5 +205,5 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
         });
     });
 });
-
+Route::get('trip-invoice/{id}', [ReportController::class, 'tripInvoice'])->name('trip_invoice');
 
