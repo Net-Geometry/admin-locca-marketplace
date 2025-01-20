@@ -11,8 +11,55 @@
 @section('content')
 <div class="content container-fluid">
     @include('rental::admin.provider.details.partials._header',['store'=>$store])
+
+    <div class="d-flex flex-wrap gap-2 mb-3">
+        <a class="order--card flex-grow-1" href="javascript:">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="card-subtitle m-0">
+                    <span>{{ translate('All') }}</span>
+                </h6>
+                <span class="card-title text-title">{{ $trips->total() }}</span>
+            </div>
+        </a>
+
+        <a class="order--card flex-grow-1" href="javascript:">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="card-subtitle m-0">
+                    <span>{{ translate('messages.ongoing') }}</span>
+                </h6>
+                <span class="card-title text--warning">{{ $store->trips->where('trip_status','ongoing')->count() }}</span>
+            </div>
+        </a>
+
+        <a class="order--card flex-grow-1" href="javascript:">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="card-subtitle m-0">
+                    <span>{{ translate('messages.pending') }}</span>
+                </h6>
+                <span class="card-title text--info">{{ $store->trips->where('trip_status','pending')->count() }}</span>
+            </div>
+        </a>
+
+        <a class="order--card flex-grow-1" href="javascript:">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="card-subtitle m-0">
+                    <span>{{ translate('messages.completed') }}</span>
+                </h6>
+                <span class="card-title text--success">{{ $store->trips->where('trip_status','completed')->count() }}</span>
+            </div>
+        </a>
+
+        <a class="order--card flex-grow-1" href="javascript:">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="card-subtitle m-0">
+                    <span>{{ translate('messages.canceled') }}</span>
+                </h6>
+                <span class="card-title text--danger">{{ $store->trips->where('trip_status','canceled')->count() }}</span>
+            </div>
+        </a>
+    </div>
     <!-- Page Heading -->
-    <div class="content container-fluid">
+    <div class="content">
         <!-- End Page Header -->
 
         <!-- Card -->

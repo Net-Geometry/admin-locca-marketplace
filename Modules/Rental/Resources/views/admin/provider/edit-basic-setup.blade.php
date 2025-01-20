@@ -2,7 +2,25 @@
 
 @section('title', translate('messages.Update Provider'))
 
+@push('css_or_js')
+    <style>
+        #pac-input1 {
+            position: absolute;
+            height: 40px;
+            border: 1px solid #fbc1c1;
+            outline: none;
+            box-shadow: none;
+            top: 20px !important;
+            left: 78% !important;
+            transform: translateX(-50%);
+            z-index: 5;
+            width: 25%;
+            padding: 10px;
+            font-size: 16px;
+        }
 
+    </style>
+@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -55,7 +73,7 @@
                                         {{ translate('messages.General_Info') }}
                                     </h5>
                                     <p class="fs-12 mb-0">
-                                        {{ translate('messages.Provider Logo & Covers') }}
+                                        {{ translate('messages.Update the basic information of the provider ') }}
                                     </p>
                                 </div>
                             </div>
@@ -210,7 +228,7 @@
                                         {{ translate('messages.Business_Info') }}
                                     </h5>
                                     <p class="fs-12 mb-0">
-                                        {{ translate('messages.Provider Logo & Covers') }}
+                                        {{ translate('messages.Update the necessary information to operate the business') }}
                                     </p>
                                 </div>
                             </div>
@@ -222,17 +240,14 @@
                                                    for="choice_zones">{{ translate('messages.business_zone') }}
                                                 <span class="form-label-secondary" data-toggle="tooltip"
                                                       data-placement="right"
-                                                      data-original-title="{{ translate('messages.select_business_zone_for_map') }}">
+                                                      data-original-title="{{ translate('messages.Select the zone from where the business will be operated') }}">
                                                     <i class="tio-info text--title opacity-60"></i>
                                                 </span>
                                             </label>
                                             <select name="zone_id" id="choice_zones" required
                                                     class="form-control js-select2-custom"
                                                     data-placeholder="{{ translate('messages.select_zone') }}">
-                                                <option value="" selected disabled>
-                                                    {{ translate('messages.select_zone') }}</option>
-                                                select name="zone_id" id="choice_zones" data-placeholder="{{translate('messages.select_zone')}}"
-                                                class="form-control js-select2-custom get_zone_data">
+                                                <option value="" selected disabled>{{ translate('messages.select_zone') }}</option>
                                                 @foreach(\App\Models\Zone::active()->get() as $zone)
                                                     @if(isset(auth('admin')->user()->zone_id))
                                                         @if(auth('admin')->user()->zone_id == $zone->id)
@@ -248,7 +263,7 @@
                                             <label class="input-label font-semibold"
                                                    for="pickup_zones">{{ translate('messages.pickup_zone') }}<span
                                                     class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                    data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}">
+                                                    data-original-title="{{ translate('messages.Select zones from where customer can choose their pickup locations for trip booking') }}">
                                                     <i class="tio-info text--title opacity-60"></i>
                                                 </span></label>
                                             <select name="pickup_zones[]" id="pickup_zones" class="form-control multiple-select2" multiple="multiple">
@@ -342,7 +357,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <input id="pac-input" class="controls rounded" data-toggle="tooltip"
+                                        <input id="pac-input1" class="controls rounded" data-toggle="tooltip"
                                                data-placement="right"
                                                data-original-title="{{ translate('messages.search_your_location_here') }}"
                                                type="text" placeholder="{{ translate('messages.search_here') }}" />
@@ -360,7 +375,7 @@
                                         {{ translate('messages.owner_information') }}
                                     </h5>
                                     <p class="fs-12 mb-0">
-                                        {{ translate('messages.Provider Logo & Covers') }}
+                                        {{ translate('messages.Update the information of the Owner who operate the business') }}
                                     </p>
                                 </div>
                             </div>
@@ -400,7 +415,7 @@
                                         {{ translate('messages.account_information') }}
                                     </h5>
                                     <p class="fs-12 mb-0">
-                                        {{ translate('messages.Provider Logo & Covers') }}
+                                        {{ translate('messages.Update the necessary information to account information') }}
                                     </p>
                                 </div>
                             </div>
@@ -548,7 +563,7 @@
                 title: "{{$store->name}}",
             });
             infoWindow.open(map);
-            const input = document.getElementById("pac-input");
+            const input = document.getElementById("pac-input1");
             const searchBox = new google.maps.places.SearchBox(input);
             map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
             let markers = [];
@@ -686,18 +701,49 @@
             }
         })
 
-        $('#reset_btn').click(function() {
-            $('#viewer').attr('src', "{{ asset('public/assets/admin/img/upload.png') }}");
-            $('#customFileEg1').val(null);
-            $('#coverImageViewer').attr('src', "{{ asset('public/assets/admin/img/upload-img.png') }}");
-            $('#coverImageUpload').val(null);
-            $('#choice_zones').val(null).trigger('change');
+        $('#reset_btn').click(function () {
+            const defaultLogo = "{{ $store->logo_full_url ?? asset('public/assets/admin/img/upload.png') }}";
+            const defaultCoverPhoto = "{{ $store->cover_photo_full_url ?? asset('public/assets/admin/img/upload-img.png') }}";
+
+            if ($('#customFileEg1').val()) {
+                $('#logoImageViewer').attr('src', defaultLogo);
+                $('#customFileEg1').val(null);
+            } else {
+                $('#logoImageViewer').attr('src', defaultLogo);
+            }
+
+            if ($('#coverImageUpload').val()) {
+                $('#coverImageViewer').attr('src', defaultCoverPhoto);
+                $('#coverImageUpload').val(null);
+            } else {
+                $('#coverImageViewer').attr('src', defaultCoverPhoto);
+            }
+
+            const zoneValue = "{{ $store->zone_id }}";
+            if (zoneValue) {
+                $('#choice_zones').val(zoneValue).trigger('change');
+            }
+
+            {{--const pickupZones = @json($store->pickup_zone_id); // This will get the list of selected pickup zones from the backend (store)--}}
+
+            {{--if (pickupZones && pickupZones.length) {--}}
+            {{--    // Set the values--}}
+            {{--    $('#pickup_zones').val(pickupZones).trigger('change');--}}
+            {{--} else {--}}
+            {{--    // If no pickup zones, clear the dropdown--}}
+            {{--    $('#pickup_zones').val([]).trigger('change');--}}
+            {{--}--}}
+
+            {{--// Destroy and reinitialize Select2 to force it to update its UI--}}
+            {{--$('#pickup_zones').select2('destroy').select2();--}}
+
             $('#module_id').val(null).trigger('change');
             zonePolygon.setMap(null);
             $('#coordinates').val(null);
             $('#latitude').val(null);
             $('#longitude').val(null);
-        })
+        });
+
 
         let zone_id = 0;
         $('#choice_zones').on('change', function() {

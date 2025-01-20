@@ -979,7 +979,7 @@ class ProviderController extends Controller
             'address' => 'required',
             'latitude' => 'required',
             'longitude' => 'required',
-            'email' => 'required|unique:vendors,id' . ($id ? ','.$id : ''),
+            'email' => 'required|unique:vendors,email,' . ($id ? $id : 'NULL') . ',id',
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:vendors,phone' . ($id ? ','.$id : ''),
             'minimum_delivery_time' => 'required',
             'maximum_delivery_time' => 'required',

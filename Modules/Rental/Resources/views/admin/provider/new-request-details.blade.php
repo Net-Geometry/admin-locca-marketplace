@@ -50,7 +50,7 @@
                             <img src="{{ asset('public/assets/admin/img/icons/zone.png') }}" width="36" height="36"
                                  class="rounded" alt="">
                             <div>
-                                <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.Business_Address') }}
+                                <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.Business_zone') }}
                                 </h5>
                                 <span class="fs-13 lh--12 color-484848">{{$store->address}}</span>
                             </div>
@@ -90,7 +90,7 @@
             <div class="card-header">
                 <div>
                     <h5 class="text-title mb-1">
-                        {{ translate('messages.Registration_Information') }}
+                        {{ translate('messages.Provider_Information') }}
                     </h5>
                     <p class="fs-12">
                         {{ translate('messages.Here you can see all the information that provider submit during registration') }}

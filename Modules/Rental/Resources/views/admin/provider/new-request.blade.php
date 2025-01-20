@@ -33,10 +33,10 @@
                         <!-- Nav -->
                         <ul class="nav nav-tabs mb-3 border-0 nav--tabs">
                             <li class="nav-item">
-                                <a class="nav-link {{request('request_type') == 'pending_provider' ? 'active' : ''}}" href="{{ route('admin.rental.provider.new-requests') }}?request_type=pending_provider"   aria-disabled="true">{{translate('messages.pending_stores')}}</a>
+                                <a class="nav-link {{request('request_type') == 'pending_provider' ? 'active' : ''}}" href="{{ route('admin.rental.provider.new-requests') }}?request_type=pending_provider"   aria-disabled="true">{{translate('messages.pending_providers')}}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{request('request_type') == 'denied_provider' ? 'active' : ''}}" href="{{ route('admin.rental.provider.new-requests') }}?request_type=denied_provider"  aria-disabled="true">{{translate('messages.denied_stores')}}</a>
+                                <a class="nav-link {{request('request_type') == 'denied_provider' ? 'active' : ''}}" href="{{ route('admin.rental.provider.new-requests') }}?request_type=denied_provider"  aria-disabled="true">{{translate('messages.denied_providers')}}</a>
                             </li>
                         </ul>
                     </div>
@@ -48,13 +48,13 @@
             <!-- Header -->
             <div class="card-header py-2">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{translate('messages.stores_list')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$stores->total()}}</span></h5>
+                    <h5 class="card-title">{{translate('messages.providers_list')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$stores->total()}}</span></h5>
                     <form action="javascript:" id="search-form" class="search-form">
                         <!-- Search -->
                         @csrf
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                   placeholder="{{translate('ex_:_Search_Store_Name')}}" value="{{isset($search_by) ? $search_by : ''}}" aria-label="{{translate('messages.search')}}" required>
+                                   placeholder="{{translate('ex_:_Search_provider_Name')}}" value="{{isset($search_by) ? $search_by : ''}}" aria-label="{{translate('messages.search')}}" required>
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
                     </form>
@@ -90,7 +90,7 @@
                             <td>{{$key+$stores->firstItem()}}</td>
                             <td>
                                 <div>
-                                    <a href="{{route('admin.rental.provider.details', $store->id)}}" class="table-rest-info" alt="view store">
+                                    <a href="{{route('admin.rental.provider.details', $store->id)}}" class="table-rest-info" alt="{{translate('view provider')}}">
                                         <img class="img--60 circle onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                              src="{{ $store['logo_full_url'] ?? asset('public/assets/admin/img/160x160/img1.jpg') }}" >
                                         <div class="info"><div class="text--title">

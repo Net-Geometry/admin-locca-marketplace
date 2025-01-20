@@ -11,6 +11,11 @@
 @section('content')
 <div class="content container-fluid">
     @include('rental::admin.provider.details.partials._header',['store'=>$store])
+    @php
+        $vendor = $store?->module_type;
+        $title = $vendor == 'rental' ? 'Provider' : 'Store';
+        $orderOrTrip = $vendor == 'rental' ? 'trip' : 'order';
+    @endphp
 
     @if ($store->store_business_model == 'commission' &&  \App\CentralLogics\Helpers::commission_check())
 
@@ -28,9 +33,9 @@
                 <div class="d-flex flex-wrap flex-md-nowrap justify-content-between __plan-details-top">
                     <div class="w-100">
                         <h2 class="name text--primary">{{ translate('Commission Base Plan') }}</h2>
-                        <h4 class="title mt-2"><span class="text-180">{{ $store->comission > 0 ?  $store->comission :  $admin_commission }} %</span> {{ translate('messages.Commission_per_order') }}</h4>
+                        <h4 class="title mt-2"><span class="text-180">{{ $store->comission > 0 ?  $store->comission :  $admin_commission }} %</span> {{ translate('messages.Commission_per_'.$orderOrTrip) }}</h4>
                         <div class="info-text ">
-                            {{ translate('Store will pay') }} {{ $store->comission > 0 ?  $store->comission :  $admin_commission }}% {{ translate('commission to') }} <strong>{{ $business_name }}</strong> {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
+                            {{ translate($title . ' will pay') }} {{ $store->comission > 0 ?  $store->comission :  $admin_commission }}% {{ translate('commission to') }} <strong>{{ $business_name }}</strong> {{ translate('from each '.$orderOrTrip.'. You will get access of all the features and options  in '.$title.' panel , app and interaction with user.') }}
                         </div>
                                 <div class="mt-3">
                                     <form action="{{route('admin.store.update-settings',[$store['id'] , 'tab' => 'business_plan'])}}" method="post">
@@ -261,7 +266,7 @@
                                     </div>
                                     <div class="py-5 mt-4">
                                         <div class="info-text text-center">
-                                            {{ translate('Store will pay') }} {{ $admin_commission }}% {{ translate('commission to') }} {{ $business_name }} {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
+                                            {{ translate($title.' will pay') }} {{ $admin_commission }}% {{ translate('commission to') }} {{ $business_name }} {{ translate('from each '.$orderOrTrip.'. You will get access of all the features and options  in '.$title.' panel , app and interaction with user.') }}
                                         </div>
                                     </div>
                                     <div class="text-center">

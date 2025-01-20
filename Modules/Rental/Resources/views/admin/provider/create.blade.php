@@ -14,7 +14,7 @@
                         <span class="page-header-icon">
                             <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
                         </span>
-                        <span>{{ translate('messages.Auto Focus Car Service') }}
+                        <span>{{ translate('messages.Add Provider') }}
                     </h1></span>
                     </h1>
                 </div>
@@ -55,7 +55,7 @@
                                         {{ translate('messages.General_Info') }}
                                     </h5>
                                     <p class="fs-12 mb-0">
-                                        {{ translate('messages.Provider Logo & Covers') }}
+                                        {{ translate('messages. Insert the basic information of the provider ') }}
                                     </p>
                                 </div>
                             </div>
@@ -240,7 +240,7 @@
                                         {{ translate('messages.Business_Info') }}
                                     </h5>
                                     <p class="fs-12 mb-0">
-                                        {{ translate('messages.Provider Logo & Covers') }}
+                                        {{ translate('messages.Insert the necessary information to operate the business') }}
                                     </p>
                                 </div>
                             </div>
@@ -252,7 +252,7 @@
                                                 for="choice_zones">{{ translate('messages.business_zone') }}
                                                 <span class="form-label-secondary" data-toggle="tooltip"
                                                     data-placement="right"
-                                                    data-original-title="{{ translate('messages.select_business_zone_for_map') }}">
+                                                    data-original-title="{{ translate('messages.Select the zone from where the business will be operated') }}">
                                                     <i class="tio-info text--title opacity-60"></i>
                                                 </span>
                                             </label>
@@ -276,7 +276,7 @@
                                             <label class="input-label font-semibold"
                                                 for="pickup_zones">{{ translate('messages.pickup_zone') }}<span
                                                     class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                    data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}">
+                                                    data-original-title="{{ translate('messages.Select zones from where customer can choose their pickup locations for trip booking') }}">
                                                     <i class="tio-info text--title opacity-60"></i>
                                                 </span></label>
                                             <select name="pickup_zones[]" id="pickup_zones"
@@ -385,7 +385,7 @@
                                         {{ translate('messages.owner_information') }}
                                     </h5>
                                     <p class="fs-12 mb-0">
-                                        {{ translate('messages.Provider Logo & Covers') }}
+                                        {{ translate('messages.Add the information of the Owner who operate the business') }}
                                     </p>
                                 </div>
                             </div>
@@ -429,7 +429,7 @@
                                         {{ translate('messages.account_information') }}
                                     </h5>
                                     <p class="fs-12 mb-0">
-                                        {{ translate('messages.Provider Logo & Covers') }}
+                                        {{ translate('messages.Insert the necessary information to account information') }}
                                     </p>
                                 </div>
                             </div>

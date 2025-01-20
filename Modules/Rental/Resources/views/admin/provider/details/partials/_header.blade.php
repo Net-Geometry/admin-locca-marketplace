@@ -22,9 +22,11 @@
                             </span>
                         </label>
                     </a>
-                    <a href="{{ route('admin.rental.provider.edit-basic-setup', $store->id)}}" class="btn btn--primary font-weight-bold float-right mr-2 mb-0">
-                        <i class="tio-edit"></i> {{ translate('messages.edit_provider') }}
-                    </a>
+                    @if(Request::url() == route('admin.rental.provider.details', $store->id))
+                        <a href="{{ route('admin.rental.provider.edit-basic-setup', $store->id)}}" class="btn btn--primary font-weight-bold float-right mr-2 mb-0">
+                            <i class="tio-edit"></i> {{ translate('messages.edit_provider') }}
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>

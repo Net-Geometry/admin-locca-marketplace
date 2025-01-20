@@ -1,5 +1,6 @@
 @php
-    $vendor = auth('vendor')?->user()?->store?->module_type;
+    $vendorData = \App\CentralLogics\Helpers::get_store_data();
+    $vendor = $vendorData?->module_type;
     $title = $vendor == 'rental' ? 'Provider' : 'Store';
     $orderOrTrip = $vendor == 'rental' ? 'trip' : 'order';
 @endphp

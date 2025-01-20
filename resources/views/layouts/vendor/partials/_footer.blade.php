@@ -1,5 +1,6 @@
 @php
-    $title = auth('vendor')?->user()?->store?->module_type == 'rental' ? 'Provider' : 'Store';
+    $vendorData = \App\CentralLogics\Helpers::get_store_data();
+    $title = $vendorData?->module_type == 'rental' ? 'Provider' : 'Store';
 @endphp
 <div class="footer">
     <div class="row justify-content-between align-items-center">

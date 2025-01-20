@@ -1,5 +1,6 @@
 @php
-    $title = auth('vendor')?->user()?->store?->module_type == 'rental' ? 'Provider' : 'Store';
+    $vendorData = \App\CentralLogics\Helpers::get_store_data();
+    $title = $vendorData?->module_type == 'rental' ? 'Provider' : 'Store';
 @endphp
 @extends('layouts.vendor.app')
 @section('title',translate('messages.store_view'))
