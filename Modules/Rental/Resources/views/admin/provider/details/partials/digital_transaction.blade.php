@@ -5,38 +5,38 @@
             <thead class="thead-light">
                 <tr>
                     <th class="w--1 border-0">{{translate('sl')}}</th>
-                    <th class="w--1 border-0">{{translate('messages.order_id')}}</th>
-                    <th class="w--2 border-0">{{translate('messages.total_order_amount')}}</th>
-                    <th class="w--3 border-0">{{translate('messages.store_earned')}}</th>
+                    <th class="w--1 border-0">{{translate('messages.Trip_id')}}</th>
+                    <th class="w--2 border-0">{{translate('messages.total_trip_amount')}}</th>
+                    <th class="w--3 border-0">{{translate('messages.provider_earned')}}</th>
                     <th class="w--1 border-0">{{translate('messages.admin_earned')}}</th>
-                    <th class="w--1 border-0">{{translate('messages.delivery_fee')}}</th>
+                    <th class="w--1 border-0">{{translate('messages.additional_charge')}}</th>
                     <th class="w--1 border-0">{{translate('messages.vat/tax')}}</th>
                 </tr>
             </thead>
             <tbody>
-            @php($digital_transaction = \App\Models\OrderTransaction::where('vendor_id', $store->vendor->id)->latest()->paginate(25))
-            @foreach($digital_transaction as $k=>$dt)
+            @php($digitalTransaction = \Modules\Rental\Entities\TripTransaction::where('vendor_id', $store->vendor->id)->latest()->paginate(25))
+            @foreach($digitalTransaction as $key => $transaction)
                 <tr>
-                    <td scope="row">{{$k+$digital_transaction->firstItem()}}</td>
-                    <td><a href="{{route('admin.order.details',$dt->order_id)}}">{{$dt->order_id}}</a></td>
-                    <td>{{\App\CentralLogics\Helpers::format_currency($dt->order_amount)}}</td>
-                    <td>{{\App\CentralLogics\Helpers::format_currency($dt->store_amount - $dt->tax)}}</td>
-                    <td>{{\App\CentralLogics\Helpers::format_currency($dt->admin_commission)}}</td>
-                    <td>{{\App\CentralLogics\Helpers::format_currency($dt->delivery_charge)}}</td>
-                    <td>{{\App\CentralLogics\Helpers::format_currency($dt->tax)}}</td>
+                    <td scope="row">{{$key+$digitalTransaction->firstItem()}}</td>
+                    <td><a href="{{route('admin.rental.trip.details',$transaction->trip_id)}}">{{$transaction->trip_id}}</a></td>
+                    <td>{{\App\CentralLogics\Helpers::format_currency($transaction->trip_amount)}}</td>
+                    <td>{{\App\CentralLogics\Helpers::format_currency($transaction->store_amount - $transaction->tax)}}</td>
+                    <td>{{\App\CentralLogics\Helpers::format_currency($transaction->admin_commission)}}</td>
+                    <td>{{\App\CentralLogics\Helpers::format_currency($transaction->additional_charge)}}</td>
+                    <td>{{\App\CentralLogics\Helpers::format_currency($transaction->tax)}}</td>
                 </tr>
             @endforeach
             </tbody>
         </table>
     </div>
 </div>
-@if(count($digital_transaction) !== 0)
+@if(count($digitalTransaction) !== 0)
 <hr>
 @endif
 <div class="page-area">
-    {!! $digital_transaction->links() !!}
+    {!! $digitalTransaction->links() !!}
 </div>
-@if(count($digital_transaction) === 0)
+@if(count($digitalTransaction) === 0)
 <div class="empty--data">
     <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
     <h5>

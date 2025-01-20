@@ -194,7 +194,7 @@ class ProviderController extends Controller
      * @param $store_id
      * @param null $tab
      * @param string $sub_tab
-     * @return Application|Factory|View|\Illuminate\Foundation\Application|RedirectResponse
+     * @return Application|Factory|View|RedirectResponse
      */
     public function details(Request $request, $store_id, $tab=null, $sub_tab='cash'): Application|Factory|View|RedirectResponse
     {

@@ -20,7 +20,7 @@
                         <span class="card-header-icon">
                             <img class="w--22" src="{{asset('public/assets/admin/img/store.png')}}" alt="">
                         </span>
-                        <span class="p-md-1"> {{translate('messages.store_meta_data')}}</span>
+                        <span class="p-md-1"> {{translate('messages.provider_meta_data')}}</span>
                     </h5>
                 </div>
                 @php($language=\App\Models\BusinessSetting::where('key','language')->first())
@@ -127,7 +127,7 @@
                                     <div class="card-header">
                                         <h5 class="card-title">
                                             <span class="card-header-icon mr-1"><i class="tio-dashboard"></i></span>
-                                            <span>{{translate('store_meta_image')}}</span>
+                                            <span>{{translate('provider_meta_image')}}</span>
                                         </h5>
                                     </div>
                                     <div class="card-body">

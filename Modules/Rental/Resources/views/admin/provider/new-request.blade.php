@@ -90,7 +90,7 @@
                             <td>{{$key+$stores->firstItem()}}</td>
                             <td>
                                 <div>
-                                    <a href="{{route('admin.rental.provider.details', $store->id)}}" class="table-rest-info" alt="{{translate('view provider')}}">
+                                    <a href="{{route('admin.rental.provider.new-requests-details', $store->id)}}" class="table-rest-info" alt="{{translate('view provider')}}">
                                         <img class="img--60 circle onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                              src="{{ $store['logo_full_url'] ?? asset('public/assets/admin/img/160x160/img1.jpg') }}" >
                                         <div class="info"><div class="text--title">
@@ -212,16 +212,21 @@
                                         <form method="get" action="{{route('admin.rental.provider.approve-or-deny',[$store['id'],0])}}">
                                             @csrf
                                             <div class="form-floating">
-                                                <label for="add-your-note"
-                                                       class="font-medium input-label text--title">{{ translate('Cancellation Note') }}<span
-                                                        class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                        data-original-title="Cancellation Note">
-                                    <i class="tio-info text--title opacity-60"></i>
-                                </span></label>
+                                                <label for="add-your-note" class="font-medium input-label text--title">{{ translate('Cancellation Note') }}
+                                                    <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="Cancellation Note">
+                                                            <i class="tio-info text--title opacity-60"></i>
+                                                    </span>
+                                                </label>
                                                 <div class="mb-30">
-                                <textarea class="form-control h--90" placeholder="{{ translate('Type your Cancellation Note') }}" name="message"
-                                          id="add-your-note" required></textarea>
-                                                    <div>0/60</div>
+                                                    <textarea
+                                                        class="form-control h--90"
+                                                        placeholder="{{ translate('Type your Cancellation Note') }}"
+                                                        name="message"
+                                                        id="add-your-note"
+                                                        maxlength="60"
+                                                        required
+                                                    ></textarea>
+                                                    <div id="char-count">0/60</div>
                                                 </div>
                                                 <input type="hidden" value="0" name="status">
                                                 <div class="d-flex justify-content-end gap-3">
@@ -264,6 +269,13 @@
 @push('script_2')
     <script>
         "use strict";
+        $('#add-your-note').on('input', function () {
+            const maxLength = 60;
+            const currentLength = $(this).val().length;
+
+            $('#char-count').text(`${currentLength}/${maxLength}`);
+        });
+
         $('.status_change_alert').on('click', function (event) {
             let url = $(this).data('url');
             let message = $(this).data('message');

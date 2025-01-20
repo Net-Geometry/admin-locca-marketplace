@@ -183,14 +183,27 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="text--title">
-                                    <div class="font-medium">
-                                        {{ $trip->customer->fullName }}
+                                @if ($trip->customer)
+                                    <div class="text--title">
+                                        <div class="font-medium">
+                                            {{ $trip->customer->fullName }}
+                                        </div>
+                                        <div class="opacity-lg">
+                                            {{ $trip->customer->email }}
+                                        </div>
                                     </div>
-                                    <div class="opacity-lg">
-                                        {{ $trip->customer->email }}
+                                @elseif($trip?->user_info['contact_person_name'])
+                                    <div class="text--title">
+                                        <div class="font-medium">
+                                            {{$trip?->user_info['contact_person_name'] }}
+                                        </div>
+                                        <div class="opacity-lg">
+                                            {{ $trip?->user_info['contact_person_email'] }}
+                                        </div>
                                     </div>
-                                </div>
+                                @else
+                                    {{ translate('messages.Guest_user') }}
+                                @endif
                             </td>
                             <td>
                                 <div class="text--title font-medium w--150px white--space-initial">

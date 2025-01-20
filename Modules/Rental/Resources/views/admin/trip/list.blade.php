@@ -149,7 +149,6 @@
                                     <div class="opacity-lg">
                                         {{ $trip->customer->email }}
                                     </div>
-
                                 @elseif($trip?->user_info['contact_person_name'])
                                     <div class="font-medium">
                                         {{$trip?->user_info['contact_person_name'] }}

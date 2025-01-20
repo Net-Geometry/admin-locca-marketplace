@@ -200,11 +200,11 @@
                                     <div class="d-flex align-items-center gap-2">
                                         <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
                                         @if ( $store?->store_sub_update_application?->max_product == 'unlimited' )
-                                        <span class="form-check-label text-dark">{{ translate('messages.unlimited_item_Upload')
+                                        <span class="form-check-label text-dark">{{ translate('messages.unlimited_vehicle_Upload')
                                             }}</span>
                                         @else
                                         <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->max_product }} {{
-                                            translate('messages.product_Upload') }} <small>({{ $store?->store_sub_update_application?->max_product  - $store->items_count > 0 ? $store?->store_sub_update_application?->max_product  - $store->items_count : 0 }} {{ translate('left') }}) </small></span>
+                                            translate('messages.vehicle_Upload') }} <small>({{ $store?->store_sub_update_application?->max_product  - $store->items_count > 0 ? $store?->store_sub_update_application?->max_product  - $store->items_count : 0 }} {{ translate('left') }}) </small></span>
                                         @endif
                                     </div>
                                 </div>

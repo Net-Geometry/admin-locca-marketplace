@@ -89,6 +89,19 @@
                     </div>
                 </div>
             </div>
+            @if (!config('module.'.$store->module_type)['always_open'])
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <span class="card-header-icon"><i class="tio-clock"></i></span>
+                            <span class="p-md-1">{{translate('messages.Daily time schedule')}}</span>
+                        </h5>
+                    </div>
+                    <div class="card-body" id="schedule">
+                        @include('rental::admin.provider.details.partials._schedule', $store)
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </div>
