@@ -120,8 +120,8 @@
                         </div>
                         <div class="col-sm-6 col-lg-3">
                             <div class="form-group">
-                                <label class="input-label" for="min_purchase">{{translate('messages.min_purchase')}}</label>
-                                <input id="min_purchase" type="number" name="min_purchase" step="0.01" value="{{$coupon['min_purchase']}}"
+                                <label class="input-label" for="min_purchase">{{translate('messages.min_trip_amount')}}</label>
+                                <input id="min_purchase" type="number" id="min_purchase" name="min_purchase" step="0.01" value="{{$coupon['min_purchase']}}"
                                        min="0" max="999999999999.99" class="form-control"
                                        placeholder="100">
                             </div>

@@ -552,6 +552,7 @@ class StoreLogic
                 $q->orWhere('name', 'like', "%{$value}%");
             }
             $relationships = [
+                'translations' => 'value',
                 'items.nutritions' => 'nutrition',
                 'items.allergies' => 'allergy',
                 'items.generic' => 'generic_name',

@@ -25,9 +25,10 @@ class VehicleIdentity extends Model
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id', 'id');
     }
-    public function vehicle_trip_details(): BelongsTo
+
+    public function vehicle_trip_details()
     {
-        return $this->belongsTo(TripVehicleDetails::class, 'id', 'vehicle_identity_id');
+        return $this->hasMany(TripVehicleDetails::class, 'vehicle_identity_id');
     }
 
     public function driver(): BelongsTo

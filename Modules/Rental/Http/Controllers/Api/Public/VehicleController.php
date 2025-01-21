@@ -39,7 +39,7 @@ class VehicleController extends Controller
         $limit = $request['limit'] ?? 25;
         $offset = $request['offset'] ?? 1;
 
-        $vehicles = $this->vehicle->whereIn('zone_id', $zone_id)->with('provider:id,name,address,tax', 'provider.discount')->withcount('vehicleIdentities as total_vehicle_count')
+        $vehicles = $this->vehicle->active()->whereIn('zone_id', $zone_id)->with('provider:id,name,address,tax', 'provider.discount')->withcount('vehicleIdentities as total_vehicle_count')
             ->orderBy('avg_rating', 'desc')
             ->orderBy('total_trip', 'desc')
             ->latest()
@@ -96,7 +96,7 @@ class VehicleController extends Controller
         $zone_id = $request->header('zoneId');
         $zone_id = json_decode($zone_id, true);
 
-        $vehicles = $this->vehicle->whereIn('zone_id', $zone_id)->with('brand:id,name')
+        $vehicles = $this->vehicle->active()->whereIn('zone_id', $zone_id)->with('brand:id,name')
             ->when($request->filled('name'), function ($query) use ($request) {
                 $keys = explode(' ', $request->input('name'));
                 $query->where(function ($query) use ($keys) {
@@ -155,7 +155,7 @@ class VehicleController extends Controller
         }
         $vehicle =  $this->vehicle->where(function ($query) use ($id) {
             $query->where('id', $id)->orWhere('slug', $id);
-        })->with('brand:id,name,image', 'provider:id,name,logo,cover_photo,rating,address,delivery_time')->withCount('vehicleIdentities as total_vehicles')->first();
+        })->with('brand:id,name,image', 'provider:id,name,logo,cover_photo,rating,address,delivery_time','provider.discount')->withCount('vehicleIdentities as total_vehicles')->first();
         if (!$vehicle) {
             return response()->json(['error' => 'vehicle_not_found'], 404);
         }
@@ -170,11 +170,10 @@ class VehicleController extends Controller
         $zone_id = $request->header('zoneId');
         $zone_id = json_decode($zone_id, true);
 
-
         $brand_ids = json_decode($request->brand_ids, true) ?? null;
         $category_ids = json_decode($request->category_ids, true) ?? null;
         $seating_capacity = json_decode($request->seating_capacity) ?? null;
-        $vehicles = $this->vehicle
+        $vehicles = $this->vehicle->active()
             ->when($pick_up_lat &&  $pick_up_lng && count($zones) > 0, function ($query) use ($zones) {
                 $query->whereHas('provider', function ($query) use ($zones) {
                     $query->where(function ($query) use ($zones) {
@@ -186,19 +185,23 @@ class VehicleController extends Controller
                     });
                 });
             })
-            ->with('provider:id,name,address,tax', 'provider.discount');
+            ->with('provider:id,name,address,tax', 'provider.discount','vehicleIdentities.vehicle_trip_details');
         if ($request?->date) {
             $vehicles = $vehicles->withCount([
                 'vehicleIdentities as total_vehicle_count' => function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
-                        $query->whereHas('vehicle_trip_details', function ($subQuery) use ($request) {
-                            $subQuery->where('estimated_trip_end_time', '<', \Carbon\Carbon::parse($request?->date) ?? now());
-                        })
-                            ->orWhereDoesntHave('vehicle_trip_details');
+                        $query->whereDoesntHave('vehicle_trip_details')
+                            ->orWhere(function ($query) use ($request) {
+                                $query->whereNotExists(function ($subQuery) use ($request) {
+                                    $subQuery->from('trip_vehicle_details')
+                                        ->whereColumn('trip_vehicle_details.vehicle_identity_id', 'vehicle_identities.id')
+                                        ->where('estimated_trip_end_time', '>', \Carbon\Carbon::parse($request?->date) ?? now());
+                                });
+                            });
                     });
                 },
             ])
-                ->having('total_vehicle_count', '>', 0);
+            ->having('total_vehicle_count', '>', 0);
         } else {
             $vehicles = $vehicles->withcount('vehicleIdentities as total_vehicle_count');
         }

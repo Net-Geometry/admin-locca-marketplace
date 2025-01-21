@@ -7172,4 +7172,5 @@ Smartly or Earn. ',
   'unit Fair' => 'Unit Fair',
   'wds' => 'Wds',
   'ssd' => 'Ssd',
+  'provider_is_closed_at_trip_time' => 'Provider is closed at trip time',
 );

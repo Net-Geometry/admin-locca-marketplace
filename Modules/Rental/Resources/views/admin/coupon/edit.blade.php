@@ -18,7 +18,7 @@
         <!-- End Page Header -->
         <div class="card">
             <div class="card-body">
-                <form action="{{route('admin.rental.coupon.update',[$coupon['id']])}}" method="post">
+                <form id="coupon_update_form" action="{{route('admin.rental.coupon.update',[$coupon['id']])}}" method="post">
                     @csrf
                     <div class="row g-3">
                         <div class="col-12">
@@ -187,8 +187,8 @@
                         </div>
                         <div class="col-md-4 col-lg-3 col-sm-6">
                             <div class="form-group m-0">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.min_purchase')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                <input type="number" name="min_purchase" step="0.01" value="{{$coupon['min_purchase']}}"
+                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.min_trip_amount')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
+                                <input type="number" id="min_purchase" name="min_purchase" step="0.01" value="{{$coupon['min_purchase']}}"
                                        min="0" max="999999999999.99" class="form-control"
                                        placeholder="100">
                             </div>
@@ -210,6 +210,43 @@
     <script src="{{asset('public/assets/admin')}}/js/view-pages/coupon-edit.js"></script>
     <script>
         "use strict";
+
+        $('#min_purchase').on('input', function() {
+            if ($('#discount_type').val() === 'amount') {
+                $('#discount').attr('max', $(this).val() || 0);
+                if (parseFloat($('#discount').val()) > parseFloat($(this).val())) {
+                    toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
+                    $(this).val($(this).data('previous-value'));
+                }
+            }
+            $(this).data('previous-value', $(this).val());
+        });
+
+        $('#discount').on('input', function() {
+            if ($('#discount_type').val() === 'amount') {
+                let minPurchase = parseFloat($('#min_purchase').val()) || 0;
+                let discountValue = parseFloat($(this).val()) || 0;
+
+                if (discountValue > minPurchase) {
+                    toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
+                    $(this).val($(this).data('previous-value'));
+                }
+            }
+            $(this).data('previous-value', $(this).val());
+        });
+
+        function validateDiscount() {
+            let discountType = $('#discount_type').val();
+            let discountInput = $('#discount');
+            let minPurchase = parseFloat($('#min_purchase').val()) || 0;
+            let discountValue = parseFloat(discountInput.val()) || 0;
+
+            if (discountType === 'amount' && discountValue > minPurchase) {
+                discountInput.val(discountValue);
+                toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
+            }
+        }
+
         coupon_type_change('{{$coupon->coupon_type}}');
 
         $(document).on('ready', function () {

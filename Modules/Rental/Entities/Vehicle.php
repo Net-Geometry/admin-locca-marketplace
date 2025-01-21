@@ -61,6 +61,22 @@ class Vehicle extends Model
         $query->where('provider_id', '=', $providerId);
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1)
+        ->whereHas('provider', function($query) {
+            $query->where('status', 1)->where('active',1)
+                    ->where(function($query) {
+                        $query->where('store_business_model', 'commission')
+                                ->orWhereHas('store_sub', function($query) {
+                                    $query->where(function($query) {
+                                        $query->where('max_order', 'unlimited')->orWhere('max_order', '>', 0);
+                                    });
+                                });
+                    });
+            });
+    }
+
     /**
      * @return BelongsTo
      */

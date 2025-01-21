@@ -57,7 +57,8 @@ class CouponController extends Controller
             $coupon = $this->createcoupon($request);
             Helpers::add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Coupon', data_id: $coupon->id, data_value: $coupon->title);
             DB::commit();
-        } catch (Exception) {
+        } catch (Exception  $exception) {
+            info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             DB::rollBack();
             Toastr::error(translate('messages.failed_to_add_coupon'));
             return back();
@@ -97,7 +98,8 @@ class CouponController extends Controller
             DB::commit();
             Toastr::success(translate('messages.coupon_updated_successfully'));
             return to_route('admin.rental.coupon.add-new');
-        } catch (Exception) {
+        } catch (Exception  $exception) {
+            info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             DB::rollBack();
             Toastr::error(translate('messages.failed_to_update_coupon'));
             return back();
