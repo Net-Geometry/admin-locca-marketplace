@@ -56,16 +56,16 @@
                             <div class="select-item">
                                 <label for="type-select" class="input-label">{{ translate('messages.type') }}</label>
                                 <select id="type-select" class="js-data-example-ajax form-control set-filter opacity-70"
-                                        name="type">
+                                        name="vehicle_type">
                                     <option value="" selected disabled>
                                         {{ translate('messages.select_vehicle_type') }}
                                     </option>
-                                    <option value="family" {{request()->type == 'family' ? 'selected' : ''}}>{{ translate('messages.family') }}</option>
-                                    <option value="luxury" {{request()->type == 'luxury' ? 'selected' : ''}}>{{ translate('messages.Luxury') }}</option>
-                                    <option value="affordable" {{request()->type == 'affordable' ? 'selected' : ''}}>{{ translate('messages.Affordable') }}</option>
-                                    <option value="executives" {{request()->type == 'executives' ? 'selected' : ''}}>{{ translate('messages.Executives') }}</option>
-                                    <option value="compact" {{request()->type == 'compact' ? 'selected' : ''}}>{{ translate('messages.Compact') }}</option>
-                                    <option value="full-size" {{request()->type == 'full-size' ? 'selected' : ''}}>{{ translate('messages.Full-Size') }}</option>
+                                    <option value="family" {{request()->vehicle_type == 'family' ? 'selected' : ''}}>{{ translate('messages.family') }}</option>
+                                    <option value="luxury" {{request()->vehicle_type == 'luxury' ? 'selected' : ''}}>{{ translate('messages.Luxury') }}</option>
+                                    <option value="affordable" {{request()->vehicle_type == 'affordable' ? 'selected' : ''}}>{{ translate('messages.Affordable') }}</option>
+                                    <option value="executives" {{request()->vehicle_type == 'executives' ? 'selected' : ''}}>{{ translate('messages.Executives') }}</option>
+                                    <option value="compact" {{request()->vehicle_type == 'compact' ? 'selected' : ''}}>{{ translate('messages.Compact') }}</option>
+                                    <option value="full-size" {{request()->vehicle_type == 'full-size' ? 'selected' : ''}}>{{ translate('messages.Full-Size') }}</option>
                                 </select>
                             </div>
                         </div>
@@ -164,6 +164,7 @@
                     <tr>
                         <th class="border-0">{{ translate('sl') }}</th>
                         <th class="border-0">{{ translate('messages.Vehicle_Info') }}</th>
+                        <th class="border-0">{{ translate('messages.Provider') }}</th>
                         <th class="border-0">{{ translate('messages.Category') }}</th>
                         <th class="border-0">{{ translate('messages.Brand') }}</th>
                         <th class="border-0">{{ translate('messages.Total_Trip') }}</th>
@@ -180,11 +181,21 @@
                             <td>{{$key+$vehicles->firstItem()}}</td>
                             <td>
                                 <div class="text--title">
-                                    <div class="font-medium">
+                                    <a href="{{ route('admin.rental.provider.vehicle.details', $vehicle->id)}}?vehicle_list=true" class="font-medium">
                                         {{ $vehicle->name }}
-                                    </div>
+                                    </a>
                                     <div class="opacity-lg">
                                         {{ $vehicle->model }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    <a href="{{ route('admin.rental.provider.details', $vehicle->provider_id)}}" class="font-medium">
+                                        {{ $vehicle?->provider?->name }}
+                                    </a>
+                                    <div class="opacity-lg">
+                                        {{ $vehicle->provider->email }}
                                     </div>
                                 </div>
                             </td>

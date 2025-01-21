@@ -23,7 +23,7 @@
                         <form class="search-form">
                             <!-- Search -->
                             <div class="input--group input-group input-group-merge input-group-flush">
-                                <input class="form-control" value="{{ request()?->search  ?? null }}" placeholder="{{ translate('search_by_store_info') }}" name="search">
+                                <input class="form-control" value="{{ request()?->search  ?? null }}" placeholder="{{ translate('search_by_provider_info') }}" name="search">
                                 <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                             </div>
                             <!-- End Search -->
@@ -40,11 +40,11 @@
                             <div id="usersExportDropdown"
                                  class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
                                 <span class="dropdown-header">{{translate('messages.download_options')}}</span>
-                                <a id="export-excel" class="dropdown-item" href="{{route('admin.store.disbursement-export', ['id'=>$store->id,'type'=>'excel'])}}">
+                                <a id="export-excel" class="dropdown-item" href="{{route('admin.store.disbursement-export', ['provider_id'=>request()->id,'id'=>$store->id,'type'=>'excel'])}}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2" src="{{asset('public/assets/admin')}}/svg/components/excel.svg" alt="Image Description">
                                     {{translate('messages.excel')}}
                                 </a>
-                                <a id="export-csv" class="dropdown-item" href="{{route('admin.store.disbursement-export', ['id'=>$store->id,'type'=>'csv'])}}">
+                                <a id="export-csv" class="dropdown-item" href="{{route('admin.store.disbursement-export', ['provider_id'=>request()->id,'id'=>$store->id,'type'=>'csv'])}}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2" src="{{asset('public/assets/admin')}}/svg/components/placeholder-csv-format.svg" alt="Image Description">
                                     {{translate('messages.csv')}}
                                 </a>

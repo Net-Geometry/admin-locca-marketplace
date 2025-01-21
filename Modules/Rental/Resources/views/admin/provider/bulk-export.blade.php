@@ -36,10 +36,14 @@
                                 <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                       {{ translate('Select_data_type_in_which_order_you_want_your_data_sorted_while_downloading.') }}
+                                        {{ translate('Download the format file and fill it with proper data.') }}
                                     </li>
-
-
+                                    <li>
+                                        {{ translate('You can download the example file to understand how the data must be filled.') }}
+                                    </li>
+                                    <li>
+                                        {{ translate('Have to upload zip file') }}
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -56,12 +60,14 @@
                                 </div>
                                 <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
-
                                     <li>
-                                        {{ translate('The_file_will_be_downloaded_in_.xls_format') }}
+                                        {{ translate('Download the format file and fill it with proper data.') }}
                                     </li>
                                     <li>
-                                        {{ translate('Click_reset_if_you_want_to_clear_you_changes_and_want_to_download_in_default_sort_wise_data') }}
+                                        {{ translate('You can download the example file to understand how the data must be filled.') }}
+                                    </li>
+                                    <li>
+                                        {{ translate('Have to upload zip file') }}
                                     </li>
                                 </ul>
                             </div>

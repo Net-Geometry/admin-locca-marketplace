@@ -1,5 +1,5 @@
 @extends('layouts.landing.app')
-@section('title', translate('messages.store_registration'))
+@section('title', translate('messages.vendor_registration'))
 @push('css_or_js')
     <link rel="stylesheet" href="{{ asset('public/assets/admin/css/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('public/assets/admin/css/view-pages/vendor-registration.css') }}">
@@ -36,7 +36,7 @@
         <div class="container">
             <!-- Page Header -->
             <div class="section-header">
-                <h2 class="title mb-2">{{ translate('messages.store') }} <span
+                <h2 class="title mb-2">{{ translate('messages.vendor') }} <span
                         class="text--base">{{ translate('application') }}</span></h2>
             </div>
             @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
@@ -70,7 +70,7 @@
                     <div class="card __card mb-3">
                         <div class="card-header">
                             <h5 class="card-title">
-                                {{ translate('messages.store_info') }}
+                                {{ translate('messages.vendor_info') }}
                             </h5>
                         </div>
                         <div class="card-body p-4">
@@ -103,7 +103,7 @@
                                                             <input type="text" name="name[]"
                                                                 value="{{ old('name.0') }}" id="default_name"
                                                                 class="form-control __form-control"
-                                                                placeholder="{{ translate('messages.store_name') }}"
+                                                                placeholder="{{ translate('messages.vendor_name') }}" maxlength="250"
                                                                 required>
                                                         </div>
                                                     </div>
@@ -120,7 +120,7 @@
                                                                     value="{{ old('name.' . $key + 1) }}"
                                                                     id="{{ $lang }}_name"
                                                                     class="form-control __form-control"
-                                                                    placeholder="{{ translate('messages.store_name') }}">
+                                                                    placeholder="{{ translate('messages.vendor_name') }}">
                                                             </div>
                                                         </div>
 
@@ -278,9 +278,9 @@
                                     <div class="form-group mb-4">
                                         <label class="input-label" for="latitude">{{ translate('messages.latitude') }}
                                             <span class="input-label-secondary"
-                                                title="{{ translate('messages.store_lat_lng_warning') }}"><img
+                                                title="{{ translate('messages.vendor_lat_lng_warning') }}"><img
                                                     src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.store_lat_lng_warning') }}"></span></label>
+                                                    alt="{{ translate('messages.vendor_lat_lng_warning') }}"></span></label>
                                         <input type="text" id="latitude" name="latitude"
                                             class="form-control __form-control"
                                             placeholder="{{ translate('messages.Ex:') }} -94.22213"
@@ -289,9 +289,9 @@
                                     <div class="form-group mb-4">
                                         <label class="input-label" for="longitude">{{ translate('messages.longitude') }}
                                             <span class="input-label-secondary"
-                                                title="{{ translate('messages.store_lat_lng_warning') }}"><img
+                                                title="{{ translate('messages.vendor_lat_lng_warning') }}"><img
                                                     src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.store_lat_lng_warning') }}"></span></label>
+                                                    alt="{{ translate('messages.vendor_lat_lng_warning') }}"></span></label>
                                         <input type="text" name="longitude" class="form-control __form-control"
                                             placeholder="{{ translate('messages.Ex:') }} 103.344322" id="longitude"
                                             value="{{ old('longitude') }}" required readonly>
@@ -662,9 +662,9 @@
                                                         </span>
                                                     </div>
                                                     <p>
-                                                        {{ translate('Store will pay') }} {{ $admin_commission }}%
+                                                        {{ translate('vendor will pay') }} {{ $admin_commission }}%
                                                         {{ translate('commission to') }} {{ $business_name }}
-                                                        {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
+                                                        {{ translate('from each order. You will get access of all the features and options  in vendor panel , app and interaction with user.') }}
                                                     </p>
                                                 </div>
                                             </label>
@@ -687,7 +687,7 @@
                                                     </span>
                                                 </div>
                                                 <p>
-                                                    {{ translate('Run store by puchasing subsciption packages. You will have access the features of in store panel , app and interaction with user according to the subscription packages.') }}
+                                                    {{ translate('Run vendor by puchasing subsciption packages. You will have access the features of in vendor panel , app and interaction with user according to the subscription packages.') }}
                                                 </p>
                                             </div>
                                         </label>
@@ -905,16 +905,16 @@
             fileInputs.forEach(input => {
 
                 if (input.files.length === 0) {
-                    toastr.error("{{ translate('Store_logo_&_cover_photos_are_required') }}");
+                    toastr.error("{{ translate('Vendor_logo_&_cover_photos_are_required') }}");
                     e.preventDefault();
                 } else if ($('#default_name').val().length === 0) {
-                    toastr.error("{{ translate('Store_name_is_required') }}");
+                    toastr.error("{{ translate('Vendor_name_is_required') }}");
                     e.preventDefault();
                 } else if ($('#address').val().length === 0) {
-                    toastr.error("{{ translate('Store_address_is_required') }}");
+                    toastr.error("{{ translate('Vendor_address_is_required') }}");
                     e.preventDefault();
                 } else if ($('#address').val().length === 0) {
-                    toastr.error("{{ translate('Store_address_is_required') }}");
+                    toastr.error("{{ translate('vendor_address_is_required') }}");
                     e.preventDefault();
                 } else if (!$('#choice_zones').val()) {
                     toastr.error("{{ translate('You_must_select_a_zone') }}");

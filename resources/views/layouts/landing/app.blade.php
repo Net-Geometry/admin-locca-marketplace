@@ -141,7 +141,7 @@ $countryCode= strtolower($country?$country->value:'auto');
                             @if ($toggle_store_registration)
                             <li>
                                 <a class="" href="{{ route('restaurant.create') }}">
-                                    {{ translate('messages.store_registration') }}
+                                    {{ translate('messages.vendor_registration') }}
                                 </a>
                             </li>
                             @if ($toggle_dm_registration)

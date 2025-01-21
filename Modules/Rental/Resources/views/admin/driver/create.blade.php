@@ -69,7 +69,7 @@
                                         <label class="input-label"
                                                for="phone">{{ translate('messages.phone') }}</label>
                                         <input type="tel" id="phone" name="phone" class="form-control"
-                                               placeholder="{{ translate('messages.Ex:') }} 017********" value="123456789"
+                                               placeholder="{{ translate('messages.Ex:') }} 017********"
                                                required>
                                     </div>
                                 </div>
@@ -87,7 +87,7 @@
                                             <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
                                                 <i class="tio-clear"></i>
                                             </a>
-                                            <input type="file" name="image" class="upload-file__input single_file_input" 
+                                            <input type="file" name="image" class="upload-file__input single_file_input"
                                                 accept=".jpg, .jpeg, .png"  value="" required>
                                             <label
                                                 class="upload-file-wrapper w--180px">
@@ -102,7 +102,7 @@
                                                 <img class="upload-file-img" height="180" width="180" loading="lazy" style="display: none;" src="" alt="">
                                             </label>
                                         </div>
-    
+
                                     </div>
                                 </div>
                             </div>
@@ -236,7 +236,7 @@
         //         }
         //     });
         // });
-        
+
         // ---- single image upload starts
         $(document).ready(function () {
             // Handle file input change
@@ -252,7 +252,7 @@
                     reader.onload = function (e) {
                         $textbox.hide();
                         $imgElement.attr('src', e.target.result).show();
-                        $removeBtn.css('opacity', 1); 
+                        $removeBtn.css('opacity', 1);
                     };
                     reader.readAsDataURL(file);
                 }
@@ -261,18 +261,18 @@
             // Handle remove button click
             $('.remove-btn').click(function () {
                 var $card = $(this).closest('.upload-file');
-                $card.find('.single_file_input').val(''); 
-                $card.find('.upload-file-textbox').show(); 
-                $card.find('.upload-file-img').hide().attr('src', ''); 
-                $(this).css('opacity', 0); 
+                $card.find('.single_file_input').val('');
+                $card.find('.upload-file-textbox').show();
+                $card.find('.upload-file-img').hide().attr('src', '');
+                $(this).css('opacity', 0);
             });
 
             // Handle reset button click
             $('#reset_btn').click(function () {
-                var $cards = $('.upload-file'); 
+                var $cards = $('.upload-file');
                 $cards.each(function () {
-                    $(this).find('.single_file_input').val(''); 
-                    $(this).find('.upload-file-textbox').show(); 
+                    $(this).find('.single_file_input').val('');
+                    $(this).find('.upload-file-textbox').show();
                     $(this).find('.upload-file-img').hide().attr('src', '');
                     $(this).find('.remove-btn').css('opacity', 0);
                 });
@@ -353,7 +353,7 @@
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
                 uploadWrapper.style.display = currentFiles >= 5 ? "none" : "block";
             }
-           // Handle reset button click 
+           // Handle reset button click
            $('#reset_btn').click(function () {
                 // Select and remove only the uploaded image elements
                 const uploadedImages = imageContainer.querySelectorAll(".image-single");

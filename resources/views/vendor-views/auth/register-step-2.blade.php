@@ -1,5 +1,5 @@
 @extends('layouts.landing.app')
-@section('title', translate('messages.store_registration'))
+@section('title', translate('messages.vendor_registration'))
 @push('css_or_js')
     <link rel="stylesheet" href="{{ asset('public/assets/admin/css/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('public/assets/admin/css/view-pages/vendor-registration.css') }}">
@@ -10,7 +10,7 @@
         <div class="container">
             <!-- Page Header -->
             <div class="section-header">
-                <h2 class="title mb-2">{{ translate('messages.store') }} <span
+                <h2 class="title mb-2">{{ translate('messages.vendor') }} <span
                         class="text--base">{{ translate('application') }}</span></h2>
             </div>
 
@@ -59,9 +59,9 @@
                                                 </span>
                                             </div>
                                             <p>
-                                                {{ translate('Store will pay') }} {{ $admin_commission }}%
+                                                {{ translate('Vendor will pay') }} {{ $admin_commission }}%
                                                 {{ translate('commission to') }} {{ $business_name }}
-                                                {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
+                                                {{ translate('from each order. You will get access of all the features and options  in vendor panel , app and interaction with user.') }}
                                             </p>
                                         </div>
                                     </label>
@@ -82,7 +82,7 @@
                                             </span>
                                         </div>
                                         <p>
-                                            {{ translate('Run store by puchasing subsciption packages. You will have access the features of in store panel , app and interaction with user according to the subscription packages.') }}
+                                            {{ translate('Run vendor by puchasing subsciption packages. You will have access the features of in vendor panel , app and interaction with user according to the subscription packages.') }}
                                         </p>
                                     </div>
                                 </label>

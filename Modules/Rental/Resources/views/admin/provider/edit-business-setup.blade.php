@@ -71,7 +71,7 @@
                                         </label>
                                     </div>
 
-                                    <div class="col-lg-12 mt-20" id="subscription-plan">
+                                    <div class="col-lg-12 mt-20 d-none" id="subscription-plan">
                                         <div>
                                             <div class="text-center mb-20">
                                                 <h3 class="modal-title fs-16 opacity-lg font-bold">
@@ -308,43 +308,47 @@
             });
         });
 
-        $(window).on('load', function() {
-            $('input[name="business_plan"]').each(function() {
-                if ($(this).is(':checked')) {
-                    if ($(this).val() == 'subscription-base') {
-                        $('#subscription-plan').show()
-                        $('#commissionBtn').hide()
-                        $('#subscriptionBtn').show()
-                    } else {
-                        $('#subscription-plan').hide()
-                        $('#commissionBtn').show()
-                        $('#subscriptionBtn').hide()
-                    }
+        $(document).ready(function () {
+            $('input[name="business_plan"]:checked').each(function () {
+                if ($(this).val() == 'subscription-base') {
+                    $('#subscription-plan').removeClass('d-none');
+                    $('#subscription-plan').addClass('d-block');
+                    $('#commissionBtn').hide();
+                    $('#subscriptionBtn').show();
+                } else {
+                    $('#subscription-plan').addClass('d-none');
+                    $('#commissionBtn').show();
+                    $('#subscriptionBtn').hide();
                 }
-            })
-            $('input[name="package_id"]').each(function() {
-                if ($(this).is(':checked')) {
-                    $(this).closest('.__plan-item').addClass('active')
+            });
+
+            $('input[name="package_id"]:checked').each(function () {
+                $(this).closest('.__plan-item').addClass('active');
+            });
+
+            $('input[name="business_plan"]').on('change', function () {
+                if ($(this).val() == 'subscription-base') {
+                    $('#subscription-plan').removeClass('d-none');
+                    $('#subscription-plan').addClass('d-block');
+                    $('#commissionBtn').hide();
+                    $('#subscriptionBtn').show();
+                } else {
+                    $('#subscription-plan').addClass('d-none');
+                    $('#subscription-plan').removeClass('d-block');
+                    $('#commissionBtn').show();
+                    $('#subscriptionBtn').hide();
                 }
-            })
-        })
-        $('input[name="business_plan"]').on('change', function() {
-            if ($(this).val() == 'subscription-base') {
-                $('#subscription-plan').slideDown()
-                $('#commissionBtn').hide()
-                $('#subscriptionBtn').show()
-            } else {
-                $('#subscription-plan').slideUp()
-                $('#commissionBtn').show()
-                $('#subscriptionBtn').hide()
-            }
-        })
-        $('input[name="package_id"]').on('change', function() {
-            $('input[name="package_id"]').each(function() {
-                $(this).closest('.__plan-item').removeClass('active')
-            })
-            $(this).closest('.__plan-item').addClass('active')
-        })
+            });
+
+            $('input[name="package_id"]').on('change', function () {
+                $('input[name="package_id"]').each(function () {
+                    $(this).closest('.__plan-item').removeClass('active');
+                });
+                $(this).closest('.__plan-item').addClass('active');
+            });
+        });
+
+
         $('#reset-btn').on('click', function() {
             location.reload()
         })

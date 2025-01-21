@@ -15,7 +15,7 @@
                     <img src="{{asset('public/assets/admin/img/items.png')}}" class="w--22" alt="">
                 </span>
                 <span>
-                    {{translate('messages.items_bulk_import')}}
+                    {{translate('messages.vehicle_bulk_import')}}
                 </span>
             </h1>
         </div>
@@ -63,19 +63,13 @@
                                   <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        {{ translate('Fill_up_the_data_according_to_the_format_and_validations.') }}
+                                        {{ translate('Download the format file and fill it with proper data.') }}
                                     </li>
                                     <li>
-                                        {{ translate('You_can_get_store_id_module_id_and_unit_id_from_their_list_please_input_the_right_ids.') }}
+                                        {{ translate('You can download the example file to understand how the data must be filled.') }}
                                     </li>
                                     <li>
-                                        {{ translate('For_ecommerce_item_avaliable_time_start_and_end_will_be_00:00:00_and_23:59:59') }}
-                                    </li>
-                                    <li>
-                                        {{ translate('If_you_want_to_create_a_product_with_variation,_just_create_variations_from_the_generate_variation_section_below_and_click_generate_value.') }}
-                                    </li>
-                                    <li>
-                                        {{ translate('Copy_the_value_and_paste_the_the_spread_sheet_file_column_name_variation_in_the_selected_product_row.') }}
+                                        {{ translate('Have to upload zip file') }}
                                     </li>
                                 </ul>
                             </div>
@@ -94,19 +88,14 @@
                                   <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                       {{ translate('In_the_Excel_file_upload_section,_first_select_the_upload_option.') }}
+                                       {{ translate('Download the format file and fill it with proper data.') }}
                                     </li>
                                     <li>
-                                       {{ translate('Upload_your_file_in_.xls,_.xlsx_format.') }}
+                                       {{ translate('You can download the example file to understand how the data must be filled.') }}
                                     </li>
                                     <li>
-                                       {{ translate('Finally_click_the_upload_button.') }}
+                                       {{ translate('Have to upload zip file') }}
                                     </li>
-                                    <li>
-                                       {{ translate('You_can_upload_your_product_images_in_product_folder_from_gallery_and_copy_image`s_path.') }}
-                                    </li>
-
-
                                 </ul>
                             </div>
                         </div>
@@ -147,7 +136,7 @@
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <h5 class="text-capitalize mb-3">{{ translate('Import_items_file') }}</h5>
+                            <h5 class="text-capitalize mb-3">{{ translate('Import_vehicle_file') }}</h5>
                             <div class="uploadDnD">
                                 <div class="form-group inputDnD input_image input_image_edit position-relative">
                                     <div class="upload-text">
@@ -165,37 +154,6 @@
                     <div class="btn--container justify-content-end mt-3">
                         <button id="reset_btn" type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
                         <button type="button" class="btn btn--primary update_or_import">{{translate('messages.Upload')}}</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-        <form action="javascript:" method="post" id="item_form" enctype="multipart/form-data">
-            <div id="food_variation_section" style="display: none">
-                <div class="card mt-2 rest-part">
-                    <div class="card-header">
-                        <h5 class="card-title">
-                            <span>{{ translate('messages.food_variations_generator') }}</span>
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-2">
-                            <div class="col-md-12">
-                                <div id="add_new_option">
-                                </div>
-                                <br>
-                                <div class="mt-2 text-center">
-                                    <a class="btn btn--primary"
-                                        id="add_new_option_button">{{ translate('add_new_variation') }}</a>
-                                </div> <br><br>
-                            </div>
-                        </div>
-                        <div class="btn--container justify-content-end mb-3">
-                            <button type="submit" class="btn btn--warning">{{translate('Generate Value')}}</button>
-                        </div>
-                        <textarea name="" id="food_variation_outpot" class="form-control" rows="5" readonly></textarea>
-                        <div class="btn--container justify-content-end mt-2 mb-2">
-                            <button type="reset" class="btn btn--reset">{{translate('Reset')}}</button>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.car'))
+@section('title', translate('messages.Car Rental Module Dashboard'))
 
 @push('css_or_js')
 @endpush

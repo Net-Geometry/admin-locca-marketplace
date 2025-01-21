@@ -104,6 +104,8 @@ class ProviderController extends Controller
      * @param Vehicle $vehicle
      * @param Trips $trips
      * @param VehicleReview $vehicleReview
+     * @param TripTransaction $tripTransaction
+     * @param WithdrawRequest $withdrawRequest
      */
     public function __construct(BusinessSetting $businessSetting, StoreWallet $storeWallet, Item $item, DisbursementDetails $disbursementDetails, Conversation $conversation, UserInfo $userInfo, TempProduct $tempProduct, Zone $zone, Order $order, Vendor $vendor, Store $store, Admin $admin, StoreLogic $storeLogic, SubscriptionPackage $subscriptionPackage, Helpers $helpers, VehicleDriver $vehicleDriver, Vehicle $vehicle, Trips $trips,  VehicleReview $vehicleReview,  TripTransaction $tripTransaction, WithdrawRequest $withdrawRequest)
     {

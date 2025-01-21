@@ -62,21 +62,14 @@
                                 <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        {{ translate('Fill_up_the_data_according_to_the_format.') }}
+                                        {{ translate('Download the format file and fill it with proper data.') }}
                                     </li>
                                     <li>
-                                        {{ translate('Make_sure_the_phone_numbers_and_email_addresses_are_unique.') }}
+                                        {{ translate('You can download the example file to understand how the data must be filled.') }}
                                     </li>
                                     <li>
-                                        {{ translate('You_can_get_module_id_and_zone_id_from_their_list,_please_input_the_right_ids.')}}
+                                        {{ translate('Have to upload zip file') }}
                                     </li>
-                                    <li>
-                                        {{ translate('For_delivery_time_the_format_is_"from-to_type"_for_example:_"30-40_min"._Also_you_can_use_days_or_hours_as_type._Please_be_carefull_about_this_format_or_leave_this_field_empty.') }}
-                                    </li>
-                                    <li>
-                                        {{ translate('Latitude_must_be_a_number_between_-90_to_90_and_Longitude_must_a_number_between_-180_to_180._Otherwise_it_will_create_server_error') }}
-                                    </li>
-
                                 </ul>
                             </div>
                         </div>
@@ -91,27 +84,17 @@
                                     </div>
                                     <img src="{{asset('/public/assets/admin/img/bulk-import-3.png')}}" alt="">
                                 </div>
-                                  <h4>{{ translate('Instruction') }}</h4>
+                                <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        {{ translate('In_the_Excel_file_upload_section,_first_select_the_upload_option.') }}
-                                     </li>
-                                     <li>
-                                        {{ translate('Upload_your_file_in_.xls,_.xlsx_format.') }}
-                                     </li>
-                                     <li>
-                                        {{ translate('Finally_click_the_upload_button.') }}
-                                     </li>
-                                    <li>
-                                       {{ translate('After_uploading_stores_you_need_to_edit_them_and_set_stores`s_logo_and_cover.`s_path')}}
+                                        {{ translate('Download the format file and fill it with proper data.') }}
                                     </li>
                                     <li>
-                                       {{ translate('You_can_upload_your_store_images_in_store_folder_from_gallery,_and_copy_image`s_path') }}
+                                        {{ translate('You can download the example file to understand how the data must be filled.') }}
                                     </li>
                                     <li>
-                                       {{ translate('Default_password_for_store_is_12345678.') }}
+                                        {{ translate('Have to upload zip file') }}
                                     </li>
-
                                 </ul>
                             </div>
                         </div>
@@ -157,7 +140,7 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <h5 class="text-capitalize mb-3">{{ translate('Import_Stores_file') }}</h5>
+                        <h5 class="text-capitalize mb-3">{{ translate('Import_Providers_file') }}</h5>
                         <div class="uploadDnD">
                             <div class="form-group inputDnD input_image input_image_edit position-relative">
                                 <div class="upload-text">

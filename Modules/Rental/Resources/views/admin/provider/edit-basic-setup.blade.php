@@ -105,7 +105,7 @@
                                                                     ({{ translate('messages.Default') }})
                                                                 </label>
                                                                 <input type="text" name="name[]" id="default_name"
-                                                                       class="form-control" placeholder="{{ translate('messages.store_name') }}" value="{{$store->getRawOriginal('name')}}"
+                                                                       class="form-control" placeholder="{{ translate('messages.provider_name') }}" value="{{$store->getRawOriginal('name')}}"
                                                                        required
                                                                 >
                                                             </div>
@@ -113,7 +113,7 @@
                                                             <div class="form-group mb-0">
                                                                 <label class="input-label"
                                                                        for="exampleFormControlInput1">{{ translate('messages.address') }} ({{ translate('messages.default') }})</label>
-                                                                <textarea type="text" name="address[]" placeholder="{{translate('messages.store')}}" class="form-control min-h-90px ckeditor">{{$store->getRawOriginal('address')}}</textarea>
+                                                                <textarea type="text" name="address[]" placeholder="{{translate('messages.provider address')}}" class="form-control min-h-90px ckeditor">{{$store->getRawOriginal('address')}}</textarea>
                                                             </div>
                                                         </div>
                                                         @foreach (json_decode($language) as $lang)
@@ -139,14 +139,14 @@
                                                                         ({{ strtoupper($lang) }})
                                                                     </label>
                                                                     <input type="text" name="name[]" id="{{ $lang }}_name"
-                                                                           class="form-control" value="{{ $translate[$lang]['name']??'' }}" placeholder="{{ translate('messages.store_name') }}"
+                                                                           class="form-control" value="{{ $translate[$lang]['name']??'' }}" placeholder="{{ translate('messages.provider_name') }}"
                                                                     >
                                                                 </div>
                                                                 <input type="hidden" name="lang[]" value="{{ $lang }}">
                                                                 <div class="form-group mb-0">
                                                                     <label class="input-label"
                                                                            for="exampleFormControlInput1">{{ translate('messages.address') }} ({{ strtoupper($lang) }})</label>
-                                                                    <textarea type="text" name="address[]" placeholder="{{translate('messages.store')}}" class="form-control min-h-90px ckeditor">{{ $translate[$lang]['address']??'' }}</textarea>
+                                                                    <textarea type="text" name="address[]" placeholder="{{translate('messages.provider address')}}" class="form-control min-h-90px ckeditor">{{ $translate[$lang]['address']??'' }}</textarea>
                                                                 </div>
                                                             </div>
                                                         @endforeach
@@ -156,14 +156,14 @@
                                                                 <label class="input-label"
                                                                        for="exampleFormControlInput1">{{ translate('messages.name') }} ({{ translate('messages.default') }})</label>
                                                                 <input type="text" name="name[]" class="form-control"
-                                                                       placeholder="{{ translate('messages.store_name') }}" required>
+                                                                       placeholder="{{ translate('messages.provider_name') }}" required>
                                                             </div>
                                                             <input type="hidden" name="lang[]" value="default">
                                                             <div class="form-group mb-0">
                                                                 <label class="input-label"
                                                                        for="exampleFormControlInput1">{{ translate('messages.address') }}
                                                                 </label>
-                                                                <textarea type="text" name="address[]" placeholder="{{translate('messages.store')}}" class="form-control min-h-90px ckeditor"></textarea>
+                                                                <textarea type="text" name="address[]" placeholder="{{translate('messages.provider address')}}" class="form-control min-h-90px ckeditor"></textarea>
                                                             </div>
                                                         </div>
                                                     @endif
@@ -198,7 +198,7 @@
                                                 @php($icon = \App\Models\BusinessSetting::where('key', 'icon')->first())
                                                 @php($icon = $icon->value ?? '')
                                                 <label class="form-label">
-                                                    {{ translate('Store Cover') }}  <span class="text--primary">({{ translate('3:2') }})</span>
+                                                    {{ translate('Cover') }}  <span class="text--primary">({{ translate('3:2') }})</span>
                                                 </label>
                                                 <label class="text-center position-relative">
                                                     <img class="img--vertical min-height-170px min-width-170px onerror-image image--border" id="coverImageViewer"
@@ -651,47 +651,66 @@
                 },
             });
         })
-        $(document).on('ready', function (){
-            let id = $('#choice_zones').val();
-            $.get({
-                url: '{{url('/')}}/admin/zone/get-coordinates/'+id,
-                dataType: 'json',
-                success: function (data) {
-                    if(zonePolygon)
-                    {
-                        zonePolygon.setMap(null);
-                    }
-                    zonePolygon = new google.maps.Polygon({
-                        paths: data.coordinates,
-                        strokeColor: "#FF0000",
-                        strokeOpacity: 0.8,
-                        strokeWeight: 2,
-                        fillColor: 'white',
-                        fillOpacity: 0,
-                    });
-                    zonePolygon.setMap(map);
-                    zonePolygon.getPaths().forEach(function(path) {
-                        path.forEach(function(latlng) {
-                            bounds.extend(latlng);
-                            map.fitBounds(bounds);
-                        });
-                    });
-                    map.setCenter(data.center);
-                    google.maps.event.addListener(zonePolygon, 'click', function (mapsMouseEvent) {
-                        infoWindow.close();
-                        // Create a new InfoWindow.
-                        infoWindow = new google.maps.InfoWindow({
-                            position: mapsMouseEvent.latLng,
-                            content: JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2),
-                        });
-                        let coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
-                        coordinates = JSON.parse(coordinates);
+        $(document).on('ready', function () {
+            // Function to update the map
+            function updateZone(id) {
+                $.get({
+                    url: '{{url('/')}}/admin/zone/get-coordinates/' + id,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (zonePolygon) {
+                            zonePolygon.setMap(null); // Remove the previous polygon
+                        }
 
-                        document.getElementById('latitude').value = coordinates['lat'];
-                        document.getElementById('longitude').value = coordinates['lng'];
-                        infoWindow.open(map);
-                    });
-                },
+                        // Create the new polygon
+                        zonePolygon = new google.maps.Polygon({
+                            paths: data.coordinates,
+                            strokeColor: "#FF0000",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 2,
+                            fillColor: 'white',
+                            fillOpacity: 0,
+                        });
+
+                        zonePolygon.setMap(map);
+
+                        // Extend bounds and fit the map
+                        zonePolygon.getPaths().forEach(function (path) {
+                            path.forEach(function (latlng) {
+                                bounds.extend(latlng);
+                                map.fitBounds(bounds);
+                            });
+                        });
+
+                        map.setCenter(data.center);
+
+                        // Add click listener to show info window
+                        google.maps.event.addListener(zonePolygon, 'click', function (mapsMouseEvent) {
+                            infoWindow.close();
+                            infoWindow = new google.maps.InfoWindow({
+                                position: mapsMouseEvent.latLng,
+                                content: JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2),
+                            });
+
+                            let coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
+                            coordinates = JSON.parse(coordinates);
+
+                            document.getElementById('latitude').value = coordinates['lat'];
+                            document.getElementById('longitude').value = coordinates['lng'];
+                            infoWindow.open(map);
+                        });
+                    },
+                });
+            }
+
+            // Initial load when page is ready (for the default zone)
+            let id = $('#choice_zones').val();
+            updateZone(id);
+
+            // Update when the zone changes
+            $('#choice_zones').on('change', function () {
+                let newId = $(this).val(); // Get the new zone ID
+                updateZone(newId); // Update the map with new coordinates
             });
         });
 

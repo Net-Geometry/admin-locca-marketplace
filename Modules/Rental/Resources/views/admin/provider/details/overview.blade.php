@@ -478,13 +478,20 @@
             const bounds = new google.maps.LatLngBounds();
 
             <?php
-                $area = json_decode($store?->zone['coordinates'][0]->toJson(),true);
+                $area = [];
+
+                if (!empty($store?->zone) && isset($store->zone['coordinates'][0])) {
+                    $area = json_decode($store->zone['coordinates'][0]->toJson(), true);
+                }
+                $coordinates = $area['coordinates'] ?? [];
             ?>
 
             const businessZoneCoords = [
-                    @foreach($area['coordinates'] as $coords)
+                    @if (!empty($coordinates))
+                    @foreach ($coordinates as $coords)
                 { lat: {{$coords[1]}}, lng: {{$coords[0]}} },
                 @endforeach
+                @endif
             ];
 
             const businessZonePolygon = new google.maps.Polygon({

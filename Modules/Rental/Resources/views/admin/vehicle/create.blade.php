@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Provider Details - Add New Vehicle'))
+@section('title', translate('messages.Add New Vehicle'))
 
 @section('content')
     <div class="content container-fluid">
@@ -124,38 +124,6 @@
 
                                 </div>
                                 <div class="col-lg-6">
-                                    {{-- <div class="text-center">
-                                        <label class="text--title fs-16 font-semibold mb-1">
-                                            {{ translate('Vehicle_Thumbnail') }}
-                                        </label>
-                                        <div class="mb-20">
-                                            <p class="fs-12">
-                                                JPG, JPEG, PNG Less Than 1MB <strong class="font-semibold">(Ratio
-                                                    2:1)</strong>
-                                            </p>
-                                        </div>
-                                        <div class="upload-file text-wrapper">
-                                            <input type="file" name="thumbnail"
-                                                   class="upload-file__input single_file_input" accept=".jpg, .jpeg, .png"
-                                                   required>
-                                            <div
-                                                class="upload-file__img d-flex justify-content-center align-items-center height-150px max-w-300px m-auto p-0">
-                                                <div class="upload-file__textbox text-center">
-                                                    <img width="34" height="34"
-                                                         src="{{ asset('public/assets/admin/img/document-upload.png') }}"
-                                                         alt="" class="svg">
-                                                    <h6 class="mt-2 font-semibold">
-                                                        <span class="text-info">{{ translate('Click to upload') }}</span>
-                                                        <br>
-                                                        {{ translate('or drag and drop') }}
-                                                    </h6>
-                                                </div>
-                                                <img class="upload-file__img__img ratio-2" width="300" height="150"
-                                                     loading="lazy" style="display: none;" alt="">
-                                            </div>
-                                        </div>
-
-                                    </div> --}}
                                     <div class="text-center">
                                         <label class="text--title fs-16 font-semibold mb-1">
                                             {{ translate('Vehicle_Thumbnail') }}
@@ -248,154 +216,126 @@
                             <div class="row g-3">
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="choice_provider">{{ translate('messages.provider') }}
-                                        </label>
+                                        <label class="input-label" for="choice_provider">{{ translate('messages.provider') }}</label>
                                         <select name="provider_id" id="choice_provider" class="form-control js-select2-custom"
                                                 data-placeholder="{{ translate('messages.select_vehicle_provider') }}" required>
                                             <option value="" selected disabled>{{ translate('messages.select_vehicle_provider') }}</option>
                                             @foreach($providers as $provider)
-                                            <option value="{{ $provider->id }}" {{ $provider->id == request()?->provider_id ? 'selected' : '' }}>{{ $provider->name }}</option>
+                                                <option value="{{ $provider->id }}" {{ old('provider_id') == $provider->id ? 'selected' : '' }}>
+                                                    {{ $provider->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="choice_brand">{{ translate('messages.brand') }}
-                                        </label>
+                                        <label class="input-label" for="choice_brand">{{ translate('messages.brand') }}</label>
                                         <select name="brand_id" id="choice_brand" class="form-control js-select2-custom"
                                                 data-placeholder="{{ translate('messages.select_vehicle_brand') }}" required>
                                             <option value="" selected disabled>{{ translate('messages.select_vehicle_brand') }}</option>
                                             @foreach($brands as $brand)
-                                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>
+                                                    {{ $brand->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label"
-                                               for="">{{ translate('messages.Model') }}
-                                        </label>
-                                        <input type="number" name="model" class="form-control" placeholder="Model Name"
-                                               value="" required>
+                                        <label class="input-label" for="">{{ translate('messages.Model') }}</label>
+                                        <input type="text" name="model" class="form-control" placeholder="Model Name" value="{{ old('model') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label"
-                                               for="choice_category">{{ translate('messages.category') }}
-                                        </label>
-                                        <select name="category_id" id="choice_category" class="form-control js-select2-custom" data-placeholder="{{ translate('messages.select_vehicle_category') }}" required>
+                                        <label class="input-label" for="choice_category">{{ translate('messages.category') }}</label>
+                                        <select name="category_id" id="choice_category" class="form-control js-select2-custom"
+                                                data-placeholder="{{ translate('messages.select_vehicle_category') }}" required>
                                             <option value="" selected disabled>{{ translate('messages.select_vehicle_category') }}</option>
                                             @foreach($categories as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="choice_type">{{ translate('messages.type') }}
-                                        </label>
+                                        <label class="input-label" for="choice_type">{{ translate('messages.type') }}</label>
                                         <select name="type" id="choice_type" class="form-control js-select2-custom"
                                                 data-placeholder="{{ translate('messages.select_vehicle_type') }}" required>
-                                            <option value="" selected disabled>
-                                                {{ translate('messages.select_vehicle_type') }}</option>
-                                            <option value="family">{{ translate('messages.family') }}</option>
-                                            <option value="luxury">{{ translate('messages.Luxury') }}</option>
-                                            <option value="affordable">{{ translate('messages.Affordable') }}</option>
-                                            <option value="executives">{{ translate('messages.Executives') }}</option>
-                                            <option value="compact">{{ translate('messages.Compact') }}</option>
-                                            <option value="full_size">{{ translate('messages.Full-Size') }}</option>
+                                            <option value="" selected disabled>{{ translate('messages.select_vehicle_type') }}</option>
+                                            <option value="family" {{ old('type') == 'family' ? 'selected' : '' }}>{{ translate('messages.family') }}</option>
+                                            <option value="luxury" {{ old('type') == 'luxury' ? 'selected' : '' }}>{{ translate('messages.Luxury') }}</option>
+                                            <option value="affordable" {{ old('type') == 'affordable' ? 'selected' : '' }}>{{ translate('messages.Affordable') }}</option>
+                                            <option value="executives" {{ old('type') == 'executives' ? 'selected' : '' }}>{{ translate('messages.Executives') }}</option>
+                                            <option value="compact" {{ old('type') == 'compact' ? 'selected' : '' }}>{{ translate('messages.Compact') }}</option>
+                                            <option value="full_size" {{ old('type') == 'full_size' ? 'selected' : '' }}>{{ translate('messages.Full-Size') }}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label"
-                                               for="">{{ translate('messages.Engine Capacity (cc)') }}
-                                        </label>
-                                        <input type="number" name="engine_capacity" class="form-control" placeholder="Ex: 450"
-                                               value="" required>
+                                        <label class="input-label" for="">{{ translate('messages.Engine Capacity (cc)') }}</label>
+                                        <input type="number" name="engine_capacity" class="form-control" placeholder="Ex: 450" value="{{ old('engine_capacity') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label"
-                                               for="">{{ translate('messages.Engine Power (hp)') }}
-                                        </label>
-                                        <input type="number" name="engine_power" class="form-control" placeholder="Ex: 100"
-                                               value="" required>
+                                        <label class="input-label" for="">{{ translate('messages.Engine Power (hp)') }}</label>
+                                        <input type="number" name="engine_power" class="form-control" placeholder="Ex: 100" value="{{ old('engine_power') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label"
-                                               for="">{{ translate('messages.Seating Capacity') }}
-                                        </label>
-                                        <input type="number" name="seating_capacity" class="form-control"
-                                               placeholder="Input how many person can seat" value="" required>
+                                        <label class="input-label" for="">{{ translate('messages.Seating Capacity') }}</label>
+                                        <input type="number" name="seating_capacity" class="form-control" placeholder="Input how many person can seat" value="{{ old('seating_capacity') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label"
-                                               for="">{{ translate('messages.Air Condition') }}
-                                        </label>
+                                        <label class="input-label" for="">{{ translate('messages.Air Condition') }}</label>
                                         <div class="resturant-type-group border">
                                             <label class="form-check form--check mr-2 mr-md-4">
-                                                <input class="form-check-input" type="radio" value="yes"
-                                                       name="air_condition" id="order_confirmation_model"
-                                                       checked="">
-                                                <span class="form-check-label">
-                                                    {{ translate('messages.yes') }}
-                                                </span>
+                                                <input class="form-check-input" type="radio" value="yes" name="air_condition" {{ old('air_condition') == 'yes' ? 'checked' : '' }}>
+                                                <span class="form-check-label">{{ translate('messages.yes') }}</span>
                                             </label>
                                             <label class="form-check form--check mr-2 mr-md-4">
-                                                <input class="form-check-input" type="radio" value="0"
-                                                       name="air_condition" id="order_confirmation_model2">
-                                                <span class="form-check-label">
-                                                    {{ translate('messages.no') }}
-                                                </span>
+                                                <input class="form-check-input" type="radio" value="0" name="air_condition" {{ old('air_condition') == '0' ? 'checked' : '' }}>
+                                                <span class="form-check-label">{{ translate('messages.no') }}</span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label"
-                                               for="choice_fuel_type">{{ translate('messages.fuel_type') }}
-                                        </label>
-                                        <select name="fuel_type" id="choice_fuel_type"
-                                                class="form-control js-select2-custom"
+                                        <label class="input-label" for="choice_fuel_type">{{ translate('messages.fuel_type') }}</label>
+                                        <select name="fuel_type" id="choice_fuel_type" class="form-control js-select2-custom"
                                                 data-placeholder="{{ translate('messages.select_fuel_type') }}" required>
-                                            <option value="" selected disabled>
-                                                {{ translate('messages.select_vehicle_fuel_type') }}</option>
-                                            <option value="octan" >{{ translate('messages.Octan') }}</option>
-                                            <option value="diesel" >{{ translate('messages.diesel') }}</option>
-                                            <option value="CNG" >{{ translate('messages.CNG') }}</option>
-                                            <option value="petrol" >{{ translate('messages.Petrol') }}</option>
-                                            <option value="electric" >{{ translate('messages.Electric') }}</option>
-                                            <option value="jet_fuel" >{{ translate('messages.Jet Fuel') }}</option>
+                                            <option value="" selected disabled>{{ translate('messages.select_vehicle_fuel_type') }}</option>
+                                            <option value="octan" {{ old('fuel_type') == 'octan' ? 'selected' : '' }}>{{ translate('messages.Octan') }}</option>
+                                            <option value="diesel" {{ old('fuel_type') == 'diesel' ? 'selected' : '' }}>{{ translate('messages.diesel') }}</option>
+                                            <option value="CNG" {{ old('fuel_type') == 'CNG' ? 'selected' : '' }}>{{ translate('messages.CNG') }}</option>
+                                            <option value="petrol" {{ old('fuel_type') == 'petrol' ? 'selected' : '' }}>{{ translate('messages.Petrol') }}</option>
+                                            <option value="electric" {{ old('fuel_type') == 'electric' ? 'selected' : '' }}>{{ translate('messages.Electric') }}</option>
+                                            <option value="jet_fuel" {{ old('fuel_type') == 'jet_fuel' ? 'selected' : '' }}>{{ translate('messages.Jet Fuel') }}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label"
-                                               for="choice_transmission_type">{{ translate('messages.transmission_type') }}
-                                        </label>
-                                        <select name="transmission_type" id="choice_transmission_type"
-                                                class="form-control js-select2-custom"
+                                        <label class="input-label" for="choice_transmission_type">{{ translate('messages.transmission_type') }}</label>
+                                        <select name="transmission_type" id="choice_transmission_type" class="form-control js-select2-custom"
                                                 data-placeholder="{{ translate('messages.select_vehicle_transmission') }}" required>
-                                            <option value="" selected disabled>
-                                                {{ translate('messages.select_vehicle_transmission') }}</option>
-                                            <option value="automatic">{{ translate('Automatic') }}</option>
-                                            <option value="manual">{{ translate('Manual') }}</option>
-                                            <option value="continuously_variable">{{ translate('Continuously Variable') }}</option>
-                                            <option value="dual_clutch">{{ translate('Dual-Clutch') }}</option>
-                                            <option value="semi_automatic">{{ translate('Semi-Automatic') }}</option>
+                                            <option value="" selected disabled>{{ translate('messages.select_vehicle_transmission') }}</option>
+                                            <option value="automatic" {{ old('transmission_type') == 'automatic' ? 'selected' : '' }}>{{ translate('Automatic') }}</option>
+                                            <option value="manual" {{ old('transmission_type') == 'manual' ? 'selected' : '' }}>{{ translate('Manual') }}</option>
+                                            <option value="continuously_variable" {{ old('transmission_type') == 'continuously_variable' ? 'selected' : '' }}>{{ translate('Continuously Variable') }}</option>
+                                            <option value="dual_clutch" {{ old('transmission_type') == 'dual_clutch' ? 'selected' : '' }}>{{ translate('Dual-Clutch') }}</option>
+                                            <option value="semi_automatic" {{ old('transmission_type') == 'semi_automatic' ? 'selected' : '' }}>{{ translate('Semi-Automatic') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -427,7 +367,7 @@
                                     <label class="input-label"
                                            for="">{{ translate('messages.VIN Number') }}</label>
                                     <input type="text" name="vehicle[vin_number][]" class="form-control"
-                                           placeholder="Type your business name" value="" required>
+                                           placeholder="Type your vin number" value="" required>
                                 </div>
                                 <div class="form-group mb-0">
                                     <label class="input-label"
@@ -459,64 +399,58 @@
                             <div class="row g-3">
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label"
-                                               for="">{{ translate('messages.Distance Wise Price ($)') }}
-                                        </label>
+                                        <label class="input-label" for="">{{ translate('messages.Distance Wise Price ($)') }}</label>
                                         <div class="border resturant-type-group">
                                             <label class="align-items-center d-flex form-check item">
                                                 <input class="form-check-input single-select" type="checkbox" name="trip_hourly"
-                                                       value="hourly" checked="">
+                                                       value="hourly" {{ old('trip_hourly') == 'hourly' ? 'checked' : '' }}>
                                                 <span class="form-check-label ml-2 mt-1">
-                                                    {{ translate('messages.hourly') }}
-                                                </span>
+                            {{ translate('messages.hourly') }}
+                        </span>
                                             </label>
                                             <label class="align-items-center d-flex form-check item">
                                                 <input class="form-check-input single-select" type="checkbox" name="trip_distance"
-                                                       value="distance_wise">
+                                                       value="distance_wise" {{ old('trip_distance') == 'distance_wise' ? 'checked' : '' }}>
                                                 <span class="form-check-label ml-2 mt-1">
-                                                    {{ translate('messages.Distance Wise') }}
-                                                </span>
+                            {{ translate('messages.Distance Wise') }}
+                        </span>
                                             </label>
                                         </div>
-
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label"
-                                               for="">{{ translate('messages.Hourly Wise Price ($)') }}
-                                        </label>
+                                        <label class="input-label" for="">{{ translate('messages.Hourly Wise Price ($)') }}</label>
                                         <input type="number" name="hourly_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="" min="0" step="0.001">
+                                               placeholder="Ex: 35.25" min="0" step="0.001" value="{{ old('hourly_price') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label"
-                                               for="">{{ translate('messages.Distance Wise Price ($)') }}
-                                        </label>
+                                        <label class="input-label" for="">{{ translate('messages.Distance Wise Price ($)') }}</label>
                                         <input type="number" name="distance_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="" min="0" step="0.001">
+                                               placeholder="Ex: 35.25" min="0" step="0.001" value="{{ old('distance_price') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label font-semibold"
-                                               for="">{{ translate('messages.Discount') }}<span
-                                                class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.select_discount') }}">
-                                                <i class="tio-info text--title opacity-60"></i>
-                                            </span></label>
+                                        <label class="input-label font-semibold" for="">{{ translate('messages.Discount') }}
+                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                                  data-original-title="{{ translate('messages.The discount value should not be higher than the hourly price or distance-wise price') }}">
+                        <i class="tio-info text--title opacity-60"></i>
+                    </span>
+                                        </label>
                                         <div class="custom-group-btn border">
                                             <div class="flex-sm-grow-1">
-                                                <input id="discount_input" type="number" name="discount_price"
-                                                       class="form-control h--45px border-0 pl-unset"
-                                                       placeholder="Ex: 10" min="0" step="0.001">
+                                                <input id="discount_input" type="number" name="discount_price" class="form-control h--45px border-0 pl-unset"
+                                                       placeholder="Ex: 10" min="0" step="0.001" value="{{ old('discount_price') }}">
                                             </div>
                                             <div class="flex-shrink-0">
                                                 <select name="discount_type" id="discount_type" class="custom-select ltr border-0">
-                                                    <option value="percent" selected>%</option>
-                                                    <option value="amount">{{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
+                                                    <option value="percent" {{ old('discount_type') == 'percent' ? 'selected' : '' }}>%</option>
+                                                    <option value="amount" {{ old('discount_type') == 'amount' ? 'selected' : '' }}>
+                                                        {{ \App\CentralLogics\Helpers::currency_symbol() }}
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -608,6 +542,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
     <script>
+        $(document).on('reset', 'form', function() {
+            $(this).find('select').each(function() {
+                var select = $(this);
+                select.val('').trigger('change'); // Reset Select2 dropdowns
+            });
+        });
         // ---- single image upload starts
         $(document).ready(function () {
             // Handle file input change
@@ -926,7 +866,7 @@
             let newDiv = $('<div class="d-flex gap-20px flex-column flex-md-row equal-width">\
                     <div class="form-group mb-0">\
                         <label class="input-label" for="">{{ translate("messages.VIN Number") }}</label>\
-                        <input type="text" name="vehicle[vin_number][]" class="form-control" placeholder="Type your business name" value="">\
+                        <input type="text" name="vehicle[vin_number][]" class="form-control" placeholder="Type your vin number" value="">\
                     </div>\
                     <div class="form-group mb-0">\
                         <label class="input-label" for="">{{ translate("messages.License Plate Number") }}</label>\

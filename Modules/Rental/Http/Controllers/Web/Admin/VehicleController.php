@@ -77,8 +77,8 @@ class VehicleController extends Controller
             ->when($request->filled('brand_id'), function ($query) use ($request) {
                 $query->where('brand_id', $request->input('brand_id'));
             })
-            ->when($request->filled('type'), function ($query) use ($request) {
-                $query->where('type', $request->input('type'));
+            ->when($request->filled('vehicle_type'), function ($query) use ($request) {
+                $query->where('type', $request->input('vehicle_type'));
             })
             ->latest()->paginate(config('default_pagination'));
 
@@ -647,20 +647,33 @@ class VehicleController extends Controller
             ->when($request->filled('brand_id'), function ($query) use ($request) {
                 $query->where('brand_id', $request->input('brand_id'));
             })
-            ->when($request->filled('type'), function ($query) use ($request) {
-                $query->where('type', $request->input('type'));
+            ->when($request->filled('vehicle_type'), function ($query) use ($request) {
+                $query->where('type', $request->input('vehicle_type'));
+            })
+            ->when(isset($request->provider_id), function ($query) use ($request) {
+                return $query->where('provider_id', $request->provider_id);
             })
             ->latest()->get();
 
+        $providerId = $request->provider_id;
+        $fileName = 'Vehicles';
+
+        if ($providerId){
+            $providerName = $this->store->where('id', $providerId)->first()->value('name');
+            $fileName = $providerName .' vehicles';
+        }
+
         $data = [
+            'providerId' => $providerId,
+            'fileName' => $fileName,
             'data' => $vehicles,
             'search' => $request['search'] ?? null,
         ];
 
         if ($request['type'] == 'csv') {
-            return Excel::download(new VehicleExport($data), 'Vehicles.csv');
+            return Excel::download(new VehicleExport($data), $fileName.'.csv');
         }
-        return Excel::download(new VehicleExport($data), 'Vehicles.xlsx');
+        return Excel::download(new VehicleExport($data), $fileName.'.xlsx');
     }
 
     /**

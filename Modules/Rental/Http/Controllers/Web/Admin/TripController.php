@@ -2,6 +2,7 @@
 
 namespace Modules\Rental\Http\Controllers\Web\Admin;
 
+use App\Models\Store;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -28,11 +29,13 @@ class TripController extends Controller
 
     use TripLogicTrait,RentalPushNotification;
     private Trips $trips;
+    private Store $provider;
     private TripDetails $tripDetails;
     private TripVehicleDetails $tripVehicleDetails;
 
-    public function __construct( Trips $trips, TripDetails $tripDetails, TripVehicleDetails $tripVehicleDetails)
+    public function __construct( Trips $trips, TripDetails $tripDetails, TripVehicleDetails $tripVehicleDetails, Store $provider)
     {
+        $this->provider = $provider;
         $this->trips = $trips;
         $this->tripDetails = $tripDetails;
         $this->tripVehicleDetails = $tripVehicleDetails;
@@ -374,17 +377,30 @@ class TripController extends Controller
                     }
                 });
             })
+            ->when(isset($request->provider_id), function ($query) use ($request) {
+                return $query->where('provider_id', $request->provider_id);
+            })
             ->orderBy('schedule_at', 'desc')->get();
 
+        $providerId = $request->provider_id;
+        $fileName = 'Trips';
+
+        if ($providerId){
+            $providerName = $this->provider->where('id', $providerId)->first()->value('name');
+            $fileName = $providerName .' trips';
+        }
+
         $data = [
+            'providerId' => $providerId,
+            'fileName' => $fileName,
             'data' => $trips,
             'search' => $request['search'] ?? null,
         ];
 
         if ($request['type'] == 'csv') {
-            return Excel::download(new TripExport($data), 'Trips.csv');
+            return Excel::download(new TripExport($data), $fileName.'.csv');
         }
-        return Excel::download(new TripExport($data), 'Trips.xlsx');
+        return Excel::download(new TripExport($data), $fileName.'.xlsx');
     }
 
     /**

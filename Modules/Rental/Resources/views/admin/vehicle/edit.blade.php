@@ -421,7 +421,7 @@
                                         <label class="input-label"
                                                for="">{{ translate('messages.VIN Number') }}</label>
                                         <input type="text" name="vehicle[vin_number][]" class="form-control"
-                                               placeholder="Type your business name" value="{{ $multi->vin_number }}">
+                                               placeholder="Type your vin number" value="{{ $multi->vin_number }}">
                                     </div>
                                     <div class="form-group mb-0">
                                         <label class="input-label"
@@ -442,7 +442,7 @@
                                     <label class="input-label"
                                            for="">{{ translate('messages.VIN Number') }}</label>
                                     <input type="text" name="vehicle[vin_number][]" class="form-control"
-                                           placeholder="Type your business name">
+                                           placeholder="Type your vin number">
                                 </div>
                                 <div class="form-group mb-0">
                                     <label class="input-label"
@@ -502,7 +502,7 @@
                                                for="">{{ translate('messages.Hourly Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="hourly_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="{{ $vehicle->hourly_price }}" min="0" step="0.001">
+                                               placeholder="Ex: 35.25" value="{{ $vehicle->hourly_price }}" min="0" step="0.001" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -511,7 +511,7 @@
                                                for="">{{ translate('messages.Distance Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="distance_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="{{ $vehicle->distance_price }}" min="0" step="0.001">
+                                               placeholder="Ex: 35.25" value="{{ $vehicle->distance_price }}" min="0" step="0.001" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -519,7 +519,7 @@
                                         <label class="input-label font-semibold"
                                                for="">{{ translate('messages.Discount') }}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.select_discount') }}">
+                                                data-original-title="{{ translate('messages.The discount value should not be higher than the hourly price and distance-wise price') }}">
                                                 <i class="tio-info text--title opacity-60"></i>
                                             </span></label>
                                         <div class="custom-group-btn border">

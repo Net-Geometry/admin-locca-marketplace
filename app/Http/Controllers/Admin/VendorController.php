@@ -38,6 +38,7 @@ use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\Rental\Entities\TripTransaction;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
@@ -568,6 +569,7 @@ class VendorController extends Controller
             'search'=>$request->search??null,
             'store'=>$store->name,
             'type'=>'store',
+            'is_provider'=>$request->provider_id ?? null,
         ];
 
         if ($request->type == 'excel') {
@@ -796,11 +798,16 @@ class VendorController extends Controller
             'zone' =>is_numeric($zone_id)?Helpers::get_zones_name($zone_id):null,
             'module'=>request('module_id')?Helpers::get_module_name(Config::get('module.current_module_id')):null,
             'search' =>$request['search'] ?? null,
+            'is_rental' =>$request['is_rental'] ?? 0,
         ];
-        if($request->type == 'csv'){
-            return Excel::download(new StoreListExport($data), 'Stores.csv');
+
+        $fileName = $request->is_rental == 1 ? 'Providers' : 'Stores';
+
+        if ($request->type == 'csv') {
+            return Excel::download(new StoreListExport($data), $fileName . '.csv');
         }
-        return Excel::download(new StoreListExport($data), 'Stores.xlsx');
+        return Excel::download(new StoreListExport($data), $fileName . '.xlsx');
+
 
     }
 
@@ -1868,13 +1875,14 @@ class VendorController extends Controller
     }
 
 
-    public function cash_export($type,$store_id)
+    public function cash_export(Request $request, $type,$store_id)
     {
         $store = Store::find($store_id);
         $account = AccountTransaction::where('from_type', 'store')->where('from_id', $store->id)->where('type', 'collected')->get();
         $data=[
             'data' =>$account,
             'search' =>$request['search'] ?? null,
+            'is_provider' =>$request['provider_id'] ?? null,
         ];
         if($type == 'csv'){
             return Excel::download(new StoreCashTransactionExport($data), 'CashTransaction.csv');
@@ -1882,26 +1890,31 @@ class VendorController extends Controller
         return Excel::download(new StoreCashTransactionExport($data), 'CashTransaction.xlsx');
     }
 
-    public function order_export($type,$store_id)
+    public function order_export(Request $request, $type,$store_id)
     {
         $store = Store::find($store_id);
-        $account = OrderTransaction::where('vendor_id', $store->vendor->id)->latest()->get();
-            // if($type == 'excel'){
-            //     return (new FastExcel(Helpers::export_order_transaction_report($account)))->download('OrderTransaction.xlsx');
-            // }elseif($type == 'csv'){
-            //     return (new FastExcel(Helpers::export_order_transaction_report($account)))->download('OrderTransaction.csv');
-            // }
-            $data=[
-                'data' =>$account,
-                'search' =>$request['search'] ?? null,
-            ];
-            if($type == 'csv'){
-                return Excel::download(new StoreOrderTransactionExport($data), 'OrderTransaction.csv');
-            }
-            return Excel::download(new StoreOrderTransactionExport($data), 'OrderTransaction.xlsx');
+
+        if ($request['provider_id']){
+            $fileName = 'Trip';
+            $account = TripTransaction::where('provider_id', $store->vendor->id)->latest()->get();
+        }else{
+            $fileName = 'Order';
+            $account = OrderTransaction::where('vendor_id', $store->vendor->id)->latest()->get();
+        }
+
+        $data=[
+            'data' =>$account,
+            'search' =>$request['search'] ?? null,
+            'is_provider' =>$request['provider_id'] ?? null,
+        ];
+
+        if($type == 'csv'){
+            return Excel::download(new StoreOrderTransactionExport($data), $fileName.'Transaction.csv');
+        }
+        return Excel::download(new StoreOrderTransactionExport($data), $fileName.'Transaction.xlsx');
     }
 
-    public function withdraw_trans_export($type,$store_id)
+    public function withdraw_trans_export(Request $request, $type,$store_id)
     {
         $store = Store::find($store_id);
         $account = WithdrawRequest::where('vendor_id', $store->vendor->id)->get();
@@ -1909,6 +1922,7 @@ class VendorController extends Controller
         $data=[
             'data' =>$account,
             'search' =>$request['search'] ?? null,
+            'is_provider' =>$request['provider_id'] ?? null,
         ];
         if($type == 'csv'){
             return Excel::download(new StoreWiseWithdrawTransactionExport($data), 'WithdrawTransaction.csv');
