@@ -17,9 +17,8 @@ use Modules\Rental\Entities\VehicleBrand;
 use Modules\Rental\Exports\VehicleBrandExport;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-
+use App\CentralLogics\Helpers;
 class BrandController extends Controller
 {
 
@@ -62,9 +61,7 @@ class BrandController extends Controller
             DB::beginTransaction();
 
             $brand = $this->createBrand($request);
-
-            $this->insertTranslations($request, $brand);
-
+            Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: VehicleBrand::class, data_id: $brand->id, data_value: $brand->name,model_class:true);
             DB::commit();
         } catch (Exception) {
             DB::rollBack();
@@ -83,13 +80,13 @@ class BrandController extends Controller
      */
     public function edit(string $id): View|Factory|Application|RedirectResponse
     {
-        $brand = $this->brand->findOrFail($id);
-        if (isset($brand)) {
+        $brand = $this->brand->withoutGlobalScope('translate')->with('translations')->findOrFail($id);
+
             $language = getWebConfig('language') ?? [];
             $defaultLang = str_replace('_', '-', app()->getLocale());
 
             return view('rental::admin.brand.edit', compact('brand', 'language', 'defaultLang'));
-        }
+
 
         Toastr::error(translate('messages.information not found'));
         return back();
@@ -116,7 +113,7 @@ class BrandController extends Controller
             DB::beginTransaction();
 
             $this->updateBrand($request, $brand);
-            $this->insertTranslations($request, $brand);
+            Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: VehicleBrand::class, data_id: $brand->id, data_value: $brand->name,model_class:true);
 
             DB::commit();
 
@@ -245,42 +242,5 @@ class BrandController extends Controller
         $brand->save();
     }
 
-    /**
-     * @param Request $request
-     * @param VehicleBrand $brand
-     * @return void
-     */
-    private function insertTranslations(Request $request, VehicleBrand $brand): void
-    {
-        $defaultLanguage = str_replace('_', '-', app()->getLocale());
 
-        foreach ($request->lang as $index => $locale) {
-            $name = $request->name[$index];
-
-            if ($this->shouldInsertTranslation($locale, $defaultLanguage, $name)) {
-                $this->translation->updateOrInsert(
-                    [
-                        'translationable_type' => 'Modules\Rental\Entities\VehicleBrand',
-                        'translationable_id' => $brand->id,
-                        'locale' => $locale,
-                        'key' => 'name',
-                    ],
-                    [
-                        'value' => $locale == 'default' ? $brand->name : ($defaultLanguage == $locale ? $brand->name : $name),
-                    ]
-                );
-            }
-        }
-    }
-
-    /**
-     * @param string $locale
-     * @param string $defaultLanguage
-     * @param string|null $name
-     * @return bool
-     */
-    private function shouldInsertTranslation(string $locale, string $defaultLanguage, ?string $name): bool
-    {
-        return ($locale == $defaultLanguage && !$name) || ($locale != 'default' && $name);
-    }
 }

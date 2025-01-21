@@ -201,6 +201,16 @@
         $('#reset_btn').click(function(){
             setTimeout(reset_select, 100);
         })
+        $('#select_customer').on('change', function () {
+        let customer = $(this).val();
+        if (Array.isArray(customer) && customer.includes("all")) {
+            $('.select_customer_option').prop('disabled', true);
+            customer = ["all"];
+            $(this).val(customer);
+        } else {
+            $('.select_customer_option').prop('disabled', false);
+        }
+    });
         function reset_select(){
             $('#select_customer').trigger('change');
             if($('#cashback_type').val() == 'amount')
