@@ -1363,7 +1363,7 @@ class ItemController extends Controller
                         return back();
                     }
                     if (data_get($collection,'Image') != "" &&  strlen(data_get($collection,'Image')) > 30 ) {
-                        Toastr::error(translate('messages.Image_name_must_be_in_30_char._Line-') . ' ' . $collection['Id']);
+                        Toastr::error(translate('messages.Image_name_must_be_in_30_char_on_id') . ' ' . $collection['Id']);
                         return back();
                     }
                     try {
