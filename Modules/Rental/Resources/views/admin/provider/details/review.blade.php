@@ -128,8 +128,8 @@
                             <span class="progress-name mr-3">{{translate('messages.excellent')}}</span>
                             <div class="progress flex-grow-1">
                                 <div class="progress-bar" role="progressbar"
-                                     style="width: {{ $totalRating > 0 ? ($excellentCount / $totalRating) * 100 : 0 }}%;"
-                                     aria-valuenow="{{ $totalRating > 0 ? ($excellentCount / $totalRating) * 100 : 0 }}"
+                                     style="width: {{ $totalReviews > 0 ? ($excellentCount / $totalReviews) * 100 : 0 }}%;"
+                                     aria-valuenow="{{ $totalReviews > 0 ? ($excellentCount / $totalReviews) * 100 : 0 }}"
                                      aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <span class="ml-3">{{$excellentCount}}</span>
@@ -141,8 +141,8 @@
                             <span class="progress-name mr-3">{{translate('messages.good')}}</span>
                             <div class="progress flex-grow-1">
                                 <div class="progress-bar" role="progressbar"
-                                     style="width: {{ $totalRating > 0 ? ($goodCount / $totalRating) * 100 : 0 }}%;"
-                                     aria-valuenow="{{ $totalRating > 0 ? ($goodCount / $totalRating) * 100 : 0 }}"
+                                     style="width: {{ $totalReviews > 0 ? ($goodCount / $totalReviews) * 100 : 0 }}%;"
+                                     aria-valuenow="{{ $totalReviews > 0 ? ($goodCount / $totalReviews) * 100 : 0 }}"
                                      aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <span class="ml-3">{{$goodCount}}</span>
@@ -154,8 +154,8 @@
                             <span class="progress-name mr-3">{{translate('messages.average')}}</span>
                             <div class="progress flex-grow-1">
                                 <div class="progress-bar" role="progressbar"
-                                     style="width: {{ $totalRating > 0 ? ($averageCount / $totalRating) * 100 : 0 }}%;"
-                                     aria-valuenow="{{ $totalRating > 0 ? ($averageCount / $totalRating) * 100 : 0 }}"
+                                     style="width: {{ $totalReviews > 0 ? ($averageCount / $totalReviews) * 100 : 0 }}%;"
+                                     aria-valuenow="{{ $totalReviews > 0 ? ($averageCount / $totalReviews) * 100 : 0 }}"
                                      aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <span class="ml-3">{{$averageCount}}</span>
@@ -167,8 +167,8 @@
                             <span class="progress-name mr-3">{{translate('messages.below_average')}}</span>
                             <div class="progress flex-grow-1">
                                 <div class="progress-bar" role="progressbar"
-                                     style="width: {{ $totalRating > 0 ? ($belowAverageCount / $totalRating) * 100 : 0 }}%;"
-                                     aria-valuenow="{{ $totalRating > 0 ? ($belowAverageCount / $totalRating) * 100 : 0 }}"
+                                     style="width: {{ $totalReviews > 0 ? ($belowAverageCount / $totalReviews) * 100 : 0 }}%;"
+                                     aria-valuenow="{{ $totalReviews > 0 ? ($belowAverageCount / $totalReviews) * 100 : 0 }}"
                                      aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <span class="ml-3">{{$belowAverageCount}}</span>
@@ -180,8 +180,8 @@
                             <span class="progress-name mr-3">{{translate('messages.poor')}}</span>
                             <div class="progress flex-grow-1">
                                 <div class="progress-bar" role="progressbar"
-                                     style="width: {{ $totalRating > 0 ? ($poorCount / $totalRating) * 100 : 0 }}%;"
-                                     aria-valuenow="{{ $totalRating > 0 ? ($poorCount / $totalRating) * 100 : 0 }}"
+                                     style="width: {{ $totalReviews > 0 ? ($poorCount / $totalReviews) * 100 : 0 }}%;"
+                                     aria-valuenow="{{ $totalReviews > 0 ? ($poorCount / $totalReviews) * 100 : 0 }}"
                                      aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <span class="ml-3">{{$poorCount}}</span>
@@ -195,7 +195,11 @@
                     <!-- Header -->
             <div class="card-header py-2">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{translate('messages.Review_list')}}</h5>
+                    <h5 class="card-title">{{translate('messages.Review_list')}}
+
+                        <span class="badge badge-soft-dark ml-2"
+                        id="itemCount">{{$tripReviews->total()}}</span>
+                    </h5>
                     {{-- <form  class="search-form">
                                     <!-- Search -->
                         @csrf
@@ -239,6 +243,8 @@
                     <!-- End Unfold -->
                 </div>
             </div>
+
+
                 <div class="card-body p-0 verticle-align-middle-table">
                     <div class="table-responsive datatable-custom">
                         <table id="columnSearchDatatable"
@@ -256,9 +262,9 @@
                             </thead>
 
                             <tbody id="set-rows">
-                            @foreach($tripReviews as $tripReview)
+                            @foreach($tripReviews as $key => $tripReview)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $key + $tripReviews->firstItem() }}</td>
                                     <td>#{{ $tripReview->id }}</td>
 
                                     <td>
@@ -338,37 +344,6 @@
         // Call the dataTables jQuery plugin
         $(document).ready(function () {
             $('#dataTable').DataTable();
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-            $('#column1_search').on('keyup', function () {
-                datatable
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column2_search').on('keyup', function () {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column3_search').on('change', function () {
-                datatable
-                    .columns(3)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column4_search').on('keyup', function () {
-                datatable
-                    .columns(4)
-                    .search(this.value)
-                    .draw();
-            });
 
 
             // INITIALIZATION OF SELECT2
@@ -378,31 +353,31 @@
             });
         });
 
-        $('#search-form').on('submit', function () {
-            let formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.item.search')}}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    $('#set-rows').html(data.view);
-                    $('.page-area').hide();
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        });
+        // $('#search-form').on('submit', function () {
+        //     let formData = new FormData(this);
+        //     $.ajaxSetup({
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         }
+        //     });
+        //     $.post({
+        //         url: '{{route('admin.item.search')}}',
+        //         data: formData,
+        //         cache: false,
+        //         contentType: false,
+        //         processData: false,
+        //         beforeSend: function () {
+        //             $('#loading').show();
+        //         },
+        //         success: function (data) {
+        //             $('#set-rows').html(data.view);
+        //             $('.page-area').hide();
+        //         },
+        //         complete: function () {
+        //             $('#loading').hide();
+        //         },
+        //     });
+        // });
 
         $(".status_form_alert").on("click", function (e) {
             const id = $(this).data('id');

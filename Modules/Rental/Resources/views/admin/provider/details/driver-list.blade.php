@@ -54,14 +54,14 @@
                     <!-- Header -->
                     <div class="card-header py-2">
                         <div class="search--button-wrapper">
-                            <h5 class="card-title text--title flex-grow-1">{{ translate('messages.Total_Trips') }}</h5>
+                            <h5 class="card-title text--title flex-grow-1">{{ translate('messages.Total_Drivers') }}</h5>
                             <form class="search-form flex-grow-1 max-w-353px">
                                 <!-- Search -->
                                 <div class="input-group input--group">
                                     <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"
                                            name="search" class="form-control"
-                                           placeholder="{{ translate('Search by provider name, owner info...') }}"
-                                           aria-label="{{ translate('messages.Search by provider name, owner info...') }}">
+                                           placeholder="{{ translate('Search by name') }}"
+                                           aria-label="{{ translate('messages.Search by name,') }}">
                                     <button type="submit" class="btn btn--secondary bg--primary"><i
                                             class="tio-search"></i></button>
 
@@ -141,9 +141,13 @@
                                 <td>{{ $key+$drivers->firstItem() }}</td>
                                 <td>
                                     <div class="text--title">
-                                        <div class="font-medium">
-                                            {{ Str::limit($driver->fullName, 20,'...') }}
-                                        </div>
+                                        <a href="{{ route('admin.rental.provider.driver.details', $driver->id) }}" target="_blank" rel="noopener noreferrer">
+
+
+                                            <div class="font-medium">
+                                                {{ Str::limit($driver->fullName, 20,'...') }}
+                                            </div>
+                                        </a>
                                         <div class="opacity-lg font-regular">
                                             {{ $driver->phone }}
                                         </div>

@@ -318,7 +318,11 @@ class CartController extends Controller
 
     private function updateCartPrice($request, $user_id, $is_guest,$user_data=null)
     {
-        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with(['vehicle','provider:id,name,address,tax','provider.discount'])->get();
+        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))
+        ->with(['vehicle' => function($query) {
+            $query->withCount('vehicleIdentities as total_vehicle_count');
+        }, 'provider:id,name,address,tax', 'provider.discount'])
+        ->get();
         $total_cart_price = 0;
         foreach ($carts as $cart) {
             $price = $this->getDiscount(price: ($request->rental_type ?? $user_data?->rental_type) == 'hourly' ? $cart->vehicle->hourly_price *   ($request->estimated_hours ?? $user_data?->estimated_hours) : $cart->vehicle->distance_price *  ($request->distance ?? $user_data?->distance), discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
