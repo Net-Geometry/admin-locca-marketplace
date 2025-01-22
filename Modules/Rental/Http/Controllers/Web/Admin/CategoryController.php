@@ -18,7 +18,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Modules\Rental\Exports\VehicleCategoryExport;
 use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\CentralLogics\Helpers;
 
 class CategoryController extends Controller
 {
@@ -62,7 +62,7 @@ class CategoryController extends Controller
 
             $category = $this->createCategory($request);
 
-            $this->insertTranslations($request, $category);
+            Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: VehicleCategory::class, data_id: $category->id, data_value: $category->name,model_class:true);
 
             DB::commit();
         } catch (Exception) {
@@ -82,13 +82,13 @@ class CategoryController extends Controller
      */
     public function edit(string $id): View|Factory|Application|RedirectResponse
     {
-        $category = $this->category->findOrFail($id);
-        if (isset($category)) {
+        $category = $this->category->withoutGlobalScope('translate')->with('translations')->findOrFail($id);
+
             $language = getWebConfig('language') ?? [];
             $defaultLang = str_replace('_', '-', app()->getLocale());
 
             return view('rental::admin.category.edit', compact('category', 'language', 'defaultLang'));
-        }
+
 
         Toastr::error(translate('messages.information not found'));
         return back();
@@ -115,7 +115,7 @@ class CategoryController extends Controller
             DB::beginTransaction();
 
             $this->updateCategory($request, $category);
-            $this->insertTranslations($request, $category);
+            Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: VehicleCategory::class, data_id: $category->id, data_value: $category->name,model_class:true);
 
             DB::commit();
 
@@ -245,44 +245,6 @@ class CategoryController extends Controller
         $category->save();
     }
 
-    /**
-     * @param Request $request
-     * @param VehicleCategory $category
-     * @return void
-     */
-    private function insertTranslations(Request $request, VehicleCategory $category): void
-    {
-        $defaultLanguage = str_replace('_', '-', app()->getLocale());
-
-        foreach ($request->lang as $index => $locale) {
-            $name = $request->name[$index];
-
-            if ($this->shouldInsertTranslation($locale, $defaultLanguage, $name)) {
-                $this->translation->updateOrInsert(
-                    [
-                        'translationable_type' => 'Modules\Rental\Entities\VehicleCategory',
-                        'translationable_id' => $category->id,
-                        'locale' => $locale,
-                        'key' => 'name',
-                    ],
-                    [
-                        'value' => $locale == 'default' ? $category->name : ($defaultLanguage == $locale? $category->name : $name),
-                    ]
-                );
-            }
-        }
-    }
-
-    /**
-     * @param string $locale
-     * @param string $defaultLanguage
-     * @param string|null $name
-     * @return bool
-     */
-    private function shouldInsertTranslation(string $locale, string $defaultLanguage, ?string $name): bool
-    {
-        return ($locale == $defaultLanguage && !$name) || ($locale != 'default' && $name);
-    }
 
     public function getCategories(Request $request)
     {

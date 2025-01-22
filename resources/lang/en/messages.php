@@ -7242,4 +7242,7 @@ Smartly or Earn. ',
   'The discount value should not be higher than the hourly price or distance-wise price' => 'The discount value should not be higher than the hourly price or distance-wise price',
   'discount_cannot_exceed_100_percent' => 'Discount cannot exceed 100 percent',
   'Discount cannot exceed 100 percent' => 'Discount cannot exceed 100 percent',
+  'provider_is_closed_at_trip_time' => 'Provider is closed at trip time',
+  'Min trip amount' => 'Min trip amount',
+  'failed_to_update_brand' => 'Failed to update brand',
 );

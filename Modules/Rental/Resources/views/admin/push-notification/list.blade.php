@@ -68,7 +68,7 @@
                                     <div class="h-100 d-flex flex-column">
                                         <label class="d-block text-center mt-auto mb-0">
                                             {{translate('messages.image')}}
-                                            <small class="text-danger">* ( {{translate('messages.ratio')}} 900x300 )</small>
+                                            <small class="text-danger"> ( {{translate('messages.ratio')}} 900x300 )</small>
                                         </label>
                                         <div class="text-center py-3 my-auto">
                                             <img class="img--vertical" id="viewer"

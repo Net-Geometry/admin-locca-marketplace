@@ -98,7 +98,7 @@ trait TripLogicTrait
 
         $comission_amount = $comission_on_store_amount;
 
-        $store_amount = $trip_amount + $trip->tax_amount  - $comission_on_store_amount - $store_coupon_discount_subsidy;
+        $store_amount = $trip_amount + $trip->tax_amount  - $comission_on_store_amount - $store_coupon_discount_subsidy - $store_d_amount;
         try {
             TripTransaction::insert([
                 'vendor_id' => $provider->vendor->id,
@@ -122,7 +122,7 @@ trait TripLogicTrait
                 // for store business model
                 'is_subscribed' => $subscription_mode,
                 'commission_percentage' => $commission_percentage,
-                'admin_net_income' =>$comission_amount + $trip->additional_charge -($admin_coupon_discount_subsidy - $ref_bonus_amount - $discount_on_trip - $amount_admin)
+                'admin_net_income' =>$comission_amount + $trip->additional_charge -($admin_coupon_discount_subsidy + $ref_bonus_amount + $discount_on_trip + $amount_admin)
             ]);
             $adminWallet = AdminWallet::firstOrNew(
                 ['admin_id' => Admin::where('role_id', 1)->first()->id]

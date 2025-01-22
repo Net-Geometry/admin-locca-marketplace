@@ -18,7 +18,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Config;
 use Modules\Rental\Exports\BannerExport;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 
@@ -61,7 +60,8 @@ class BannerController extends Controller
             $banner = $this->createBanner($request);
             Helpers::add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Banner', data_id: $banner->id, data_value: $banner->title);
             DB::commit();
-        } catch (Exception) {
+        } catch (Exception $exception) {
+            info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             DB::rollBack();
             Toastr::error(translate('messages.failed_to_add_banner'));
             return back();
@@ -98,7 +98,8 @@ class BannerController extends Controller
             DB::commit();
             Toastr::success(translate('messages.banner_updated_successfully'));
             return to_route('admin.rental.banner.add-new');
-        } catch (Exception) {
+        } catch (Exception  $exception) {
+            info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             DB::rollBack();
             Toastr::error(translate('messages.failed_to_update_banner'));
             return back();

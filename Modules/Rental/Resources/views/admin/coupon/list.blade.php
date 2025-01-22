@@ -20,7 +20,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{route('admin.rental.coupon.store')}}" method="POST">
+                        <form id="coupon_add_form" action="{{route('admin.rental.coupon.store')}}" method="POST">
                             @csrf
                             <div class="row">
                                 <div class="col-12">
@@ -84,7 +84,6 @@
                                             <option disabled selected>---{{translate('messages.Select_coupon_type')}}---</option>
                                             <option value="store_wise">{{translate('messages.Provider_wise')}}</option>
                                             <option value="zone_wise">{{translate('messages.zone_wise')}}</option>
-                                            {{-- <option value="free_delivery">{{translate('messages.free_delivery')}}</option> --}}
                                             <option value="first_order">{{translate('messages.first_trip')}}</option>
                                             <option value="default">{{translate('messages.default')}}</option>
                                         </select>
@@ -180,7 +179,7 @@
                                 <div class="col-md-4 col-lg-3 col-sm-6">
                                     <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.min_trip_amount')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                        <input type="number" step="0.01" name="min_purchase" value="0" min="0" max="999999999999.99" class="form-control"
+                                        <input type="number" step="0.01" id="min_purchase" name="min_purchase" value="0" min="0" max="999999999999.99" class="form-control"
                                             placeholder="100">
                                     </div>
                                 </div>
@@ -265,7 +264,7 @@
                                 <th class="border-0">{{translate('messages.code')}}</th>
                                 <th class="border-0">{{translate('messages.type')}}</th>
                                 <th class="border-0">{{translate('messages.total_uses')}}</th>
-                                <th class="border-0">{{translate('messages.min_purchase')}}</th>
+                                <th class="border-0">{{translate('messages.min_trip_amount')}}</th>
                                 <th class="border-0">{{translate('messages.max_discount')}}</th>
                                 <th class="border-0">{{translate('messages.discount')}}</th>
                                 <th class="border-0">{{translate('messages.discount_type')}}</th>
@@ -357,6 +356,45 @@
 <script>
     "use strict";
 
+
+        $('#min_purchase').on('input', function() {
+            if ($('#discount_type').val() === 'amount') {
+                $('#discount').attr('max', $(this).val() || 0);
+                if (parseFloat($('#discount').val()) > parseFloat($(this).val())) {
+                    toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
+                    $(this).val($(this).data('previous-value'));
+                }
+            }
+            $(this).data('previous-value', $(this).val());
+        });
+
+        $('#discount').on('input', function() {
+            if ($('#discount_type').val() === 'amount') {
+                let minPurchase = parseFloat($('#min_purchase').val()) || 0;
+                let discountValue = parseFloat($(this).val()) || 0;
+
+                if (discountValue > minPurchase) {
+                    toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
+                    $(this).val($(this).data('previous-value'));
+                }
+            }
+            $(this).data('previous-value', $(this).val());
+        });
+
+        function validateDiscount() {
+            let discountType = $('#discount_type').val();
+            let discountInput = $('#discount');
+            let minPurchase = parseFloat($('#min_purchase').val()) || 0;
+            let discountValue = parseFloat(discountInput.val()) || 0;
+
+            if (discountType === 'amount' && discountValue > minPurchase) {
+                discountInput.val(discountValue);
+                toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
+            }
+        }
+
+
+
     $(document).on('ready', function () {
 
         let module_id = {{Config::get('module.current_module_id')}};
@@ -388,15 +426,6 @@
         });
 
     });
-    $('#select_customer').on('change', function () {
-    let customer = $(this).val();
-    if (Array.isArray(customer) && customer.includes("all")) {
-        $('.select_customer_option').prop('disabled', true);
-        customer = ["all"];
-        $(this).val(customer);
-    } else {
-        $('.select_customer_option').prop('disabled', false);
-    }
-    });
+
     </script>
 @endpush

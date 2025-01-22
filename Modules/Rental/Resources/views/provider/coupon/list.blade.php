@@ -119,7 +119,7 @@
                         </div>
                         <div class="col-lg-3 col-sm-6">
                             <div class="form-group">
-                                <label class="input-label" for="min_purchase">{{translate('messages.min_purchase')}}</label>
+                                <label class="input-label" for="min_purchase">{{translate('messages.min_trip_amount')}}</label>
                                 <input id="min_purchase" type="number" step="0.01" name="min_purchase" value="0" min="0" max="999999999999.99" class="form-control"
                                        placeholder="100">
                             </div>
@@ -190,7 +190,7 @@
                         <th>{{translate('messages.code')}}</th>
                         <th>{{translate('messages.type')}}</th>
                         <th>{{translate('messages.total_uses')}}</th>
-                        <th>{{translate('messages.min_purchase')}}</th>
+                        <th>{{translate('messages.min_trip_amount')}}</th>
                         <th>{{translate('messages.max_discount')}}</th>
                         <th>
                             <div class="text-center">
