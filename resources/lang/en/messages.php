@@ -7245,4 +7245,8 @@ Smartly or Earn. ',
   'provider_is_closed_at_trip_time' => 'Provider is closed at trip time',
   'Min trip amount' => 'Min trip amount',
   'failed_to_update_brand' => 'Failed to update brand',
+  'See more' => 'See more',
+  'See less' => 'See less',
+  'product_imported_successfully' => 'Product imported successfully',
+  'The discount value should not be higher than the hourly price and distance-wise price' => 'The discount value should not be higher than the hourly price and distance-wise price',
 );

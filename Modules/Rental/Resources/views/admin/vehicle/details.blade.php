@@ -227,11 +227,18 @@
                             @if ($language)
                                 <div class="lang_form text--title" id="default-form">
                                     <h3 class="text--title fs-20 ont-bold mb-10px">{{$vehicle?->getRawOriginal('name')}}</h3>
-                                    <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
+                                    <h5 class="text--title font-semibold opacity-lg mb-10px">{{translate('Description')}}:</h5>
                                     <div class="fs-12 opacity-lg description-text">
-                                        <span class="short-description">{{ Str::limit($vehicle?->getRawOriginal('description'), 2100) }}</span>
-                                        <span class="full-description" style="display: none;">{{$vehicle?->getRawOriginal('description')}}</span>
-                                        <a href="#" class="text--info font-medium see-more">See more</a>
+                                        <span class="short-description">
+                                            {{ Str::limit($vehicle?->getRawOriginal('description'), 1500) }}
+                                        </span>
+                                                                            <span class="full-description" style="display: none;">
+                                            {{$vehicle?->getRawOriginal('description')}}
+                                        </span>
+                                        <!-- By default, "See more" button is hidden -->
+                                        <a href="#" class="text--info font-medium see-more" style="display: none;">
+                                            {{translate('See more')}}
+                                        </a>
                                     </div>
                                 </div>
 
@@ -249,11 +256,18 @@
                                     @endphp
                                     <div class="lang_form d-none text--title" id="{{ $lang }}-form">
                                         <h3 class="text--title fs-20 ont-bold mb-10px">{{$translate[$lang]['name']??''}}</h3>
-                                        <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
+                                        <h5 class="text--title font-semibold opacity-lg mb-10px">{{translate('Description')}}:</h5>
                                         <div class="fs-12 opacity-lg description-text">
-                                            <span class="short-description">{{ Str::limit($translate[$lang]['description'] ?? '', 2100) }}</span>
-                                            <span class="full-description" style="display: none;">{{$translate[$lang]['description'] ?? ''}}</span>
-                                            <a href="#" class="text--info font-medium see-more">See more</a>
+                                                <span class="short-description">
+                                                    {{ Str::limit($vehicle?->getRawOriginal('description'), 2100) }}
+                                                </span>
+                                                <span class="full-description" style="display: none;">
+                                                    {{$vehicle?->getRawOriginal('description')}}
+                                                </span>
+                                            <!-- By default, "See more" button is hidden -->
+                                            <a href="#" class="text--info font-medium see-more" style="display: none;">
+                                                {{translate('See more')}}
+                                            </a>
                                         </div>
                                     </div>
                                 @endforeach
@@ -332,7 +346,7 @@
                                                     class="font-semibold">:
                                                         {{ ucwords($vehicle->transmission_type) }}</span></div>
                                             <div class="d-flex"><span class="min-w-110px">{{translate('Fuel Type')}}</span><span
-                                                    class="font-semibold">: {{ $vehicle->fuel_type }}</span></div>
+                                                    class="font-semibold">: {{ translate($vehicle->fuel_type) }}</span></div>
                                         </div>
                                         <div>
                                             <div class="d-flex"> <span class="min-w-110px">{{translate('Engine Capacity')}}</span><span
@@ -604,24 +618,34 @@
 
     <script>
         $(document).ready(function () {
-            $('.see-more').on('click', function (e) {
-                e.preventDefault();
-
-                const $descriptionText = $(this).closest('.description-text');
+            $('.description-text').each(function () {
+                const $descriptionText = $(this);
                 const $shortDescription = $descriptionText.find('.short-description');
                 const $fullDescription = $descriptionText.find('.full-description');
+                const $seeMore = $descriptionText.find('.see-more');
 
-                $shortDescription.toggle();
-                $fullDescription.toggle();
+                const fullDescriptionLength = $fullDescription.text().trim().length;
 
-                if ($fullDescription.is(':visible')) {
-                    $(this).text('See less');
+                if (fullDescriptionLength > 1500) {
+                    $seeMore.show();
                 } else {
-                    $(this).text('See more');
+                    $seeMore.hide();
                 }
+
+                $seeMore.on('click', function (e) {
+                    e.preventDefault();
+
+                    $shortDescription.toggle();
+                    $fullDescription.toggle();
+
+                    if ($fullDescription.is(':visible')) {
+                        $(this).text('See less');
+                    } else {
+                        $(this).text('See more');
+                    }
+                });
             });
         });
-
     </script>
 
     <script>
