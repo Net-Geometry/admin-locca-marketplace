@@ -7245,4 +7245,5 @@ Smartly or Earn. ',
   'provider_is_closed_at_trip_time' => 'Provider is closed at trip time',
   'Min trip amount' => 'Min trip amount',
   'failed_to_update_brand' => 'Failed to update brand',
+  'total_trip_vehicles' => 'Total trip vehicles',
 );
