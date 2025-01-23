@@ -335,7 +335,7 @@ class TripController extends Controller
                 'message' =>  'Sorry_the_provider_is_unable_to_take_any_trip',
                 'status' => 403
             ],
-            $request->schedule_at  && !$store->schedule_order => [
+            $request->scheduled == 1  && !$store->schedule_order => [
                 'code' => 'schedule_at',
                 'message' => 'schedule_trip_not_available',
                 'status' => 403
@@ -345,7 +345,7 @@ class TripController extends Controller
                 'message' => 'provider_is_closed_at_trip_time',
                 'status' => 403
             ],
-            $request->schedule_at && $schedule_at < now() => [
+            $request->scheduled == 1  && $schedule_at < now() => [
                 'code' => 'trip_time',
                 'message' =>  'you_can_not_schedule_a_trip_in_past',
                 'status' => 403

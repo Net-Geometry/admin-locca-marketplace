@@ -532,7 +532,7 @@ class VendorController extends Controller
             ])->withcount('items')
             ->first();
             $packages = SubscriptionPackage::where('status',1)
-            ->where('module_type', $store?->module?->module_type == 'rental' ? 'rental' : 'all' )
+            ->where('module_type', $store?->module?->module_type == 'rental' && rental_module_published_status('Rental') ? 'rental' : 'all' )
             ->latest()->get();
             $admin_commission=BusinessSetting::where('key', 'admin_commission')->first()?->value ;
             $business_name=BusinessSetting::where('key', 'business_name')->first()?->value ;
@@ -1308,7 +1308,7 @@ class VendorController extends Controller
 
             $this->sentWithdrawRequestNotification($withdraw,$vendor->firebase_token,$vendor->email,'approved',$moduleType,$push_notification_status,$mail_status);
 
-            Toastr::success(translate('messages.seller_payment_approved'));
+            Toastr::success(translate('messages.vendor_withdraw_request_approved'));
             return redirect()->route('admin.transactions.store.withdraw_list');
         } else if ($request->approved == 2) {
             $wallet->decrement('pending_withdraw', $withdraw->amount);
@@ -1322,7 +1322,7 @@ class VendorController extends Controller
 
             $this->sentWithdrawRequestNotification($withdraw,$vendor->firebase_token,$vendor->email,'denied',$moduleType,$push_notification_status,$mail_status);
 
-            Toastr::info(translate('messages.seller_payment_denied'));
+            Toastr::info(translate('messages.vendor_withdraw_request_denied'));
             return redirect()->route('admin.transactions.store.withdraw_list');
         } else {
             Toastr::error(translate('messages.not_found'));

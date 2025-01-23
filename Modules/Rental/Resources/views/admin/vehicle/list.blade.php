@@ -192,10 +192,10 @@
                             <td>
                                 <div class="text--title">
                                     <a href="{{ route('admin.rental.provider.details', $vehicle->provider_id)}}" class="font-medium">
-                                        {{ $vehicle?->provider?->name }}
+                                        {{ $vehicle?->provider?->name ?? translate('provider_not_found') }}
                                     </a>
                                     <div class="opacity-lg">
-                                        {{ $vehicle->provider->email }}
+                                        {{ $vehicle?->provider?->email }}
                                     </div>
                                 </div>
                             </td>

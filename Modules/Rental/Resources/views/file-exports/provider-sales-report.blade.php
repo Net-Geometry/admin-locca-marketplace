@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 >{{ translate('provider_sales_reports') }}</h1></div>
+    <div class="col-lg-12 text-center "><h1 >{{ translate('provider_vehicle_reports') }}</h1></div>
     <div class="col-lg-12">
 
 

@@ -156,13 +156,13 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
     $subscription_deadline_warning_message =  \App\Models\BusinessSetting::where('key','subscription_deadline_warning_message')->first()?->value ?? null;
 
 
-        // if ($store_data->canceled_orders > 0 && $store_data?->module?->module_type == 'rental' ) {
+        // if ($store_data->canceled_orders > 0 && $store_data?->module?->module_type == 'rental' && rental_module_published_status('Rental') ) {
         //     $store_data['cancellation_rate']= (($store_data->canceled_orders / $store_data->total_orders) * 100) ;
         // }
 
 ?>
 
-{{-- @if (data_get($store_data,'cancellation_rate')  >= \App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_warning_limit') && data_get($store_data,'cancellation_rate')  <= \App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_block_limit') && $store_data?->module?->module_type == 'rental' )
+{{-- @if (data_get($store_data,'cancellation_rate')  >= \App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_warning_limit') && data_get($store_data,'cancellation_rate')  <= \App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_block_limit') && $store_data?->module?->module_type == 'rental' && rental_module_published_status('Rental') )
 
     <div class="alert __alert-2 alert-warning m-0 py-1 px-2" role="alert">
         <img class="rounded mr-1"  width="25" src="{{ asset('/public/assets/admin/img/header_warning.png') }}" alt="">
@@ -171,7 +171,7 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
             {{ translate('Your cancelation rate is getting higher. If cancelation rate is reach 20%, your account will automatically suspended.') }}
         </div>
     </div>
-    @elseif(data_get($store_data,'cancellation_rate')  >= \App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_block_limit') && $store_data?->module?->module_type == 'rental' )
+    @elseif(data_get($store_data,'cancellation_rate')  >= \App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_block_limit') && $store_data?->module?->module_type == 'rental' && rental_module_published_status('Rental') )
 
 
     <div class="alert __alert-2 alert-warning m-0 py-1 px-2" role="alert">

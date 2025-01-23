@@ -52,8 +52,6 @@ class VendorController extends Controller
         $store['discount']=$discount;
         $store['schedules']=$store->schedules()->get();
         $store['module']=$store->module;
-
-        $vendor['order_count'] =$vendor->orders->where('order_type','!=','pos')->whereNotIn('order_status',['canceled','failed'])->count();
         $vendor['order_count'] =$vendor->orders->where('order_type','!=','pos')->whereNotIn('order_status',['canceled','failed'])->count();
         $vendor['todays_order_count'] =$vendor->todaysorders->where('order_type','!=','pos')->whereIn('order_status', ['refunded', 'delivered'])->count();
         $vendor['this_week_order_count'] =$vendor->this_week_orders->where('order_type','!=','pos')->whereIn('order_status', ['refunded', 'delivered'])->count();
@@ -843,7 +841,7 @@ class VendorController extends Controller
                 if($request['vendor']?->stores[0]?->module?->module_type !== 'rental' &&  config('mail.status') && $mail_status == '1'  &&  Helpers::getNotificationStatusData('admin','withdraw_request','mail_status' )) {
                     Mail::to($admin->email)->send(new WithdrawRequestMail('admin_mail',$wallet_transaction));
                 }
-                elseif($request['vendor']?->stores[0]?->module?->module_type == 'rental' && config('mail.status') && Helpers::get_mail_status('rental_withdraw_request_mail_status_admin') == '1' &&   Helpers::getRentalNotificationStatusData('admin','provider_withdraw_request','mail_status') ){
+                elseif($request['vendor']?->stores[0]?->module?->module_type == 'rental' && rental_module_published_status('Rental') && config('mail.status') && Helpers::get_mail_status('rental_withdraw_request_mail_status_admin') == '1' &&   Helpers::getRentalNotificationStatusData('admin','provider_withdraw_request','mail_status') ){
                     Mail::to($admin->email)->send(new ProviderWithdrawRequestMail('pending',$wallet_transaction));
                 }
                 return response()->json(['message'=>translate('messages.withdraw_request_placed_successfully')],200);

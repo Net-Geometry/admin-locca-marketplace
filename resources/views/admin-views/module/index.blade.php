@@ -108,6 +108,7 @@
 
                         <tbody id="table-div">
                         @foreach($modules as $key=>$module)
+                        @if(($module->module_type == 'rental' && rental_module_published_status('Rental') == 1) || $module->module_type != 'rental')
                             <tr>
                                 <td class="pl-4">{{$key+$modules->firstItem()}}</td>
                                 <td>{{$module->id}}</td>
@@ -154,6 +155,7 @@
                                     </div>
                                 </td>
                             </tr>
+                        @endif
                         @endforeach
                         </tbody>
                     </table>

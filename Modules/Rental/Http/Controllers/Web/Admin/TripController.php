@@ -178,6 +178,7 @@ class TripController extends Controller
             }
 
             $trip->trip_status = $status;
+            $trip[$status] = now();
             $trip->save();
 
             if ($status == 'completed' && $trip->payment_status == 'paid' && !$trip->trip_transaction) {

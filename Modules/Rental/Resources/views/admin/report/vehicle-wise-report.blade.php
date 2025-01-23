@@ -190,9 +190,10 @@
                         <tr>
                             <td>{{$key+$vehicles->firstItem()}}</td>
                             <td>
+
                                 <a class="media align-items-center" href="{{ route('admin.rental.provider.vehicle.details', $vehicle->id)}}">
                                     <img class="avatar avatar-lg mr-3 onerror-image"
-                                    src="{{ $vehicle['image_full_url'] ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                    src="{{ $vehicle?->thumbnail_full_url ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"
 
 
                                     data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{$vehicle->name}} image">

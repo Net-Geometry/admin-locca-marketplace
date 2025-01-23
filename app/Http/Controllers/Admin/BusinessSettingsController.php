@@ -2128,8 +2128,10 @@ class BusinessSettingsController extends Controller
 
     public function fcm_index(Request $request)
     {
-        abort_if(!rental_module_published_status('rental') && $request?->module_type == 'rental',404 );
-        return view($request->module_type == 'rental' ?  'admin-views.business-settings.fcm-index-rental' : 'admin-views.business-settings.fcm-index');
+        abort_if($request?->module_type == 'rental' && !rental_module_published_status('Rental'), 404);
+        return view($request->module_type == 'rental' && rental_module_published_status('Rental')
+            ? 'admin-views.business-settings.fcm-index-rental'
+            : 'admin-views.business-settings.fcm-index');
     }
 
     public function fcm_config()
@@ -7615,12 +7617,12 @@ class BusinessSettingsController extends Controller
     public function notification_setup(Request $request)
     {
 
-        abort_if(!rental_module_published_status('rental') && $request?->module == 'rental',404 );
+        abort_if(!rental_module_published_status('Rental') && $request?->module == 'rental',404 );
 
         if (NotificationSetting::count() == 0) {
             Helpers::notificationDataSetup();
         }
-        if(rental_module_published_status('rental') && $request?->module == 'rental'){
+        if(rental_module_published_status('Rental') && $request?->module == 'rental'){
             Helpers::getRentalAdminNotificationSetupDatasetup();
         }
 

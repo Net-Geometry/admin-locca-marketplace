@@ -67,7 +67,7 @@ use Laravelpkg\Laravelchk\Http\Controllers\LaravelchkController;
 
 class Helpers
 {
-    use PaymentGatewayTrait , NotificationDataSetUpTrait , TripLogicTrait;
+    use PaymentGatewayTrait , NotificationDataSetUpTrait;
     public static function error_processor($validator)
     {
         $err_keeper = [];
@@ -4491,7 +4491,17 @@ class Helpers
 
     public static function createTransactionForTrip($trip, $received_by = false, $status = null)
     {
-        return self::create_transaction($trip, $received_by, $status);
+        if (is_dir('Modules/Rental') && file_exists('Modules/Rental/Services/TripTransactionService.php')) {
+            try {
+                $serviceClass = 'Modules\Rental\Services\TripTransactionService';
+                if (class_exists($serviceClass)) {
+                    return (new $serviceClass)->createTransaction($trip, $received_by, $status);
+                }
+            } catch (\Exception $e) {
+                info(['error_creating_trip_transaction', $e->getMessage()]);
+            }
+        }
+        return null;
     }
 }
 

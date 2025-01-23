@@ -81,7 +81,7 @@ class VehicleReportExport implements  FromView, ShouldAutoSize, WithStyles,WithC
             $drawing = new Drawing();
             $drawing->setName($item->name);
             $drawing->setDescription($item->name);
-            $drawing->setPath(is_file(storage_path('app/public/vehicle/'.$item->image))?storage_path('app/public/vehicle/'.$item->image):public_path('/assets/admin/img/160x160/img2.jpg'));
+            $drawing->setPath(is_file(storage_path('app/public/vehicle/'.$item->thumbnail))?storage_path('app/public/vehicle/'.$item->thumbnail):public_path('/assets/admin/img/160x160/img2.jpg'));
             $drawing->setHeight(25);
             $index+=4;
             $drawing->setCoordinates("B$index");

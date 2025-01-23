@@ -207,10 +207,10 @@ active
                             <div class="d-flex align-items-center gap-2">
                                 <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 @if ( $store?->store_sub_update_application?->max_order == 'unlimited' )
-                                <span class="form-check-label text-dark">{{ $store?->module->module_type == 'rental' ? translate('messages.unlimited_trips') : translate('messages.unlimited_orders') }}</span>
+                                <span class="form-check-label text-dark">{{ $store?->module->module_type == 'rental' && rental_module_published_status('Rental') ? translate('messages.unlimited_trips') : translate('messages.unlimited_orders') }}</span>
                                 @else
                                 <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->package?->max_order }} {{
-                                   $store?->module->module_type == 'rental' ? translate('messages.trips') :  translate('messages.Orders') }} <small>({{ $store?->store_sub_update_application?->max_order }} {{ translate('left') }}) </small> </span>
+                                   $store?->module->module_type == 'rental' && rental_module_published_status('Rental') ? translate('messages.trips') :  translate('messages.Orders') }} <small>({{ $store?->store_sub_update_application?->max_order }} {{ translate('left') }}) </small> </span>
                                 @endif
                             </div>
                         </div>
@@ -257,10 +257,10 @@ active
                             <div class="d-flex align-items-center gap-2">
                                 <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 @if ( $store?->store_sub_update_application?->max_product == 'unlimited' )
-                                <span class="form-check-label text-dark">{{ $store?->module->module_type == 'rental' ? translate('messages.unlimited_Upload') : translate('messages.unlimited_item_Upload')
+                                <span class="form-check-label text-dark">{{ $store?->module->module_type == 'rental' && rental_module_published_status('Rental') ? translate('messages.unlimited_Upload') : translate('messages.unlimited_item_Upload')
                                     }}</span>
                                 @else
-                                <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->max_product }} {{$store?->module->module_type == 'rental' ? translate('messages.Upload') :
+                                <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->max_product }} {{$store?->module->module_type == 'rental' && rental_module_published_status('Rental') ? translate('messages.Upload') :
                                     translate('messages.product_Upload') }} <small>({{ $store?->store_sub_update_application?->max_product  - $store->items_count > 0 ? $store?->store_sub_update_application?->max_product  - $store->items_count : 0 }} {{ translate('left') }}) </small></span>
                                 @endif
                             </div>
@@ -387,11 +387,11 @@ active
                                             @endif
                                             @if ($package->max_order == 'unlimited')
                                             <li>
-                                                <i class="tio-checkmark-circle"></i> <span>  {{ $store?->module->module_type == 'rental' ? translate('messages.unlimited_trips') :  translate('messages.Unlimited_Orders') }} </span>
+                                                <i class="tio-checkmark-circle"></i> <span>  {{ $store?->module->module_type == 'rental' && rental_module_published_status('Rental') ? translate('messages.unlimited_trips') :  translate('messages.Unlimited_Orders') }} </span>
                                             </li>
                                             @else
                                             <li>
-                                                <i class="tio-checkmark-circle"></i> <span>  {{ $package->max_order }} {{ $store?->module->module_type == 'rental' ? translate('messages.trips') :  translate('messages.Orders') }} </span>
+                                                <i class="tio-checkmark-circle"></i> <span>  {{ $package->max_order }} {{ $store?->module->module_type == 'rental' && rental_module_published_status('Rental') ? translate('messages.trips') :  translate('messages.Orders') }} </span>
                                             </li>
                                             @endif
                                             @if ($package->max_product == 'unlimited')

@@ -32,7 +32,7 @@
             <a href="{{route('admin.transactions.rental.report.provider-summary-report')}}" class="nav-link active">{{translate('Summary Report')}}</a>
         </li>
         <li class="nav-item">
-            <a href="{{route('admin.transactions.rental.report.provider-sales-report')}}" class="nav-link">{{translate('Sales Report')}}</a>
+            <a href="{{route('admin.transactions.rental.report.provider-sales-report')}}" class="nav-link">{{translate('Vehicle Report')}}</a>
         </li>
         <li class="nav-item">
             <a href="{{ route('admin.transactions.rental.report.provider-trip-report') }}" class="nav-link">{{translate('Trip Report')}}</a>
@@ -102,8 +102,8 @@
             <div class="left-content-card">
                 <img src="{{asset('/public/assets/admin/img/report/product.svg')}}" alt="">
                 <div class="info">
-                    <h4 class="subtitle">{{ $vehicles->count() }}</h4>
-                    <h6 class="subtext">{{ translate('New Vehicles') }}</h6>
+                    <h4 class="subtitle">{{ $vehicles }}</h4>
+                    <h6 class="subtext">{{ translate('Total Vehicles') }}</h6>
                 </div>
             </div>
         </div>
