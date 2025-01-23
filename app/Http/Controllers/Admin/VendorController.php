@@ -1308,7 +1308,7 @@ class VendorController extends Controller
 
             $this->sentWithdrawRequestNotification($withdraw,$vendor->firebase_token,$vendor->email,'approved',$moduleType,$push_notification_status,$mail_status);
 
-            Toastr::success(translate('messages.seller_payment_approved'));
+            Toastr::success(translate('messages.vendor_withdraw_request_approved'));
             return redirect()->route('admin.transactions.store.withdraw_list');
         } else if ($request->approved == 2) {
             $wallet->decrement('pending_withdraw', $withdraw->amount);
@@ -1322,7 +1322,7 @@ class VendorController extends Controller
 
             $this->sentWithdrawRequestNotification($withdraw,$vendor->firebase_token,$vendor->email,'denied',$moduleType,$push_notification_status,$mail_status);
 
-            Toastr::info(translate('messages.seller_payment_denied'));
+            Toastr::info(translate('messages.vendor_withdraw_request_denied'));
             return redirect()->route('admin.transactions.store.withdraw_list');
         } else {
             Toastr::error(translate('messages.not_found'));

@@ -10,6 +10,7 @@ use App\Models\Store;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
+
 class Vendor extends Authenticatable
 {
     use Notifiable;

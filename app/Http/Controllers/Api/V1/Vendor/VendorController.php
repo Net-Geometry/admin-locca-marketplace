@@ -52,8 +52,6 @@ class VendorController extends Controller
         $store['discount']=$discount;
         $store['schedules']=$store->schedules()->get();
         $store['module']=$store->module;
-
-        $vendor['order_count'] =$vendor->orders->where('order_type','!=','pos')->whereNotIn('order_status',['canceled','failed'])->count();
         $vendor['order_count'] =$vendor->orders->where('order_type','!=','pos')->whereNotIn('order_status',['canceled','failed'])->count();
         $vendor['todays_order_count'] =$vendor->todaysorders->where('order_type','!=','pos')->whereIn('order_status', ['refunded', 'delivered'])->count();
         $vendor['this_week_order_count'] =$vendor->this_week_orders->where('order_type','!=','pos')->whereIn('order_status', ['refunded', 'delivered'])->count();

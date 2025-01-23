@@ -32,7 +32,7 @@
                 <a href="{{route('admin.transactions.rental.report.provider-summary-report')}}" class="nav-link">{{translate('Summary Report')}}</a>
             </li>
             <li class="nav-item">
-                <a href="{{route('admin.transactions.rental.report.provider-sales-report')}}" class="nav-link">{{translate('Sales Report')}}</a>
+                <a href="{{route('admin.transactions.rental.report.provider-sales-report')}}" class="nav-link">{{translate('Vehicle Report')}}</a>
             </li>
             <li class="nav-item">
                 <a href="{{ route('admin.transactions.rental.report.provider-trip-report') }}" class="nav-link active">{{translate('Trip Report')}}</a>
@@ -270,7 +270,7 @@
                             </div>
                         </div>
                         <div class="earning-statistics-content mt-3">
-                            <a href="{{ route('admin.order.list', ['all']) }}" class="trx-btn">{{ translate('View All Trips') }}</a>
+                            <a href="{{ route('admin.rental.trip.list', ['status' =>'all']) }}" class="trx-btn">{{ translate('View All Trips') }}</a>
                         </div>
                     </div>
                 </div>
@@ -426,7 +426,7 @@
                                                 <i class="tio-invisible"></i>
                                             </a>
                                             <a class="ml-2 btn btn-sm btn--primary btn-outline-primary action-btn"
-                                                href="{{ route('admin.transactions.order.generate-invoice', ['id' => $trip['id']]) }}">
+                                                href="{{ route('admin.rental.trip.generate-invoice', ['id' => $trip['id']]) }}">
                                                 <i class="tio-print"></i>
                                             </a>
                                         </div>

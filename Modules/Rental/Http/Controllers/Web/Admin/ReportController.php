@@ -2,27 +2,28 @@
 
 namespace Modules\Rental\Http\Controllers\Web\Admin;
 
-use App\CentralLogics\Helpers;
-use App\Models\BusinessSetting;
-use App\Models\Store;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Zone;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\View;
+use App\Models\Store;
 use Illuminate\Http\Request;
+use App\CentralLogics\Helpers;
+use App\Models\BusinessSetting;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
 use Modules\Rental\Entities\Trips;
-use Modules\Rental\Entities\TripTransaction;
+use Illuminate\Support\Facades\View;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Rental\Entities\Vehicle;
+use Modules\Rental\Entities\TripTransaction;
 use Modules\Rental\Entities\VehicleCategory;
-use Modules\Rental\Exports\ProviderSalesReportExport;
-use Modules\Rental\Exports\ProviderSummaryReportExport;
-use Modules\Rental\Exports\ProviderTripReportExport;
-use Modules\Rental\Exports\TransactionReportExport;
 use Modules\Rental\Exports\TripReportExport;
 use Modules\Rental\Exports\VehicleReportExport;
+use Modules\Rental\Exports\TransactionReportExport;
+use Modules\Rental\Exports\ProviderTripReportExport;
+use Modules\Rental\Exports\ProviderSalesReportExport;
+use Modules\Rental\Exports\ProviderSummaryReportExport;
+
 class ReportController extends Controller
 {
     public function transactionReport(Request $request)
@@ -536,7 +537,11 @@ class ReportController extends Controller
 
         $filter = $request->query('filter', 'all_time');
 
-        $providers = Store::with('trips')->withCount('trips')
+        $providers = Store::with('trips')
+            ->whereHas('vendor',function($query){
+                $query->where('status',1);
+            })
+            ->withCount('trips')
             ->withModuleType('rental')
             ->when(isset($key), function ($query) use ($key) {
                 return $query->where(function ($q) use ($key) {
@@ -582,22 +587,11 @@ class ReportController extends Controller
             })
             ->orderBy('trips_count', 'DESC')->paginate(config('default_pagination'));
 
-        $new_providers = Store::withModuleType('rental')
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-            return $query->whereYear('created_at', now()->format('Y'));
-        })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
+        $new_providers = Store::withModuleType('rental')->whereHas('vendor',function($query){
+                $query->where('status',1);
             })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('created_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })->count();
+            ->applyDateFilter($filter)
+            ->count();
 
         $trip_payment_methods = Trips::when(isset($filter) && $filter == 'this_year', function ($query) {
             return $query->whereYear('schedule_at', now()->format('Y'));
@@ -633,26 +627,13 @@ class ReportController extends Controller
             ->when(isset($filter) && $filter == 'this_week', function ($query) {
                 return $query->whereBetween('schedule_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
             })->get();
+
         $total_trip_amount = $trips->whereIn('trip_status', ['completed'])->sum('trip_amount');
         $total_ongoing = $trips->whereIn('trip_status', ['pending', 'accepted', 'confirmed', 'processing', 'ongoing'])->count();
         $total_canceled = $trips->whereIn('trip_status', ['failed', 'canceled'])->count();
         $total_completed = $trips->whereIn('trip_status', ['completed'])->count();
 
-        $vehicles = Vehicle::when(isset($filter) && $filter == 'this_year', function ($query) {
-            return $query->whereYear('created_at', now()->format('Y'));
-        })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('created_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })->get();
+        $vehicles = Vehicle::applyDateFilter($filter)->count();
 
         $monthly_trip = [];
         switch ($filter) {
@@ -738,6 +719,9 @@ class ReportController extends Controller
         $filter = $request->query('filter', 'all_time');
 
         $providers = Store::with('trips')->withCount('trips')
+            ->whereHas('vendor',function($query){
+                $query->where('status',1);
+            })
             ->withModuleType('rental')
             ->when(isset($key), function ($query) use ($key) {
                 return $query->where(function ($q) use ($key) {
@@ -783,22 +767,10 @@ class ReportController extends Controller
             })
             ->orderBy('trips_count', 'DESC')->get();
 
-        $new_providers = Store::withModuleType('rental')
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                return $query->whereYear('created_at', now()->format('Y'));
+        $new_providers = Store::withModuleType('rental')->whereHas('vendor',function($query){
+                $query->where('status',1);
             })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('created_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })->count();
+            ->applyDateFilter($filter)->count();
 
         $trip_payment_methods = Trips::when(isset($filter) && $filter == 'this_year', function ($query) {
             return $query->whereYear('schedule_at', now()->format('Y'));
@@ -1111,9 +1083,9 @@ class ReportController extends Controller
             'filter'=>$filter,
         ];
         if ($request->type == 'excel') {
-            return Excel::download(new ProviderSalesReportExport($data), 'ProviderSalesReport.xlsx');
+            return Excel::download(new ProviderSalesReportExport($data), 'ProviderVehicleReport.xlsx');
         } else if ($request->type == 'csv') {
-            return Excel::download(new ProviderSalesReportExport($data), 'ProviderSalesReport.csv');
+            return Excel::download(new ProviderSalesReportExport($data), 'ProviderVehicleReport.csv');
         }
     }
     private static function get_provider_sales_data($request){

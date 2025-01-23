@@ -253,6 +253,7 @@
                             <tr>
                                 <th class="border-0">{{ translate('sl') }}</th>
                                 <th class="border-0">{{ translate('messages.Review_ID') }}</th>
+                                <th class="w-10p">{{translate('messages.vehicle')}}</th>
                                 <th class="border-0">{{ translate('messages.Customer') }}</th>
                                 <th class="border-0">{{ translate('messages.Review') }}</th>
                                 <th class="border-0">{{ translate('messages.Date') }}</th>
@@ -265,7 +266,29 @@
                             @foreach($tripReviews as $key => $tripReview)
                                 <tr>
                                     <td>{{ $key + $tripReviews->firstItem() }}</td>
-                                    <td>#{{ $tripReview->id }}</td>
+                                    <td>{{$tripReview->review_id}}</td>
+
+                                    <td class="d-flex">
+                                        @if ($tripReview->vehicle)
+                                            <a class="media align-items-center mb-1" href="{{route('admin.rental.provider.vehicle.details', $tripReview->vehicle_id)}}">
+                                                <img class="avatar avatar-lg mr-3 onerror-image"
+                                                     src="{{ $tripReview->vehicle['thumbnailFullUrl'] ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                     data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}"
+                                                     alt="{{ $tripReview->vehicle['name'] }} image">
+                                            </a>
+                                            <div class="py-2">
+                                                <a class="media align-items-center mb-1" href="{{route('admin.rental.provider.vehicle.details', $tripReview->vehicle_id)}}">
+                                                    <div class="media-body">
+                                                        <h5 class="text-hover-primary mb-0">{{Str::limit($tripReview->vehicle['name'],20,'...')}}</h5>
+                                                    </div>
+                                                </a>
+                                                <a class="mr-5 text-body" href="{{ route('admin.rental.trip.details', $tripReview->trip_id) }}"> {{ translate('Trip_ID') }}: {{ $tripReview->trip_id }}</a>
+                                            </div>
+                                        @else
+                                            {{translate('messages.Trip_deleted!')}}
+                                        @endif
+
+                                    </td>
 
                                     <td>
                                         <div class="table-rest-info d-block">

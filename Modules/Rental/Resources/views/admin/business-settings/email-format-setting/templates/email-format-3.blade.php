@@ -32,6 +32,15 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                                 <h3 class="subtitle">{{ translate('Trip_Summary') }}</h3>
                                                 <span class="d-block">{{ translate('Trip') }}{{ translate('#_48573') }}</span>
                                                 <span class="d-block">{{ translate('23 Jul, 2023 4:30 am') }}</span>
+
+                                                <div class="text-break mb-1">
+                                                    <span class="opacity-70">{{ translate('messages.pickup_location') }}</span> <span>:</span>
+                                                    <span>{{ translate('4B Kemal Ataturk Ave, Dhaka 1212, Bangladesh') }}</span>
+                                                </div>
+                                                <div class="text-break mb-1">
+                                                    <span class="opacity-70">{{ translate('messages.destination_location') }}</span> <span>:</span>
+                                                    <span>{{ translate('Dhanmondi 32 Road Bridge, Dhaka 1209, Bangladesh') }}</span>
+                                                </div>
                                             </td>
                                             <td class="email-template-table-td-max-width">
                                                 <h3 class="subtitle">{{ translate('User_Info') }}</h3>
@@ -39,18 +48,28 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                                 <span class="d-block" >{{ translate('xyz@gami.com')}}</span>
                                             </td>
                                         </tr>
-                                        <td colspan="2">
+                                        <td colspan="4">
                                             <table class="w-100">
                                                 <thead class="bg-section-2">
                                                     <tr>
+                                                        <th class="text-left p-1 px-3">{{ translate('#') }}</th>
                                                         <th class="text-left p-1 px-3">{{ translate('Vehicle') }}</th>
-                                                        <th class="text-right p-1 px-3">{{ translate('Price') }}</th>
+                                                        <th class="text-left p-1 px-3">{{ translate('Hour/Km') }}</th>
+                                                        <th class="text-right p-1 px-3">{{ translate('Fare') }}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+
+
                                                     <tr>
+                                                        <td class="text-left p-1 px-3">
+                                                            1
+                                                        </td>
                                                         <td class="text-left p-2 px-3">
                                                             {{ translate('1.ABC_x_1') }}
+                                                        </td>
+                                                        <td class="text-left p-2 px-3">
+                                                            {{ translate('$ 20.00 x 2 Hrs') }}
                                                         </td>
                                                         <td class="text-right p-2 px-3">
                                                             <h4>
@@ -59,8 +78,14 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                                         </td>
                                                     </tr>
                                                     <tr>
+                                                        <td class="text-left p-1 px-3">
+                                                            2
+                                                        </td>
                                                         <td class="text-left p-2 px-3">
                                                             {{ translate('2.XYZ_x_1') }}
+                                                        </td>
+                                                        <td class="text-left p-2 px-3">
+                                                            {{ translate('$ 44.00 x 2 Hrs') }}
                                                         </td>
                                                         <td class="text-right p-2 px-3">
                                                             <h4>
@@ -69,7 +94,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="2">
+                                                        <td colspan="4">
                                                             <hr class="mt-0">
                                                             <table class="w-100">
                                                                 <tr>

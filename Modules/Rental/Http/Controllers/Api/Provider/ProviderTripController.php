@@ -231,12 +231,13 @@ class ProviderTripController extends Controller
         $trip = $this->trips->where('provider_id', $request->vendor->stores[0]->id)->where('id', $request->trip_id)
             ->with([
                 'customer:id,f_name,l_name,phone,email,image',
-                'trip_details.vehicle:id,hourly_price,distance_price,discount_type,discount_price',
                 'vehicle_identity.driver_data:id,first_name,last_name,email,phone,image',
                 'vehicle_identity.vehicle_identity_data:id,vin_number,license_plate_number',
                 'vehicle_identity.vehicles:id,name,thumbnail',
-            ])
-            ->first();
+                'trip_details.vehicle' => function($query) {
+                    $query->select('id', 'hourly_price', 'distance_price', 'discount_type', 'discount_price')
+                                    ->withCount('vehicleIdentities as total_vehicle_count');
+                }])->first();
 
         if (!$trip) {
             return response()->json(['errors' => translate('Trip_not_found')], 404);

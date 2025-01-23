@@ -290,8 +290,18 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                     <h3 class="subtitle">{{ translate('Trip_Summary') }}</h3>
                                                     <span class="d-block">{{ translate('Trip') }}#
                                                         {{ $trip->id }}</span>
-                                                    <span class="d-block">{{ $trip->created_at }}</span>
-                                                </td>
+                                                        <span class="d-block">{{ \App\CentralLogics\Helpers::time_date_format($trip->schedule_at)	 }}</span>
+
+                                                        <div class="text-break mb-1">
+                                                            <span class="opacity-70">{{ translate('messages.pickup_location') }}</span> <span>:</span>
+                                                            <span>{{ $trip?->pickup_location['location_name'] }}</span>
+                                                        </div>
+                                                        <div class="text-break mb-1">
+                                                            <span class="opacity-70">{{ translate('messages.destination_location') }}</span> <span>:</span>
+                                                            <span>{{ $trip?->destination_location['location_name'] }}</span>
+                                                        </div>
+
+                                                    </td>
                                                 <td style="max-width:130px">
                                                     <h3 class="subtitle">{{ translate('Customer_Info') }}</h3>
 

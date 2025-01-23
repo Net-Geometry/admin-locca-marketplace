@@ -235,10 +235,17 @@ active
                         <div class="max-w-542 mx-auto py-sm-5 py-4">
                             <img class="mb-4" src="{{asset('/public/assets/admin/img/empty-subscription.svg')}}" alt="img">
                             <h4 class="mb-3">{{translate('Create Subscription Plan')}}</h4>
-                            <p class="mb-4">
-                                {{translate('Add new subscription packages to the list. So that Stores get more options to join the business for the growth and success.')}}<br>
-                            </p>
-                            <a href="{{ route('admin.business-settings.subscriptionackage.create',[ 'module' => request()->module == 1 ? 'rental' : 'all' ]) }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
+                            @if ( request()->module == 1)
+                                <p class="mb-4">
+                                    {{translate('Add new subscription packages to the list. So that Providers get more options to join the business for the growth and success.')}}<br>
+                                </p>
+                                <a href="{{ route('admin.business-settings.subscriptionackage.create',[ 'module' => 'rental']) }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
+                            @else
+                                <p class="mb-4">
+                                    {{translate('Add new subscription packages to the list. So that Stores get more options to join the business for the growth and success.')}}<br>
+                                </p>
+                                <a href="{{ route('admin.business-settings.subscriptionackage.create',[ 'module' => 'all' ]) }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -265,6 +272,18 @@ active
                         </div>
                         <div class="text-center" id="toggle-message">
                             <h3>{{ translate('Are_You_Sure_You_want_To_Off_The_Status?') }}</h3>
+                            @if ( request()->module == 1)
+                            <p>{{ translate('You_are_about_to_deactivate_a_subscription_package._You_have_the_option_to_either_switch_all_Providers_plans_or_allow_Providers_to_make_changes._Please_choose_an_option_below_to_proceed.') }}</p>
+                        </div>
+                    </div>
+                    <div class="btn--container justify-content-center">
+                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="{{ translate('Providers_will_be_subscribed_untill_their_package_expires') }}"  id="status_change_now" class="btn btn-outline-primary min-w-120" >
+                            {{translate("Allow Provider to Change")}}
+                        </a>
+
+
+                            @else
+
                             <p>{{ translate('You_are_about_to_deactivate_a_subscription_package._You_have_the_option_to_either_switch_all_stores_plans_or_allow_stores_to_make_changes._Please_choose_an_option_below_to_proceed.') }}</p>
                         </div>
                     </div>
@@ -272,6 +291,13 @@ active
                         <a href="#" data-toggle="tooltip" data-placement="bottom" title="{{ translate('Stores_will_be_subscribed_untill_their_package_expires') }}"  id="status_change_now" class="btn btn-outline-primary min-w-120" >
                             {{translate("Allow Store to Change")}}
                         </a>
+
+                            @endif
+
+
+
+
+
                         <button type="button"  class="btn btn--primary min-w-120  shift_package"  data-dismiss="modal" >{{translate('Switch_Plan')}}</button>
                     </div>
                 </div>
@@ -297,7 +323,13 @@ active
                         </div>
                         <div class="text-center" id="toggle-message">
                             <h3>{{ translate('Are_You_Sure_You_want_To_ON_The_Status?') }}</h3>
+                            @if ( request()->module == 1)
+                            <p>{{ translate('This_package_will_be_available_for_the_providers.') }}</p>
+
+                            @else
+
                             <p>{{ translate('This_package_will_be_available_for_the_stores.') }}</p>
+                            @endif
                         </div>
                     </div>
                     <div class="btn--container justify-content-center">

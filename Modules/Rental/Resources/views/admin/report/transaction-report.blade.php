@@ -162,9 +162,9 @@
                     </h3>
                     <form>
                         <!-- Search -->
-                        <div class="input--group input-group input-group-merge input-group-flush">
-                            <input class="form-control" placeholder="{{ translate('Search by Trip ID') }}"
-                                value="{{ request()?->search ?? null }}" name="search">
+                        <div class="input--group input-group ">
+                            <input  class="form-control" placeholder="{{ translate('Search by Trip ID') }}"
+                                value="{{ request()?->search ?? null }}" type="search" name="search">
                             <button class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->

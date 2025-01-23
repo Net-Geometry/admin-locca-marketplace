@@ -36,7 +36,7 @@
                 <a href="{{route('admin.transactions.rental.report.provider-summary-report')}}" class="nav-link">{{translate('Summary Report')}}</a>
             </li>
             <li class="nav-item">
-                <a href="{{route('admin.transactions.rental.report.provider-sales-report')}}" class="nav-link active">{{translate('Sales Report')}}</a>
+                <a href="{{route('admin.transactions.rental.report.provider-sales-report')}}" class="nav-link active">{{translate('Vehicle Report')}}</a>
             </li>
             <li class="nav-item">
                 <a href="{{ route('admin.transactions.rental.report.provider-trip-report') }}" class="nav-link">{{translate('Trip Report')}}</a>
@@ -54,7 +54,7 @@
                         <div class="col-md-4 col-sm-6">
                             <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
                                 <option value="all">{{ translate('messages.All_Zones') }}</option>
-                                @foreach (\App\Models\Zone::orderBy('name')->get() as $z)
+                                @foreach (\App\Models\Zone::orderBy('name')->get(['id','name']) as $z)
                                     <option value="{{ $z['id'] }}"
                                         {{ isset($zone) && $zone->id == $z['id'] ? 'selected' : '' }}>
                                         {{ $z['name'] }}
@@ -63,11 +63,11 @@
                             </select>
                         </div>
                         <div class="col-md-4 col-sm-6">
-                            <select name="store_id"
+                            <select name="provider_id"
                                     data-placeholder="{{ translate('messages.select_provider') }}"
-                                    class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="store_id">
-                                @if (isset($store))
-                                    <option value="{{ $store->id }}" selected>{{ $store->name }}</option>
+                                    class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="provider_id">
+                                @if (isset($provider))
+                                    <option value="{{ $provider->id }}" selected>{{ $provider->name }}</option>
                                 @else
                                     <option value="all" selected>{{ translate('messages.all_providers') }}</option>
                                 @endif
@@ -218,7 +218,7 @@
                         <div class="earning-statistics-content">
                             <h6 class="subtitle">{{ translate('Total Provider Earnings') }}</h6>
                             <h3 class="title">
-                                {{ \App\CentralLogics\Helpers::number_format_short($trips->sum('transaction_sum_store_amount')) }}
+                                {{ \App\CentralLogics\Helpers::number_format_short($trips->sum('trip_transaction_sum_store_amount')) }}
                             </h3>
                         </div>
                     </div>

@@ -2,21 +2,23 @@
 
 namespace Modules\Rental\Http\Controllers\Api\Provider;
 
-use App\CentralLogics\Helpers;
-use App\Models\BusinessSetting;
 use App\Models\Store;
-use App\Models\StoreSchedule;
-use App\Models\SubscriptionBillingAndRefundHistory;
-use App\Models\SubscriptionTransaction;
-use App\Traits\FileManagerTrait;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Models\StoreSchedule;
+use App\CentralLogics\Helpers;
+use Illuminate\Support\Carbon;
+use App\Models\BusinessSetting;
+use App\Traits\FileManagerTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use App\Models\SubscriptionTransaction;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use Modules\Rental\Entities\VehicleBrand;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Rental\Entities\VehicleCategory;
+use App\Models\SubscriptionBillingAndRefundHistory;
+use Modules\Rental\Entities\Trips;
 
 class ProviderController extends Controller
 {
@@ -29,9 +31,11 @@ class ProviderController extends Controller
     private VehicleBrand $brand;
     private Helpers $helpers;
     private BusinessSetting $businessSetting;
+    private Trips $trip;
 
-    public function __construct(VehicleCategory $category, VehicleBrand $brand, Store $store, Helpers $helpers, BusinessSetting $businessSetting, SubscriptionTransaction $subscriptionTransaction, SubscriptionBillingAndRefundHistory $subscriptionBillingAndRefundHistory, StoreSchedule $storeSchedule)
+    public function __construct(VehicleCategory $category, Trips $trip,VehicleBrand $brand, Store $store, Helpers $helpers, BusinessSetting $businessSetting, SubscriptionTransaction $subscriptionTransaction, SubscriptionBillingAndRefundHistory $subscriptionBillingAndRefundHistory, StoreSchedule $storeSchedule)
     {
+        $this->trip = $trip;
         $this->category = $category;
         $this->brand = $brand;
         $this->helpers = $helpers;
@@ -59,25 +63,14 @@ class ProviderController extends Controller
         $store['schedules'] = $store->schedules()->get();
         $store['module'] = $store->module;
 
-        $vendor['order_count'] = $vendor->orders
-            ->where('order_type', '!=', 'pos')
-            ->whereNotIn('order_status', ['canceled', 'failed'])
-            ->count();
-
-        $vendor['todays_order_count'] = $vendor->todaysorders
-            ->where('order_type', '!=', 'pos')
-            ->whereIn('order_status', ['refunded', 'delivered'])
-            ->count();
-
-        $vendor['this_week_order_count'] = $vendor->this_week_orders
-            ->where('order_type', '!=', 'pos')
-            ->whereIn('order_status', ['refunded', 'delivered'])
-            ->count();
-
-        $vendor['this_month_order_count'] = $vendor->this_month_orders
-            ->where('order_type', '!=', 'pos')
-            ->whereIn('order_status', ['refunded', 'delivered'])
-            ->count();
+        $vendor['order_count'] =$this->trip->where('provider_id' , $store->id)->whereNotIn('trip_status', ['canceled', 'failed'])
+        ->count();
+        $vendor['todays_order_count'] = $this->trip->where('provider_id' , $store->id)->whereDate('created_at',now())
+        ->whereIn('trip_status', ['refunded', 'completed'])->count();
+        $vendor['this_week_order_count'] =$this->trip->where('provider_id' , $store->id)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            ->whereIn('trip_status', ['refunded', 'completed'])->count();
+        $vendor['this_month_order_count'] = $this->trip->where('provider_id' , $store->id)->whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))
+            ->whereIn('trip_status', ['refunded', 'completed'])->count();
 
         $vendor['member_since_days'] = $vendor->created_at->diffInDays();
 

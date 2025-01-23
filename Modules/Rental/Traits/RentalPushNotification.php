@@ -39,7 +39,7 @@ trait RentalPushNotification
     {
         $data = self::makeNotifyData(
             title: translate('Trip_Notification'),
-            description: translate('messages.New_Trip_Notification_Has_Been_Booked'),
+            description: translate('messages.New_Trip_Has_Been_Booked'),
             trip: $trip,
             order_type: 'trip',
             type: 'new_order'
@@ -55,7 +55,7 @@ trait RentalPushNotification
         if ($push_notification_status) {
             $data = self::makeNotifyData(
                 title: translate('Trip_Notification'),
-                description: translate('messages.New_Trip_Notification_Has_Been_Booked'),
+                description: translate('messages.New_Trip_Has_Been_Booked'),
                 trip: $trip,
                 order_type: 'trip',
                 type: 'new_order'
@@ -80,7 +80,7 @@ trait RentalPushNotification
 
             $data = self::makeNotifyData(
                 title: translate('Trip_Notification'),
-                description: translate('messages.New_Trip_Notification_Has_Been_Booked'),
+                description: translate('messages.New_Trip_Has_Been_Booked'),
                 trip: $trip,
                 order_type: 'trip',
                 type: 'new_order'
