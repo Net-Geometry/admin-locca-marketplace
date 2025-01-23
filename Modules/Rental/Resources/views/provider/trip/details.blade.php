@@ -76,7 +76,7 @@
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
                                         <span>{{translate('Trip Type')}}</span> <span>:</span>
                                         <span class="font-bold">{{ translate($trip->trip_type) }}</span>
-                                        <span>({{ !$trip->scheduled ? translate('messages.Instant_Booking') : translate('messages.scheduled') }})</span>
+                                        <span>({{ $trip->scheduled ?  translate('messages.scheduled') : '' }})</span>
                                     </div>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
                                         @if ($trip->trip_type == 'hourly')
@@ -259,7 +259,7 @@
                                         <td>
                                             <div class="fs-14 text--title">
                                                 {{ \App\CentralLogics\Helpers::format_currency($detail->rental_type == 'hourly' ? $detail->vehicle_details['hourly_price'] : $detail->vehicle_details['distance_price']) }}
-                                                ({{ translate($detail->rental_type) }})
+                                               /{{ $detail->rental_type ==  'hourly' ? translate('Hr') : translate('messages.KM')  }}
                                             </div>
                                         </td>
                                         <td>
@@ -519,10 +519,10 @@
                                     <span class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">{{ $trip->customer->fullName }}</span>
 
                                     <div class="text--title d-flex align-items-center gap-1">
-                                        <span>
+                                        {{-- <span>
                                             <span class="font-bold">{{ $trip->customer->orders->count() }}</span>
                                             {{ translate('messages.order') }},
-                                        </span>
+                                        </span> --}}
                                         <span>
                                             <span class="font-bold">{{ $trip->customer->trips->count() }}</span>
                                             {{ translate('messages.trip') }}
@@ -636,7 +636,7 @@
                                                 <div class="d-flex flex-column w-100">
                                                     <select name="driver_ids[{{ $vehicleDetails->id }}]"
                                                             class="form-control js-select2-custom driver-select"
-                                                            data-placeholder="{{ translate('messages.select_vehicle_transmission') }}"
+                                                            data-placeholder="{{ translate('messages.select_vehicle_driver') }}"
                                                             id="driver_{{ $vehicleDetails->id }}">
                                                         <option value="" selected disabled>
                                                             <span class="fs-12 text--title">{{ translate('Select Vendors') }}</span>
@@ -901,7 +901,7 @@
                                                 <div class="fs-14 eta_amount text--title">
 
                                                     {{ \App\CentralLogics\Helpers::format_currency($editDetail->rental_type == 'hourly' ? $editDetail->vehicle_details['hourly_price'] : $editDetail->vehicle_details['distance_price']) }}
-                                                    ({{ translate($editDetail->rental_type) }})
+                                                    /{{ $detail->rental_type ==  'hourly' ? translate('Hr') : translate('messages.KM')  }}
                                                 </div>
                                             </td>
 

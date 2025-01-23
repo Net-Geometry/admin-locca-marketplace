@@ -43,17 +43,17 @@ trait TripLogicTrait
         // coupon discount by Admin
         if ($trip->coupon_created_by == 'admin') {
             $admin_coupon_discount_subsidy = $trip->coupon_discount_amount;
-            self::expenseCreate(amount: $admin_coupon_discount_subsidy, type: 'coupon_discount', datetime: now(), created_by: $trip->coupon_created_by, trip_id: $trip->id);
+            self::tripExpenseCreate(amount: $admin_coupon_discount_subsidy, type: 'coupon_discount', datetime: now(), created_by: $trip->coupon_created_by, trip_id: $trip->id);
         }
         // 1st order discount by Admin
         if ($trip->ref_bonus_amount > 0) {
             $ref_bonus_amount = $trip->ref_bonus_amount;
-            self::expenseCreate(amount: $ref_bonus_amount, type: 'referral_discount', datetime: now(), created_by: 'admin', trip_id: $trip->id);
+            self::tripExpenseCreate(amount: $ref_bonus_amount, type: 'referral_discount', datetime: now(), created_by: 'admin', trip_id: $trip->id);
         }
         // coupon discount by store
         if ($trip->coupon_created_by == 'vendor') {
             $store_coupon_discount_subsidy = $trip->coupon_discount_amount;
-            self::expenseCreate(amount: $store_coupon_discount_subsidy, type: 'coupon_discount', datetime: now(), created_by: $trip->coupon_created_by, trip_id: $trip->id, store_id: $provider->id);
+            self::tripExpenseCreate(amount: $store_coupon_discount_subsidy, type: 'coupon_discount', datetime: now(), created_by: $trip->coupon_created_by, trip_id: $trip->id, store_id: $provider->id);
         }
 
         if ($trip?->cashback_history) {
@@ -66,18 +66,18 @@ trait TripLogicTrait
         if ($trip->discount_on_trip > 0  && $trip->discount_on_trip_by == 'vendor') {
             if ($provider->store_business_model == 'subscription' && isset($store_sub)) {
                 $store_d_amount =  $trip->discount_on_trip;
-                self::expenseCreate(amount: $store_d_amount, type: 'discount_on_trip', datetime: now(), created_by: 'vendor', trip_id: $trip->id, store_id: $trip->provider->id);
+                self::tripExpenseCreate(amount: $store_d_amount, type: 'discount_on_trip', datetime: now(), created_by: 'vendor', trip_id: $trip->id, store_id: $trip->provider->id);
             } else {
                 $amount_admin = $comission ? ($trip->discount_on_trip / 100) * $comission : 0;
                 $store_d_amount =  $trip->discount_on_trip - $amount_admin;
-                self::expenseCreate(amount: $store_d_amount, type: 'discount_on_trip', datetime: now(), created_by: 'vendor', trip_id: $trip->id, store_id: $trip->provider->id);
-                self::expenseCreate(amount: $amount_admin, type: 'discount_on_trip', datetime: now(), created_by: 'admin', trip_id: $trip->id);
+                self::tripExpenseCreate(amount: $store_d_amount, type: 'discount_on_trip', datetime: now(), created_by: 'vendor', trip_id: $trip->id, store_id: $trip->provider->id);
+                self::tripExpenseCreate(amount: $amount_admin, type: 'discount_on_trip', datetime: now(), created_by: 'admin', trip_id: $trip->id);
             }
         }
 
         if ($trip->discount_on_trip > 0  && $trip->discount_on_trip_by == 'admin') {
             $discount_on_trip = $trip->discount_on_trip;
-            self::expenseCreate(amount: $discount_on_trip, type: 'discount_on_trip', datetime: now(), created_by: 'admin', trip_id: $trip->id);
+            self::tripExpenseCreate(amount: $discount_on_trip, type: 'discount_on_trip', datetime: now(), created_by: 'admin', trip_id: $trip->id);
         }
 
 
@@ -232,7 +232,7 @@ trait TripLogicTrait
         return true;
     }
 
-    public static function expenseCreate($amount, $type, $datetime, $created_by, $trip_id = null, $store_id = null, $description = '', $delivery_man_id = null, $user_id = null)
+    public static function tripExpenseCreate($amount, $type, $datetime, $created_by, $trip_id = null, $store_id = null, $description = '', $delivery_man_id = null, $user_id = null)
     {
         $expense = new Expense();
         $expense->amount = $amount;
@@ -281,7 +281,7 @@ trait TripLogicTrait
 
         $refer_wallet_transaction = CustomerLogic::create_wallet_transaction($trip?->cashback_history?->user_id, $trip?->cashback_history?->calculated_amount, 'CashBack', $trip->id);
         if ($refer_wallet_transaction != false) {
-            self::expenseCreate(amount: $trip?->cashback_history?->calculated_amount, type: 'CashBack', datetime: now(), created_by: 'admin', trip_id: $trip->id);
+            self::tripExpenseCreate(amount: $trip?->cashback_history?->calculated_amount, type: 'CashBack', datetime: now(), created_by: 'admin', trip_id: $trip->id);
             $trip?->cashback_history?->cashBack?->increment('total_used');
 
             $notification_data = [

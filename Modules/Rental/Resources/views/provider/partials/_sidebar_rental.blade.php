@@ -132,7 +132,7 @@
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
                                             {{ translate('messages.confirmed') }}
-                                            <span class="badge badge-soft-success badge-pill ml-1">
+                                            <span class="badge badge-soft-info badge-pill ml-1">
                                                 {{  $tripCount['confirmed_trips'] }}
                                             </span>
                                         </span>
@@ -144,7 +144,7 @@
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
                                             {{ translate('messages.Ongoing') }}
-                                            <span class="badge badge-soft-warning badge-pill ml-1">
+                                            <span class="badge badge-soft-info badge-pill ml-1">
                                                 {{  $tripCount['ongoing_trips'] }}
                                             </span>
                                         </span>
@@ -157,7 +157,7 @@
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
                                             {{ translate('messages.Completed') }}
-                                            <span class="badge badge-soft-warning badge-pill ml-1">
+                                            <span class="badge badge-soft-success badge-pill ml-1">
                                                 {{  $tripCount['completed_trips'] }}
                                             </span>
                                         </span>
@@ -169,7 +169,7 @@
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
                                             {{ translate('messages.canceled') }}
-                                            <span class="badge badge-soft-warning bg-light badge-pill ml-1">
+                                            <span class="badge badge-soft-danger  badge-pill ml-1">
                                                 {{  $tripCount['canceled_trips'] }}
                                             </span>
                                         </span>
@@ -182,7 +182,7 @@
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container text-capitalize">
                                             {{ translate('messages.payment_failed') }}
-                                            <span class="badge badge-soft-danger bg-light badge-pill ml-1">
+                                            <span class="badge badge-soft-danger  badge-pill ml-1">
                                                 {{  $tripCount['payment_failed_trips'] }}
                                             </span>
                                         </span>

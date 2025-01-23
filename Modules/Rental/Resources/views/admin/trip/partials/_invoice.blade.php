@@ -67,6 +67,10 @@
                                     <span class="opacity-70">{{ translate('messages.pickup_location') }}</span> <span>:</span>
                                     <span>{{ $trip?->pickup_location['location_name'] }}</span>
                                 </div>
+                                <div class="text-break mb-1">
+                                    <span class="opacity-70">{{ translate('messages.destination_location') }}</span> <span>:</span>
+                                    <span>{{ $trip?->destination_location['location_name'] }}</span>
+                                </div>
                             </div>
                         </div>
 
@@ -143,21 +147,6 @@
                                 <dd class="col-6 total"> {{ \App\CentralLogics\Helpers::format_currency($trip->trip_amount) }}</dd>
                             </dl>
                         </div>
-                    </div>
-
-                    <div><img src="{{ asset('/public/assets/admin/img/line_icon.svg') }}" alt="" class="w-100"></div>
-
-                    <div class="checkout--info">
-                        <dl class="row text-right">
-                            <dt class="col-6 opacity-70">{{ translate('messages.Paid_By') }}:</dt>
-                            <dd class="col-6"> {{ translate('messages.' . $trip->payment_method) }}</dd>
-
-                            <dt class="col-6 opacity-70">{{ translate('messages.Paid_Amount') }}:</dt>
-                            <dd class="col-6"> {{ $trip->payment_status == 'paid' ? \App\CentralLogics\Helpers::format_currency($trip->trip_amount) : \App\CentralLogics\Helpers::format_currency(0) }}</dd>
-
-{{--                            <dt class="col-6 opacity-70">{{ translate('messages.Change_Return') }}:</dt>--}}
-{{--                            <dd class="col-6"> $0.00</dd>--}}
-                        </dl>
                     </div>
 
                     <div class="top-info">

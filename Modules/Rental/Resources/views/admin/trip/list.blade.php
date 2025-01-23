@@ -313,7 +313,7 @@
     <div id="datatableFilterSidebar" class="hs-unfold-content_ sidebar sidebar-bordered sidebar-box-shadow initial-hidden">
         <div class="card card-lg sidebar-card sidebar-footer-fixed">
             <div class="card-header">
-                <h4 class="card-header-title">{{translate('messages.order_filter')}}</h4>
+                <h4 class="card-header-title">{{translate('messages.Trip_filter')}}</h4>
 
                 <!-- Toggle Button -->
                 <a class="js-hs-unfold-invoker_ btn btn-icon btn-sm btn-ghost-dark ml-2 filter-button-hide" href="javascript:;">
@@ -342,17 +342,17 @@
 
                 <div class="mb-2 initial--21">
                     <select name="zone_ids[]" id="zone_ids" class="form-control js-select2-custom" multiple="multiple">
-                        @foreach(\App\Models\Zone::all() as $zone)
+                        @foreach(\App\Models\Zone::get(['id','name']) as $zone)
                             <option value="{{$zone->id}}" {{isset($zone_ids)?(in_array($zone->id, $zone_ids)?'selected':''):''}}>{{$zone->name}}</option>
                         @endforeach
                     </select>
                 </div>
 
                 <hr class="my-4">
-                <small class="text-cap mb-3">{{translate('messages.store')}}</small>
+                <small class="text-cap mb-3">{{translate('messages.Provider')}}</small>
                 <div class="mb-2 initial--21">
-                    <select name="provider_ids[]" id="provider_ids" class="form-control js-select2-custom test-class" multiple="multiple">
-                        @foreach(\App\Models\Store::all() as $store)
+                    <select name="provider_ids[]" id="provider_ids" class="form-control js-select2-custom" multiple="multiple">
+                        @foreach(\App\Models\Store::get(['id','name']) as $store)
                             <option value="{{$store->id}}"
                                     @if(isset($provider_ids) && in_array($store->id, $provider_ids))
                                         selected
@@ -366,7 +366,7 @@
 
                 <hr class="my-4">
                 @if($status == 'all')
-                    <small class="text-cap mb-3">{{translate('messages.order_status')}}</small>
+                    <small class="text-cap mb-3">{{translate('messages.Trip_status')}}</small>
 
                     <!-- Custom Checkbox -->
                     <div class="custom-control custom-radio mb-2">
@@ -379,11 +379,11 @@
                     </div>
                     <div class="custom-control custom-radio mb-2">
                         <input type="checkbox" id="orderStatus3" name="tripStatus[]" class="custom-control-input" value="ongoing" {{isset($tripStatus)?(in_array('ongoing', $tripStatus)?'checked':''):''}}>
-                        <label class="custom-control-label" for="orderStatus3">{{translate('messages.processing')}}</label>
+                        <label class="custom-control-label" for="orderStatus3">{{translate('messages.ongoing')}}</label>
                     </div>
                     <div class="custom-control custom-radio mb-2">
                         <input type="checkbox" id="orderStatus5" name="tripStatus[]" class="custom-control-input" value="completed" {{isset($tripStatus)?(in_array('completed', $tripStatus)?'checked':''):''}}>
-                        <label class="custom-control-label" for="orderStatus5">{{translate('messages.delivered')}}</label>
+                        <label class="custom-control-label" for="orderStatus5">{{translate('messages.Completed')}}</label>
                     </div>
                     <div class="custom-control custom-radio mb-2">
                         <input type="checkbox" id="orderStatus8" name="tripStatus[]" class="custom-control-input" value="canceled" {{isset($tripStatus)?(in_array('canceled', $tripStatus)?'checked':''):''}}>

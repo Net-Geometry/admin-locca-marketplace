@@ -304,15 +304,28 @@ class ProviderController extends Controller
 
         else if($tab == 'reviews')
         {
-            $avgRating = number_format($store->vehicle_reviews->avg('rating'), 1);
-            $totalRating = $store->vehicle_reviews->sum('rating');
-            $totalReviews = $store->vehicle_reviews->whereNotNull('comment')->count();
-            $excellentCount = $store->vehicle_reviews->where('rating', 5)->count();
-            $goodCount = $store->vehicle_reviews->where('rating', 4)->count();
-            $averageCount = $store->vehicle_reviews->where('rating', 3)->count();
-            $belowAverageCount = $store->vehicle_reviews->where('rating', 2)->count();
-            $poorCount = $store->vehicle_reviews->where('rating', 1)->count();
             $tripReviews = $this->vehicleReview->where('provider_id', $store->id)->latest()->paginate(config('default_pagination'));
+            $reviews = $store->vehicle_reviews()
+                            ->selectRaw('
+                                COUNT(*) as total_reviews,
+                                ROUND(AVG(rating), 1) as avg_rating,
+                                SUM(rating) as total_rating,
+                                SUM(CASE WHEN rating = 5 THEN 1 ELSE 0 END) as excellent_count,
+                                SUM(CASE WHEN rating = 4 THEN 1 ELSE 0 END) as good_count,
+                                SUM(CASE WHEN rating = 3 THEN 1 ELSE 0 END) as average_count,
+                                SUM(CASE WHEN rating = 2 THEN 1 ELSE 0 END) as below_average_count,
+                                SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END) as poor_count
+                            ')
+                            ->first();
+
+            $avgRating = $reviews->avg_rating;
+            $totalRating = $reviews->total_rating;
+            $totalReviews = $reviews->total_reviews;
+            $excellentCount = $reviews->excellent_count;
+            $goodCount = $reviews->good_count;
+            $averageCount = $reviews->average_count;
+            $belowAverageCount = $reviews->below_average_count;
+            $poorCount = $reviews->poor_count;
 
             return view('rental::admin.provider.details.review', compact('totalRating', 'store', 'sub_tab', 'tripReviews', 'avgRating', 'totalReviews', 'excellentCount', 'goodCount', 'averageCount', 'belowAverageCount', 'poorCount'));
 

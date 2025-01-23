@@ -1037,7 +1037,10 @@ class ItemController extends Controller
                         Toastr::error(translate('messages.Discount_must_be_greater_then_0').' '.$collection['Id']);
                         return back();
                     }
-
+                    if (data_get($collection,'Image') != "" &&  strlen(data_get($collection,'Image')) > 30 ) {
+                        Toastr::error(translate('messages.Image_name_must_be_in_30_char._on_id') . ' ' . $collection['Id']);
+                        return back();
+                    }
                     try{
                         $t1= Carbon::parse($collection['AvailableTimeStarts']);
                         $t2= Carbon::parse($collection['AvailableTimeEnds']) ;
@@ -1127,7 +1130,7 @@ class ItemController extends Controller
                 }
             }catch(\Exception $e){
                 info(["line___{$e->getLine()}",$e->getMessage()]);
-                Toastr::error(translate('messages.failed_to_import_data'));
+                Toastr::error($e->getMessage());
                 return back();
             }
             try{
@@ -1199,7 +1202,7 @@ class ItemController extends Controller
             {
                 DB::rollBack();
                 info(["line___{$e->getLine()}",$e->getMessage()]);
-                Toastr::error(translate('messages.failed_to_import_data'));
+                Toastr::error($e->getMessage());
                 return back();
             }
 
@@ -1227,7 +1230,10 @@ class ItemController extends Controller
                     Toastr::error(translate('messages.Discount_must_be_less_then_100').' '.$collection['Id']);
                     return back();
                 }
-
+                if (data_get($collection,'Image') != "" &&  strlen(data_get($collection,'Image')) > 30 ) {
+                    Toastr::error(translate('messages.Image_name_must_be_in_30_char._on_id') . ' ' . $collection['Id']);
+                    return back();
+                }
                 try{
                     $t1= Carbon::parse($collection['AvailableTimeStarts']);
                     $t2= Carbon::parse($collection['AvailableTimeEnds']) ;
@@ -1318,7 +1324,7 @@ class ItemController extends Controller
             }
         }catch(\Exception $e){
             info(["line___{$e->getLine()}",$e->getMessage()]);
-            Toastr::error(translate('messages.failed_to_import_data'));
+            Toastr::error($e->getMessage());
             return back();
         }
         try{
@@ -1365,7 +1371,7 @@ class ItemController extends Controller
         {
             DB::rollBack();
             info(["line___{$e->getLine()}",$e->getMessage()]);
-            Toastr::error(translate('messages.failed_to_import_data'));
+            Toastr::error($e->getMessage());
             return back();
         }
 

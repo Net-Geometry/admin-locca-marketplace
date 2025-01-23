@@ -7249,4 +7249,5 @@ Smartly or Earn. ',
   'See less' => 'See less',
   'product_imported_successfully' => 'Product imported successfully',
   'The discount value should not be higher than the hourly price and distance-wise price' => 'The discount value should not be higher than the hourly price and distance-wise price',
+  'total_trip_vehicles' => 'Total trip vehicles',
 );

@@ -77,7 +77,7 @@
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
                                     <span>{{translate('Trip Type')}}</span> <span>:</span>
                                         <span class="font-bold">{{ translate($trip->trip_type) }}</span>
-                                        <span>({{ !$trip->scheduled ? translate('messages.Instant_Booking') : translate('messages.scheduled') }})</span>
+                                        <span>({{ $trip->scheduled ?  translate('messages.scheduled') :'' }})</span>
                                     </div>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
 
@@ -155,7 +155,7 @@
                                 <tr>
                                     <th class="border-0">#</th>
                                     <th class="border-0">{{translate('Vehicle Details')}}</th>
-                                    <th class="border-0">{{translate('Unite Fair')}}</th>
+                                    <th class="border-0">{{translate('Unit Fair')}}</th>
                                     <th class="border-0">{{translate('Quantity')}}</th>
                                     <th class="border-0">{{translate('Total Hour/Km')}}</th>
                                     <th class="text-right  border-0">{{translate('Fare')}}</th>
@@ -264,7 +264,7 @@
                                         <td>
                                             <div class="fs-14 text--title">
                                                 {{ \App\CentralLogics\Helpers::format_currency($detail->rental_type == 'hourly' ? $detail->vehicle_details['hourly_price'] : $detail->vehicle_details['distance_price']) }}
-                                                ({{ translate($detail->rental_type) }})
+                                                /{{ $detail->rental_type ==  'hourly' ? translate('Hr') : translate('messages.KM')  }}
                                             </div>
                                         </td>
                                         <td>
@@ -457,7 +457,7 @@
                                                             <span>{{ $driverDetails->driver->fullName }}</span>
                                                             <span class="fs-10 opacity-70">({{ $driverDetails->driver->phone }})</span>
                                                         </div>
-                                                        <div class="opacity-60">{{translate('Car No')}}: {{ $driverDetails->vehicle_identity_data->license_plate_number }}</div>
+z                                                        <div class="opacity-60">{{translate('Car No')}}: {{ $driverDetails?->vehicle_identity_data?->license_plate_number }}</div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -524,10 +524,10 @@
                                     <span class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">{{ $trip->customer->fullName }}</span>
 
                                     <div class="text--title d-flex align-items-center gap-1">
-                                        <span>
+                                        {{-- <span>
                                             <span class="font-bold">{{ $trip->customer->orders->count() }}</span>
                                             {{ translate('messages.order') }},
-                                        </span>
+                                        </span> --}}
                                         <span>
                                             <span class="font-bold">{{ $trip->customer->trips->count() }}</span>
                                             {{ translate('messages.trip') }}
@@ -601,7 +601,7 @@
                                 </div>
 
                                 <div class="text--title">
-                                    <span class="font-bold">{{ $trip->provider->trips->count() }}</span>
+                                    <span class="font-bold">{{ $trip->provider->trips()->where('trip_status' ,'completed')->count() }}</span>
                                     {{ translate('messages.Trip_served') }}
                                 </div>
 
@@ -676,7 +676,7 @@
                                                 <div class="d-flex flex-column w-100">
                                                     <select name="driver_ids[{{ $vehicleDetails->id }}]"
                                                             class="form-control js-select2-custom driver-select"
-                                                            data-placeholder="{{ translate('messages.select_vehicle_transmission') }}"
+                                                            data-placeholder="{{ translate('messages.select_vehicle_driver') }}"
                                                             id="driver_{{ $vehicleDetails->id }}">
                                                         <option value="" selected disabled>
                                                             <span class="fs-12 text--title">{{ translate('Select Vendors') }}</span>
@@ -898,7 +898,7 @@
                                         <tr>
                                             <th class="border-0">#</th>
                                             <th class="border-0">{{translate('Vehicle Details')}}</th>
-                                            <th class="border-0">{{translate('Unite Fair')}}</th>
+                                            <th class="border-0">{{translate('Unit Fair')}}</th>
                                             <th class="border-0 text-center">{{translate('Quantity')}}</th>
                                             <th class="border-0">{{translate('Total Hour/Km')}}</th>
                                             <th class="text-right  border-0">{{translate('Fare')}}</th>
@@ -941,7 +941,7 @@
                                                 <div class="fs-14 eta_amount text--title">
 
                                                     {{ \App\CentralLogics\Helpers::format_currency($editDetail->rental_type == 'hourly' ? $editDetail->vehicle_details['hourly_price'] : $editDetail->vehicle_details['distance_price']) }}
-                                                    ({{ translate($editDetail->rental_type) }})
+                                                    /{{ $detail->rental_type ==  'hourly' ? translate('Hr') : translate('messages.KM')  }}
                                                 </div>
                                             </td>
 

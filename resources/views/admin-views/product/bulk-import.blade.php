@@ -105,6 +105,9 @@
                                     <li>
                                        {{ translate('You_can_upload_your_product_images_in_product_folder_from_gallery_and_copy_image`s_path.') }}
                                     </li>
+                                    <li>
+                                       {{ translate('Image_file_name_must_be_in_30_character.') }}
+                                    </li>
 
 
                                 </ul>
