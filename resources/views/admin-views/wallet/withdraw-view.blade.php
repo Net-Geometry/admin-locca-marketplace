@@ -8,6 +8,9 @@
 @endpush
 
 @section('content')
+    @php
+        $vendor = $wr?->vendor->stores[0]?->module_type == 'rental' ? 'Provider' : 'store';
+    @endphp
 <div class="content container-fluid">
     <!-- Page Heading -->
     <div class="page-header">
@@ -16,7 +19,7 @@
                 <img src="{{asset('public/assets/admin/img/withdraw.png')}}" class="w--26" alt="">
             </span>
             <span>
-                {{translate('messages.store_withdraw_information')}}
+                {{translate($vendor.'_withdraw_information')}}
             </span>
         </h1>
     </div>
@@ -28,7 +31,7 @@
             <div class="card">
                 <div class="card-header p-3">
                     <h3 class="text-center text-capitalize">
-                        {{translate('messages.store_withdraw_information')}}
+                        {{translate($vendor.'_withdraw_information')}}
                     </h3>
 
                     <i class="tio-wallet-outlined fz--30"></i>
@@ -101,11 +104,11 @@
             <div class="col-md-4">
                 <div class="card min-height-260">
                     <div class="card-header">
-                        <h3 class="h3 mb-0">{{translate('messages.store_info')}}</h3>
+                        <h3 class="h3 mb-0">{{translate($vendor.'_info')}}</h3>
                         <i class="tio tio-shop-outlined"></i>
                     </div>
                     <div class="card-body">
-                        <h5 class="d-flex __gap-5px"><span>{{translate('messages.store')}}</span> <span>:</span> <span>{{$wr->vendor->stores[0]->name}}</span></h5>
+                        <h5 class="d-flex __gap-5px"><span>{{translate($vendor)}}</span> <span>:</span> <span>{{$wr->vendor->stores[0]->name}}</span></h5>
                         <h5 class="d-flex __gap-5px"><span>{{translate('messages.phone')}}</span> <span>:</span> <span>{{$wr->vendor->stores[0]->contact}}</span></h5>
                         <h5 class="d-flex __gap-5px"><span>{{translate('messages.address')}}</span> <span>:</span> <span>{{$wr->vendor->stores[0]->address}}</span></h5>
                         <h5 class="text-capitalize badge badge-success d-flex __gap-5px"><span>{{translate('messages.balance')}}</span> <span>:</span> <span>{{$wr->vendor->wallet->balance}}</span></h5>
@@ -125,7 +128,7 @@
                         <h5 class="d-flex __gap-5px"><span>{{translate('messages.email')}}</span> <span>:</span> <span>{{$wr->vendor->email}}</span></h5>
                         <h5 class="d-flex __gap-5px"><span>{{translate('messages.phone')}}</span> <span>:</span> <span>{{$wr->vendor->phone}}</span></h5>
                     @else
-                        <h5>{{translate('messages.store deleted!')}}</h5>
+                        <h5>{{translate('messages.'.$vendor.' deleted!')}}</h5>
                     @endif
 
                 </div>

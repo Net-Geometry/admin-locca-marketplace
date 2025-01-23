@@ -199,31 +199,6 @@
                                             data-placeholder="{{ translate('messages.select_module') }}">
                                         </select>
                                     </div>
-                                    {{-- <div class="form-group mb-4 pickup-zone-container" id="pickup-zone-container">
-                                        <label class="input-label"
-                                               title="{{ translate('messages.select_pickup_zone_for_map') }}"
-                                               for="choice_zones">{{ translate('messages.pickup_zone') }} <span
-                                                class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}"><img
-                                                    src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.select_pickup_zone_for_map') }}"></span></label>
-                                        <select name="pickup_zone_id[]" required
-                                                class="form-control __form-control js-select2-custom js-multi-select2 js-example-basic-single"
-                                                data-placeholder="{{ translate('messages.select_zone') }}" multiple="multiple">
-                                            <option value="" disabled>
-                                                {{ translate('messages.select_zone') }}</option>
-                                            @foreach (\App\Models\Zone::active()->get() as $zone)
-                                                @if (isset(auth('admin')->user()->zone_id))
-                                                    @if (auth('admin')->user()->zone_id == $zone->id)
-                                                        <option value="{{ $zone->id }}" selected>{{ $zone->name }}
-                                                        </option>
-                                                    @endif
-                                                @else
-                                                    <option value="{{ $zone->id }}">{{ $zone->name }}</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div> --}}
                                     <div class="form-group mb-4 pickup-zone-container pickup-zone-tag" id="pickup-zone-container">
                                         <label class="input-label"
                                                title="{{ translate('messages.select_pickup_zone_for_map') }}"
@@ -249,32 +224,6 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    {{-- <div class="form-group mb-4 pickup-zone-tag">
-                                        <label class="input-label"
-                                               title="{{ translate('messages.select_pickup_zone_for_map') }}"
-                                               for="choice_zones">{{ translate('messages.pickup_zone') }} <span
-                                                class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}"><img
-                                                    src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.select_pickup_zone_for_map') }}"></span>
-                                        </label>
-                                        <select name="pickup_zone_id[]" required
-                                                class="form-control multiple-select2"
-                                                data-placeholder="{{ translate('messages.select_zone') }}" multiple="multiple">
-                                            <option value="" selected disabled>
-                                                {{ translate('messages.select_zone') }}</option>
-                                            @foreach (\App\Models\Zone::active()->get() as $zone)
-                                                @if (isset(auth('admin')->user()->zone_id))
-                                                    @if (auth('admin')->user()->zone_id == $zone->id)
-                                                        <option value="{{ $zone->id }}" selected>{{ $zone->name }}
-                                                        </option>
-                                                    @endif
-                                                @else
-                                                    <option value="{{ $zone->id }}">{{ $zone->name }}</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div> --}}
                                     <div class="form-group mb-4">
                                         <label class="input-label" for="latitude">{{ translate('messages.latitude') }}
                                             <span class="input-label-secondary"
@@ -336,32 +285,9 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        {{-- old approx. time design --}}
-                                        {{-- <div class="input-group">
-                                            <input type="number" id="minimum_delivery_time"
-                                                name="minimum_delivery_time" class="form-control __form-control"
-                                                placeholder="Min: 10" value="{{ old('minimum_delivery_time') }}">
-                                            <input type="number" name="maximum_delivery_time" id="max_delivery_time"
-                                                class="form-control __form-control" placeholder="Max: 20"
-                                                value="{{ old('maximum_delivery_time') }}">
-                                            <select name="delivery_time_type"
-                                                class="form-control __form-control text-capitalize" required>
-                                                <option value="min">{{ translate('messages.minutes') }}</option>
-                                                <option value="hours">{{ translate('messages.hours') }}</option>
-                                                <option value="days">{{ translate('messages.days') }}</option>
-                                            </select>
-                                        </div> --}}
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    {{-- old map --}}
-                                    {{-- <div class="p-3 border border-success-light rounded mb-3">
-                                        <input id="pac-input" class="controls rounded"
-                                            style="height: 3em;width:fit-content;"
-                                            title="{{ translate('messages.search_your_location_here') }}" type="text"
-                                            placeholder="{{ translate('messages.search_here') }}" />
-                                        <div class="h-255" id="map"></div>
-                                    </div> --}}
                                     <div class="rounded mb-3">
                                         <input id="pac-input" class="controls rounded"
                                             style="height: 3em;width:fit-content;"
@@ -556,7 +482,8 @@
                                                     </span>
                                                 </label>
                                                 <div id="password-feedback" class="pass password-feedback">
-                                                    {{ translate('messages.password_not_matched') }}</div>
+                                                    {{ translate('messages.password_not_matched') }}
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-sm-12 col-lg-4">
@@ -591,7 +518,8 @@
                                                     </span>
                                                 </label>
                                                 <div class="pass invalid-feedback">
-                                                    {{ translate('messages.password_not_matched') }}</div>
+                                                    {{ translate('messages.password_not_matched') }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1090,7 +1018,7 @@
 
 <script>
     $.fn.select2DynamicDisplay = function () {
-        const limit = 5;
+        const limit = 10000;
         function updateDisplay($element) {
             var $rendered = $element
                 .siblings(".select2-container")

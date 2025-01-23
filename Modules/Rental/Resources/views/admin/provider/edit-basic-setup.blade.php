@@ -7,10 +7,10 @@
         #pac-input1 {
             position: absolute;
             height: 40px;
-            border: 1px solid #fbc1c1;
+            border: 1px solid #ddd;
             outline: none;
             box-shadow: none;
-            top: 20px !important;
+            top: 10px !important;
             left: 78% !important;
             transform: translateX(-50%);
             z-index: 5;
@@ -61,7 +61,7 @@
             <div id="businessSetup">
                 <div class="custom-timeline d-flex flex-wrap gap-40px text-title mb-2">
                     <h4 class="single"><span class="count">1</span>{{translate('Business Basic Setup')}}</h4>
-                    <h4 class="single opacity-70"><span class="count">2</span>{{translate('Business Plan Setup')}}</h4>
+                    <h4 class="single opacity-70"><span class="count2">2</span>{{translate('Business Plan Setup')}}</h4>
                 </div>
 
                 <div class="row g-2">
@@ -284,8 +284,8 @@
                                             <label class="input-label" for="latitude">{{translate('messages.latitude')}}
                                                 <span
                                                     class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                    data-original-title="{{translate('messages.store_lat_lng_warning')}}">
-                                                <img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.store_lat_lng_warning')}}">
+                                                    data-original-title="{{translate('messages.provider_lat_lng_warning')}}">
+                                                <img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.provider_lat_lng_warning')}}">
                                             </span>
                                             </label>
                                             <input type="text" id="latitude"
@@ -296,8 +296,8 @@
                                             <label class="input-label" for="longitude">{{translate('messages.longitude')}}
                                                 <span
                                                     class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                    data-original-title="{{translate('messages.store_lat_lng_warning')}}">
-                                                <img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.store_lat_lng_warning')}}">
+                                                    data-original-title="{{translate('messages.provider_lat_lng_warning')}}">
+                                                <img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.provider_lat_lng_warning')}}">
                                             </span>
                                             </label>
                                             <input type="text"
@@ -515,6 +515,178 @@
     </script>
 
     <script>
+        $.fn.select2DynamicDisplay = function () {
+            const limit = 100;
+            function updateDisplay($element) {
+                var $rendered = $element
+                    .siblings(".select2-container")
+                    .find(".select2-selection--multiple")
+                    .find(".select2-selection__rendered");
+                var $container = $rendered.parent();
+                var containerWidth = $container.width();
+                var totalWidth = 0;
+                var itemsToShow = [];
+                var remainingCount = 0;
+
+                // Get all selected items
+                var selectedItems = $element.select2("data");
+
+                // Create a temporary container to measure item widths
+                var $tempContainer = $("<div>")
+                    .css({
+                        display: "inline-block",
+                        padding: "0 15px",
+                        "white-space": "nowrap",
+                        visibility: "hidden",
+                    })
+                    .appendTo($container);
+
+                // Calculate the width of items and determine how many fit
+                selectedItems.forEach(function (item) {
+                    var $tempItem = $("<span>")
+                        .text(item.text)
+                        .css({
+                            display: "inline-block",
+                            padding: "0 12px",
+                            "white-space": "nowrap",
+                        })
+                        .appendTo($tempContainer);
+
+                    var itemWidth = $tempItem.outerWidth(true);
+
+                    if (totalWidth + itemWidth <= containerWidth - 40) {
+                        totalWidth += itemWidth;
+                        itemsToShow.push(item);
+                    } else {
+                        remainingCount = selectedItems.length - itemsToShow.length;
+                        return false;
+                    }
+                });
+
+                $tempContainer.remove();
+
+                const $searchForm = $rendered.find(".select2-search");
+
+                var html = "";
+                itemsToShow.forEach(function (item) {
+                    html += `<li class="name">
+                                        <span>${item.text}</span>
+                                        <span class="close-icon" data-id="${item.id}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                            </svg>
+                                        </span>
+                                        </li>`;
+                });
+                if (remainingCount > 0) {
+                    html += `<li class="ms-auto">
+                                        <div class="more">+${remainingCount}</div>
+                                        </li>`;
+                }
+
+                if (selectedItems.length < limit) {
+                    html += $searchForm.prop("outerHTML");
+                }
+
+                $rendered.html(html);
+
+                function debounce(func, wait) {
+                    let timeout;
+                    return function (...args) {
+                        clearTimeout(timeout);
+                        timeout = setTimeout(() => func.apply(this, args), wait);
+                    };
+                }
+
+                $(".select2-search input").on(
+                    "input",
+                    debounce(function () {
+                        const inputValue = $(this).val().toLowerCase();
+                        const $listItems = $(".select2-results__options li");
+                        let matches = 0;
+
+                        $listItems.each(function () {
+                            const itemText = $(this).text().toLowerCase();
+                            const isMatch = itemText.includes(inputValue);
+                            $(this).toggle(isMatch);
+                            if (isMatch) matches++;
+                        });
+
+                        if (matches === 0) {
+                            $(".select2-results__options").append(
+                                '<li class="no-results">No results found</li>'
+                            );
+                        } else {
+                            $(".no-results").remove();
+                        }
+                    }, 100)
+                );
+
+                $(".select2-search input").on("keydown", function (e) {
+                    if (e.which === 13) {
+                        e.preventDefault();
+                        const inputValue = $(this).val().toLowerCase();
+                        const $listItems = $(".select2-results__options li:not(.no-results)");
+                        const matchedItem = $listItems.filter(function () {
+                            return $(this).text().toLowerCase() === inputValue;
+                        });
+
+                        if (matchedItem.length > 0) {
+                            matchedItem.trigger("mouseup"); // Select the matched item
+                        }
+
+                        $(this).val("");
+                    }
+                });
+            }
+            return this.each(function () {
+                var $this = $(this);
+
+                $this.select2({
+                    tags: true,
+                    maximumSelectionLength: limit,
+                });
+
+                // Bind change event to update display
+                $this.on("change", function () {
+                    updateDisplay($this);
+                });
+
+                // Initial display update
+                updateDisplay($this);
+
+                $(window).on("resize", function () {
+                    updateDisplay($this);
+                });
+                $(window).on("load", function () {
+                    updateDisplay($this);
+                });
+
+                // Handle the click event for the remove icon
+                $(document).on(
+                    "click",
+                    ".select2-selection__rendered .close-icon",
+                    function (e) {
+                        e.stopPropagation();
+                        var $removeIcon = $(this);
+                        var itemId = $removeIcon.data("id");
+                        var $this2 = $removeIcon
+                            .closest(".select2")
+                            .siblings(".multiple-select2");
+                        $this2.val(
+                            $this2.val().filter(function (id) {
+                                return id != itemId;
+                            })
+                        );
+                        $this2.trigger("change");
+                    }
+                );
+            });
+        };
+        $(".multiple-select2").select2DynamicDisplay();
+    </script>
+
+    <script>
         "use strict";
 
         $(document).on('ready', function() {
@@ -720,6 +892,11 @@
             }
         })
 
+        let initialSelectedZones = [];
+        $(".multiple-select2 option:selected").each(function () {
+            initialSelectedZones.push($(this).val());
+        });
+
         $('#reset_btn').click(function () {
             const defaultLogo = "{{ $store->logo_full_url ?? asset('public/assets/admin/img/upload.png') }}";
             const defaultCoverPhoto = "{{ $store->cover_photo_full_url ?? asset('public/assets/admin/img/upload-img.png') }}";
@@ -743,24 +920,12 @@
                 $('#choice_zones').val(zoneValue).trigger('change');
             }
 
-            {{--const pickupZones = @json($store->pickup_zone_id); // This will get the list of selected pickup zones from the backend (store)--}}
-
-            {{--if (pickupZones && pickupZones.length) {--}}
-            {{--    // Set the values--}}
-            {{--    $('#pickup_zones').val(pickupZones).trigger('change');--}}
-            {{--} else {--}}
-            {{--    // If no pickup zones, clear the dropdown--}}
-            {{--    $('#pickup_zones').val([]).trigger('change');--}}
-            {{--}--}}
-
-            {{--// Destroy and reinitialize Select2 to force it to update its UI--}}
-            {{--$('#pickup_zones').select2('destroy').select2();--}}
-
             $('#module_id').val(null).trigger('change');
             zonePolygon.setMap(null);
             $('#coordinates').val(null);
             $('#latitude').val(null);
             $('#longitude').val(null);
+            $(".multiple-select2").val(initialSelectedZones).trigger("change");
         });
 
 

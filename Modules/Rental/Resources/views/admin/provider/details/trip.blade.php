@@ -149,7 +149,6 @@
                         <th class="border-0">{{ translate('messages.Booking_Date') }}</th>
                         <th class="border-0">{{ translate('messages.Schedule_At') }}</th>
                         <th class="border-0">{{ translate('messages.Customer_Info') }}</th>
-                        <th class="border-0">{{ translate('messages.Vendor') }}</th>
                         <th class="border-0">{{ translate('messages.Driver_Info') }}</th>
                         <th class="border-0">{{ translate('messages.Vehicle_Info') }}</th>
                         <th class="border-0">{{ translate('messages.Trip_Type') }}</th>
@@ -164,9 +163,9 @@
                         <tr>
                             <td>{{$key+$trips->firstItem()}}</td>
                             <td>
-                                <div class="text--title font-semibold">
+                                <a href="{{ route('admin.rental.trip.details', $trip->id) }}" class="text--title font-semibold">
                                     {{ $trip->id }}
-                                </div>
+                                </a>
                             </td>
                             <td>
                                 <div class="text--title">
@@ -185,9 +184,9 @@
                             <td>
                                 @if ($trip->customer)
                                     <div class="text--title">
-                                        <div class="font-medium">
+                                        <a href="{{ route('admin.users.customer.rental.view', $trip->user_id) }}?module=1" class="font-medium">
                                             {{ $trip->customer->fullName }}
-                                        </div>
+                                        </a>
                                         <div class="opacity-lg">
                                             {{ $trip->customer->email }}
                                         </div>
@@ -204,11 +203,6 @@
                                 @else
                                     {{ translate('messages.Guest_user') }}
                                 @endif
-                            </td>
-                            <td>
-                                <div class="text--title font-medium w--150px white--space-initial">
-                                    {{ $trip->provider->name }}
-                                </div>
                             </td>
                             @php
                                 $maxDisplay = 3;
@@ -243,9 +237,9 @@
                                     @else
                                         <div class="text--title">
                                             @if ($trip->assignedDriver->isNotEmpty())
-                                                <div class="font-medium">
+                                                <a href="{{ route('admin.rental.provider.driver.details', $trip->assignedDriver->first()?->driver->id) }}" class="font-medium">
                                                     {{ $trip->assignedDriver->first()?->driver?->fullName }}
-                                                </div>
+                                                </a>
                                                 <div class="opacity-lg">
                                                     {{ $trip->assignedDriver->first()?->driver?->email }}
                                                 </div>
@@ -285,7 +279,7 @@
                             <td>
                                 <div class="text--title">
                                     <div class="font-medium">
-                                        {{ $trip->trip_type }}
+                                        {{ translate(str_replace('-', ' ', translate($trip->trip_type))) }}
                                     </div>
                                     <div class="opacity-lg">
                                         {{ $trip->scheduled ? translate('messages.Instant') : translate('messages.scheduled') }}

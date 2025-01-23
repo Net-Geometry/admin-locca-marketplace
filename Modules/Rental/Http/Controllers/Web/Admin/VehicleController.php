@@ -659,7 +659,7 @@ class VehicleController extends Controller
         $fileName = 'Vehicles';
 
         if ($providerId){
-            $providerName = $this->store->where('id', $providerId)->first()->value('name');
+            $providerName = $this->store->where('id', $providerId)->value('name');
             $fileName = $providerName .' vehicles';
         }
 

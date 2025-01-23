@@ -1,8 +1,50 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Add Provider'))
+@section('title', translate('messages.Create New Provider'))
 
+@push('css_or_js')
+    <style>
+        #pac-input1 {
+            position: absolute;
+            height: 40px;
+            border: 1px solid #ddd;
+            outline: none;
+            box-shadow: none;
+            top: 10px !important;
+            left: 78% !important;
+            transform: translateX(-50%);
+            z-index: 5;
+            width: 25%;
+            padding: 10px;
+            font-size: 16px;
+        }
 
+        .password-feedback {
+            display: none;
+            width: 100%;
+            margin-top: .25rem;
+            font-size: .875em;
+            /* color: #35dc80; */
+        }
+
+        .invalid-feedback {
+            display: none;
+            width: 100%;
+            margin-top: .25rem;
+            font-size: .875em;
+            /* color: #35dc80; */
+        }
+
+        .valid {
+            color: green;
+        }
+
+        .invalid {
+            color: red;
+        }
+
+    </style>
+@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -12,9 +54,9 @@
                 <div>
                     <h1 class="page-header-title text-break">
                         <span class="page-header-icon">
-                            <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
+                            <img src="{{ asset('public/assets/admin/img/provider.png') }}" class="w--22" alt="">
                         </span>
-                        <span>{{ translate('messages.Add Provider') }}
+                        <span>{{ translate('messages.Create New Provider') }}
                     </h1></span>
                     </h1>
                 </div>
@@ -43,7 +85,7 @@
             <div id="businessSetup">
                 <div class="custom-timeline d-flex flex-wrap gap-40px text-title mb-2">
                     <h4 class="single"><span class="count">1</span>{{translate('Business Basic Setup')}}</h4>
-                    <h4 class="single opacity-70"><span class="count">2</span>{{translate('Business Plan Setup')}}</h4>
+                    <h4 class="single opacity-70"><span class="count2">2</span>{{translate('Business Plan Setup')}}</h4>
                 </div>
 
                 <div class="row g-2">
@@ -87,7 +129,7 @@
                                                             </label>
                                                             <input type="text" name="name[]" id="default_name"
                                                                 class="form-control"
-                                                                placeholder="{{ translate('messages.store_name') }}" value="{{old('default_name')}}" required>
+                                                                placeholder="{{ translate('messages.provider_name') }}" value="{{old('default_name')}}" required>
                                                         </div>
                                                         <input type="hidden" name="lang[]" value="default">
                                                         <div class="form-group mb-0">
@@ -107,7 +149,7 @@
                                                                 </label>
                                                                 <input type="text" name="name[]"
                                                                     id="{{ $lang }}_name" class="form-control"
-                                                                    placeholder="{{ translate('messages.store_name') }}">
+                                                                    placeholder="{{ translate('messages.provider_name') }}">
                                                             </div>
                                                             <input type="hidden" name="lang[]" value="{{ $lang }}">
                                                             <div class="form-group mb-0">
@@ -126,7 +168,7 @@
                                                                 for="exampleFormControlInput1">{{ translate('messages.name') }}
                                                                 ({{ translate('messages.default') }})</label>
                                                             <input type="text" name="name[]" class="form-control"
-                                                                placeholder="{{ translate('messages.store_name') }}" required>
+                                                                placeholder="{{ translate('messages.provider_name') }}" required>
                                                         </div>
                                                         <input type="hidden" name="lang[]" value="default">
                                                         <div class="form-group mb-0">
@@ -296,9 +338,9 @@
                                         <div class="form-group mb-4">
                                             <label class="input-label" for="latitude">{{ translate('messages.latitude') }}
                                                 <span class="input-label-secondary"
-                                                      title="{{ translate('messages.store_lat_lng_warning') }}"><img
+                                                      title="{{ translate('messages.provider_lat_lng_warning') }}"><img
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                        alt="{{ translate('messages.store_lat_lng_warning') }}"></span></label>
+                                                        alt="{{ translate('messages.provider_lat_lng_warning') }}"></span></label>
                                             <input type="text" id="latitude" name="latitude"
                                                    class="form-control __form-control"
                                                    placeholder="{{ translate('messages.Ex:') }} -94.22213"
@@ -307,9 +349,9 @@
                                         <div class="form-group mb-4">
                                             <label class="input-label" for="longitude">{{ translate('messages.longitude') }}
                                                 <span class="input-label-secondary"
-                                                      title="{{ translate('messages.store_lat_lng_warning') }}"><img
+                                                      title="{{ translate('messages.provider_lat_lng_warning') }}"><img
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                        alt="{{ translate('messages.store_lat_lng_warning') }}"></span></label>
+                                                        alt="{{ translate('messages.provider_lat_lng_warning') }}"></span></label>
                                             <input type="text" name="longitude" class="form-control __form-control"
                                                    placeholder="{{ translate('messages.Ex:') }} 103.344322" id="longitude"
                                                    value="{{ old('longitude') }}" required readonly>
@@ -367,7 +409,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <input id="pac-input" class="controls rounded" data-toggle="tooltip"
+                                        <input id="pac-input1" class="controls rounded" data-toggle="tooltip"
                                             data-placement="right"
                                             data-original-title="{{ translate('messages.search_your_location_here') }}"
                                             type="text" placeholder="{{ translate('messages.search_here') }}" />
@@ -474,6 +516,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div id="password-feedback" class="pass password-feedback">
+                                            {{ translate('messages.password_not_matched') }}
+                                        </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="js-form-message form-group mb-0">
@@ -501,6 +546,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div id="invalid-feedback" class="pass invalid-feedback">
+                                            {{ translate('messages.password_not_matched') }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -518,7 +566,7 @@
             </div>
             <div id="businessPlan" class="d-none">
                 <div class="custom-timeline d-flex flex-wrap gap-40px text-title mb-2">
-                    <h4 class="single text-primary checked"><span class="count">1</span>{{ translate('messages.Business Basic Setup') }}</h4>
+                    <h4 class="single text-primary checked"><span class="count-checked">1</span>{{ translate('messages.Business Basic Setup') }}</h4>
                     <h4 class="single font-semibold"><span class="count btn-primary">2</span>{{ translate('messages.Business Plan Setup') }}</h4>
                 </div>
                 <div class="row g-2">
@@ -530,7 +578,7 @@
                                         {{ translate('messages.Choose Business Plan') }}
                                     </h5>
                                     <p class="fs-12 mb-0">
-                                        {{ translate('messages.Provider Logo & Covers') }}
+                                        {{ translate('messages.Pay per transaction or enjoy unlimited access with a subscription.') }}
                                     </p>
                                 </div>
                             </div>
@@ -642,7 +690,7 @@
                     <div class="col-lg-12">
                         <div class="btn--container justify-content-end mt-3">
                             <button type="button" class="btn btn--reset min-w-100px justify-content-center" id="backBusinessSetup">{{ translate('messages.back') }}</button>
-                            <button type="submit" class="btn btn--primary min-w-100px justify-content-center" id="submit">{{ translate('messages.update') }}</button>
+                            <button type="submit" class="btn btn--primary min-w-100px justify-content-center" id="submit">{{ translate('messages.Submit') }}</button>
                         </div>
                     </div>
                 </div>
@@ -703,6 +751,58 @@
             position: myLatlng,
         });
         let bounds = new google.maps.LatLngBounds();
+        function initMap() {
+            const input = document.getElementById("pac-input1");
+            const searchBox = new google.maps.places.SearchBox(input);
+            map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+            let markers = [];
+            searchBox.addListener("places_changed", () => {
+                const places = searchBox.getPlaces();
+                if (places.length == 0) {
+                    return;
+                }
+                // Clear out the old markers.
+                markers.forEach((marker) => {
+                    marker.setMap(null);
+                });
+                markers = [];
+                // For each place, get the icon, name and location.
+                const bounds = new google.maps.LatLngBounds();
+                places.forEach((place) => {
+                    document.getElementById('latitude').value = place.geometry.location.lat();
+                    document.getElementById('longitude').value = place.geometry.location.lng();
+                    if (!place.geometry || !place.geometry.location) {
+                        console.log("Returned place contains no geometry");
+                        return;
+                    }
+                    const icon = {
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(25, 25),
+                    };
+                    // Create a marker for each place.
+                    markers.push(
+                        new google.maps.Marker({
+                            map,
+                            icon,
+                            title: place.name,
+                            position: place.geometry.location,
+                        })
+                    );
+
+                    if (place.geometry.viewport) {
+                        // Only geocodes have viewport.
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
+                });
+                map.fitBounds(bounds);
+            });
+        }
+        initMap();
 
         $('#choice_zones').on('change', function() {
             let id = $(this).val();
@@ -757,11 +857,12 @@
         })
 
         $('#reset_btn').click(function() {
-            $('#viewer').attr('src', "{{ asset('public/assets/admin/img/upload.png') }}");
+            $('#logoImageViewer').attr('src', "{{ asset('public/assets/admin/img/upload-img.png') }}");
             $('#customFileEg1').val(null);
             $('#coverImageViewer').attr('src', "{{ asset('public/assets/admin/img/upload-img.png') }}");
             $('#coverImageUpload').val(null);
             $('#choice_zones').val(null).trigger('change');
+            $(".multiple-select2").val(null).trigger("change");
             $('#module_id').val(null).trigger('change');
             zonePolygon.setMap(null);
             $('#coordinates').val(null);
@@ -913,6 +1014,47 @@
                     }
                 }
             })
+
+            $(document).on('keyup', 'input[name="password"]', function() {
+                const password = $(this).val();
+                const feedback = $('#password-feedback');
+
+                const minLength = password.length >= 8;
+                const hasLowerCase = /[a-z]/.test(password);
+                const hasUpperCase = /[A-Z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+                if (minLength && hasLowerCase && hasUpperCase && hasNumber && hasSymbol) {
+                    feedback.text("{{ translate('Password is valid') }}");
+                    feedback.removeClass('invalid').addClass('valid');
+                    feedback.removeClass('password-feedback');
+
+                } else {
+                    feedback.text("{{ translate('Password format is invalid') }}");
+                    feedback.removeClass('valid').addClass('invalid');
+                    feedback.removeClass('password-feedback');
+
+                }
+            });
+
+            $(document).on('keyup', 'input[name="confirmPassword"]', function() {
+                const password = $('input[name="password"]').val();
+                const confirmPassword = $(this).val();
+                const feedback = $('#invalid-feedback');
+
+                if (confirmPassword == password && confirmPassword.length > 0) {
+                    feedback.text("{{ translate('Passwords match') }}");
+                    feedback.removeClass('invalid').addClass('valid');
+                    feedback.removeClass('invalid-feedback');
+
+                } else {
+                    feedback.text("{{ translate('confirmPassword not match') }}");
+                    feedback.removeClass('valid').addClass('invalid');
+                    feedback.removeClass('invalid-feedback');
+
+                }
+            });
 
             $('#nextStep').on('click', function () {
                 const fileInputs = document.querySelectorAll('input[type="file"]');
@@ -1148,6 +1290,7 @@
                 $this.select2({
                     tags: true,
                     maximumSelectionLength: limit,
+                    placeholder: "{{ translate('messages.select_pickup_zone') }}",
                 });
 
                 // Bind change event to update display

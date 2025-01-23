@@ -305,16 +305,21 @@
                     <form method="get" action="{{route('admin.rental.provider.approve-or-deny',[$store['id'],0])}}">
                         @csrf
                         <div class="form-floating">
-                            <label for="add-your-note"
-                                   class="font-medium input-label text--title">{{ translate('Cancellation Note') }}<span
-                                    class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                    data-original-title="Cancellation Note">
-                                    <i class="tio-info text--title opacity-60"></i>
-                                </span></label>
+                            <label for="add-your-note" class="font-medium input-label text--title">{{ translate('Cancellation Note') }}
+                                <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="Cancellation Note">
+                                                            <i class="tio-info text--title opacity-60"></i>
+                                                    </span>
+                            </label>
                             <div class="mb-30">
-                                <textarea class="form-control h--90" placeholder="{{ translate('Type your Cancellation Note') }}" name="message"
-                                          id="add-your-note" required></textarea>
-                                <div>0/60</div>
+                                                    <textarea
+                                                        class="form-control h--90"
+                                                        placeholder="{{ translate('Type your Cancellation Note') }}"
+                                                        name="message"
+                                                        id="add-your-note"
+                                                        maxlength="60"
+                                                        required
+                                                    ></textarea>
+                                <div id="char-count">0/60</div>
                             </div>
                             <input type="hidden" value="0" name="status">
                             <div class="d-flex justify-content-end gap-3">
@@ -334,4 +339,12 @@
 @endpush
 
 @push('script_2')
+    <script>
+        $('#add-your-note').on('input', function () {
+            const maxLength = 60;
+            const currentLength = $(this).val().length;
+
+            $('#char-count').text(`${currentLength}/${maxLength}`);
+        });
+    </script>
 @endpush

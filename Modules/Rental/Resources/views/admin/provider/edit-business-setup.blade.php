@@ -26,7 +26,7 @@
             @csrf
             <div id="businessPlan">
                 <div class="custom-timeline d-flex flex-wrap gap-40px text-title mb-2">
-                    <h4 class="single text-primary checked"><span class="count">1</span>{{ translate('messages.Business Basic Setup') }}</h4>
+                    <h4 class="single text-primary checked"><span class="count-checked">1</span>{{ translate('messages.Business Basic Setup') }}</h4>
                     <h4 class="single font-semibold"><span class="count btn-primary">2</span>{{ translate('messages.Business Plan Setup') }}</h4>
                 </div>
                 <div class="row g-2">

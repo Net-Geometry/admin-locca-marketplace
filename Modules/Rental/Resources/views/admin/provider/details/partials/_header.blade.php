@@ -11,23 +11,23 @@
                     </h1></span>
                     </h1>
                 </div>
-                <div class="d-flex align-items-start flex-wrap gap-2">
-                    <a href="javascript:" class="btn btn--reset d-flex justify-content-between align-items-center gap-4 lh--1 h--45px">
-                        {{ translate('messages.status') }}
-                        <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$store->id}}">
-                            <input type="checkbox" data-url="{{route('admin.store.status',[$store['id'],$store->status?0:1])}}"
-                                   class="toggle-switch-input redirect-url" id="stocksCheckbox{{$store->id}}" {{$store->status?'checked':''}}>
-                            <span class="toggle-switch-label">
-                                <span class="toggle-switch-indicator"></span>
-                            </span>
-                        </label>
-                    </a>
-                    @if(Request::url() == route('admin.rental.provider.details', $store->id))
+                @if(!request()->tab)
+                    <div class="d-flex align-items-start flex-wrap gap-2">
+                        <a href="javascript:" class="btn btn--reset d-flex justify-content-between align-items-center gap-4 lh--1 h--45px">
+                            {{ translate('messages.status') }}
+                            <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$store->id}}">
+                                <input type="checkbox" data-url="{{route('admin.store.status',[$store['id'],$store->status?0:1])}}"
+                                       class="toggle-switch-input redirect-url" id="stocksCheckbox{{$store->id}}" {{$store->status?'checked':''}}>
+                                <span class="toggle-switch-label">
+                                    <span class="toggle-switch-indicator"></span>
+                                </span>
+                            </label>
+                        </a>
                         <a href="{{ route('admin.rental.provider.edit-basic-setup', $store->id)}}" class="btn btn--primary font-weight-bold float-right mr-2 mb-0">
                             <i class="tio-edit"></i> {{ translate('messages.edit_provider') }}
                         </a>
-                    @endif
-                </div>
+                    </div>
+                @endif
             </div>
         </div>
         @if($store->vendor->status)

@@ -313,10 +313,15 @@
                             <tr>
                                 <td>
                                     <div>
-                                        <div class="d-flex"> <span class="min-w-110px">{{ translate('Brand') }}</span><span
-                                                class="font-semibold">: {{ $vehicle?->brand?->name }}</span></div>
-                                        <div class="d-flex"><span class="min-w-110px">{{ translate('Category') }}</span><span
-                                                class="font-semibold">: {{ $vehicle?->category?->name }}</span></div>
+                                        <div class="d-flex">
+                                            <span class="min-w-110px">{{ translate('Brand') }}</span>
+                                            <span class="font-semibold">: {{ Str::limit($vehicle?->brand?->name, 15) }}</span>
+                                        </div>
+
+                                        <div class="d-flex">
+                                            <span class="min-w-110px">{{ translate('Category') }}</span>
+                                            <span class="font-semibold">: {{ Str::limit($vehicle?->category?->name, 15) }}</span>
+                                        </div>
                                         <div class="d-flex"><span class="min-w-110px">{{ translate('Type') }}</span><span
                                                 class="font-semibold">: {{ $vehicle?->type }}</span></div>
                                     </div>

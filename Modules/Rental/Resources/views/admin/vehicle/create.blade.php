@@ -221,8 +221,9 @@
                                                 data-placeholder="{{ translate('messages.select_vehicle_provider') }}" required>
                                             <option value="" selected disabled>{{ translate('messages.select_vehicle_provider') }}</option>
                                             @foreach($providers as $provider)
-                                                <option value="{{ $provider->id }}" {{ old('provider_id') == $provider->id ? 'selected' : '' }}>
-                                                    {{ $provider->name }}
+                                                <option value="{{ $provider->id }}"
+                                                    {{ (old('provider_id') == $provider->id || request()->provider_id == $provider->id) ? 'selected' : '' }}>
+                                                {{ $provider->name }}
                                                 </option>
                                             @endforeach
                                         </select>

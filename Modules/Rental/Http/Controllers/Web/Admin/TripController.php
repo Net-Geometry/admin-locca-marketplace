@@ -386,7 +386,7 @@ class TripController extends Controller
         $fileName = 'Trips';
 
         if ($providerId){
-            $providerName = $this->provider->where('id', $providerId)->first()->value('name');
+            $providerName = $this->provider->where('id', $providerId)->value('name');
             $fileName = $providerName .' trips';
         }
 

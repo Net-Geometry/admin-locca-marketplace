@@ -293,7 +293,7 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/provider/list') ||  Request::is('admin/rental/provider/details/*') ||  Request::is('admin/rental/provider/driver/*') ||  Request::is('admin/rental/provider/edit-basic-setup/*') ? 'active' : '' }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/provider/list') ||  Request::is('admin/rental/provider/details/*') ||  Request::is('admin/rental/provider/driver/*') ||  Request::is('admin/rental/provider/edit*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.rental.provider.list') }}" title="{{ translate('messages.providers_list') }}">
                                 <span class="tio-layout nav-icon"></span>
                                 <span class="text-truncate">{{ translate('providers list') }}</span>

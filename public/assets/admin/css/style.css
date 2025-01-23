@@ -14208,6 +14208,36 @@ ul.address-info .label {
 }
 .custom-timeline .single .count {
     font-weight: 700;
+    background-color: #0a1123;
+    color: #fff;
+    border: 1px solid #0a1123;
+    width: 32px;
+    height: 32px;
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    position: relative;
+}
+.custom-timeline .single .count-checked {
+    font-weight: 700;
+    background-color: transparent;
+    color: var(--primary-clr);
+    border: 1px solid var(--primary-clr);
+    width: 32px;
+    height: 32px;
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    position: relative;
+}
+.custom-timeline .single .count2 {
+    font-weight: 700;
+    /*background-color: var(--primary-clr);*/
+    /*color: #fff;*/
     border: 1px solid rgba(51, 66, 87, 0.7);
     width: 32px;
     height: 32px;
@@ -14220,23 +14250,24 @@ ul.address-info .label {
 }
 
 .custom-timeline .single.checked .count {
-    background-color: var(--primary-clr);
+    /*background-color: var(--primary-clr);*/
     border-color: var(--primary-clr);
-    color: transparent;
+    color: var(--primary-clr);
 }
 
-.custom-timeline .single.checked .count::after {
-    content: url("../img/icons/check.svg");
+.custom-timeline .single.checked .count-checked::after {
+    content: url("../img/icons/checked.png");
     position: absolute;
     inset-inline-start: 0;
     inset-block-start: 0;
     block-size: 100%;
     inline-size: 100%;
-    color: #fafafa;
+    color: var(--primary-clr);
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
+    background-color: transparent !important;
 }
 
 .business-plan-card-wrapper {

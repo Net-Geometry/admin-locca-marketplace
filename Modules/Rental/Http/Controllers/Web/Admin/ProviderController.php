@@ -1173,7 +1173,7 @@ class ProviderController extends Controller
 
                 $store->update(['store_business_model' => 'commission']);
 
-                Toastr::success(translate('messages.your_store_registration_is_successful'));
+                Toastr::success(translate('messages.Your_provider_registration_is_successful'));
                 return back();
 
             } else {
