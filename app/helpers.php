@@ -258,17 +258,15 @@ if (!function_exists('addon_published_status')) {
 if (!function_exists('rental_module_published_status')) {
     function rental_module_published_status($module_name = 'Rental')
     {
-        info('rental____________'.$module_name);
         $is_published = 0;
         // return 1;
-        // try {
+        try {
             $full_data = include("Modules/{$module_name}/Addon/info.php");
             $is_published = $full_data['is_published'] == 1 ? 1 : 0;
-            info('rental____________'.$is_published);
             return $is_published;
-        // } catch (\Exception $exception) {
-        //     return 0;
-        // }
+        } catch (\Exception $exception) {
+            return 0;
+        }
     }
 }
 
