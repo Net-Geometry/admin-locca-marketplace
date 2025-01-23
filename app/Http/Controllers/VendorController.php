@@ -127,7 +127,7 @@ class VendorController extends Controller
         }
 
         $module = Module::find($request['module_id']);
-        if ($module?->module_type == 'rental' && empty($request['pickup_zone_id'])){
+        if ($module?->module_type == 'rental' && rental_module_published_status('Rental') && empty($request['pickup_zone_id'])){
             $validator->getMessageBag()->add('pickup_zone_id', translate('messages.You_must_select_a_pickup_zone'));
             return back()->withErrors($validator)
                 ->withInput();
@@ -177,13 +177,13 @@ class VendorController extends Controller
             if($module?->module_type != 'rental' && config('mail.status') && Helpers::get_mail_status('registration_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_registration','mail_status') ){
                 Mail::to($request['email'])->send(new VendorSelfRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
             }
-            elseif($module?->module_type == 'rental'&& config('mail.status') && Helpers::get_mail_status('rental_registration_mail_status_provider') == '1' &&  Helpers::getRentalNotificationStatusData('provider','provider_registration','mail_status') ){
+            elseif($module?->module_type == 'rental' && rental_module_published_status('Rental')&& config('mail.status') && Helpers::get_mail_status('rental_registration_mail_status_provider') == '1' &&  Helpers::getRentalNotificationStatusData('provider','provider_registration','mail_status') ){
                 Mail::to($request['email'])->send(new ProviderSelfRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
             }
 
             if($module?->module_type != 'rental' && config('mail.status') && Helpers::get_mail_status('store_registration_mail_status_admin') == '1' &&  Helpers::getNotificationStatusData('admin','store_self_registration','mail_status') ){
                 Mail::to($admin['email'])->send(new StoreRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
-            } elseif($module?->module_type == 'rental'&& config('mail.status') && Helpers::get_mail_status('rental_provider_registration_mail_status_admin') == '1' &&  Helpers::getRentalNotificationStatusData('admin','provider_self_registration','mail_status') ){
+            } elseif($module?->module_type == 'rental' && rental_module_published_status('Rental')&& config('mail.status') && Helpers::get_mail_status('rental_provider_registration_mail_status_admin') == '1' &&  Helpers::getRentalNotificationStatusData('admin','provider_self_registration','mail_status') ){
                 Mail::to($admin['email'])->send(new ProviderRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
             }
 
@@ -271,7 +271,7 @@ class VendorController extends Controller
 
 
         if ($module) {
-            $packages= SubscriptionPackage::where('status',1)->where('module_type',$module?->module_type == 'rental' ? 'rental' : 'all')->latest()->get();
+            $packages= SubscriptionPackage::where('status',1)->where('module_type',$module?->module_type == 'rental' && rental_module_published_status('Rental') ? 'rental' : 'all')->latest()->get();
 
             $module = $module->module_type;
             return response()->json([

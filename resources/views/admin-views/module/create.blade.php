@@ -143,12 +143,14 @@
                             <div class="card-body p-0">
                                 <div class="module-radio-group">
                                 @foreach (config('module.module_type') as $key)
+                                @if($key != 'rental')
                                 <label class="form-check form--check">
                                     <input class="form-check-input" type="radio" name="module_type" value="{{$key}}">
                                     <span class="form-check-label">
                                         {{translate($key)}}
                                     </span>
                                 </label>
+                                @endif
                                 @endforeach
                                 </div>
                             </div>

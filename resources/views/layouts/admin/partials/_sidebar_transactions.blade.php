@@ -177,7 +177,7 @@
                     </a>
                 </li>
                 @endif
-                    @if (rental_module_published_status('rental'))
+                    @if (rental_module_published_status('Rental'))
                         <!-- Rental Report -->
                         @if (\App\CentralLogics\Helpers::module_permission_check('rental_report'))
                             <li class="nav-item">
