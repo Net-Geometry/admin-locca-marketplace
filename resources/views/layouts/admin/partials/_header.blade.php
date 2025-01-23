@@ -249,10 +249,11 @@
                                 <div class="__nav-module-body">
                                     <div class="__nav-module-items">
                                         @foreach ($modules as $module)
+                                        @if(($module->module_type == 'rental' && rental_module_published_status('Rental') == 1) || $module->module_type != 'rental')
                                             <a href="javascript:"
 
                                                data-module-id="{{ $module->id }}"
-                                               data-url="{{$module->module_type == 'rental' ? route('admin.rental.dashboard') : route('admin.dashboard')}}"
+                                               data-url="{{$module->module_type == 'rental' && rental_module_published_status('Rental') ? route('admin.rental.dashboard') : route('admin.dashboard')}}"
                                                data-filter="module_id"
 
                                                class="__nav-module-item set-module {{Config::get('module.current_module_id') == $module->id?'active':''}}">
@@ -266,6 +267,7 @@
                                                     {{ $module->module_name }}
                                                 </div>
                                             </a>
+                                        @endif
                                         @endforeach
                                         @if (\App\CentralLogics\Helpers::module_permission_check('module'))
                                             <a href="{{ route('admin.business-settings.module.create') }}"

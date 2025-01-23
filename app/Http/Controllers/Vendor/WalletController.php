@@ -70,7 +70,7 @@ class WalletController extends Controller
                 $wallet_transaction = WithdrawRequest::where('vendor_id',Helpers::get_vendor_id())->latest()->first();
                 if( Helpers::get_store_data()?->module?->module_type !== 'rental' && config('mail.status') && Helpers::get_mail_status('withdraw_request_mail_status_admin') == '1' &&   Helpers::getNotificationStatusData('admin','withdraw_request','mail_status')) {
                     Mail::to($admin['email'])->send(new WithdrawRequestMail('pending',$wallet_transaction));
-                } elseif(Helpers::get_store_data()?->module?->module_type == 'rental' && config('mail.status') && Helpers::get_mail_status('rental_withdraw_request_mail_status_admin') == '1' &&   Helpers::getRentalNotificationStatusData('admin','provider_withdraw_request','mail_status') ){
+                } elseif(Helpers::get_store_data()?->module?->module_type == 'rental' && rental_module_published_status('Rental') && config('mail.status') && Helpers::get_mail_status('rental_withdraw_request_mail_status_admin') == '1' &&   Helpers::getRentalNotificationStatusData('admin','provider_withdraw_request','mail_status') ){
                     Mail::to($admin['email'])->send(new ProviderWithdrawRequestMail('pending',$wallet_transaction));
                  }
             }

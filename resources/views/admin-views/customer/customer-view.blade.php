@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        @if (rental_module_published_status('rental'))
+        @if (rental_module_published_status('Rental'))
             @php($id = request()->user_id)
             <!-- Nav Menus -->
             <ul class="nav nav-tabs border-0 nav--tabs nav--pills mb-4">

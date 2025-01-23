@@ -532,7 +532,7 @@ class VendorController extends Controller
             ])->withcount('items')
             ->first();
             $packages = SubscriptionPackage::where('status',1)
-            ->where('module_type', $store?->module?->module_type == 'rental' ? 'rental' : 'all' )
+            ->where('module_type', $store?->module?->module_type == 'rental' && rental_module_published_status('Rental') ? 'rental' : 'all' )
             ->latest()->get();
             $admin_commission=BusinessSetting::where('key', 'admin_commission')->first()?->value ;
             $business_name=BusinessSetting::where('key', 'business_name')->first()?->value ;
