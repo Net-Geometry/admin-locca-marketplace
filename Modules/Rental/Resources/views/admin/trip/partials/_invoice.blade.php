@@ -33,8 +33,7 @@
 
                 <div class="img-wrap">
                     <div class="top-info">
-                        <img src="{{ asset('/public/assets/admin/img/line_icon.svg') }}" alt="" class="w-100">
-                        <div>{{ translate('messages.cash_receipt') }}</div>
+                      
                         <img src="{{ asset('/public/assets/admin/img/line_icon.svg') }}" alt="" class="w-100">
                     </div>
                     <div class="order-info-id text-center">

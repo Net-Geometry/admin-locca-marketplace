@@ -71,7 +71,7 @@
                                         <span class="font-bold">{{ $trip->provider->name }}</span>
                                         <button type="button" class="btn btn--primary-light px-2 py-1 shadow-none"
                                                 data-toggle="modal" data-target="#providerLocationModal">
-                                            <i class="tio-poi"></i> {{translate('Map View')}}
+                                            <i class="tio-poi"></i> {{translate('View map')}}
                                         </button>
                                     </div>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
@@ -1647,6 +1647,14 @@ z                                                        <div class="opacity-60"
                 price: $(this).data('old-value') || $(this).val()
             };
         });
+
+
+        $(document).on('keydown', '.quantity-input, .fare-total', function(event) {
+            if (event.key === '-' || event.keyCode === 189) {
+                event.preventDefault(); // Prevent the "-" key from being input
+            }
+        });
+
 
         $('.quantity-input').on('input', function() {
             const $this = $(this);
