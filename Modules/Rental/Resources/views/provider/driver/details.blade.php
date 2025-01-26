@@ -52,43 +52,48 @@
                     <div class="media align-items-sm-center flex-column flex-sm-row">
                         <div class="mb-3 mb-sm-0">
                             <img height="115" class="aspect-ratio-1 w-auto rounded mr-4 onerror-image"
-                                 src="{{ $driver['image_full_url'] }}"
-                                 alt="">
+                                src="{{ $driver['image_full_url'] }}" alt="">
                         </div>
-                        <div class="media-body text--title d-flex flex-column flex-lg-row gap-3">
-                            <div class="mr-0 mr-lg-5">
+                        <div class="media-body text--title d-flex justify-content-around flex-column flex-lg-row gap-3">
+                            <div class="mr-0 mr-lg-4">
                                 <h3 class="fs-20 mb-0">{{ $driver?->fullName }}</h3>
                                 <div class="d-flex gap-3">
-                                    <span class="min-w-110px">{{translate('Phone')}}</span>
+                                    <span class="min-w-110px">{{ translate('Phone') }}</span>
                                     <span>: {{ $driver->phone }}</span>
                                 </div>
                                 <div class="d-flex gap-3">
-                                    <span class="min-w-110px">{{translate('Email')}}</span>
+                                    <span class="min-w-110px">{{ translate('Email') }}</span>
                                     <span>: {{ $driver->email }}</span>
                                 </div>
                             </div>
-                            <div class="mr-0 mr-lg-5">
-                                <h5 class="">{{translate('Identity Information')}}</h5>
+
+                            <div class="mr-0 mr-lg-4">
+                                <h5 class="">{{ translate('Identity Information') }}</h5>
                                 <div class="d-flex gap-3">
-                                    <span class="min-w-110px">{{translate('Identity Type')}}</span>
-                                    <span>: {{ ucwords($driver->identity_type) }}</span>
+                                    <span class="min-w-110px">{{ translate('Identity Type') }}</span>
+                                    <span>: {{ translate($driver->identity_type) }}</span>
                                 </div>
                                 <div class="d-flex gap-3">
-                                    <span class="min-w-110px">{{translate('Identity Number')}}</span>
+                                    <span class="min-w-110px">{{ translate('Identity Number') }}</span>
                                     <span>: {{ $driver->identity_number }}</span>
                                 </div>
                             </div>
-                            <div>
-                                <h5 class="">{{translate('Provider Info')}}</h5>
+                            <div class="mr-0 mr-lg-4">
+                                <h5 class="">{{ translate('Provider Info') }}</h5>
                                 <div class="align-items-center d-flex gap-2 resturant--information-single text-left">
-                                    <img height="45" class="aspect-ratio-1 onerror-image rounded" src="{{ $driver?->provider?->logo_full_url }}" alt="{{translate('Image Description')}}">
+                                    <img height="45" class="aspect-ratio-1 onerror-image rounded"
+                                        src="{{ $driver?->provider?->logo_full_url }}"
+                                        alt="{{ translate('Image Description') }}">
                                     <div class="text--title">
-                                        <h5 class="text-capitalize font-semibold text-hover-primary d-block mb-1">
-                                            {{ $driver?->provider?->name }}
-                                            <span class="btn btn--warning fs-12 rounded-20 text-white py-1 px-2 ml-1">
-                                                <i class="tio-star mr-1"></i>{{ number_format($driver?->provider?->vehicle_reviews->avg('rating')) ?? 0.00 }}
-                                            </span>
-                                        </h5>
+
+                                            <h5 class="text-capitalize font-semibold text-hover-primary d-block mb-1">
+                                                {{ $driver?->provider?->name }}
+                                                <span class="btn btn--warning fs-12 rounded-20 text-white py-1 px-2 ml-1">
+                                                    <i
+                                                        class="tio-star mr-1"></i>{{ number_format($driver?->provider?->vehicle_reviews->avg('rating'), 1) ?? 0.0 }}
+                                                </span>
+                                            </h5>
+
                                         <span class="opacity-lg">
                                             {{ $driver?->provider?->phone }}
                                         </span>
@@ -99,14 +104,46 @@
                     </div>
                 </div>
                 <div>
-                    <h5 class="text--title mb-20">{{translate('Identity Image')}}</h5>
-                    <div class="d-flex gap-4 flex-wrap">
-                        @foreach($driver['identity_image_full_url'] as $img)
-                            <div>
-                                <img width="275" class="aspect-2-1 object--cover rounded-10" src="{{ $img }}" alt="Identity image">
-                            </div>
-                        @endforeach
-                    </div>
+                    @if (count($driver['identity_image_full_url']) > 0)
+
+                        <h5 class="text--title mb-20">{{ translate('Identity Image') }}</h5>
+                        <div class="d-flex gap-4 flex-wrap">
+                            @foreach ($driver['identity_image_full_url'] as $key => $img)
+                                <div>
+                                    <img width="275" data-toggle="modal" data-target="#imagemodal{{ $key }}"
+                                        class="aspect-2-1 object--cover rounded-10" src="{{ $img }}"
+                                        alt="Identity image">
+                                </div>
+
+                                <div class="modal fade" id="imagemodal{{ $key }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="order_proof_{{ $key }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="order_proof_{{ $key }}">
+                                                    {{ translate('Identity Image') }}</h4>
+                                                <button type="button" class="close" data-dismiss="modal"><span
+                                                        aria-hidden="true">&times;</span><span
+                                                        class="sr-only">{{ translate('messages.cancel') }}</span></button>
+                                            </div>
+                                            <div class="modal-body scroll-down">
+                                                <img src="{{ $img }}" class="initial--22 w-100">
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <a href="{{ $img }}" download class="btn btn-primary"
+                                                    class="download-icon mt-3">
+                                                    <img src="{{ asset('/public/assets/admin/new-img/download-icon.svg') }}"
+                                                        alt="">
+                                                    {{ translate('messages.download') }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -206,16 +243,16 @@
                             </td>
                             <td>
                                 <div class="text--title">
-                                    {{ $driverTrip?->trip?->bookingDate }}
+                                    {{ \App\CentralLogics\Helpers::date_format($driverTrip?->trip?->created_at)  }}
                                     <br>
-                                    {{ $driverTrip?->trip?->bookingTime }}
+                                    {{ \App\CentralLogics\Helpers::time_format($driverTrip?->trip?->created_at)  }}
                                 </div>
                             </td>
                             <td>
                                 <div class="text--title">
-                                    {{ $driverTrip?->trip?->scheduleDate }}
+                                    {{ \App\CentralLogics\Helpers::date_format($driverTrip?->trip?->schedule_at)  }}
                                     <br>
-                                    {{ $driverTrip?->trip?->scheduleTime }}
+                                    {{ \App\CentralLogics\Helpers::time_format($driverTrip?->trip?->schedule_at)  }}
                                 </div>
                             </td>
                             <td>
@@ -319,30 +356,7 @@
         <!-- End Card -->
     </div>
     <!--Driver delete Modal -->
-    <div class="modal fade" id="driverDeleteModal" tabindex="-1" role="dialog"
-         aria-labelledby="driverDeleteModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header p-2 pb-0 justify-content-end flex-shrink-0">
-                    <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body py-6 text-center">
-                    <div class="mb-20">
-                        <img width="80" class="aspect-ratio-1" src="{{ asset('public/assets/admin/img/modal/delete-icon.png') }}" alt="">
-                    </div>
-                    <h3 class="font-medium text--title">Confirm Driver Deletion</h3>
-                    <div class="fs-13">Are you sure you want to delete this Driver & remove it permanently?</div>
-                    <div class="btn--container justify-content-center mt-5">
-                        <button type="reset" id="reset_btn"
-                                class="btn btn--cancel min-w-120px">{{ translate('messages.not_now') }}</button>
-                        <button type="submit"
-                                class="btn btn--primary min-w-120px">{{ translate('messages.yes') }}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <!-- End Modal -->
 @endsection
 

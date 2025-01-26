@@ -169,17 +169,19 @@
                             </td>
                             <td>
                                 <div class="text--title">
-                                    {{ $trip->BookingDate }}
+                                    {{ \App\CentralLogics\Helpers::date_format($trip?->created_at)  }}
                                     <br>
-                                    {{ $trip->BookingTime }}
+                                    {{ \App\CentralLogics\Helpers::time_format($trip?->created_at)  }}
                                 </div>
                             </td>
                             <td>
                                 <div class="text--title">
-                                    {{ $trip->ScheduleDate }}
+                                    {{ \App\CentralLogics\Helpers::date_format($trip?->schedule_at)  }}
                                     <br>
-                                    {{ $trip->ScheduleTime }}
+                                    {{ \App\CentralLogics\Helpers::time_format($trip?->schedule_at)  }}
                                 </div>
+
+
                             </td>
                             <td>
                                 @if ($trip->customer)

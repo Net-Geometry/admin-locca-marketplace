@@ -60,10 +60,10 @@
                                         @endif
                                     </h1>
                                     <span class="mt-2 d-block d-flex align-items-center __gap-5px">
-                                        {{ translate('Placed on') }} {{ $trip->BookingDate }} {{ $trip->BookingTime }}
+                                        {{ translate('Placed on') }} {{ \App\CentralLogics\Helpers::time_date_format($trip?->created_at)  }}
                                         @if ($trip->scheduled)
                                         <br>
-                                        {{ translate('Schedule At') }} {{ $trip->ScheduleDate }} {{ $trip->ScheduleTime }}
+                                        {{ translate('Schedule At') }}  {{ \App\CentralLogics\Helpers::time_date_format($trip?->schedule_at)  }}
                                         @endif
                                     </span>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
@@ -77,7 +77,7 @@
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
                                     <span>{{translate('Trip Type')}}</span> <span>:</span>
                                         <span class="font-bold">{{ translate($trip->trip_type) }}</span>
-                                        <span>({{ $trip->scheduled ?  translate('messages.scheduled') :'' }})</span>
+                                        <span>({{ $trip->scheduled ?  translate('messages.scheduled') : translate('messages.Instant') }})</span>
                                     </div>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
 

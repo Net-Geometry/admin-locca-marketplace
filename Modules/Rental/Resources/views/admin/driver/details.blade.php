@@ -73,11 +73,12 @@
                                     <span>: {{ $driver->email }}</span>
                                 </div>
                             </div>
+
                             <div class="mr-0 mr-lg-4">
                                 <h5 class="">{{ translate('Identity Information') }}</h5>
                                 <div class="d-flex gap-3">
                                     <span class="min-w-110px">{{ translate('Identity Type') }}</span>
-                                    <span>: {{ ucwords($driver->identity_type) }}</span>
+                                    <span>: {{ translate($driver->identity_type) }}</span>
                                 </div>
                                 <div class="d-flex gap-3">
                                     <span class="min-w-110px">{{ translate('Identity Number') }}</span>
@@ -133,7 +134,7 @@
                                                         aria-hidden="true">&times;</span><span
                                                         class="sr-only">{{ translate('messages.cancel') }}</span></button>
                                             </div>
-                                            <div class="modal-body">
+                                            <div class="modal-body scroll-down">
                                                 <img src="{{ $img }}" class="initial--22 w-100">
                                             </div>
 
@@ -256,24 +257,27 @@
                                 </td>
                                 <td>
                                     <div class="text--title">
-                                        {{ $driverTrip?->trip?->bookingDate }}
+                                        {{ \App\CentralLogics\Helpers::date_format($driverTrip?->trip?->created_at)  }}
                                         <br>
-                                        {{ $driverTrip?->trip?->bookingTime }}
+                                        {{ \App\CentralLogics\Helpers::time_format($driverTrip?->trip?->created_at)  }}
                                     </div>
                                 </td>
                                 <td>
                                     <div class="text--title">
-                                        {{ $driverTrip?->trip?->scheduleDate }}
+                                        {{ \App\CentralLogics\Helpers::date_format($driverTrip?->trip?->schedule_at)  }}
                                         <br>
-                                        {{ $driverTrip?->trip?->scheduleTime }}
+                                        {{ \App\CentralLogics\Helpers::time_format($driverTrip?->trip?->schedule_at)  }}
                                     </div>
+
                                 </td>
                                 <td>
                                     <div class="text--title">
                                         @if ($driverTrip?->trip?->customer)
+                                        <a href="{{ route('admin.users.customer.rental.view', $driverTrip?->trip->user_id) }}?module=1" target="_blank" rel="noopener noreferrer">
                                             <div class="font-medium">
                                                 {{ $driverTrip?->trip?->customer?->fullName }}
                                             </div>
+                                        </a>
                                             <div class="opacity-lg">
                                                 {{ $driverTrip?->trip?->customer?->email }}
                                             </div>
