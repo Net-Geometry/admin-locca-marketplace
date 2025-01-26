@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\System;
 
+use App\Models\Module;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use Illuminate\Http\JsonResponse;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Foundation\Application;
@@ -74,6 +76,10 @@ class AddonController extends Controller
         $str = "<?php return " . var_export($full_data, true) . ";";
         file_put_contents(base_path($request['path'] . '/Addon/info.php'), $str);
 
+        if ($full_data['name'] == 'Rental') {
+            $this->rentalPublish($full_data['is_published']);
+        }
+
         return response()->json([
             'status' => 'success',
             'message'=> 'status_updated_successfully'
@@ -104,6 +110,7 @@ class AddonController extends Controller
             $full_data['purchase_code'] = $request['purchase_code'];
             $str = "<?php return " . var_export($full_data, true) . ";";
             file_put_contents(base_path($request['path'] . '/Addon/info.php'), $str);
+            $this->rentalPublish($full_data['is_published']);
 
             Toastr::success(translate('activated_successfully'));
             return back();
@@ -192,5 +199,27 @@ class AddonController extends Controller
                 $directories[] = $item;
         }
         return $directories;
+    }
+
+    private function rentalPublish(int|bool $is_published): bool
+    {
+        try {
+            $module = Module::firstOrNew(
+                ['module_type' => 'rental'],
+                ['module_name' => 'Rental']
+            );
+
+            if ($is_published) {
+                Artisan::call('migrate', ['--force' => true]);
+                $module->status = 1;
+            } else {
+                $module->status = 0;
+            }
+
+            $module->save();
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

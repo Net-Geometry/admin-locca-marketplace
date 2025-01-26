@@ -7257,4 +7257,8 @@ Smartly or Earn. ',
   'Unit Fair' => 'Unit Fair',
   'Hr' => 'Hr',
   'select_vehicle_driver' => 'Select vehicle driver',
+  'Distance wise' => 'Distance wise',
+  'Rental' => 'Rental',
+  'Vehicle Report' => 'Vehicle Report',
+  'Total Vehicles' => 'Total Vehicles',
 );

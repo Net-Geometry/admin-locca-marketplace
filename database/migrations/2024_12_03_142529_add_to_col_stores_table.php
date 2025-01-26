@@ -28,6 +28,7 @@ class AddToColStoresTable extends Migration
     {
         Schema::table('stores', function (Blueprint $table) {
             $table->dropColumn('pickup_zone_id');
+            $table->dropColumn('comment');
         });
     }
 }
