@@ -46,7 +46,7 @@
                                                 (Default)
                                             </label>
                                             <input type="text" name="title[]" id="default_title"
-                                                class="form-control" pdlaceholder="{{ translate('messages.new_coupon') }}" required>
+                                                class="form-control" placeholder="{{ translate('messages.new_coupon') }}" required>
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
@@ -150,6 +150,13 @@
                                 </div>
                                 <div class="col-md-4 col-lg-3 col-sm-6">
                                     <div class="form-group">
+                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.min_trip_amount')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
+                                        <input type="number" step="0.01" id="min_purchase" name="min_purchase" value="0" min="0" max="999999999999.99" class="form-control"
+                                            placeholder="100">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-lg-3 col-sm-6">
+                                    <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.discount_type')}}</label>
                                         <select name="discount_type" class="form-control" id="discount_type" required>
                                             <option value="amount">{{translate('messages.amount')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
@@ -158,6 +165,7 @@
                                         </select>
                                     </div>
                                 </div>
+
                                 <div class="col-md-4 col-lg-3 col-sm-6">
                                     <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.discount')}}
@@ -176,13 +184,7 @@
                                         <input type="number" step="0.01" min="0" value="0" max="999999999999.99" name="max_discount" id="max_discount" class="form-control" readonly>
                                     </div>
                                 </div>
-                                <div class="col-md-4 col-lg-3 col-sm-6">
-                                    <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.min_trip_amount')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                        <input type="number" step="0.01" id="min_purchase" name="min_purchase" value="0" min="0" max="999999999999.99" class="form-control"
-                                            placeholder="100">
-                                    </div>
-                                </div>
+
                             </div>
                             <div class="btn--container justify-content-end">
                                 <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
