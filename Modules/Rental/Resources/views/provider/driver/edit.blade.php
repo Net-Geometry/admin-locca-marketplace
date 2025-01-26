@@ -132,7 +132,7 @@
                                     <div class="form-group mb-0">
                                         <label class="input-label"
                                                for="">{{ translate('messages.Identity_Number') }}</label>
-                                        <input type="number" id="" name="identity_number" class="form-control"
+                                        <input type="text" id="" name="identity_number" class="form-control"
                                                placeholder="Ex: 123654789512364" value="{{ $driver->identity_number }}"
                                                required>
                                     </div>

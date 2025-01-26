@@ -7260,4 +7260,8 @@ Smartly or Earn. ',
   'executives' => 'Executives',
   'dual_clutch' => 'Dual clutch',
   'Estimated_pickup_time' => 'Estimated pickup time',
+  'Distance wise' => 'Distance wise',
+  'Rental' => 'Rental',
+  'Vehicle Report' => 'Vehicle Report',
+  'Total Vehicles' => 'Total Vehicles',
 );

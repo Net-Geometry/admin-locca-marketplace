@@ -111,42 +111,9 @@ class Trips extends Model
 
     public function scopeProviderTrip($query)
     {
-        return $query->where(function ($q) {
-            $q->where('trip_type', 'completed');
-        });
+        return $query->where('trip_type', 'completed');
     }
 
-    /**
-     * @return string
-     */
-    public function getBookingDateAttribute(): string
-    {
-        return Carbon::parse($this->created_at)->format('d F Y');
-    }
-
-    /**
-     * @return string
-     */
-    public function getBookingTimeAttribute(): string
-    {
-        return Carbon::parse($this->created_at)->format('h:i A');
-    }
-
-    /**
-     * @return string
-     */
-    public function getScheduleDateAttribute(): string
-    {
-        return Carbon::parse($this->schedule_at)->format('d F Y');
-    }
-
-    /**
-     * @return string
-     */
-    public function getScheduleTimeAttribute(): string
-    {
-        return Carbon::parse($this->schedule_at)->format('h:i A');
-    }
 
     public function scopeScheduled($query)
     {

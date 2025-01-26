@@ -128,16 +128,16 @@
                         </td>
                         <td>
                             <div class="text--title">
-                                {{ $trip->BookingDate }}
+                                {{ \App\CentralLogics\Helpers::date_format($trip?->created_at)  }}
                                 <br>
-                                {{ $trip->BookingTime }}
+                                {{ \App\CentralLogics\Helpers::time_format($trip?->created_at)  }}
                             </div>
                         </td>
                         <td>
                             <div class="text--title">
-                                {{ $trip->ScheduleDate }}
+                                {{ \App\CentralLogics\Helpers::date_format($trip?->schedule_at)  }}
                                 <br>
-                                {{ $trip->ScheduleTime }}
+                                {{ \App\CentralLogics\Helpers::time_format($trip?->schedule_at)  }}
                             </div>
                         </td>
                         <td>
@@ -163,7 +163,7 @@
                         </td>
                         <td>
                             <div class="text--title font-medium w--150px white--space-initial">
-                                {{ $trip?->provider?->name }}
+                                {{  Str::limit($trip?->provider?->name ?? translate('messages.not_found'),12,'...')  }}
                             </div>
                         </td>
                         @php
@@ -179,17 +179,17 @@
                                          title="<div class='d-flex flex-column p-2'>
                                              @foreach($trip->assignedDriver as $index => $tooltipDriver)
                                                 <div class='media gap-3 {{ !$loop->last ? 'border-bottom mb-2 pb-2' : '' }}'>
-                                                    <img src='{{ $tooltipDriver->driver['imageFullUrl'] }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                                    <img height='40' src='{{ $tooltipDriver->driver['imageFullUrl'] }}'  class='rounded ratio-1-1' width='40' alt='...'>
                                                     <div class='media-body'>
-                                                        <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ $tooltipDriver->driver['fullName'] }}</h5>
-                                                        <div class='d-flex align-items-center gap-2 fs-10'>{{ $tooltipDriver->driver->email }}</div>
+                                                        <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ Str::limit($tooltipDriver->driver['fullName'],12,'...')  }}</h5>
+                                                        <div class='d-flex align-items-center gap-2 fs-10'>{{Str::limit( $tooltipDriver->driver->email,12,'...') }}</div>
                                                     </div>
                                                 </div>
                                              @endforeach
                                          </div>">
                                         <div class="d-flex">
                                             @foreach ($trip->assignedDriver->take($maxDisplay) as $key => $assignedDriver)
-                                                <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm {{ $key > 0 ? 'ml-n2' : '' }}" src="{{ $assignedDriver->driver['imageFullUrl'] }}" alt="">
+                                                <img width="35"  class="rounded-circle aspect-1-1 border border-white shadow-sm {{ $key > 0 ? 'ml-n2' : '' }}" src="{{ $assignedDriver->driver['imageFullUrl'] }}" alt="">
                                             @endforeach
                                         </div>
                                         @if ($totalDriver > $maxDisplay)
@@ -200,10 +200,10 @@
                                     <div class="text--title">
                                         @if ($trip->assignedDriver->isNotEmpty())
                                             <div class="font-medium">
-                                                {{ $trip->assignedDriver->first()?->driver?->fullName }}
+                                                {{ Str::limit($trip->assignedDriver->first()?->driver?->fullName,12,'...')  }}
                                             </div>
                                             <div class="opacity-lg">
-                                                {{ $trip->assignedDriver->first()?->driver?->email }}
+                                                {{ Str::limit($trip->assignedDriver->first()?->driver?->email,12,'...' )  }}
                                             </div>
                                         @endif
                                     </div>
@@ -224,7 +224,7 @@
                                          <div class='media gap-3 {{ !$loop->last ? 'border-bottom mb-2 pb-2' : '' }}'>
                                              <img src='{{  data_get($detail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}' class='rounded ratio-1-1' width='40' alt='...'>
                                              <div class='media-body'>
-                                                 <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ $detail->vehicle_details['name'] }}</h5>
+                                                 <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ Str::limit($detail->vehicle_details['name'],12,'...')  }}</h5>
                                                  <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: {{ $detail->tripVehicleDetails->count() }}</div>
                                              </div>
                                          </div>
@@ -232,7 +232,7 @@
                                          <div class='media gap-3 {{ !$loop->last ? 'border-bottom mb-2 pb-2' : '' }}'>
                                              <img src='{{  data_get($detail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}' class='rounded ratio-1-1' width='40' alt='...'>
                                              <div class='media-body'>
-                                                 <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ $detail->vehicle_details['name'] }}</h5>
+                                                 <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ Str::limit($detail->vehicle_details['name'],12,'...')  }}</h5>
                                                  <div class='d-flex align-items-center text-danger gap-2 fs-10'>{{ translate('Vehicle_Not_Found_!!!') }}</div>
                                              </div>
                                          </div>

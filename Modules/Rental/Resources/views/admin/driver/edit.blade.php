@@ -87,7 +87,7 @@
                                             <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
                                                 <i class="tio-clear"></i>
                                             </a>
-                                            <input type="file" name="image" class="upload-file__input single_file_input" 
+                                            <input type="file" name="image" class="upload-file__input single_file_input"
                                                 accept=".jpg, .jpeg, .png"  value="{{ $driver['image_full_url'] ?? '' }}">
                                             <label
                                                 class="upload-file-wrapper w--180px">
@@ -102,7 +102,7 @@
                                                 <img class="upload-file-img" height="180" width="180" loading="lazy" style="display: none;" src="{{ $driver['image_full_url'] ?? '' }}" alt="">
                                             </label>
                                         </div>
-    
+
                                     </div>
                                     {{-- <div class="d-flex flex-column h-100">
                                         <label>{{translate('messages.deliveryman_image')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small></label>
@@ -147,7 +147,7 @@
                                     <div class="form-group mb-0">
                                         <label class="input-label"
                                                for="">{{ translate('messages.Identity_Number') }}</label>
-                                        <input type="number" id="" name="identity_number" class="form-control"
+                                        <input type="text" id="" name="identity_number" class="form-control"
                                                placeholder="Ex: 123654789512364" value="{{ $driver->identity_number }}"
                                                required>
                                     </div>
@@ -209,7 +209,7 @@
                                                 @endforeach
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -245,12 +245,12 @@
             const inputElement = document.querySelector('.multiple_image_input');
             const fileSet = new Set(); // To keep track of files
             let removedImages = []; // To track removed images
-    
+
             // Handle file input change (adding new files)
             inputElement.addEventListener('change', function (event) {
                 const files = Array.from(event.target.files);
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
-    
+
                 if (currentFiles + files.length > MAX_FILES) {
                     toastr.error('You can upload a maximum of ' + MAX_FILES + ' files.', {
                         CloseButton: true,
@@ -267,7 +267,7 @@
                         });
                         return;
                     }
-    
+
                     // Validate file size
                     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
                         toastr.error('File size too big.', {
@@ -276,11 +276,11 @@
                         });
                         return;
                     }
-    
+
                     // Add to the file set and create preview
                     if (!fileSet.has(file.name)) {
                         fileSet.add(file.name);
-    
+
                         const fileURL = URL.createObjectURL(file);
                         const imageSingle = document.createElement("div");
                         imageSingle.className = "image-single h-100 max-w-200px p-0";
@@ -293,47 +293,47 @@
                         imageContainer.appendChild(imageSingle);
                     }
                 });
-    
+
                 toggleUploadWrapper();
             });
-    
+
             // Remove image logic
             window.removeImage = function (event, element, fileName) {
                 event.stopPropagation();
                 const imageSingle = element.closest(".image-single");
                 imageSingle.remove();
                 fileSet.delete(fileName); // Remove the file from the set
-    
+
                 // Track the removed image
                 removedImages.push(fileName); // Add to removed images array
-    
+
                 console.log("Updated removed images array:", removedImages);
-    
+
                 toggleUploadWrapper();
             };
-    
+
             function toggleUploadWrapper() {
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
                 uploadWrapper.style.display = currentFiles >= 5 ? "none" : "block";
             }
-    
-            // Handle reset button click 
+
+            // Handle reset button click
             $('#reset_btn').click(function () {
                 // Select and remove only the new uploaded image elements (those without data-existing="true")
                 const uploadedImages = imageContainer.querySelectorAll(".image-single:not([data-existing='true'])");
                 uploadedImages.forEach(image => image.remove());
-    
+
                 // Clear the file set for new uploads
                 fileSet.clear();
-    
+
                 // Ensure the upload wrapper is visible
                 uploadWrapper.style.display = "block";
             });
         });
          // ----- mutiple image upload ends
     </script>
-    
-    
+
+
 
     <script>
 
@@ -391,16 +391,16 @@
            // Handle remove button click
            $('.remove-btn').click(function () {
                 var $card = $(this).closest('.upload-file');
-                $card.find('.single_file_input').val(''); 
+                $card.find('.single_file_input').val('');
                 $card.find('.upload-file-img').attr('src', '{{ $driver['image_full_url'] ?? '' }}');
                 $(this).css('opacity', 0);
             });
 
             // Handle reset button click
             $('#reset_btn').click(function () {
-                var $cards = $('.upload-file'); 
+                var $cards = $('.upload-file');
                 $cards.each(function () {
-                    $(this).find('.single_file_input').val(''); 
+                    $(this).find('.single_file_input').val('');
                     $(this).find('.upload-file-img').attr('src', '{{ $driver['image_full_url'] ?? '' }}');
                     $(this).find('.remove-btn').css('opacity', 0);
                 });
@@ -502,6 +502,6 @@
         // });
 
     </script>
-    
-    
+
+
 @endpush
