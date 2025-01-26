@@ -66,7 +66,7 @@
                                                         </label>
                                                         <input type="text" name="name[]" id="default_name"
                                                                class="form-control"
-                                                               value=""
+                                                               value="{{ old('name.0') }}"
                                                                placeholder="{{ translate('messages.type_vehicle_name') }}"
                                                                required>
                                                     </div>
@@ -76,10 +76,10 @@
                                                                for="exampleFormControlInput1">{{ translate('messages.short_description') }}
                                                             ({{ translate('messages.default') }})</label>
                                                         <textarea type="text" name="description[]" placeholder="{{ translate('messages.type_business_address') }}"
-                                                                  class="form-control min-h-90px ckeditor"></textarea>
+                                                                  class="form-control min-h-90px ckeditor">{{ old('description.0') }}</textarea>
                                                     </div>
                                                 </div>
-                                                @foreach (json_decode($language) as $lang)
+                                                @foreach (json_decode($language) as $key => $lang)
                                                     <div class="d-none lang_form" id="{{ $lang }}-form">
                                                         <div class="form-group mb-0">
                                                             <label class="input-label font-semibold"
@@ -87,16 +87,16 @@
                                                                 ({{ strtoupper($lang) }})
                                                             </label>
                                                             <input type="text" name="name[]"
-                                                                   id="{{ $lang }}_name" class="form-control"
-                                                                   placeholder="{{ translate('messages.store_name') }}">
+                                                                   id="{{ $lang }}_name" class="form-control" value="{{ old('name.'.$key+1) }}"
+                                                                   placeholder="{{ translate('messages.vehicle_name') }}">
                                                         </div>
                                                         <input type="hidden" name="lang[]" value="{{ $lang }}">
                                                         <div class="form-group mb-0">
                                                             <label class="input-label font-semibold"
                                                                    for="exampleFormControlInput1">{{ translate('messages.short_description') }}
                                                                 ({{ strtoupper($lang) }})</label>
-                                                            <textarea type="text" name="description[]" placeholder="{{ translate('messages.store') }}"
-                                                                      class="form-control min-h-90px ckeditor"></textarea>
+                                                            <textarea type="text" name="description[]" placeholder="{{ translate('messages.vehicle_description') }}"
+                                                                      class="form-control min-h-90px ckeditor">{{ old('description.'.$key+1) }}</textarea>
                                                         </div>
                                                     </div>
                                                 @endforeach
@@ -107,14 +107,14 @@
                                                                for="exampleFormControlInput1">{{ translate('messages.vehicle_name') }}
                                                             ({{ translate('messages.default') }})</label>
                                                         <input type="text" name="name[]" class="form-control"
-                                                               placeholder="{{ translate('messages.store_name') }}" required>
+                                                               placeholder="{{ translate('messages.vehicle_name') }}" required>
                                                     </div>
                                                     <input type="hidden" name="lang[]" value="default">
                                                     <div class="form-group mb-0">
                                                         <label class="input-label font-semibold"
                                                                for="exampleFormControlInput1">{{ translate('messages.short_description') }}
                                                         </label>
-                                                        <textarea type="text" name="description[]" placeholder="{{ translate('messages.store') }}"
+                                                        <textarea type="text" name="description[]" placeholder="{{ translate('messages.vehicle_description') }}"
                                                                   class="form-control min-h-90px ckeditor"></textarea>
                                                     </div>
                                                 </div>
@@ -423,14 +423,14 @@
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="">{{ translate('messages.Hourly Wise Price ($)') }}</label>
                                         <input type="number" name="hourly_price" class="form-control"
-                                               placeholder="Ex: 35.25" min="0" step="0.001" value="{{ old('hourly_price') }}" required>
+                                               placeholder="Ex: 35.25" min="0.01" step="0.01" value="{{ old('hourly_price') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="">{{ translate('messages.Distance Wise Price ($)') }}</label>
                                         <input type="number" name="distance_price" class="form-control"
-                                               placeholder="Ex: 35.25" min="0" step="0.001" value="{{ old('distance_price') }}" required>
+                                               placeholder="Ex: 35.25" min="0.01" step="0.01" value="{{ old('distance_price') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -438,8 +438,8 @@
                                         <label class="input-label font-semibold" for="">{{ translate('messages.Discount') }}
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                   data-original-title="{{ translate('messages.The discount value should not be higher than the hourly price or distance-wise price') }}">
-                        <i class="tio-info text--title opacity-60"></i>
-                    </span>
+                                                <i class="tio-info text--title opacity-60"></i>
+                                            </span>
                                         </label>
                                         <div class="custom-group-btn border">
                                             <div class="flex-sm-grow-1">
@@ -503,7 +503,7 @@
                                     <div class="upload-file text-wrapper document-wrapper" id="upload-wrapper">
                                         <input type="file" name="documents[]"
                                             class="upload-file__input multiple_document_input" accept="*"
-                                            multiple>
+                                            multiple required>
                                         <div
                                             class="upload-file__img d-flex justify-content-center align-items-center h-100 max-w-300px p-0">
                                             <div class="upload-file__textbox pdf">

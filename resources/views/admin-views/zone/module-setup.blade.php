@@ -197,8 +197,7 @@
                                     class="form-control"
                                     name="module_data[{{ $module->id }}][maximum_cod_order_amount]"
                                     placeholder="{{ translate('Not applicable') }}"
-                                    title="{{ translate('Not applicable') }}"
-                                    value="{{ $module->pivot->maximum_cod_order_amount }}" readonly></div>
+                                    title="{{ translate('Not applicable') }}" readonly></div>
                             </div>
                             @else
                             <div class="row gy-1 module-row" id="module_{{ $module->id }}">

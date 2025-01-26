@@ -218,6 +218,13 @@
                             </td>
                             <td>
                                 {{ $store->trips->count() }}
+                                <span class="form-label-secondary cursor-pointer" data-toggle="tooltip" data-placement="bottom" data-html="true"
+                                      data-original-title="<div class='text-left p-3'><div>{{translate('Complete')}} : {{ $store->trips()->Completed()->count() }}</div>
+                                      <div>{{translate('Ongoing')}} : {{ $store->trips()->Ongoing()->count() }}</div>
+                                      <div>{{translate('Canceled')}} : {{ $store->trips()->Canceled()->count() }}</div>
+                                      <div class='text-danger font-bold'>{{translate('Cancelation Rate')}} : {{ number_format($store->trips()->Canceled()->count() > 0 ? ($store->trips()->Canceled()->count() / $store->trips->count()) * 100 : 0) }}%</div></div>">
+                                        <i class="tio-info"></i>
+                                </span>
                             </td>
 
                             <td>

@@ -289,7 +289,7 @@
                                     {{ $vehicle?->provider?->name }}
                                 </h5>
                                 <span class="opacity-lg">
-                                    {{ $vehicle?->provider?->address }}
+                                    {{ Str::limit($vehicle?->provider?->address, 40) }}
                                 </span>
                             </div>
                         </a>
@@ -323,7 +323,7 @@
                                             <span class="font-semibold">: {{ Str::limit($vehicle?->category?->name, 15) }}</span>
                                         </div>
                                         <div class="d-flex"><span class="min-w-110px">{{ translate('Type') }}</span><span
-                                                class="font-semibold">: {{ $vehicle?->type }}</span></div>
+                                                class="font-semibold">: {{ translate($vehicle?->type) }}</span></div>
                                     </div>
                                 </td>
                                 <td>
@@ -349,7 +349,7 @@
                                                     class="font-semibold">: {{ $vehicle->air_condition ? 'Yes' : 'No' }}</span></div>
                                             <div class="d-flex"><span class="min-w-110px">{{translate('Transmission')}}</span><span
                                                     class="font-semibold">:
-                                                        {{ ucwords($vehicle->transmission_type) }}</span></div>
+                                                        {{ str_replace('_', ' ', translate($vehicle->transmission_type)) }}</span></div>
                                             <div class="d-flex"><span class="min-w-110px">{{translate('Fuel Type')}}</span><span
                                                     class="font-semibold">: {{ translate($vehicle->fuel_type) }}</span></div>
                                         </div>

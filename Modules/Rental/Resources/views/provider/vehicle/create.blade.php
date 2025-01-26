@@ -442,7 +442,7 @@
                                                for="">{{ translate('messages.Hourly Wise Price') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                         </label>
                                         <input type="number" name="hourly_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="" min="0" step="0.001">
+                                               placeholder="Ex: 35.25" value="" min="0.01" step="0.001">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -451,7 +451,7 @@
                                                for="">{{ translate('messages.Distance Wise Price') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                         </label>
                                         <input type="number" name="distance_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="" min="0" step="0.001">
+                                               placeholder="Ex: 35.25" value="" min="0.01" step="0.001">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">

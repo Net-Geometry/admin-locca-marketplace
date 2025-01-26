@@ -5,6 +5,22 @@
 @push('css_or_js')
     <!-- Custom styles for this page -->
     <link href="{{asset('public/assets/admin/css/croppie.css')}}" rel="stylesheet">
+    <style>
+        .description-text {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .full-description {
+            display: none;
+        }
+
+        .see-more {
+            color: #1a73e8;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -170,7 +186,7 @@
                             <div>
                                 <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.Business_zone') }}
                                 </h5>
-                                <span class="fs-13 lh--12 color-484848">{{$store->address}}</span>
+                                <span class="fs-13 lh--12 color-484848">{{$store?->zone?->name}}</span>
                             </div>
                         </div>
                         <div class="details-single d-flex align-items-center gap-2">
@@ -222,9 +238,6 @@
                             <div class="card-body">
                                 <h5 class="mb-10px font-bold"> {{ translate('messages.General_Information') }}
                                 </h5>
-                                @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
-                                @php($language = $language->value ?? null)
-                                @php($defaultLang = 'en')
                                 <div class="div">
                                     @if ($language)
                                         <ul class="nav nav-tabs mb-4">
@@ -232,7 +245,7 @@
                                                 <a class="nav-link lang_link active" href="#"
                                                    id="default-link">{{ translate('Default') }}</a>
                                             </li>
-                                            @foreach (json_decode($language) as $lang)
+                                            @foreach ($language as $lang)
                                                 <li class="nav-item">
                                                     <a class="nav-link lang_link" href="#"
                                                        id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
@@ -241,70 +254,79 @@
                                         </ul>
                                     @endif
                                     @if ($language)
-                                        <div class="lang_form" id="default-form">
-                                            <div class="resturant--info-address">
+                                        <div class="lang_form text--title" id="default-form">
+                                            <div class="fs-12 opacity-lg description-text">
                                                 <ul class="address-info address-info-2 p-0 text-dark">
                                                     <li class="d-flex align-items-start">
                                                         <span class="label min-w-sm-auto">{{ translate('messages.Vendor Name') }}</span>
-                                                        <span>: {{$store->name}} {{$store->name}}</span>
+                                                        <span>: {{$store?->getRawOriginal('name')}}</span>
                                                     </li>
                                                     <li class="d-flex align-items-start">
                                                         <span class="label min-w-sm-auto">{{ translate('messages.Business Address') }}</span>
-                                                        <span>: {{$store->address}} </span>
+                                                        <div>
+                                                            <div class="short-description">
+                                                                <span>: {{ Str::limit($store->getRawOriginal('address'), 500) }} </span>
+                                                            </div>
+                                                            <div class="full-description" style="display: none;">
+                                                                <span>: {{ $store->getRawOriginal('address') }} </span>
+                                                            </div>
+                                                            <a href="#" class="text--info font-medium see-more" style="display: none;">
+                                                                {{ translate('See more') }}
+                                                            </a>
+                                                        </div>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
-                                        @foreach (json_decode($language) as $lang)
-                                                <?php
-                                                if(count($store?->translations ?? [])){
+
+                                            @foreach ($language as $lang)
+                                                    <?php
                                                     $translate = [];
-                                                    foreach($store['translations'] as $t)
-                                                    {
-                                                        if($t->locale == $lang && $t->key=="name"){
-                                                            $translate[$lang]['name'] = $t->value;
+                                                    if (isset($store['translations']) && count($store['translations'])) {
+                                                        foreach ($store['translations'] as $t) {
+                                                            if ($t->locale == $lang && $t->key == "name") {
+                                                                $translate[$lang]['name'] = $t->value;
+                                                            }
+                                                            if ($t->locale == $lang && $t->key == "address") {
+                                                                $translate[$lang]['address'] = $t->value;
+                                                            }
                                                         }
                                                     }
-                                                }
-                                                ?>
-                                            <div class="d-none lang_form" id="{{ $lang }}-form">
-                                                <div class="resturant--info-address">
-                                                    <ul class="address-info address-info-2 p-0 text-dark">
-                                                        <li class="d-flex align-items-start">
-                                                            <span class="label min-w-sm-auto">{{ translate('messages.Provider Name') }}</span>
-                                                            <span>: {{$translate[$lang]['name']??''}}</span>
-                                                        </li>
-                                                        <li class="d-flex align-items-start">
-                                                            <span class="label min-w-sm-auto">{{ translate('messages.Business Address') }}</span>
-                                                            <span>: {{$store->address}} </span>
-                                                        </li>
-                                                    </ul>
+                                                    ?>
+
+                                                <div class="lang_form d-none text--title" id="{{ $lang }}-form">
+                                                    <div class="fs-12 opacity-lg description-text">
+                                                        <ul class="address-info address-info-2 p-0 text-dark">
+                                                            <li class="d-flex align-items-start">
+                                                                <span class="label min-w-sm-auto">{{ translate('messages.Vendor Name') }}</span>
+                                                                <span>: {{ $translate[$lang]['name'] ?? '' }}</span>
+                                                            </li>
+                                                            <li class="d-flex align-items-start">
+                                                                <span class="label min-w-sm-auto">{{ translate('messages.Business Address') }}</span>
+                                                                <div>
+                                                                    <div class="short-description">
+                                                                        <span>: {{ isset($translate[$lang]['address']) ? Str::limit($translate[$lang]['address'], 500) : '' }}</span>
+                                                                    </div>
+                                                                    <div class="full-description" style="display: none;">
+                                                                        <span>: {{ $translate[$lang]['address'] ?? '' }}</span>
+                                                                    </div>
+                                                                    <a href="#" class="text--info font-medium see-more pl-1" style="display: none;">
+                                                                        {{ translate('See more') }}
+                                                                    </a>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
-                                    @else
-                                        <div id="default-form">
-                                            <div class="resturant--info-address">
-                                                <ul class="address-info address-info-2 p-0 text-dark">
-                                                    <li class="d-flex align-items-start">
-                                                        <span class="label min-w-sm-auto">{{ translate('messages.Provider Name') }}</span>
-                                                        <span>: {{ $store->name }} {{ $store->name }}</span>
-                                                    </li>
-                                                    <li class="d-flex align-items-start">
-                                                        <span class="label min-w-sm-auto">{{ translate('messages.Business Address') }}</span>
-                                                        <span>: {{ $store->address }}</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    @endif
-                                        <div class="hs-unfold mt-1">
-                                            <button
-                                                class="btn order--details-btn-sm btn--varify btn-outline-varify btn--sm font-regular d-flex align-items-center __gap-5px"
-                                                data-toggle="modal" data-target="#locationModal"><i
-                                                    class="tio-poi"></i>
-                                                {{ translate('messages.map_view') }}</button>
-                                        </div>
+                                            @endforeach
+                                        @endif
+                                    <div class="hs-unfold mt-1">
+                                        <button
+                                            class="btn order--details-btn-sm btn--varify btn-outline-varify btn--sm font-regular d-flex align-items-center __gap-5px"
+                                            data-toggle="modal" data-target="#locationModal"><i
+                                                class="tio-poi"></i>
+                                            {{ translate('messages.map_view') }}</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -322,7 +344,7 @@
                                             <span>: {{$store->vendor->f_name}} </span>
                                         </li>
                                         <li class="d-flex align-items-start">
-                                            <span class="label min-w-sm-auto">{{ translate('messages.Last Zone') }}</span>
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Last Name') }}</span>
                                             <span>: {{$store->vendor->l_name}}</span>
                                         </li>
                                         <li class="d-flex align-items-start">
@@ -332,28 +354,7 @@
                                     </ul>
 
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card __bg-FAFAFA border-0 h-100">
-                            <div class="card-body">
-                                <h5 class="mb-10px font-bold"> {{ translate('messages.Pickup_Zone') }}
-                                </h5>
-                                <div class="d-flex gap-2 gap-sm-3 flex-wrap">
-                                    @foreach($store->getPickupZones() as $pickupZone)
-                                        <label class="badge badge-soft-dark rounded-20 p-2 m-0 font-medium">
-                                            {{ $pickupZone->name ?? 'Unknown Zone' }}
-                                        </label>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card __bg-FAFAFA border-0 h-100">
-                            <div class="card-body">
-                                <h5 class="mb-10px font-bold"> {{ translate('messages.Login_Information') }}
+                                <h5 class="mt-5 font-bold"> {{ translate('messages.Login_Information') }}
                                 </h5>
                                 <div class="resturant--info-address">
                                     <ul class="address-info address-info-2 p-0 text-dark">
@@ -367,6 +368,21 @@
                                         </li>
                                     </ul>
 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="card __bg-FAFAFA border-0 h-100">
+                            <div class="card-body">
+                                <h5 class="mb-10px font-bold"> {{ translate('messages.Pickup_Zone') }}
+                                </h5>
+                                <div class="d-flex gap-2 gap-sm-3 flex-wrap">
+                                    @foreach($store->getPickupZones() as $pickupZone)
+                                        <label class="badge badge-soft-dark rounded-20 p-2 m-0 font-medium">
+                                            {{ $pickupZone->name ?? 'Unknown Zone' }}
+                                        </label>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -477,14 +493,14 @@
 
             const bounds = new google.maps.LatLngBounds();
 
-            <?php
+                <?php
                 $area = [];
 
                 if (!empty($store?->zone) && isset($store->zone['coordinates'][0])) {
                     $area = json_decode($store->zone['coordinates'][0]->toJson(), true);
                 }
                 $coordinates = $area['coordinates'] ?? [];
-            ?>
+                ?>
 
             const businessZoneCoords = [
                     @if (!empty($coordinates))
@@ -522,30 +538,30 @@
 
             @foreach($store->getPickupZones() as $pickupZone)
                 <?php
-                    $pickupArea = json_decode($pickupZone->coordinates[0]->toJson(), true);
+                $pickupArea = json_decode($pickupZone->coordinates[0]->toJson(), true);
                 ?>
 
-                const pickupZoneCoords_{{$pickupZone->id}} = [
-                        @foreach($pickupArea['coordinates'] as $coords)
-                    { lat: {{$coords[1]}}, lng: {{$coords[0]}} },
-                    @endforeach
-                ];
+            const pickupZoneCoords_{{$pickupZone->id}} = [
+                    @foreach($pickupArea['coordinates'] as $coords)
+                { lat: {{$coords[1]}}, lng: {{$coords[0]}} },
+                @endforeach
+            ];
 
-                const pickupZonePolygon_{{$pickupZone->id}} = new google.maps.Polygon({
-                    paths: pickupZoneCoords_{{$pickupZone->id}},
-                    strokeColor: "#aaaaaa",
-                    strokeOpacity: 0.8,
-                    strokeWeight: 2,
-                    fillColor: "rgba(181, 191, 181, 0.45)",
-                    fillOpacity: 0.35
-                });
+            const pickupZonePolygon_{{$pickupZone->id}} = new google.maps.Polygon({
+                paths: pickupZoneCoords_{{$pickupZone->id}},
+                strokeColor: "#aaaaaa",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "rgba(181, 191, 181, 0.45)",
+                fillOpacity: 0.35
+            });
 
-                pickupZoneCoords_{{$pickupZone->id}}.forEach(coord => {
-                    bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
-                });
+            pickupZoneCoords_{{$pickupZone->id}}.forEach(coord => {
+                bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+            });
 
-                polygons['pickup_{{$pickupZone->id}}'] = pickupZonePolygon_{{$pickupZone->id}};
-                pickupZonePolygon_{{$pickupZone->id}}.setMap(map);
+            polygons['pickup_{{$pickupZone->id}}'] = pickupZonePolygon_{{$pickupZone->id}};
+            pickupZonePolygon_{{$pickupZone->id}}.setMap(map);
             @endforeach
 
             map.fitBounds(bounds);
@@ -591,6 +607,39 @@
         initMap();
     </script>
 
+    <script>
+        $(document).ready(function () {
+            $('.description-text').each(function () {
+                const $descriptionText = $(this);
+                const $shortDescription = $descriptionText.find('.short-description');
+                const $fullDescription = $descriptionText.find('.full-description');
+                const $seeMore = $descriptionText.find('.see-more');
+
+                const fullDescriptionLength = $fullDescription.text().trim().length;
+
+                if (fullDescriptionLength > 500) {
+                    $seeMore.show();
+                } else {
+                    $seeMore.hide();
+                }
+
+                $seeMore.on('click', function (e) {
+                    console.log($shortDescription)
+                    console.log($fullDescription)
+                    e.preventDefault();
+
+                    $shortDescription.toggle();
+                    $fullDescription.toggle();
+
+                    if ($fullDescription.is(':visible')) {
+                        $(this).text('See less');
+                    } else {
+                        $(this).text('See more');
+                    }
+                });
+            });
+        });
+    </script>
 
     <script>
         "use strict";

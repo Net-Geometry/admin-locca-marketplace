@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.vehicale_list'))
+@section('title', translate('messages.vehicle_list'))
 
 @push('css_or_js')
 @endpush
@@ -156,9 +156,9 @@
                             <td>{{ $key+$vehicles->firstItem() }}</td>
                             <td>
                                 <div class="text--title">
-                                    <div class="font-medium">
+                                    <a href="{{ route('admin.rental.provider.vehicle.details', $vehicle->id) }}" class="font-medium">
                                         {{ $vehicle->name }}
-                                    </div>
+                                    </a>
                                     <div class="opacity-lg">
                                         {{ $vehicle->model }}
                                     </div>

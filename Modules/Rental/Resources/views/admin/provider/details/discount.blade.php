@@ -218,7 +218,7 @@
                         });
 
                         setTimeout(function () {
-                            location.href = '{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'discount'])}}';
+                            location.reload();
                         }, 2000);
                     }
                 }

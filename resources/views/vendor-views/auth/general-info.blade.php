@@ -761,7 +761,7 @@
                         $('#show_sub_packages').empty().html(response.view);
                         if (response.module_type === 'rental') {
                             $('#pickup-zone-container').show();
-                            $('.module-select-time').text('{{ translate('messages.approx_pickup_time') }}');
+                            $('.module-select-time').text('{{ translate('messages.Estimated_pickup_time') }}');
                         } else {
                             $('#pickup-zone-container').hide();
                         }

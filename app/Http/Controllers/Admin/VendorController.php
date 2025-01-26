@@ -1103,7 +1103,7 @@ class VendorController extends Controller
                 }
             }
         }
-        Toastr::success(translate('messages.store_meta_data_updated'));
+        Toastr::success(translate('messages.meta_data_updated'));
         return back();
     }
 

@@ -204,7 +204,10 @@ class ProviderController extends Controller
         $key = explode(' ', request()->search);
 
         $store = $this->store->findOrFail($store_id);
+        $store->withoutGlobalScope('translate')->with('translations');
         $wallet = $store->vendor->wallet;
+        $language = getWebConfig('language') ?? [];
+
 
         if(!$wallet)
         {
@@ -374,7 +377,7 @@ class ProviderController extends Controller
             return view('rental::admin.provider.details.subscription',compact('store','packages','business_name','admin_commission','index'));
         }
 
-        return view('rental::admin.provider.details.overview', compact('store', 'wallet'));
+        return view('rental::admin.provider.details.overview', compact('store', 'wallet', 'language'));
     }
 
 
@@ -716,7 +719,7 @@ class ProviderController extends Controller
                     return back();
                 }
                 if(isset($collection['PickupTime']) && explode("-", (string)$collection['PickupTime'])[0] >  explode("-", (string)$collection['PickupTime'])[1]){
-                    Toastr::error('messages.max_delivery_time_must_be_greater_than_min_delivery_time');
+                    Toastr::error('messages.max_pickup_time_must_be_greater_than_min_delivery_time');
                     return back();
                 }
                 if(isset($collection['Comission']) && ($collection['Comission'] < 0 ||  $collection['Comission'] > 100) ) {
@@ -814,7 +817,7 @@ class ProviderController extends Controller
                 return back();
             }
 
-            Toastr::success(translate('messages.store_imported_successfully',['count'=>count($stores)]));
+            Toastr::success(translate('messages.provider_imported_successfully',['count'=>count($stores)]));
             return back();
         }
 
@@ -840,7 +843,7 @@ class ProviderController extends Controller
                 return back();
             }
             if(isset($collection['PickupTime']) && explode("-", (string)$collection['PickupTime'])[0] >  explode("-", (string)$collection['PickupTime'])[1]){
-                Toastr::error('messages.max_delivery_time_must_be_greater_than_min_delivery_time');
+                Toastr::error('messages.max_pickup_time_must_be_greater_than_min_pickup_time');
                 return back();
             }
             if(isset($collection['Comission']) && ($collection['Comission'] < 0 ||  $collection['Comission'] > 100) ) {
@@ -928,7 +931,7 @@ class ProviderController extends Controller
             return back();
         }
 
-        Toastr::success(translate('messages.store_imported_successfully',['count'=>count($stores)]));
+        Toastr::success(translate('messages.provider_imported_successfully',['count'=>count($stores)]));
         return back();
     }
 

@@ -502,7 +502,7 @@
                                                for="">{{ translate('messages.Hourly Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="hourly_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="{{ $vehicle->hourly_price }}" min="0" step="0.001" required>
+                                               placeholder="Ex: 35.25" value="{{ $vehicle->hourly_price }}" min="0.01" step="0.001" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -511,7 +511,7 @@
                                                for="">{{ translate('messages.Distance Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="distance_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="{{ $vehicle->distance_price }}" min="0" step="0.001" required>
+                                               placeholder="Ex: 35.25" value="{{ $vehicle->distance_price }}" min="0.01" step="0.001" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
