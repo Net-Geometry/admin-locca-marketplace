@@ -549,7 +549,7 @@
         $(document).on('click', '.restaurant-open-status', function (event) {
                 Swal.fire({
                     title: '{{translate('messages.are_you_sure')}}',
-                    text: '{{$store->active ? translate('messages.you_want_to_temporarily_close_this_store') : translate('messages.you_want_to_open_this_store') }}',
+                    text: '{{$store->active ? translate('messages.you_want_to_temporarily_close_this_').($store->module->module_type == 'rental' ? translate('provider') : translate('store')) : translate('messages.you_want_to_open_this_').($store->module->module_type == 'rental' ? translate('provider') : translate('store')) }}',
                     type: 'warning',
                     showCancelButton: true,
                     cancelButtonColor: 'default',

@@ -2,16 +2,18 @@
 
 namespace Modules\Rental\Http\Controllers\Api\Provider;
 
-use App\Http\Controllers\Controller;
 use App\Models\StoreConfig;
+use App\Models\Translation;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use App\Models\StoreSchedule;
-use App\Models\Translation;
+use Modules\Rental\Entities\Trips;
+use Modules\Rental\Traits\RentalPushNotification;
 
 class BusinessSettingsController extends Controller
 {
+    use RentalPushNotification;
     public function updateStoreSetup(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -70,5 +72,14 @@ class BusinessSettingsController extends Controller
         }
 
         return response()->json(['message'=>translate('messages.Provider_settings_updated')], 200);
+    }
+
+    public function testNotification($id){
+        $trip = Trips::find($id);
+        if($trip){
+            $this->sendTripNotificationAdminPanel($trip);
+            return response()->json('SUCCESS');
+        }
+        return response()->json($id);
     }
 }

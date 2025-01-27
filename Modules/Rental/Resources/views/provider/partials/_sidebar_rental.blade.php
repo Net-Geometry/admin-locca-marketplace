@@ -338,9 +338,9 @@
                         <li
                             class="nav-item {{ Request::is('vendor-panel/business-settings/store-setup') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('vendor.business-settings.store-setup') }}"
-                                title="{{ translate('messages.ProviderConfig') }}">
+                                title="{{ translate('messages.Provider_Config') }}">
                                 <span class="tio-settings nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.ProviderConfig') }}</span>
+                                <span class="text-truncate">{{ translate('messages.Provider_Config') }}</span>
                             </a>
                         </li>
                     @endif

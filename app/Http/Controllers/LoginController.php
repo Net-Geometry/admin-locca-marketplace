@@ -178,7 +178,15 @@ class LoginController extends Controller
                 return redirect()->back()->withInput($request->only('email', 'remember'))
                     ->withErrors(['Credentials does not match.']);
             }
-        } elseif ($request->role == 'vendor') {
+        }
+        elseif ($request->role == 'admin') {
+            $data = Admin::where('email', $request->email)->where('role_id', 1)->exists();
+            if (!$data) {
+                return redirect()->back()->withInput($request->only('email', 'remember'))
+                    ->withErrors(['Credentials does not match.']);
+            }
+        }
+        elseif ($request->role == 'vendor') {
             $vendor = Vendor::where('email', $request->email)->first();
             if ($vendor) {
                 if ($vendor?->stores[0]?->store_business_model == 'none') {
@@ -200,18 +208,10 @@ class LoginController extends Controller
             }
         } elseif ($request->role == 'vendor_employee') {
             $employee = VendorEmployee::where('email', $request->email)->first();
-            if ($employee) {
-
-                if (in_array($employee?->store?->store_business_model, ['none', 'unsubscribed'])) {
+                if ($employee && (in_array($employee?->store?->store_business_model, ['none', 'unsubscribed']) || $employee?->store?->status == 0)) {
                     return redirect()->back()->withInput($request->only('email', 'remember'))
                         ->withErrors([translate('messages.store_is_inactive')]);
                 }
-
-                if ($employee?->store?->status == 0) {
-                    return redirect()->back()->withInput($request->only('email', 'remember'))
-                        ->withErrors([translate('messages.store_is_inactive')]);
-                }
-            }
         }
 
         $data = $this->login_attemp($request->role, $request->email, $request->password, $request->remember);

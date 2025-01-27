@@ -88,8 +88,8 @@ class ProviderController extends Controller
             $item['customer_name'] = null;
             if ($item->vehicle) {
                 $item['vehicle_name'] = $item->vehicle->name;
-                $item['vehicle_image'] = $item->vehicle->image;
-                $item['vehicle_image_full_url'] = $item->vehicle->image_full_url;
+                $item['vehicle_image'] = $item->vehicle->thumbnail;
+                $item['vehicle_image_full_url'] = $item->vehicle->thumbnail_full_url;
             }
 
             if ($item->customer) {

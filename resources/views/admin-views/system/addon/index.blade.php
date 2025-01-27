@@ -44,9 +44,9 @@
                                     <div class="">
                                         <img src="{{asset('public/assets/admin/img/addon_setting.png')}}" loading="lazy" alt="" class="dark-support rounded mb-4 mw-100">
                                         <ol>
-                                            <li>{{translate('After purchasing the Payment & SMS Module from Codecanyon, you will find a file download option.')}}</li>
+                                            <li>{{translate('After purchasing the ')}} <strong>{{translate('Payment & SMS Module/Rental Module')}}</strong> {{translate('from Codecanyon, you will find a file download option.')}}</li>
                                             <li>{{translate('Download the file. It will be downloaded as Zip format Filename.Zip.')}}</li>
-                                            <li>{{translate('Extract the file and you will get another file name payment.zip.')}}</li>
+                                            <li>{{translate('Extract the file and you will get another file name Filename.zip.')}}</li>
                                             <li>{{translate('Upload the file here and your Addon uploading is complete !')}}</li>
                                             <li>{{translate('Then active the Addon and setup all the options. you are good to go !')}}</li>
                                         </ol>
@@ -59,9 +59,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-center">
+                        {{-- <div class="d-flex justify-content-center">
                             <div class="slide-counter"></div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

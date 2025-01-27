@@ -11,20 +11,35 @@ use App\CentralLogics\Helpers;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Password;
+use Modules\Rental\Entities\Trips;
 
 class SystemController extends Controller
 {
 
     public function store_data()
     {
-        $new_order_count = Order::StoreOrder()->where(['checked' => 0])->count();
-        $new_order = Order::StoreOrder()->where(['checked' => 0])->latest()->first();
-        $new_parcel_order_count = Order::ParcelOrder()->where(['checked' => 0])->count();
-        $new_parcel_order = Order::ParcelOrder()->where(['checked' => 0])->latest()->first();
+        if(Order::StoreOrder()->where(['checked' => 0])->count() > 0 ){
+            $new_order =1;
+            $type='store_order';
+            $module_id=  Order::StoreOrder()->where(['checked' => 0])->latest()->first(['module_id'])->module_id;
+        }
+        elseif(Order::ParcelOrder()->where(['checked' => 0])->count() > 0 ){
+            $new_order =1;
+            $type='parcel';
+            $module_id= Order::ParcelOrder()->where(['checked' => 0])->latest()->first('module_id')->module_id;
+        }
+        elseif(rental_module_published_status() &&  Trips::where(['checked' => 0])->count() > 0 ){
+            $new_order =1;
+            $type='trip';
+            $module_id=Trips::where(['checked' => 0])->latest()->first(['module_id'])->module_id;
+        }
+
         return response()->json([
             'success' => 1,
-
-            'data' => ['new_order' => $new_order_count > 0 ? $new_order_count : $new_parcel_order_count, 'type' => $new_order_count > 0 ? 'store_order' : 'parcel', 'module_id' => $new_order_count > 0 ? $new_order?->module_id : $new_parcel_order?->module_id]
+            'data' => ['new_order' => $new_order ?? 0,
+                        'type' => $type ?? 'store_order',
+                        'module_id' => $module_id ?? 0
+                ]
         ]);
     }
 

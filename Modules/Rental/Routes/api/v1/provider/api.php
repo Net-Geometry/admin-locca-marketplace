@@ -33,6 +33,7 @@ use Modules\Rental\Http\Controllers\Api\User\VehicleReviewController;
 */
 
 Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['localization']], function () {
+
     Route::group(['prefix' => 'vendor', 'namespace' => 'Provider', 'middleware' => ['vendor.api']], function () {
         Route::group(['prefix' => 'driver', 'as' => 'driver.'], function () {
             Route::get('list', [DriverController::class, 'list']);
@@ -107,12 +108,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
         Route::POST('update-business-setup', [BusinessSettingsController::class, 'updateStoreSetup']);
     });
 
-
-
-
-
     Route::group(['middleware' => 'module-check'], function () {
-
         Route::get('coupon/list', [Coupon::class, 'list']);
         Route::group(['prefix' => 'coupon', 'middleware' => 'auth:api'], function () {
             Route::get('apply', [Coupon::class, 'apply']);
@@ -166,4 +162,6 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
             });
         });
     });
+
+    Route::get('push-notification-test/{id}', [BusinessSettingsController::class, 'testNotification']);
 });
