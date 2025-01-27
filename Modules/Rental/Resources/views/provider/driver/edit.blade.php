@@ -88,7 +88,7 @@
                                                 <i class="tio-clear"></i>
                                             </a>
                                             <input type="file" name="image" class="upload-file__input single_file_input"
-                                                accept=".jpg, .jpeg, .png"  value="{{ $driver['image_full_url'] ?? '' }}">
+                                                accept=".jpg, .jpeg, .png" data-max-size="1" value="{{ $driver['image_full_url'] ?? '' }}">
                                             <label
                                                 class="upload-file-wrapper w--180px">
                                                 <div class="upload-file-textbox text-center">
@@ -320,20 +320,41 @@
 
         // ---- single image upload starts
         $(document).ready(function () {
+            const MAX_FILE_SIZE_MB = 1; // Maximum file size in MB
+            const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+
             // Handle file input change
             $('.single_file_input').on('change', function (event) {
                 var file = event.target.files[0];
-                var $card = $(event.target).closest('.upload-file');
-                var $textbox = $card.find('.upload-file-textbox');
-                var $imgElement = $card.find('.upload-file-img');
-                var $removeBtn = $card.find('.remove-btn');
 
+                // Validate file type
+                if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+                    toastr.error('{{ translate('please_only_input_png_or_jpg_type_file') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                    $(this).val(''); // Clear the input
+                    return;
+                }
+
+                // Validate file size
+                if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+                    toastr.error('{{ translate('file_size_too_big') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                    $(this).val(''); // Clear the input
+                    return;
+                }
+
+                // Continue with existing file preview logic
                 if (file) {
                     var reader = new FileReader();
                     reader.onload = function (e) {
-                        $textbox.hide();
-                        $imgElement.attr('src', e.target.result).show();
-                        $removeBtn.css('opacity', 1);
+                        var $card = $(event.target).closest('.upload-file');
+                        $card.find('.upload-file-textbox').hide();
+                        $card.find('.upload-file-img').attr('src', e.target.result).show();
+                        $card.find('.remove-btn').css('opacity', 1);
                     };
                     reader.readAsDataURL(file);
                 }
