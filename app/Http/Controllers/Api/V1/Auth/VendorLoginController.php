@@ -193,7 +193,7 @@ class VendorLoginController extends Controller
         $store->module_id = $request->module_id;
         $store->status = 0;
         $store->store_business_model = 'none';
-        $store->pickup_zone_id = $request['pickup_zone_id'] ?? [];
+        $store->pickup_zone_id = $request['pickup_zone_id'] ?? json_encode([]);
         $store->save();
         $store->module->increment('stores_count');
         if(config('module.'.$store->module->module_type)['always_open'])

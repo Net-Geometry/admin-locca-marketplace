@@ -352,7 +352,7 @@
                 <small class="text-cap mb-3">{{translate('messages.Provider')}}</small>
                 <div class="mb-2 initial--21">
                     <select name="provider_ids[]" id="provider_ids" class="form-control js-select2-custom" multiple="multiple">
-                        @foreach(\App\Models\Store::get(['id','name']) as $store)
+                        @foreach(\App\Models\Store::WithModuleType('rental')->get(['id','name']) as $store)
                             <option value="{{$store->id}}"
                                     @if(isset($provider_ids) && in_array($store->id, $provider_ids))
                                         selected

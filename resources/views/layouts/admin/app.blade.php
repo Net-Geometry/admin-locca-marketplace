@@ -635,6 +635,9 @@ $countryCode= strtolower($country?$country->value:'auto');
                         let data = response.data;
                         new_order_type = data.type;
                         new_module_id = data.module_id;
+                        if(new_order_type === 'trip'){
+                            document.querySelector('.update_notification_text').textContent = "{{translate('messages.You have new trip, Check Please.')}}";
+                        }
                         if (data.new_order > 0) {
                             playAudio();
                             $('#popup-modal').appendTo("body").modal('show');
