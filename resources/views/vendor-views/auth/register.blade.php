@@ -519,7 +519,7 @@
             $(document).ready(function() {
                 $('#module_id').select2({
                     ajax: {
-                        url: '{{url('/')}}/store/get-all-modules/',
+                        url: '{{url('/')}}/vendor/get-all-modules/',
                         data: function (params) {
                             return {
                                 q: params.term, // search term

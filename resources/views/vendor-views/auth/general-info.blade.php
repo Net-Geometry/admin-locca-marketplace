@@ -727,7 +727,7 @@
         $(document).ready(function() {
             $('#module_id').select2({
                 ajax: {
-                    url: '{{ url('/') }}/store/get-all-modules/',
+                    url: '{{ url('/') }}/vendor/get-all-modules/',
                     data: function(params) {
                         return {
                             q: params.term, // search term
@@ -754,7 +754,7 @@
             $('#module_id').on('change', function() {
                 var moduleId = $(this).val();
                 $.ajax({
-                    url: '{{ url('/') }}/store/get-module-type',
+                    url: '{{ url('/') }}/vendor/get-module-type',
                     method: 'GET',
                     data: { id: moduleId },
                     success: function(response) {

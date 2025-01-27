@@ -196,7 +196,7 @@ Route::get('module-test', function () {
 });
 
 //Restaurant Registration
-Route::group(['prefix' => 'store', 'as' => 'restaurant.'], function () {
+Route::group(['prefix' => 'vendor', 'as' => 'restaurant.'], function () {
     Route::get('apply', 'VendorController@create')->name('create');
     Route::post('apply', 'VendorController@store')->name('store');
     Route::get('get-all-modules', 'VendorController@get_all_modules')->name('get-all-modules');
