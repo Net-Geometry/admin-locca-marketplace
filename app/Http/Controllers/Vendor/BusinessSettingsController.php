@@ -60,7 +60,11 @@ class BusinessSettingsController extends Controller
         $conf->extra_packaging_status = $request->extra_packaging_status ?? 0;
         $conf->minimum_stock_for_warning = $request->minimum_stock_for_warning ?? 0;
         $conf->save();
-        Toastr::success(translate('messages.store_settings_updated'));
+        if($store->module->module_type == 'rental' && rental_module_published_status('Rental')){
+            Toastr::success(translate('messages.provider settings updated!'));
+        }else{
+            Toastr::success(translate('messages.store_settings_updated'));
+        }
         return back();
     }
     public function updateStoreMetaData(Store $store, Request $request)
@@ -131,7 +135,12 @@ class BusinessSettingsController extends Controller
                 }
             }
         }
-        Toastr::success(translate('messages.store').translate('messages.meta_data_updated'));
+        if($store->module->module_type == 'rental' && rental_module_published_status('Rental')){
+            Toastr::success(translate('messages.provider_meta_data_updated!'));
+        }else{
+            Toastr::success(translate('messages.store').' '.translate('messages.meta_data_updated'));
+        }
+
         return back();
     }
     public function store_status(Store $store, Request $request)
@@ -197,7 +206,7 @@ class BusinessSettingsController extends Controller
         $store = Helpers::get_store_data();
         $store->active = $store->active?0:1;
         $store->save();
-        return response()->json(['message' => $store->active?translate('messages.store_opened'):translate('messages.store_temporarily_closed')], 200);
+        return response()->json(['message' => $store->active?($store->module->module_type == 'rental' ? translate('provider') : translate('store')).' '.translate('messages.opened'):($store->module->module_type == 'rental' ? translate('provider') : translate('store')).' '.translate('messages.temporarily_closed')], 200);
     }
 
     public function add_schedule(Request $request)

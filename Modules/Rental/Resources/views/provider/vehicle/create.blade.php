@@ -232,7 +232,7 @@
                                         <label class="input-label"
                                                for="">{{ translate('messages.Model') }}
                                         </label>
-                                        <input type="number" name="model" class="form-control" placeholder="Model Name"
+                                        <input type="text" name="model" class="form-control" placeholder="Model Name"
                                                value="" required>
                                     </div>
                                 </div>
@@ -602,6 +602,9 @@
 
         // ---- single image upload starts
         $(document).ready(function () {
+            const MAX_FILE_SIZE_MB = 1; // Maximum file size in MB
+            const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+
             // Handle file input change
             $('.single_file_input').on('change', function (event) {
                 var file = event.target.files[0];
@@ -609,6 +612,26 @@
                 var $textbox = $card.find('.upload-file-textbox');
                 var $imgElement = $card.find('.upload-file-img');
                 var $removeBtn = $card.find('.remove-btn');
+
+                // Validate file type
+                if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+                    toastr.error('{{ translate('please_only_input_png_or_jpg_type_file') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                    $(this).val(''); // Clear the input
+                    return;
+                }
+
+                // Validate file size
+                if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+                    toastr.error('{{ translate('file_size_too_big') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                    $(this).val(''); // Clear the input
+                    return;
+                }
 
                 if (file) {
                     var reader = new FileReader();
