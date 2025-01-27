@@ -505,6 +505,13 @@ class Store extends Model
         return $this->hasOne(DisbursementWithdrawalMethod::class)->where('is_default',1);
     }
 
+    public function scopeWithoutModule($query, $moduleType)
+    {
+        return $query->whereHas('module', function ($q) use ($moduleType) {
+            $q->whereNot('module_type', $moduleType);
+        });
+    }
+
        /**
      * @param $value
      * @return bool

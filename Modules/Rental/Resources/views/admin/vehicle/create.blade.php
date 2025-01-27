@@ -19,7 +19,6 @@
         </div>
         @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
         @php($language = $language->value ?? null)
-        @php($defaultLang = 'en')
         <!-- End Page Header -->
 
         <form action="" method="post" enctype="multipart/form-data">

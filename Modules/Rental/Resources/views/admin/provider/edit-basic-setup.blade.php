@@ -805,7 +805,23 @@
                         fillOpacity: 0,
                     });
                     zonePolygon.setMap(map);
-                    map.setCenter(data.center);
+
+                    let bounds = new google.maps.LatLngBounds();
+                    zonePolygon.getPaths().forEach(function(path) {
+                        path.forEach(function(latlng) {
+                            bounds.extend(latlng);
+                        });
+                    });
+
+                    map.fitBounds(bounds);
+
+                    map.addListener('idle', function() {
+                        const customZoom = 15;
+                        if (map.getZoom() > customZoom) {
+                            map.setZoom(customZoom);
+                        }
+                    });
+
                     google.maps.event.addListener(zonePolygon, 'click', function (mapsMouseEvent) {
                         infoWindow.close();
                         // Create a new InfoWindow.
@@ -824,17 +840,15 @@
             });
         })
         $(document).on('ready', function () {
-            // Function to update the map
             function updateZone(id) {
                 $.get({
                     url: '{{url('/')}}/admin/zone/get-coordinates/' + id,
                     dataType: 'json',
                     success: function (data) {
                         if (zonePolygon) {
-                            zonePolygon.setMap(null); // Remove the previous polygon
+                            zonePolygon.setMap(null);
                         }
 
-                        // Create the new polygon
                         zonePolygon = new google.maps.Polygon({
                             paths: data.coordinates,
                             strokeColor: "#FF0000",
@@ -846,17 +860,22 @@
 
                         zonePolygon.setMap(map);
 
-                        // Extend bounds and fit the map
-                        zonePolygon.getPaths().forEach(function (path) {
-                            path.forEach(function (latlng) {
+                        let bounds = new google.maps.LatLngBounds();
+                        zonePolygon.getPaths().forEach(function(path) {
+                            path.forEach(function(latlng) {
                                 bounds.extend(latlng);
-                                map.fitBounds(bounds);
                             });
                         });
 
-                        map.setCenter(data.center);
+                        map.fitBounds(bounds);
 
-                        // Add click listener to show info window
+                        map.addListener('idle', function() {
+                            const customZoom = 15;
+                            if (map.getZoom() > customZoom) {
+                                map.setZoom(customZoom);
+                            }
+                        });
+
                         google.maps.event.addListener(zonePolygon, 'click', function (mapsMouseEvent) {
                             infoWindow.close();
                             infoWindow = new google.maps.InfoWindow({
@@ -875,14 +894,12 @@
                 });
             }
 
-            // Initial load when page is ready (for the default zone)
             let id = $('#choice_zones').val();
             updateZone(id);
 
-            // Update when the zone changes
             $('#choice_zones').on('change', function () {
-                let newId = $(this).val(); // Get the new zone ID
-                updateZone(newId); // Update the map with new coordinates
+                let newId = $(this).val();
+                updateZone(newId);
             });
         });
 
@@ -941,7 +958,7 @@
                 url: '{{ url('/') }}/vendor/get-all-modules',
                 data: function(params) {
                     return {
-                        q: params.term, // search term
+                        q: params.term,
                         page: params.page,
                         zone_id: zone_id
                     };

@@ -98,7 +98,7 @@
                                                         <div class="form-group">
                                                             <label class="input-label"
                                                                 for="default_name">{{ translate('messages.name') }}
-                                                                ({{ translate('messages.Default') }})
+                                                                ({{ translate('messages.Default') }})<span class="text-danger">*</span>
                                                             </label>
                                                             <input type="text" name="name[]"
                                                                 value="{{ old('name.0') }}" id="default_name"
@@ -136,7 +136,7 @@
                                                         <div class="form-group mb-0">
                                                             <label class="input-label"
                                                                 for="address">{{ translate('messages.address') }}
-                                                                ({{ translate('messages.default') }})</label>
+                                                                ({{ translate('messages.default') }})<span class="text-danger">*</span></label>
                                                             <textarea type="text" id="address" name="address[]" placeholder="{{ translate('Ex: ABC Company') }}"
                                                                 class="form-control __form-control">{{ old('address.0') }}</textarea>
                                                         </div>
@@ -167,7 +167,7 @@
                                 <div class="col-lg-6">
                                     <div class="form-group mb-4">
                                         <label class="input-label" title="{{ translate('messages.select_zone_for_map') }}"
-                                            for="choice_zones">{{ translate('messages.business_zone') }} <span
+                                            for="choice_zones">{{ translate('messages.business_zone') }}<span class="text-danger">*</span> <span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('messages.select_zone_for_map') }}"><img
                                                     src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
@@ -191,7 +191,7 @@
                                     </div>
                                     <div class="form-group mb-4">
                                         <label for="module_id"
-                                            class="input-label">{{ translate('messages.business_module') }}
+                                            class="input-label">{{ translate('messages.business_module') }}<span class="text-danger">*</span>
                                             <small
                                                 class="text-danger">({{ translate('messages.Select_zone_first') }})</small></label>
                                         <select name="module_id" required id="module_id"
@@ -202,7 +202,7 @@
                                     <div class="form-group mb-4 pickup-zone-container pickup-zone-tag" id="pickup-zone-container">
                                         <label class="input-label"
                                                title="{{ translate('messages.select_pickup_zone_for_map') }}"
-                                               for="choice_zones">{{ translate('messages.pickup_zone') }} <span
+                                               for="choice_zones">{{ translate('messages.pickup_zone') }}<span class="text-danger">*</span> <span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}"><img
                                                     src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
@@ -225,7 +225,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group mb-4">
-                                        <label class="input-label" for="latitude">{{ translate('messages.latitude') }}
+                                        <label class="input-label" for="latitude">{{ translate('messages.latitude') }}<span class="text-danger">*</span>
                                             <span class="input-label-secondary"
                                                 title="{{ translate('messages.vendor_lat_lng_warning') }}"><img
                                                     src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
@@ -236,7 +236,7 @@
                                             value="{{ old('latitude') }}" required readonly>
                                     </div>
                                     <div class="form-group mb-4">
-                                        <label class="input-label" for="longitude">{{ translate('messages.longitude') }}
+                                        <label class="input-label" for="longitude">{{ translate('messages.longitude') }}<span class="text-danger">*</span>
                                             <span class="input-label-secondary"
                                                 title="{{ translate('messages.vendor_lat_lng_warning') }}"><img
                                                     src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
@@ -246,7 +246,7 @@
                                             value="{{ old('longitude') }}" required readonly>
                                     </div>
                                     <div class="form-group mb-4">
-                                        <label class="input-label" for="tax">{{ translate('messages.vat/tax') }}
+                                        <label class="input-label" for="tax">{{ translate('messages.vat/tax') }}<span class="text-danger">*</span>
                                             (%)</label>
                                         <input type="number" id="tax" name="tax"
                                             class="form-control __form-control"
@@ -255,7 +255,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="input-label module-select-time"
-                                            for="minimum_delivery_time">{{ translate('messages.approx_delivery_time') }}</label>
+                                            for="minimum_delivery_time">{{ translate('messages.approx_delivery_time') }}<span class="text-danger">*</span></label>
                                         <div class=" __form-control custom-group-btn">
                                             <div class="item flex-sm-grow-1">
                                                 <div class="d-flex align-items-center gap-1">
@@ -298,7 +298,7 @@
                                     <div class="d-flex flex-column flex-sm-row gap-4">
                                         <div class="form-group flex-grow-1 d-flex flex-column justify-content-between">
                                             <label class="input-label pt-2 mb-2">
-                                                <div class="lh-1">{{ translate('messages.cover') }}</div>
+                                                <div class="lh-1">{{ translate('messages.cover') }}<span class="text-danger">*</span></div>
                                                 <div class="fs-12 opacity-70">
                                                     {{ translate('messages.JPG, JPEG, PNG Less Than 2MB') }}
                                                     <strong> {{ translate('(Ratio 2:1)') }}
@@ -333,7 +333,7 @@
                                         </div>
                                         <div class="form-group d-flex flex-column justify-content-between">
                                             <label class="input-label pt-2 mb-2">
-                                                <div class="lh-1">{{ translate('messages.logo') }}</div>
+                                                <div class="lh-1">{{ translate('messages.logo') }}<span class="text-danger">*</span></div>
                                                 <div class="fs-12 opacity-70">
                                                     {{ translate('messages.JPG, JPEG, PNG Less Than 2MB') }}
                                                     <strong> {{ translate('(Ratio 1:1)') }}
@@ -386,7 +386,7 @@
                                         <div class="col-md-4 col-lg-4 col-sm-12">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                    for="f_name">{{ translate('messages.first_name') }}</label>
+                                                    for="f_name">{{ translate('messages.first_name') }}<span class="text-danger">*</span></label>
                                                 <input type="text" id="f_name" name="f_name"
                                                     class="form-control __form-control"
                                                     placeholder="{{ translate('messages.first_name') }}"
@@ -396,7 +396,7 @@
                                         <div class="col-md-4 col-lg-4 col-sm-12">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                    for="l_name">{{ translate('messages.last_name') }}</label>
+                                                    for="l_name">{{ translate('messages.last_name') }}<span class="text-danger">*</span></label>
                                                 <input type="text" id="l_name" name="l_name"
                                                     class="form-control __form-control"
                                                     placeholder="{{ translate('messages.last_name') }}"
@@ -406,7 +406,7 @@
                                         <div class="col-md-4 col-lg-4 col-sm-12">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                    for="phone">{{ translate('messages.phone') }}</label>
+                                                    for="phone">{{ translate('messages.phone') }}<span class="text-danger">*</span></label>
                                                 <input type="tel" id="phone" name="phone"
                                                     class="form-control __form-control"
                                                     placeholder="{{ translate('messages.Ex:') }} 017********"
@@ -434,7 +434,7 @@
                                         <div class="col-md-4 col-sm-12 col-lg-4">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                    for="email">{{ translate('messages.email') }}</label>
+                                                    for="email">{{ translate('messages.email') }}<span class="text-danger">*</span></label>
                                                 <input type="email" id="email" name="email"
                                                     class="form-control __form-control"
                                                     placeholder="{{ translate('messages.Ex:') }} ex@example.com"
@@ -445,7 +445,7 @@
                                             <div class="form-group">
                                                 <label class="input-label"
                                                     title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
-                                                    for="exampleInputPassword">{{ translate('messages.password') }}
+                                                    for="exampleInputPassword">{{ translate('messages.password') }}<span class="text-danger">*</span>
                                                     &nbsp;
                                                     <span class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
@@ -489,7 +489,7 @@
                                         <div class="col-md-4 col-sm-12 col-lg-4">
                                             <div class="form-group">
                                                 <label class="input-label"
-                                                    for="exampleRepeatPassword">{{ translate('messages.confirm_password') }}</label>
+                                                    for="exampleRepeatPassword">{{ translate('messages.confirm_password') }}<span class="text-danger">*</span></label>
                                                 <label class="position-relative m-0 d-block">
                                                     <input type="password" name="confirm-password"
                                                         class="form-control __form-control form-control __form-control-user"

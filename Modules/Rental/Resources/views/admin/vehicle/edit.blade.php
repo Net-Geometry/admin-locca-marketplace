@@ -26,20 +26,8 @@
                 </div>
             </div>
         </div>
-        @php
-            $delivery_time_start = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode('-', $store->delivery_time)[0]
-                : 10;
-            $delivery_time_end = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode(' ', explode('-', $store->delivery_time)[1])[0]
-                : 30;
-            $delivery_time_type = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode(' ', explode('-', $store->delivery_time)[1])[1]
-                : 'min';
-        @endphp
         @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
         @php($language = $language->value ?? null)
-        @php($defaultLang = 'en')
         <!-- End Page Header -->
 
         <form action="" method="post" enctype="multipart/form-data">
@@ -82,7 +70,7 @@
                                                     <div class="form-group mb-20">
                                                         <label class="input-label font-semibold"
                                                                for="default_name">{{ translate('messages.vehicle_name') }}
-                                                            ({{ translate('messages.Default') }})
+                                                            ({{ translate('messages.Default') }})<span class="text-danger">*</span>
                                                         </label>
                                                         <input type="text" name="name[]" id="default_name"
                                                                class="form-control"
@@ -142,7 +130,7 @@
                                 <div class="col-lg-6">
                                     <div class="text-center">
                                         <label class="text--title fs-16 font-semibold mb-1">
-                                            {{ translate('Vehicle_Thumbnail') }}
+                                            {{ translate('Vehicle_Thumbnail') }}<span class="text-danger">*</span>
                                         </label>
                                         <div class="mb-20">
                                             <p class="fs-12">
@@ -180,7 +168,7 @@
                         <div class="card-header">
                             <div>
                                 <h5 class="text-title mb-1">
-                                    {{ translate('messages.Images') }}
+                                    {{ translate('messages.Images') }}<span class="text-danger">*</span>
                                 </h5>
                                 <p class="fs-12 mb-0">
                                     {{ translate('messages.JPG, JPEG, PNG Less Than 1MB') }}
@@ -239,7 +227,7 @@
                             <div class="row g-3">
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="choice_provider">{{ translate('messages.provider') }}
+                                        <label class="input-label" for="choice_provider">{{ translate('messages.provider') }}<span class="text-danger">*</span>
                                         </label>
                                         <select name="provider_id" id="choice_provider" class="form-control js-select2-custom"
                                                 data-placeholder="{{ translate('messages.select_vehicle_provider') }}">
@@ -252,7 +240,7 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="choice_brand">{{ translate('messages.brand') }}
+                                        <label class="input-label" for="choice_brand">{{ translate('messages.brand') }}<span class="text-danger">*</span>
                                         </label>
                                         <select name="brand_id" id="choice_brand" class="form-control js-select2-custom"
                                                 data-placeholder="{{ translate('messages.select_vehicle_brand') }}">
@@ -266,7 +254,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.Model') }}
+                                               for="">{{ translate('messages.Model') }}<span class="text-danger">*</span>
                                         </label>
                                         <input type="text" name="model" class="form-control" placeholder="Model Name"
                                                value="{{ $vehicle->model }}" required>
@@ -287,7 +275,7 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="choice_type">{{ translate('messages.type') }}
+                                        <label class="input-label" for="choice_type">{{ translate('messages.type') }}<span class="text-danger">*</span>
                                         </label>
                                         <select name="type" id="choice_type" class="form-control js-select2-custom"
                                                 data-placeholder="{{ translate('messages.select_vehicle_type') }}">
@@ -305,7 +293,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.Engine Capacity (cc)') }}
+                                               for="">{{ translate('messages.Engine Capacity (cc)') }}<span class="text-danger">*</span>
                                         </label>
                                         <input type="number" name="engine_capacity" class="form-control" placeholder="Ex: 450"
                                                value="{{ $vehicle->engine_capacity }}">
@@ -314,7 +302,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.Engine Power (hp)') }}
+                                               for="">{{ translate('messages.Engine Power (hp)') }}<span class="text-danger">*</span>
                                         </label>
                                         <input type="number" name="engine_power" class="form-control" placeholder="Ex: 100"
                                                value="{{ $vehicle->engine_power }}">
@@ -323,7 +311,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.Seating Capacity') }}
+                                               for="">{{ translate('messages.Seating Capacity') }}<span class="text-danger">*</span>
                                         </label>
                                         <input type="number" name="seating_capacity" class="form-control"
                                                placeholder="Input how many person can seat" value="{{ $vehicle->seating_capacity }}">
@@ -332,7 +320,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.Air Condition') }}
+                                               for="">{{ translate('messages.Air Condition') }}<span class="text-danger">*</span>
                                         </label>
                                         <div class="resturant-type-group border">
                                             <label class="form-check form--check mr-2 mr-md-4">
@@ -357,7 +345,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="choice_fuel_type">{{ translate('messages.fuel_type') }}
+                                               for="choice_fuel_type">{{ translate('messages.fuel_type') }}<span class="text-danger">*</span>
                                         </label>
                                         <select name="fuel_type" id="choice_fuel_type"
                                                 class="form-control js-select2-custom"
@@ -376,7 +364,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="choice_transmission_type">{{ translate('messages.transmission_type') }}
+                                               for="choice_transmission_type">{{ translate('messages.transmission_type') }}<span class="text-danger">*</span>
                                         </label>
                                         <select name="transmission_type" id="choice_transmission_type"
                                                 class="form-control js-select2-custom"
@@ -419,13 +407,13 @@
                                 <div class="d-flex gap-20px flex-column flex-md-row equal-width {{$index > 0 ? 'new-added' : ''}}">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.VIN Number') }}</label>
+                                               for="">{{ translate('messages.VIN Number') }}<span class="text-danger">*</span></label>
                                         <input type="text" name="vehicle[vin_number][]" class="form-control"
                                                placeholder="Type your vin number" value="{{ $multi->vin_number }}">
                                     </div>
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.License Plate Number') }}</label>
+                                               for="">{{ translate('messages.License Plate Number') }}<span class="text-danger">*</span></label>
                                         <input type="text" name="vehicle[license_plate_number][]" class="form-control"
                                                placeholder="Type your license plate number" value="{{ $multi->license_plate_number }}">
                                     </div>
@@ -440,13 +428,13 @@
                             <div class="d--flex gap-20px flex-column flex-md-row equal-width multiple-vehicles" id="input-container">
                                 <div class="form-group mb-0">
                                     <label class="input-label"
-                                           for="">{{ translate('messages.VIN Number') }}</label>
+                                           for="">{{ translate('messages.VIN Number') }}<span class="text-danger">*</span></label>
                                     <input type="text" name="vehicle[vin_number][]" class="form-control"
                                            placeholder="Type your vin number">
                                 </div>
                                 <div class="form-group mb-0">
                                     <label class="input-label"
-                                           for="">{{ translate('messages.License Plate Number') }}</label>
+                                           for="">{{ translate('messages.License Plate Number') }}<span class="text-danger">*</span></label>
                                     <input type="text" name="vehicle[license_plate_number][]" class="form-control"
                                            placeholder="Type your license plate number">
                                 </div>
@@ -475,7 +463,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.Distance Wise Price ($)') }}
+                                               for="">{{ translate('messages.Distance Wise Price ($)') }}<span class="text-danger">*</span>
                                         </label>
                                         <div class="border resturant-type-group">
                                             <label class="align-items-center d-flex form-check item">
@@ -499,7 +487,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.Hourly Wise Price ($)') }}
+                                               for="">{{ translate('messages.Hourly Wise Price ($)') }}<span class="text-danger">*</span>
                                         </label>
                                         <input type="number" name="hourly_price" class="form-control"
                                                placeholder="Ex: 35.25" value="{{ $vehicle->hourly_price }}" min="0.01" step="0.001" required>
@@ -508,7 +496,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.Distance Wise Price ($)') }}
+                                               for="">{{ translate('messages.Distance Wise Price ($)') }}<span class="text-danger">*</span>
                                         </label>
                                         <input type="number" name="distance_price" class="form-control"
                                                placeholder="Ex: 35.25" value="{{ $vehicle->distance_price }}" min="0.01" step="0.001" required>
@@ -577,7 +565,7 @@
                         <div class="card-header">
                             <div>
                                 <h5 class="text-title mb-1">
-                                    {{ translate('messages.Vehicle_Documents') }}
+                                    {{ translate('messages.Vehicle_Documents') }}<span class="text-danger">*</span>
                                 </h5>
                                 <p class="fs-12 mb-0">
                                     {{ translate('messages.Provider Logo & Covers') }}

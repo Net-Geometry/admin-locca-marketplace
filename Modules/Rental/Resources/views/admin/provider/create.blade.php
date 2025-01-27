@@ -822,25 +822,33 @@
                         fillOpacity: 0,
                     });
                     zonePolygon.setMap(map);
+
+                    let bounds = new google.maps.LatLngBounds();
                     zonePolygon.getPaths().forEach(function(path) {
                         path.forEach(function(latlng) {
                             bounds.extend(latlng);
-                            map.fitBounds(bounds);
                         });
                     });
-                    map.setCenter(data.center);
+
+                    map.fitBounds(bounds);
+
+                    map.addListener('idle', function() {
+                        const customZoom = 15;
+                        if (map.getZoom() > customZoom) {
+                            map.setZoom(customZoom);
+                        }
+                    });
+
                     google.maps.event.addListener(zonePolygon, 'click', function(mapsMouseEvent) {
                         infoWindow.close();
-                        // Create a new InfoWindow.
                         infoWindow = new google.maps.InfoWindow({
                             position: mapsMouseEvent.latLng,
-                            content: JSON.stringify(mapsMouseEvent.latLng.toJSON(),
-                                null, 2),
+                            content: JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2),
                         });
-                        let coordinates;
-                        coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null,
-                            2);
-                        coordinates = JSON.parse(coordinates);
+
+                        let coordinates = JSON.parse(
+                            JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
+                        );
 
                         document.getElementById('latitude').value = coordinates['lat'];
                         document.getElementById('longitude').value = coordinates['lng'];

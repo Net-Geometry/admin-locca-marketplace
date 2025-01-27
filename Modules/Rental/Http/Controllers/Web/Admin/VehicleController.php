@@ -226,6 +226,9 @@ class VehicleController extends Controller
         $vehicle->thumbnail = $thumbnailName;
         $vehicle->images = $image;
         $vehicle->documents = $documents;
+
+        DB::beginTransaction();
+
         $vehicle->save();
 
         if (!empty($vinNumbers[0]) && !empty($licensePlateNumbers[0])){
@@ -240,6 +243,7 @@ class VehicleController extends Controller
 
                     if ($existingVehicle) {
                         Toastr::error(translate('This VIN and License Plate combination already exists.'));
+                        DB::rollBack();
                         return back()->withInput($request->all());
                     }
 
@@ -255,6 +259,8 @@ class VehicleController extends Controller
 
         $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: Vehicle::class, data_id: $vehicle->id, data_value: $vehicle->name,model_class:true);
         $this->helpers->add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: Vehicle::class, data_id: $vehicle->id, data_value: $vehicle->description ,model_class:true);
+
+        DB::commit();
 
         Toastr::success(translate('messages.vehicle_added_successfully'));
         return back();

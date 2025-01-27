@@ -491,9 +491,9 @@
 
                     <div class="mb-2 initial--21">
                         <select name="zone[]" id="zone_ids" class="form-control js-select2-custom" multiple="multiple">
-                        @foreach(\App\Models\Zone::all() as $zone)
-                            <option value="{{$zone->id}}" {{isset($zone_ids)?(in_array($zone->id, $zone_ids)?'selected':''):''}}>{{$zone->name}}</option>
-                        @endforeach
+                            @foreach(\App\Models\Zone::get(['id','name']) as $zone)
+                                <option value="{{$zone->id}}" {{isset($zone_ids)?(in_array($zone->id, $zone_ids)?'selected':''):''}}>{{$zone->name}}</option>
+                            @endforeach
                         </select>
                     </div>
                     @if (!$parcel_order)
@@ -501,9 +501,15 @@
                         <small class="text-cap mb-3">{{translate('messages.store')}}</small>
                         <div class="mb-2 initial--21">
                             <select name="vendor[]" id="vendor_ids" class="form-control js-select2-custom" multiple="multiple">
-                            @foreach(\App\Models\Store::whereIn('id', $vendor_ids)->get() as $store)
-                                <option value="{{$store->id}}" selected >{{$store->name}}</option>
-                            @endforeach
+                                @foreach(\App\Models\Store::WithoutModule('rental')->get(['id','name']) as $store)
+
+                                    <option value="{{$store->id}}"
+                                            @if(isset($vendor_ids) && in_array($store->id, $vendor_ids))
+                                                selected
+                                        @endif>
+                                        {{$store->name}}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     @endif
@@ -611,40 +617,45 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/order-list.js"></script>
-    <script>
-        "use strict";
-        $(document).on('ready', function () {
-            @if($filter_count>0)
-            $('#filter_count').html({{$filter_count}});
-            @endif
+        <script src="{{asset('public/assets/admin')}}/js/view-pages/order-list.js"></script>
 
-            $('#vendor_ids').select2({
-                ajax: {
-                    url: '{{url('/')}}/admin/store/get-stores',
-                    data: function (params) {
-                        return {
-                            q: params.term, // search term
-                            zone_ids: zone_id,
-                            page: params.page
-                        };
-                    },
-                    processResults: function (data) {
-                        return {
-                        results: data
-                        };
-                    },
-                    __port: function (params, success, failure) {
-                        let $request = $.ajax(params);
+        <script>
+            $(document).ready(function () {
 
-                        $request.then(success);
-                        $request.fail(failure);
+                @if($filter_count > 0)
+                $('#filter_count').html({{$filter_count}});
+                @endif
 
-                        return $request;
+                $('#zone_ids').on('change', function () {
+                    $('#vendor_ids').val(null).trigger('change');
+                    $('#vendor_ids').trigger('change');
+                });
+
+                $('#vendor_ids').select2({
+                    ajax: {
+                        url: '{{url('/')}}/admin/store/get-stores',
+                        data: function (params) {
+                            return {
+                                q: params.term,
+                                zone_ids: $('#zone_ids').val(),
+                                page: params.page
+                            };
+                        },
+                        processResults: function (data) {
+                            return {
+                                results: data
+                            };
+                        }
                     }
-                }
-            });
+                });
 
+                $('#reset').on('click', function(){
+                    location.href = '{{url('/')}}/admin/rental/trip?status=all';
+                });
+            });
+        </script>
+        <script>
+        $(document).ready(function () {
             // INITIALIZATION OF DATATABLES
             // =======================================================
             let datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
