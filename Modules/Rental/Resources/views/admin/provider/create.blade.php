@@ -1044,7 +1044,7 @@
                 const feedback = $('#invalid-feedback');
 
                 if (confirmPassword == password && confirmPassword.length > 0) {
-                    feedback.text("{{ translate('Passwords match') }}");
+                    feedback.text("{{ translate('Passwords Matched') }}");
                     feedback.removeClass('invalid').addClass('valid');
                     feedback.removeClass('invalid-feedback');
 

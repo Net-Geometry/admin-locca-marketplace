@@ -126,6 +126,10 @@ class VehicleController extends Controller
             'seating_capacity' => 'required|integer|min:1',
             'fuel_type' => 'required|string|max:50',
             'transmission_type' => 'required|string|max:50',
+            'vehicle.vin_number' => 'required|array',
+            'vehicle.license_plate_number' => 'required|array',
+            'vehicle.vin_number.*' => 'required|string|unique:vehicle_identities,vin_number',
+            'vehicle.license_plate_number.*' => 'required|string|unique:vehicle_identities,license_plate_number',
             'hourly_price' => 'nullable|numeric|min:0',
             'discount_price' => [
                 'nullable',
@@ -229,6 +233,16 @@ class VehicleController extends Controller
                 $licensePlate = $licensePlateNumbers[$index];
 
                 if (!empty($vin) && !empty($licensePlate)) {
+                    $existingVehicle = $this->vehicleIdentity
+                        ->where('vin_number', $vin)
+                        ->where('license_plate_number', $licensePlate)
+                        ->first();
+
+                    if ($existingVehicle) {
+                        Toastr::error(translate('This VIN and License Plate combination already exists.'));
+                        return back()->withInput($request->all());
+                    }
+
                     $this->vehicleIdentity->create([
                         'vehicle_id' => $vehicle->id,
                         'provider_id' => $vehicle->provider_id,

@@ -29,13 +29,6 @@
     <div class="row">
         <div class="col-md-12 mb-3">
             <div class="card">
-                <div class="card-header p-3">
-                    <h3 class="text-center text-capitalize">
-                        {{translate($vendor.'_withdraw_information')}}
-                    </h3>
-
-                    <i class="tio-wallet-outlined fz--30"></i>
-                </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-4">
