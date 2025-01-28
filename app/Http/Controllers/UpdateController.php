@@ -208,6 +208,16 @@ class UpdateController extends Controller
             'store_id' => DB::raw("JSON_UNQUOTE(JSON_EXTRACT(data, '$[0]'))")
         ]);
 
+        $twoFactor = Setting::where(['key_name' => '2factor', 'settings_type' => 'sms_config'])->first();
+        if ($twoFactor && $twoFactor->live_values) {
+            $liveValues = is_array($twoFactor->live_values) ? $twoFactor->live_values : json_decode($twoFactor->live_values, true);
+            $liveValues['otp_template'] = $liveValues['otp_template'] ?? 'Your OTP is: #OTP#';
+            Setting::where(['key_name' => '2factor', 'settings_type' => 'sms_config'])->update([
+                'live_values' => json_encode($liveValues),
+                'test_values' => json_encode($liveValues),
+            ]);
+        }
+
         $data = DataSetting::where('type', 'login_admin')->pluck('value')->first();
         return redirect('/login/'.$data);
     }
@@ -391,6 +401,7 @@ class UpdateController extends Controller
                     $additional_data = [
                         'status' => data_get($decoded_value,'status',null),
                         'api_key' => data_get($decoded_value,'api_key',null),
+                        'otp_template' => data_get($decoded_value,'otp_template','Your OTP is: #OTP#'),
                     ];
                 } elseif ($key == 'msg91_sms') {
                     $sms_gateway='msg91';

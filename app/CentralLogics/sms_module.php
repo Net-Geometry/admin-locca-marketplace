@@ -98,9 +98,12 @@ class SMS_module
         $response = 'error';
         if (isset($config) && $config['status'] == 1) {
             $api_key = $config['api_key'];
+            $otp_template = $config['otp_template']  ?? 'Your OTP is: #OTP#';
+            $apiUrl = "https://2factor.in/API/V1/$api_key/SMS/$receiver/$otp/$otp_template";
+
             $curl = curl_init();
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://2factor.in/API/V1/" . $api_key . "/SMS/" . $receiver . "/" . $otp . "",
+                CURLOPT_URL => $apiUrl,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",
                 CURLOPT_MAXREDIRS => 10,

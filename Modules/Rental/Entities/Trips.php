@@ -2,10 +2,11 @@
 
 namespace Modules\Rental\Entities;
 
-use Carbon\Carbon;
+
 use App\Models\User;
 use App\Models\Guest;
 use App\Models\Store;
+use App\Models\CashBackHistory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -63,6 +64,10 @@ class Trips extends Model
         return $value;
     }
 
+    public function cashback_history()
+    {
+        return $this->hasOne(CashBackHistory::class, 'trip_id');
+    }
     public function provider()
     {
         return $this->belongsTo(Store::class,'provider_id');

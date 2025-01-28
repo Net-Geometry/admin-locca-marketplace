@@ -650,7 +650,7 @@
                 });
 
                 $('#reset').on('click', function(){
-                    location.href = '{{url('/')}}/admin/rental/trip?status=all';
+                    location.href = '{{url('/')}}/admin/order/filter/reset';
                 });
             });
         </script>
@@ -771,10 +771,7 @@
         });
 
 
-        $('#reset').on('click', function(){
-            // e.preventDefault();
-            location.href = '{{url('/')}}/admin/order/filter/reset';
-        });
+
 
         $('#search-form').on('submit', function (e) {
             $.ajaxSetup({
