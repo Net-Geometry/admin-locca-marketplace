@@ -208,7 +208,7 @@
                             <small class="nav-subtitle" title="{{ translate('messages.vehicle_section') }}">{{ translate('messages.vehicle_management') }}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/category/list') ? 'active' : '' }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/category/list') || Request::is('admin/rental/category/edit*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.rental.category.list') }}" title="{{ translate('messages.category') }}">
                                 <i class="tio-category nav-icon"></i>
                                 <span class="text-truncate position-relative overflow-visible">
@@ -216,7 +216,7 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/brand/list') ? 'active' : '' }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/brand/list') || Request::is('admin/rental/brand/edit*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.rental.brand.list') }}" title="{{ translate('messages.brands') }}">
                                 <i class="tio-medal nav-icon"></i>
                                 <span class="text-truncate position-relative overflow-visible">

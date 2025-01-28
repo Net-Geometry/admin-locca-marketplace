@@ -74,7 +74,7 @@
                                                         <label class="input-label font-semibold"
                                                                for="exampleFormControlInput1">{{ translate('messages.short_description') }}
                                                             ({{ translate('messages.default') }})</label>
-                                                        <textarea type="text" name="description[]" placeholder="{{ translate('messages.type_business_address') }}"
+                                                        <textarea type="text" name="description[]" placeholder="{{ translate('messages.type_short_description') }}"
                                                                   class="form-control min-h-90px ckeditor">{{ old('description.0') }}</textarea>
                                                     </div>
                                                 </div>

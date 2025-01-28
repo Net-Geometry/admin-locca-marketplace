@@ -198,9 +198,9 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <label class="toggle-switch toggle-switch-sm" for="stocksCheckboxNewTag">
-                                        <input type="checkbox" class="toggle-switch-input redirect-url" data-url=""
-                                               id="stocksCheckboxNewTag">
+                                    <label class="toggle-switch toggle-switch-sm" for="stocksCheckboxNew{{$vehicle->id}}">
+                                        <input type="checkbox" data-url="{{route('admin.rental.provider.vehicle.new-tag',[$vehicle['id'],$vehicle->new_tag?0:1])}}"
+                                               class="toggle-switch-input redirect-url" id="stocksCheckboxNew{{$vehicle->id}}" {{$vehicle->new_tag?'checked':''}}>
                                         <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -209,9 +209,9 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <label class="toggle-switch toggle-switch-sm" for="stocksCheckboxSTatus">
-                                        <input type="checkbox" class="toggle-switch-input redirect-url" data-url=""
-                                               id="stocksCheckboxSTatus" checked="">
+                                    <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$vehicle->id}}">
+                                        <input type="checkbox" data-url="{{route('admin.rental.provider.vehicle.status',[$vehicle['id'],$vehicle->status?0:1])}}"
+                                               class="toggle-switch-input redirect-url" id="stocksCheckbox{{$vehicle->id}}" {{$vehicle->status?'checked':''}}>
                                         <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
