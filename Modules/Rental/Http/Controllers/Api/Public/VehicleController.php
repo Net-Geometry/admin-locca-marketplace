@@ -267,10 +267,8 @@ class VehicleController extends Controller
             ->when(in_array($request->sortby_price, ['asc', 'desc']), function ($query) use ($request) {
 
                 if ($request->trip_type == 'distance_wise') {
-                    info($request->sortby_price);
                     return  $query->orderBy('distance_price', $request->sortby_price);
                 } elseif ($request->trip_type == 'hourly') {
-                    info($request->sortby_price);
                     return  $query->orderBy('hourly_price', $request->sortby_price);
                 }
             })
