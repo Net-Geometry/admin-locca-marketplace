@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaymentRequest;
 use App\Models\User;
+use App\Traits\Processor;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -13,8 +15,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
-use App\Models\PaymentRequest;
-use App\Traits\Processor;
 use Razorpay\Api\Api;
 
 class RazorPayController extends Controller
@@ -103,17 +103,23 @@ class RazorPayController extends Controller
     {
         $input = $request->all();
         $data_id= base64_decode($request?->payment_data);
+        $payment_data = $this->payment::where(['id' => $data_id])->first();
         if (count($input) && !empty($input['razorpay_payment_id'])) {
-            $data = $this->payment::where(['id' =>$data_id])->first();
-            if (isset($data) && function_exists($data->success_hook)) {
-                $data->payment_method=  'razor_pay';
-                $data->is_paid=  1;
-                $data->transaction_id= $input['razorpay_payment_id'] ;
-                $data->save();
-                call_user_func($data->success_hook, $data);
-                return $this->payment_response($data, 'success');
+            if (isset($payment_data) && function_exists($payment_data->success_hook)) {
+                $payment_data->payment_method=  'razor_pay';
+                $payment_data->is_paid=  1;
+                $payment_data->transaction_id= $input['razorpay_payment_id'] ;
+                $payment_data->save();
+                call_user_func($payment_data->success_hook, $payment_data);
+                return $this->payment_response($payment_data, 'success');
             }
         }
-        return redirect()->route('payment-fail');
+        return $this->payment_response($payment_data, 'fail');
+    }
+
+    public function cancel(Request $request): JsonResponse|Redirector|RedirectResponse|Application
+    {
+        $payment_data = $this->payment::where(['id' => $request['payment_id']])->first();
+        return $this->payment_response($payment_data, 'fail');
     }
 }
