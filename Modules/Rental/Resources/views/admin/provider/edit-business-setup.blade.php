@@ -161,7 +161,7 @@
                         <div class="btn--container justify-content-end mt-3">
                             <a href="{{ route('admin.rental.provider.edit-basic-setup', $store->id ) }}" class="btn btn--reset min-w-100px justify-content-center">{{ translate('messages.back') }}</a>
                             <div id="subscriptionBtn">
-                                <button data-id="{{ $store?->package?->id }}"
+                                <button data-id="{{ $store->store_business_model == 'commission' ? 0 : $store?->package?->id }}"
                                     data-target="#package_detail" id="package_detail" type="button" class="btn btn--primary shift-btn package_detail">{{ translate('messages.update') }}</button>
                             </div>
                             <?php
@@ -356,6 +356,13 @@
         $('.shift_to_commission').on('click', function (event) {
             let url = $(this).data('url');
             let message = $(this).data('message');
+            let storeBusinessModel = '{{ $store->store_business_model }}' == 'commission';
+            if(storeBusinessModel){
+                $('#loading').hide();
+                toastr.success('{{ translate('Business Plan updated successfully') }}!');
+                location.reload();
+                return;
+            }
             shift_to_commission(url, message, event)
         })
 
@@ -399,11 +406,24 @@
         }
 
         $(document).on('click', '.package_detail', function () {
+            var oldPackage = $(this).data('id');
             var activePackage = $('.__plan-item.active input[name="package_id"]');
+
+            if(oldPackage == activePackage.val()){
+                $('#loading').hide();
+                toastr.success('{{ translate('Business Plan updated successfully') }}');
+                location.reload();
+                return;
+            }
+
             if (activePackage.length) {
                 var packageId = activePackage.val();
-                // alert(packageId)
                 var url = `{{ route('admin.business-settings.subscriptionackage.packageView', ['package_id', $store->id]) }}`.replace('package_id', packageId);
+            }
+            else{
+                $('#loading').hide();
+                toastr.warning('{{ translate('Please select a subscription package.') }}');
+                return;
             }
 
             $.ajax({

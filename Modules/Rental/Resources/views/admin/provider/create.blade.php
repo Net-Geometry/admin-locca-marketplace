@@ -710,6 +710,12 @@
     <script>
         "use strict";
 
+        $('#pac-input1').on('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+            }
+        });
+
         $(document).on('ready', function() {
             $('.offcanvas').on('click', function() {
                 $('.offcanvas, .floating--date').removeClass('active')
