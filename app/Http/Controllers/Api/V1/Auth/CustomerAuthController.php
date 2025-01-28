@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use Illuminate\Support\Carbon;
 use App\Mail\EmailVerification;
-use App\Mail\LoginVerification;
 use App\Models\BusinessSetting;
 use App\CentralLogics\SMS_module;
 use App\Models\WalletTransaction;
@@ -26,6 +25,8 @@ use Illuminate\Support\Facades\Mail;
 use Modules\Gateways\Traits\SmsGateway;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use Modules\Rental\Entities\RentalCart;
+use Modules\Rental\Entities\RentalCartUserData;
 
 class CustomerAuthController extends Controller
 {
@@ -1072,7 +1073,7 @@ class CustomerAuthController extends Controller
     }
 
     private function check_guest_cart($user, $guest_id){
-        if($guest_id  && isset($user->id)){
+        if($guest_id && isset($user->id)){
 
             $userStoreIds = Cart::where('user_id', $guest_id)
                 ->join('items', 'carts.item_id', '=', 'items.id')
@@ -1086,6 +1087,22 @@ class CustomerAuthController extends Controller
                 ->delete();
 
             Cart::where('user_id', $guest_id)->update(['user_id' => $user->id, 'is_guest' => 0]);
+
+            if(rental_module_published_status()){
+
+                RentalCart::where(['user_id' => $user->id, 'is_guest' => 0])
+                ->when(RentalCart::where(['user_id' => $guest_id, 'is_guest' => 1])->exists(),function ($query) {
+                        $query->delete();
+                    });
+
+                RentalCartUserData::where(['user_id' => $user->id, 'is_guest' => 0])
+                    ->when( RentalCartUserData::where(['user_id' => $guest_id, 'is_guest' => 1])->exists(),function ($query) {
+                            $query->delete();
+                        });
+
+                RentalCart::where('user_id', $guest_id)->update(['user_id' => $user->id, 'is_guest' => 0]);
+                RentalCartUserData::where('user_id', $guest_id)->update(['user_id' => $user->id, 'is_guest' => 0]);
+            }
         }
         return true;
     }
