@@ -14,7 +14,7 @@ class BannerObserver
      */
     public function created(Banner $Banner): void
     {
-        $this->refreshBannersCache($Banner->key);
+        $this->refreshBannersCache();
     }
 
     /**
@@ -22,7 +22,7 @@ class BannerObserver
      */
     public function updated(Banner $Banner): void
     {
-        $this->refreshBannersCache($Banner->key);
+        $this->refreshBannersCache();
     }
 
     /**
@@ -30,7 +30,7 @@ class BannerObserver
      */
     public function deleted(Banner $Banner): void
     {
-        $this->refreshBannersCache($Banner->key);
+        $this->refreshBannersCache();
     }
 
     /**
@@ -38,7 +38,7 @@ class BannerObserver
      */
     public function restored(Banner $Banner): void
     {
-        $this->refreshBannersCache($Banner->key);
+        $this->refreshBannersCache();
     }
 
     /**
@@ -46,10 +46,10 @@ class BannerObserver
      */
     public function forceDeleted(Banner $Banner): void
     {
-        $this->refreshBannersCache($Banner->key);
+        $this->refreshBannersCache();
     }
 
-    private function refreshBannersCache($config=null)
+    private function refreshBannersCache()
     {
         $prefix = 'banners_';
         $cacheKeys = DB::table('cache')
