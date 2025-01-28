@@ -83,24 +83,12 @@ class BannerController extends Controller
         $cacheKey = 'banners_' . md5($zone_id . '_' . ($featured ? 'featured' : 'non_featured') . '_' . $moduleId);
 
         $banners = Cache::remember($cacheKey, now()->addMinutes(20), function () use ($zone_id, $featured) {
-            $banners = Banner::active()->wherehas('module', function ($query) {
+            return  Banner::active()->wherehas('module', function ($query) {
                 $query->where('module_type', 'rental');
             })
                 ->when($featured, function ($query) {
                     $query->featured();
-                });
-
-            if (config('module.current_module_data')) {
-                $banners = $banners->whereHas('zone.modules', function ($query) {
-                    $query->where('modules.id', config('module.current_module_data')['id']);
-                })
-                    ->module(config('module.current_module_data')['id'])
-                    ->when(!config('module.current_module_data')['all_zone_service'], function ($query) use ($zone_id) {
-                        $query->whereIn('zone_id', json_decode($zone_id, true));
-                    });
-            }
-
-            return $banners->whereIn('zone_id', json_decode($zone_id, true))
+                })->whereIn('zone_id', json_decode($zone_id, true))
                 ->whereHas('module', function ($query) {
                     $query->active();
                 })

@@ -160,7 +160,7 @@ class VendorController extends Controller
         $store->vendor_id = $vendor->id;
         $store->zone_id = $request->zone_id;
         $store->module_id = $request->module_id;
-        $store->pickup_zone_id = json_encode($request['pickup_zone_id']) ?? [];
+        $store->pickup_zone_id = json_encode($request['pickup_zone_id']?? []) ;
         $store->tax = $request->tax;
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->status = 0;

@@ -154,7 +154,8 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="text-center">
-                                <h2>
+
+                                <h2 class="update_notification_text">
                                     <i class="tio-shopping-cart-outlined"></i> {{translate('messages.You have new order, Check Please.')}}
                                 </h2>
                                 <hr>
@@ -437,10 +438,15 @@
         @php($order_notification_type = \App\Models\BusinessSetting::where('key', 'order_notification_type')->first())
         @php($order_notification_type = $order_notification_type ? $order_notification_type->value : 'firebase')
         let order_type = 'all';
+        let is_trip =false;
         messaging.onMessage(function (payload) {
             if(payload.data.order_id && payload.data.type === 'new_order'){
                 @if(\App\CentralLogics\Helpers::employee_module_permission_check('order') && $order_notification_type == 'firebase')
                     order_type = payload.data.order_type
+                    if(order_type === 'trip'){
+                        document.querySelector('.update_notification_text').textContent = "{{translate('messages.You have new trip, Check Please.')}}";
+                        is_trip= true;
+                    }
                     playAudio();
                     $('#popup-modal').appendTo("body").modal('show');
                 @endif
@@ -473,6 +479,12 @@
                 dataType: 'json',
                 success: function (response) {
                     let data = response.data;
+
+                    if(data.order_type === 'trip'){
+                        document.querySelector('.update_notification_text').textContent = "{{translate('messages.You have new trip, Check Please.')}}";
+                        is_trip= true;
+                    }
+
                     if (data.new_pending_order > 0) {
                         order_type = 'pending';
                         playAudio();
@@ -491,7 +503,12 @@
 
         $('.check-order').on('click',function (){
             if(order_type){
-                location.href = '{{url('/')}}/vendor-panel/order/list/'+order_type;
+                if(is_trip === true){
+                    location.href = '{{url('/')}}/vendor-panel/trip?status=all';
+                } else{
+                    location.href = '{{url('/')}}/vendor-panel/order/list/'+order_type;
+
+                }
             }
         });
         startFCM();
