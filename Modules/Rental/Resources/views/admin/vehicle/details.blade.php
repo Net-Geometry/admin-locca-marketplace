@@ -387,18 +387,20 @@
                     <tbody id="set-rows">
                     <tr>
                         <td>
-                            <div class="d-flex gap-20px">
+                            <div class="row">
                                 @foreach($vehicle->vehicleIdentities as $multi)
-                                <div class="flex-grow-1 font-semibold text--title">
-                                    <div class="opacity-70 mb-2">{{translate('Vehicle')}} {{ $loop->iteration }}</div>
-                                    <div class="border rounded p-3 d-flex gap-4 justify-content-between">
-                                        <div>
-                                            <div class="fs-12 opacity-60">{{translate('VIN Number')}}</div>
-                                            <div>{{ $multi->vin_number }}</div>
-                                        </div>
-                                        <div>
-                                            <div class="fs-12 opacity-60">{{translate('Registration No.')}}</div>
-                                            <div>{{ $multi->license_plate_number }}</div>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="font-semibold text--title">
+                                        <div class="opacity-70 mb-2">{{translate('Vehicle')}} {{ $loop->iteration }}</div>
+                                        <div class="border rounded p-3 d-flex gap-4 justify-content-between">
+                                            <div>
+                                                <div class="fs-12 opacity-60">{{translate('VIN Number')}}</div>
+                                                <div>{{ $multi->vin_number }}</div>
+                                            </div>
+                                            <div class="pr-4">
+                                                <div class="fs-12 opacity-60">{{translate('Registration No.')}}</div>
+                                                <div>{{ $multi->license_plate_number }}</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

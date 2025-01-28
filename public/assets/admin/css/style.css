@@ -2571,9 +2571,9 @@ textarea.form-control[readonly] {
     -moz-transition: all ease 0.3s;
 }
 
-.select2:not(.select2-container--open) .select2-search--inline {
+/* .select2:not(.select2-container--open) .select2-search--inline {
     height: 2px;
-}
+} */
 
 .toggle-switch-sm .toggle-switch-label {
     width: 44px;

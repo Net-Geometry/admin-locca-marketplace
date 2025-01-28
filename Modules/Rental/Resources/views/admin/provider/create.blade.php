@@ -107,14 +107,14 @@
                                         <div class="card __bg-FAFAFA border-0">
                                             <div class="card-body">
                                                 @if ($language)
-                                                    <ul class="nav nav-tabs mb-4">
+                                                    <ul class="nav nav-tabs mb-4 flex-nowrap">
                                                         <li class="nav-item">
-                                                            <a class="nav-link lang_link active" href="#"
+                                                            <a class="nav-link lang_link text-nowrap active" href="#"
                                                                 id="default-link">{{ translate('Default') }}</a>
                                                         </li>
                                                         @foreach (json_decode($language) as $lang)
                                                             <li class="nav-item">
-                                                                <a class="nav-link lang_link" href="#"
+                                                                <a class="nav-link lang_link text-nowrap" href="#"
                                                                     id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
                                                             </li>
                                                         @endforeach
@@ -216,12 +216,13 @@
                                                         </h6>
                                                     </div>
                                                     <div class="icon-file-group outside">
-                                                        <div class="icon-file rounded-circle">
+                                                        <div id="logoEditIcon" class="icon-file rounded-circle">
                                                             <i class="tio-edit"></i>
-                                                            <input type="file" name="logo" id="customFileEg1"
+                                                            
+                                                        </div>
+                                                        <input type="file" name="logo" id="customFileEg1"
                                                                 class="custom-file-input"
                                                                 accept=".jpg, .png, .jpeg|image/*">
-                                                        </div>
                                                     </div>
                                                 </label>
                                             </div>
@@ -259,12 +260,12 @@
                                                         </h6>
                                                     </div>
                                                     <div class="icon-file-group outside">
-                                                        <div class="icon-file rounded-circle">
+                                                        <div id="coverEditIcon" class="icon-file rounded-circle">
                                                             <i class="tio-edit"></i>
-                                                            <input type="file" name="cover_photo" id="coverImageUpload"
+                                                        </div>
+                                                        <input type="file" name="cover_photo" id="coverImageUpload"
                                                                 class="custom-file-input"
                                                                 accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                                        </div>
                                                     </div>
                                                 </label>
                                             </div>
@@ -929,7 +930,7 @@
     <script>
         // ---- file upload with textbox
         $(document).ready(function() {
-            function handleImageUpload(inputSelector, imgViewerSelector, textBoxSelector) {
+            function handleImageUpload(inputSelector, imgViewerSelector, textBoxSelector, iconSelector) {
                 const inputElement = $(inputSelector);
 
                 // Handle input change for file selection
@@ -940,6 +941,7 @@
                         reader.onload = function(e) {
                             $(imgViewerSelector).attr('src', e.target.result).show();
                             $(textBoxSelector).hide();
+                            $(iconSelector).remove();
                         };
                         reader.readAsDataURL(file);
                     }
@@ -968,6 +970,7 @@
                         reader.onload = function(e) {
                             $(imgViewerSelector).attr('src', e.target.result).show();
                             $(textBoxSelector).hide();
+                            $(iconSelector).remove();
                         };
                         reader.readAsDataURL(file);
                     }
@@ -978,13 +981,15 @@
             handleImageUpload(
                 '#coverImageUpload',
                 '#coverImageViewer',
-                '#coverImageViewer ~ .upload-file__textbox'
+                '#coverImageViewer ~ .upload-file__textbox',
+                '#coverEditIcon'
             );
 
             handleImageUpload(
                 '#customFileEg1',
                 '#logoImageViewer',
-                '#logoImageViewer ~ .upload-file__textbox'
+                '#logoImageViewer ~ .upload-file__textbox',
+                '#logoEditIcon'
             );
         });
         // ---- file upload with textbox ends

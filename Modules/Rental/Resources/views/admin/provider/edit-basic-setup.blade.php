@@ -83,14 +83,14 @@
                                         <div class="card __bg-FAFAFA border-0">
                                             <div class="card-body">
                                                 @if ($language)
-                                                    <ul class="nav nav-tabs mb-4">
+                                                    <ul class="nav nav-tabs mb-4 flex-nowrap">
                                                         <li class="nav-item">
-                                                            <a class="nav-link lang_link active" href="#"
+                                                            <a class="nav-link lang_link text-nowrap active" href="#"
                                                                id="default-link">{{ translate('Default') }}</a>
                                                         </li>
                                                         @foreach (json_decode($language) as $lang)
                                                             <li class="nav-item">
-                                                                <a class="nav-link lang_link" href="#"
+                                                                <a class="nav-link lang_link text-nowrap" href="#"
                                                                    id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
                                                             </li>
                                                         @endforeach
