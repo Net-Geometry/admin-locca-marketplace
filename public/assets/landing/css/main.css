@@ -1948,11 +1948,10 @@ header.active::after {
   justify-content: flex-end;
   align-items: center;
   position: relative;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
 .earn-item-img::before {
-    border-radius: 50px;
   position: absolute;
   content: "";
   inset: 0;
@@ -3589,7 +3588,7 @@ input[type=password] ~ .show-password .icon-2 {
 
 input[type=text] ~ .show-password .icon-1 {
   display: none;
-}
+} 
 .__plan-item .info li img {
   width: 20px !important;
 }
@@ -3615,7 +3614,7 @@ input[type=text] ~ .show-password .icon-1 {
 
 .nav--tabs-wrapper {
   margin-inline: auto;
-  max-width: 640px;
+  max-width: 700px;
 }
 .nav--tabs-wrapper .owl-nav .owl-prev,
 .nav--tabs-wrapper .owl-nav .owl-next {
@@ -3933,6 +3932,3 @@ input[type=text] ~ .show-password .icon-1 {
   content: "";
   transform: translateY(-50%);
 }/*# sourceMappingURL=main.css.map */
-.z-2{
-    z-index: 2;
-}

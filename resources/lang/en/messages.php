@@ -7286,4 +7286,7 @@ Smartly or Earn. ',
   'Please select a subscription package.' => 'Please select a subscription package.',
   'type_short_description' => 'Type short description',
   'View map' => 'View map',
+  'Total_Drivers' => 'Total Drivers',
+  'Search by name,' => 'Search by name,',
+  'Taxi Module' => 'Taxi Module',
 );
