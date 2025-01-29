@@ -342,26 +342,33 @@
         $(document).ready(function () {
             // Handle file input change
             $('.single_file_input').on('change', function (event) {
-                var file = event.target.files[0];
-                var $card = $(event.target).closest('.upload-file');
-                var $textbox = $card.find('.upload-file-textbox');
-                var $imgElement = $card.find('.upload-file-img');
-                var $removeBtn = $card.find('.remove-btn');
+                let file = event.target.files[0];
+                let $card = $(event.target).closest('.upload-file');
+                let $textbox = $card.find('.upload-file-textbox');
+                let $imgElement = $card.find('.upload-file-img');
+                let $removeBtn = $card.find('.remove-btn');
 
                 if (file) {
-                    var reader = new FileReader();
+                    let reader = new FileReader();
                     reader.onload = function (e) {
                         $textbox.hide();
                         $imgElement.attr('src', e.target.result).show();
                         $removeBtn.css('opacity', 1);
                     };
                     reader.readAsDataURL(file);
+                    console.log("file--", file);
+                    
+                }
+                 else {
+                    $textbox.show();
+                    $imgElement.hide().attr('src', ''); 
+                    $removeBtn.css('opacity', 0); 
                 }
             });
 
             // Handle remove button click
             $('.remove-btn').click(function () {
-                var $card = $(this).closest('.upload-file');
+                let $card = $(this).closest('.upload-file');
                 $card.find('.single_file_input').val('');
                 $card.find('.upload-file-textbox').show();
                 $card.find('.upload-file-img').hide().attr('src', '');
@@ -372,7 +379,7 @@
             $('#reset_btn').click(function () {
                 $('#banner_type').trigger('change');
                 $('#store_id').val(null).trigger('change');
-                var $cards = $('.upload-file');
+                let $cards = $('.upload-file');
                 $cards.each(function () {
                     $(this).find('.single_file_input').val('');
                     $(this).find('.upload-file-textbox').show();
