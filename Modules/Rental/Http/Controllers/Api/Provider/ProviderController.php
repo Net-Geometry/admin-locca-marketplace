@@ -86,12 +86,9 @@ class ProviderController extends Controller
             ? (float) $vendor->wallet->total_earning
             : 0;
 
-        $vendor['todays_earning'] = (float) $vendor->todays_earning()->sum('store_amount');
-
-        $vendor['this_week_earning'] = (float) $vendor->this_week_earning()->sum('store_amount');
-
-        $vendor['this_month_earning'] = (float) $vendor->this_month_earning()->sum('store_amount');
-
+        $vendor['todays_earning'] = (float) $store->todays_trip_earning()->sum('store_amount');
+        $vendor['this_week_earning'] = (float) $store->this_week_trip_earning()->sum('store_amount');
+        $vendor['this_month_earning'] = (float) $store->this_month_trip_earning()->sum('store_amount');
 
         if($vendor['balance']  < 0){
             $vendor['balance']  = 0 ;

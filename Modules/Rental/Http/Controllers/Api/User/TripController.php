@@ -120,7 +120,7 @@ class TripController extends Controller
                 ], data_get($coupon_check, 'status_code'));
             } else {
                 $coupon = data_get($coupon_check, 'coupon');
-                $coupon_created_by = data_get($coupon_check, 'coupon_created_by');
+                $coupon_discount_by = data_get($coupon_check, 'coupon_discount_by');
             }
         }
 
@@ -190,7 +190,6 @@ class TripController extends Controller
             'user_data' => $user_data,
             'provider' => $provider,
             'coupon' => $coupon ?? null,
-            'coupon_created_by' => $coupon_created_by ?? null,
             'tax_included' => $tax_included,
             'discount_on_trip' => $discount_on_trip ?? 0,
             'coupon_discount_amount' => $coupon_discount_amount ?? 0,
