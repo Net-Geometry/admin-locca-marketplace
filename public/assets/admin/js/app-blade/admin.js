@@ -510,6 +510,7 @@ $(function () {
 });
 
 $(document).ready(function () {
+    // --- select2 dropdown icon add
     $("select.js-select2-custom, select.multiple-select2")
         .on("select2:open", function () {
             setTimeout(() => {
@@ -521,4 +522,43 @@ $(document).ready(function () {
         })
         .trigger("select2:open")
         .select2("close");
+
+    // --- tooltip remains open
+    let activeTooltip = null;
+    $('[data-toggle="tooltip"][data-html="true"]')
+        .tooltip({
+            html: true,
+            trigger: "manual",
+        })
+        .on("mouseenter", function () {
+            let _this = this;
+
+            if (activeTooltip && activeTooltip !== _this) {
+                $(activeTooltip).tooltip("hide");
+            }
+
+            activeTooltip = _this;
+            $(_this).tooltip("show");
+
+            $(".tooltip")
+                .on("mouseenter", function () {
+                    $(activeTooltip).tooltip("show");
+                })
+                .on("mouseleave", function () {
+                    $(activeTooltip).tooltip("hide");
+                    activeTooltip = null;
+                });
+        })
+        .on("mouseleave", function () {
+            let _this = this;
+
+            setTimeout(function () {
+                if (!$(".tooltip:hover").length) {
+                    $(_this).tooltip("hide");
+                    if (activeTooltip === _this) {
+                        activeTooltip = null;
+                    }
+                }
+            }, 200);
+        });
 });
