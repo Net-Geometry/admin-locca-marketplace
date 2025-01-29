@@ -289,21 +289,28 @@ class VehicleController extends Controller
             ->when($request->transmission_type, function ($query) use ($request) {
                 $query->where('transmission_type', $request->transmission_type);
             })
+            ->when($request->vehicle_type, function ($query) use ($request) {
+                $query->where('type', $request->vehicle_type);
+            })
             ->when($request->fuel_type, function ($query) use ($request) {
                 $query->where('fuel_type', $request->fuel_type);
-            })
-            ->when($request->top_rated == 1, function ($query) {
-                $query->orderBy('total_trip', 'desc');
-            })
-            ->when(in_array($request->sortby_price, ['asc', 'desc']), function ($query) use ($request) {
+            });
 
+            $vehicles = $vehicles->when(in_array($request->sortby_price, ['asc', 'desc']), function ($query) use ($request) {
                 if ($request->trip_type == 'distance_wise') {
                     return  $query->orderBy('distance_price', $request->sortby_price);
                 } elseif ($request->trip_type == 'hourly') {
                     return  $query->orderBy('hourly_price', $request->sortby_price);
                 }
-            })
-            ->latest();
+            });
+            $vehicles = $vehicles->when($request->top_rated == 1, function ($query) {
+                $query->orderBy('total_trip', 'desc');
+            });
+
+            if(!in_array($request->sortby_price, ['asc', 'desc']) && $request->top_rated != 1 ){
+                $vehicles = $vehicles->latest();
+            }
+
 
         return [ 'vehicles' =>$vehicles , 'max_price'=> $max_price , 'min_price' => $min_price];
     }

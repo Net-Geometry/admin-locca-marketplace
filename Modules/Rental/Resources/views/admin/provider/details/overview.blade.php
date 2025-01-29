@@ -354,8 +354,7 @@
                                     </ul>
 
                                 </div>
-                                <h5 class="mt-5 font-bold"> {{ translate('messages.Login_Information') }}
-                                </h5>
+                                
                                 <div class="resturant--info-address">
                                     <ul class="address-info address-info-2 p-0 text-dark">
                                         <li class="d-flex align-items-start">

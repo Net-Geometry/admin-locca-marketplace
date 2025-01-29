@@ -63,7 +63,7 @@ class ProviderController extends Controller
         $store['schedules'] = $store->schedules()->get();
         $store['module'] = $store->module;
 
-        $vendor['order_count'] =$this->trip->where('provider_id' , $store->id)->whereNotIn('trip_status', ['canceled', 'failed'])
+        $vendor['order_count'] =$this->trip->where('provider_id' , $store->id)->whereIn('trip_status', ['refunded', 'completed'])
         ->count();
         $vendor['todays_order_count'] = $this->trip->where('provider_id' , $store->id)->whereDate('created_at',now())
         ->whereIn('trip_status', ['refunded', 'completed'])->count();

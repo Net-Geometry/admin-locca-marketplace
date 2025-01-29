@@ -145,7 +145,7 @@ trait TripLogicTrait
 
             if ($received_by == 'admin') {
                 $adminWallet->digital_received = $adminWallet->digital_received + ($trip->trip_amount - $trip->partially_paid_amount);
-            } else if ($received_by == 'store' &&  ($trip->payment_method == "cash_payment" || $unpaid_pay_method == 'cash_payment')) {
+            } else if ($received_by == 'vendor' &&  ($trip->payment_method == "cash_payment" || $unpaid_pay_method == 'cash_payment')) {
                 $store_over_flow =  true;
                 $vendorWallet->collected_cash = $vendorWallet->collected_cash + ($trip->trip_amount - $trip->partially_paid_amount);
             } else if ($received_by == false) {
