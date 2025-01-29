@@ -25,7 +25,7 @@ class ProviderDashBoardController extends Controller
     {
         $deliveryStatistics= $this->getTripData($request);
         $data = self::dashboard_data($request);
-        $total_sell = $data['total_sell'];
+        // $total_sell = $data['total_sell'];
         $commission = $data['commission'];
         $label = $data['label'];
         return view("rental::provider.dashboard.dashboard", [
@@ -37,7 +37,7 @@ class ProviderDashBoardController extends Controller
             'totalCount' => $deliveryStatistics['totalCount'],
             'scheduledCount' => $deliveryStatistics['scheduledCount'],
             'instantCount' => $deliveryStatistics['instantCount'],
-            'total_sell' => $total_sell,
+            // 'total_sell' => $total_sell,
             'commission' => $commission,
             'label' => $label,
         ]);
@@ -93,13 +93,13 @@ class ProviderDashBoardController extends Controller
     {
         $request->get('commission_overview', 'all');
         $data = self::dashboard_data($request);
-        $total_sell = $data['total_sell'];
+        // $total_sell = $data['total_sell'];
         $commission = $data['commission'];
         $label = $data['label'];
-        $grossEarning = collect($total_sell)->sum();
+        $grossEarning = collect($commission)->sum();
 
         return response()->json([
-            'view' => view('rental::provider.dashboard._sale-chart', compact('total_sell', 'commission', 'label', 'grossEarning'))->render(),
+            'view' => view('rental::provider.dashboard._sale-chart', compact('commission', 'label', 'grossEarning'))->render(),
             'grossEarning' => $grossEarning
         ], 200);
     }
@@ -129,15 +129,15 @@ class ProviderDashBoardController extends Controller
             '"'.translate('Sat').'"',
             '"'.translate('Sun').'"',
         );
-        $total_sell = [];
+        // $total_sell = [];
         $commission = [];
 
         switch ($request['commission_overview']) {
             case "this_year":
                 for ($i = 1; $i <= 12; $i++) {
-                    $total_sell[$i] = TripTransaction::where('provider_id',Helpers::get_store_id())
-                        ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
-                        ->sum('trip_amount');
+                    // $total_sell[$i] = TripTransaction::where('provider_id',Helpers::get_store_id())
+                    //     ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
+                    //     ->sum('trip_amount');
 
                     $commission[$i] = TripTransaction::where('provider_id',Helpers::get_store_id())
                         ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
@@ -153,9 +153,9 @@ class ProviderDashBoardController extends Controller
                 for ($i = 0; $i < 7; $i++) { // Loop through each day of the week
                     $currentDate = $weekStartDate->copy()->addDays($i); // Get the date for the current day in the loop
 
-                    $total_sell[$i] = TripTransaction::where('provider_id',Helpers::get_store_id())
-                        ->whereDate('created_at', $currentDate->format('Y-m-d'))
-                        ->sum('trip_amount');
+                    // $total_sell[$i] = TripTransaction::where('provider_id',Helpers::get_store_id())
+                    //     ->whereDate('created_at', $currentDate->format('Y-m-d'))
+                    //     ->sum('trip_amount');
 
                     $commission[$i] = TripTransaction::where('provider_id',Helpers::get_store_id())
                         ->whereDate('created_at', $currentDate->format('Y-m-d'))
@@ -185,9 +185,9 @@ class ProviderDashBoardController extends Controller
                         $end = now()->endOfMonth();
                     }
 
-                    $total_sell[$i] = TripTransaction::where('provider_id',Helpers::get_store_id())
-                        ->whereBetween('created_at', ["{$start->format('Y-m-d')} 00:00:00", "{$end->format('Y-m-d')} 23:59:59"])
-                        ->sum('trip_amount');
+                    // $total_sell[$i] = TripTransaction::where('provider_id',Helpers::get_store_id())
+                    //     ->whereBetween('created_at', ["{$start->format('Y-m-d')} 00:00:00", "{$end->format('Y-m-d')} 23:59:59"])
+                    //     ->sum('trip_amount');
 
                     $commission[$i] = TripTransaction::where('provider_id',Helpers::get_store_id())
                         ->whereBetween('created_at', ["{$start->format('Y-m-d')} 00:00:00", "{$end->format('Y-m-d')} 23:59:59"])
@@ -202,9 +202,9 @@ class ProviderDashBoardController extends Controller
 
             default:
                 for ($i = 1; $i <= 12; $i++) {
-                    $total_sell[$i] = TripTransaction::where('provider_id',Helpers::get_store_id())
-                        ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
-                        ->sum('trip_amount');
+                    // $total_sell[$i] = TripTransaction::where('provider_id',Helpers::get_store_id())
+                    //     ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
+                    //     ->sum('trip_amount');
 
                     $commission[$i] = TripTransaction::where('provider_id',Helpers::get_store_id())
                         ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
@@ -214,7 +214,7 @@ class ProviderDashBoardController extends Controller
         }
 
 
-        $dash_data['total_sell'] = $total_sell;
+        // $dash_data['total_sell'] = $total_sell;
         $dash_data['commission'] = $commission;
         $dash_data['label'] = $label;
 

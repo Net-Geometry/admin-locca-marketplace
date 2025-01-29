@@ -10,6 +10,7 @@ use App\CentralLogics\StoreLogic;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Rental\Entities\Vehicle;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Modules\Rental\Entities\VehicleBrand;
 use Modules\Rental\Entities\VehicleReview;
@@ -77,9 +78,14 @@ class VehicleController extends Controller
             ], 403);
         }
 
+            $vehicleData=$this->getVelicleListData($request, $zones ?? [], $pick_up_lat, $pick_up_lng);
+            $vehicles = $vehicleData['vehicles']->paginate($limit, ['*'], 'page', $offset);
+            $extraData=[
+                'max_price' => (int) $vehicleData['max_price'],
+                'min_price' => (int) $vehicleData['min_price'],
+            ];
 
-        $vehicles = $this->getVelicleListData($request, $zones ?? [], $pick_up_lat, $pick_up_lng)->paginate($limit, ['*'], 'page', $offset);
-        $data = $this->helpers->preparePaginatedResponse(pagination: $vehicles, limit: $limit, offset: $offset, key: 'vehicles', extraData: []);
+        $data = $this->helpers->preparePaginatedResponse(pagination: $vehicles, limit: $limit, offset: $offset, key: 'vehicles', extraData: $extraData);
         return response()->json($data, 200);
     }
 
@@ -143,8 +149,16 @@ class VehicleController extends Controller
 
         $limit = $request['limit'] ?? 25;
         $offset = $request['offset'] ?? 1;
-        $vehicles = $this->getVelicleListData($request)->paginate($limit, ['*'], 'page', $offset);
-        $data = $this->helpers->preparePaginatedResponse(pagination: $vehicles, limit: $limit, offset: $offset, key: 'vehicles', extraData: []);
+
+        $vehicleData= $this->getVelicleListData($request);
+        $vehicles = $vehicleData['vehicles']->paginate($limit, ['*'], 'page', $offset);
+        $extraData=[
+            'max_price' => (int) $vehicleData['max_price'],
+            'min_price' => (int) $vehicleData['min_price'],
+        ];
+
+        $data = $this->helpers->preparePaginatedResponse(pagination: $vehicles, limit: $limit, offset: $offset, key: 'vehicles', extraData: $extraData);
+
         return response()->json($data, 200);
     }
 
@@ -169,6 +183,23 @@ class VehicleController extends Controller
     {
         $zone_id = $request->header('zoneId');
         $zone_id = json_decode($zone_id, true);
+
+        $max_price= 999999999;
+        $min_price= 1;
+        $price_column = $request->trip_type == 'distance_wise' ? 'distance_price' : ($request->trip_type == 'hourly' ? 'hourly_price' : null);
+
+        if ($price_column) {
+            $cache_key_max = "vehicle_max_price_{$price_column}";
+            $cache_key_min = "vehicle_min_price_{$price_column}";
+
+            $max_price = Cache::rememberForever($cache_key_max, function () use ($price_column) {
+                return $this->vehicle->max($price_column);
+            });
+
+            $min_price = Cache::rememberForever($cache_key_min, function () use ($price_column) {
+                return $this->vehicle->min($price_column);
+            });
+        }
 
         $brand_ids = json_decode($request->brand_ids, true) ?? null;
         $category_ids = json_decode($request->category_ids, true) ?? null;
@@ -274,9 +305,7 @@ class VehicleController extends Controller
             })
             ->latest();
 
-
-
-        return $vehicles;
+        return [ 'vehicles' =>$vehicles , 'max_price'=> $max_price , 'min_price' => $min_price];
     }
 
 

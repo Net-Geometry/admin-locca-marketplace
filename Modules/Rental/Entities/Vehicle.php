@@ -276,7 +276,18 @@ class Vehicle extends Model
         static::created(function ($item) {
             $item->slug = $item->generateSlug($item->name);
             $item->save();
+            Helpers::deleteCacheData('vehicle_');
         });
+        static::deleted(function(){
+            Helpers::deleteCacheData('vehicle_');
+        });
+        static::saved(function(){
+            Helpers::deleteCacheData('vehicle_');
+        });
+        static::updated(function(){
+            Helpers::deleteCacheData('vehicle_');
+        });
+
     }
 }
 

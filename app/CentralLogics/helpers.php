@@ -4503,5 +4503,21 @@ class Helpers
         }
         return null;
     }
+
+    public static function deleteCacheData($prefix)
+    {
+        $cacheKeys = DB::table('cache')
+            ->where('key', 'like', "%" . $prefix . "%")
+            ->pluck('key');
+        $appName = env('APP_NAME').'_cache';
+        $remove_prefix = strtolower(str_replace('=', '', $appName));
+        $sanitizedKeys = $cacheKeys->map(function ($key) use ($remove_prefix) {
+            $key = str_replace($remove_prefix, '', $key);
+            return $key;
+        });
+        foreach ($sanitizedKeys as $key) {
+            Cache::forget($key);
+        }
+    }
 }
 
