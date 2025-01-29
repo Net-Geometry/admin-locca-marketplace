@@ -224,9 +224,9 @@
                                                 @endif
                                             @else
                                                 <div class="mt-2 bg--F6F6F6 p-2 radius-15 mb-4 d-inline-block">
-                                                    <div class="d-flex justify-content-between mb-10px text--title">
-                                                        {{translate('Assigned Vehicle')}}
-                                                        @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']))
+                                                    <div class="d-flex justify-content-between gap-3 mb-10px text--title">
+                                                        <span>{{translate('Assigned Vehicle')}}</span>
+                                                        {{-- @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled'])) --}}
                                                             <button
                                                                 class="btn btn--primary p-5px rounded-circle d-flex align-items-center justify-content-center assign-vehicle-btn"
                                                                 type="button"
@@ -246,7 +246,7 @@
                                                             >
                                                                 <i class="tio-edit fs-12"></i>
                                                             </button>
-                                                        @endif
+                                                        {{-- @endif --}}
                                                     </div>
                                                     <div class="text-wrap">
                                                         @php
