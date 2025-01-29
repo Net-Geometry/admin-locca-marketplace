@@ -7285,4 +7285,5 @@ Smartly or Earn. ',
   'Business Plan updated successfully' => 'Business Plan updated successfully',
   'Please select a subscription package.' => 'Please select a subscription package.',
   'type_short_description' => 'Type short description',
+  'View map' => 'View map',
 );
