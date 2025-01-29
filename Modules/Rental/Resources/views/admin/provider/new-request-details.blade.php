@@ -197,7 +197,7 @@
                                             <span>: {{$store->vendor->f_name}} </span>
                                         </li>
                                         <li class="d-flex align-items-start">
-                                            <span class="label min-w-sm-auto">{{ translate('messages.Last Zone') }}</span>
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Last Name') }}</span>
                                             <span>: {{$store->vendor->l_name}}</span>
                                         </li>
                                         <li class="d-flex align-items-start">

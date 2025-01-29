@@ -143,9 +143,9 @@
                         <td>
                             <div class="text--title">
                                 @if ($trip->customer)
-                                    <div class="font-medium">
+                                    <a href="{{ route('admin.users.customer.rental.view', $trip->user_id) }}?module=1" class="font-medium">
                                         {{ $trip->customer->fullName }}
-                                    </div>
+                                    </a>
                                     <div class="opacity-lg">
                                         {{ $trip->customer->email }}
                                     </div>
@@ -162,9 +162,9 @@
                             </div>
                         </td>
                         <td>
-                            <div class="text--title font-medium w--150px white--space-initial">
+                            <a href="{{ route('admin.rental.provider.details', $trip->provider_id) }}" class="text--title font-medium w--150px white--space-initial">
                                 {{  Str::limit($trip?->provider?->name ?? translate('messages.not_found'),12,'...')  }}
-                            </div>
+                            </a>
                         </td>
                         @php
                             $maxDisplay = 3;
@@ -199,9 +199,9 @@
                                 @else
                                     <div class="text--title">
                                         @if ($trip->assignedDriver->isNotEmpty())
-                                            <div class="font-medium">
+                                            <a href="{{ route('admin.rental.provider.driver.details', $trip->assignedDriver->first()?->driver->id) }}" class="font-medium">
                                                 {{ Str::limit($trip->assignedDriver->first()?->driver?->fullName,12,'...')  }}
-                                            </div>
+                                            </a>
                                             <div class="opacity-lg">
                                                 {{ Str::limit($trip->assignedDriver->first()?->driver?->email,12,'...' )  }}
                                             </div>
