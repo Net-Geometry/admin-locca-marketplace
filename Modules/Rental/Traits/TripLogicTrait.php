@@ -537,7 +537,7 @@ trait TripLogicTrait
 
             return ['coupon' => $coupon, 'coupon_discount_by' => $coupon_discount_by];
         } else {
-            return ['code' => 'coupon', 'message' => translate('messages.not_found'), 'status_code' => 404];
+            return ['code' => 'coupon', 'message' => translate('messages.coupon_not_found'), 'status_code' => 404];
         }
     }
 
