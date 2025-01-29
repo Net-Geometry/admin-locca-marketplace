@@ -236,14 +236,15 @@
         options = {
             series: [{
                 name: 'Gross Earning',
-                data: [{{ implode(",",$total_sell) }}]
+                data: [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $total_sell)) }}]
             }, {
                 name: 'Commission Earning',
-                data: [{{ implode(",",$commission) }}]
+                data: [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $commission)) }}]
             }, {
                 name: 'Subscription Earning',
-                data: [{{ implode(",",$total_subs) }}]
-            }],
+                data: [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $total_subs)) }}]
+            }]
+            ,
             chart: {
                 height: 350,
                 type: 'area',

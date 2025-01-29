@@ -220,7 +220,9 @@
     <div class="mt-11px card">
         <div class="card-header border-0 py-2">
             <div class="search--button-wrapper">
-                <h5 class="card-title">{{translate('messages.Total Providers')}}</h5>
+                <h5 class="card-title">{{translate('messages.Total Providers')}}
+                    <span class="badge badge-soft-dark ml-2 rounded-circle" id="itemCount">{{ $providers->total() }}</span>
+                </h5>
                 <form class="search-form">
                                 <!-- Search -->
                     {{-- @csrf --}}

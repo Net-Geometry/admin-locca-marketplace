@@ -423,7 +423,7 @@ class TripController extends Controller
         $distance = $trip->distance;
 
         if($request->distance && is_string($request->distance)){
-            $distance =floatval($request->distance);
+            $distance = preg_replace('/[^\d]/', '', $request->distance);
         }
         $scheduled = $request->scheduled ?? $trip->scheduled;
 
