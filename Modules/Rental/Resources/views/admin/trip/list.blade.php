@@ -468,12 +468,6 @@
                 location.href = '{{url('/')}}/admin/rental/trip?status=all';
             });
 
-            $('select.js-select2-custom').each(function() {
-                if (!$(this).hasClass('custom-select')) {
-                    $(this).next('.select2').find('.select2-selection--multiple').addClass('custom-select');
-                }
-            });
-            
         });
 
     </script>
