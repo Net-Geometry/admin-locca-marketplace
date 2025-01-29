@@ -835,28 +835,29 @@
 
             var thumbs = sync2.owlCarousel({
                 startPosition: 12,
-                items: 4,
+                items: 2,
                 loop: false,
                 margin: 10,
                 autoplay: false,
-                nav: false,
+                nav: true,
+                navText: ["", ""],
                 dots: false,
                 rtl: themeDirection && themeDirection.toString() === "rtl",
                 responsive: {
                     576: {
-                        items: 4,
+                        items: 3,
                     },
                     768: {
-                        items: 4,
+                        items: 3,
                     },
                     992: {
-                        items: 4,
+                        items: 3,
                     },
                     1200: {
-                        items: 5,
+                        items: 3,
                     },
                     1400: {
-                        items: 5,
+                        items: 3,
                     },
                 },
                 onInitialized: function(e) {
