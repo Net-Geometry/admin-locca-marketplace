@@ -14969,3 +14969,15 @@ ul.address-info .label {
     max-inline-size: 100% !important;
     max-block-size: 100% !important;
 }
+
+/* for language tabs */
+.nav-tabs {
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+}
+
+.nav-tabs .lang_link {
+    white-space: nowrap !important;
+}
+/* language tabs ends */
