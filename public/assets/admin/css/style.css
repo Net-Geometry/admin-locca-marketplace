@@ -14063,7 +14063,8 @@ ul.address-info .label {
 }
 
 .pdf-single .download-btn,
-.download-image-single .download-btn {
+.download-image-single .download-btn,
+.identify-image-single .download-btn {
     position: absolute;
     inset-block-start: 10px;
     inset-inline-end: 10px;

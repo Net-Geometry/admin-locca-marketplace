@@ -7289,4 +7289,5 @@ Smartly or Earn. ',
   'Total_Drivers' => 'Total Drivers',
   'Search by name,' => 'Search by name,',
   'Taxi Module' => 'Taxi Module',
+  'electric' => 'Electric',
 );
