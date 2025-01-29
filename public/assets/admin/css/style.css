@@ -14981,3 +14981,13 @@ ul.address-info .label {
     white-space: nowrap !important;
 }
 /* language tabs ends */
+
+.min-h-100 {
+    min-height: 100% !important;
+}
+
+@media (max-width: 575px) {
+    .min-w-100-mobile {
+        min-width: 100% !important;
+    }
+}

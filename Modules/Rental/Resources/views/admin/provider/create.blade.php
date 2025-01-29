@@ -242,7 +242,7 @@
                                                     </p>
                                                 </div>
                                                 <label
-                                                    class="position-relative d-inline-block image--border cursor-pointer w-100 h-165 min-w-330">
+                                                    class="position-relative d-inline-block image--border cursor-pointer w-100 h-165 min-w-330 min-w-100-mobile">
                                                     <img class="img--vertical-2 h-165 rounded-10 image--border"
                                                         id="coverImageViewer"
                                                         data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
@@ -414,7 +414,7 @@
                                             data-placement="right"
                                             data-original-title="{{ translate('messages.search_your_location_here') }}"
                                             type="text" placeholder="{{ translate('messages.search_here') }}" />
-                                        <div id="map" class="h-100"></div>
+                                        <div id="map" class="min-h-100"></div>
                                     </div>
                                 </div>
                             </div>

@@ -361,7 +361,7 @@
                                                data-placement="right"
                                                data-original-title="{{ translate('messages.search_your_location_here') }}"
                                                type="text" placeholder="{{ translate('messages.search_here') }}" />
-                                        <div id="map" class="h-100"></div>
+                                        <div id="map" class="min-h-100"></div>
                                     </div>
                                 </div>
                             </div>
