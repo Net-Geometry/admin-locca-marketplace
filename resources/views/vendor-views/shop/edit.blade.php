@@ -1,6 +1,9 @@
-
+@php
+    $vendorData = \App\CentralLogics\Helpers::get_store_data();
+    $title = $vendorData?->module_type == 'rental' && rental_module_published_status('Rental') ? 'Provider' : 'Store';
+@endphp
 @extends('layouts.vendor.app')
-@section('title',translate('messages.edit_store'))
+@section('title',translate('messages.edit_' . $title))
 @push('css_or_js')
     <!-- Custom styles for this page -->
     <link href="{{asset('public/assets/admin')}}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
@@ -15,7 +18,7 @@
             <h2 class="page-header-title text-capitalize">
                 <img class="w--26" src="{{asset('/public/assets/admin/img/store.png')}}" alt="public">
                 <span>
-                    {{translate('messages.edit_store_info')}}
+                    {{translate('messages.edit_'.$title.'_info')}}
                 </span>
             </h1>
         </div>
@@ -56,7 +59,7 @@
                                                 ({{ translate('messages.Default') }})
                                             </label>
                                             <input type="text" name="name[]" id="default_name"
-                                                class="form-control" placeholder="{{ translate('messages.store_name') }}" value="{{$shop->getRawOriginal('name')}}"
+                                                class="form-control" placeholder="{{ translate('messages.'.$title.'_name') }}" value="{{$shop->getRawOriginal('name')}}"
 
                                                  >
                                         </div>
@@ -64,7 +67,7 @@
                                         <div class="form-group mb-0">
                                             <label class="input-label"
                                                 for="exampleFormControlInput1">{{ translate('messages.address') }} ({{ translate('messages.default') }})</label>
-                                            <textarea type="text" name="address[]" placeholder="{{translate('messages.store')}}" class="form-control min-h-90px ckeditor">{{$shop->getRawOriginal('address')}}</textarea>
+                                            <textarea type="text" name="address[]" placeholder="{{translate('messages.'.$title)}}" class="form-control min-h-90px ckeditor">{{$shop->getRawOriginal('address')}}</textarea>
                                         </div>
                                     </div>
                                         @foreach (json_decode($language) as $lang)

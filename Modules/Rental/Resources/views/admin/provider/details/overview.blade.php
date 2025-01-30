@@ -354,7 +354,7 @@
                                     </ul>
 
                                 </div>
-                                
+
                                 <div class="resturant--info-address">
                                     <ul class="address-info address-info-2 p-0 text-dark">
                                         <li class="d-flex align-items-start">
@@ -397,7 +397,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title text-title font-bold" id="locationModalLabel">
-                        {{ translate('messages.ABC Rent a Car') }}</h3>
+                        {{ translate($store->name) }}</h3>
                     <button type="button" class="close fs-24 m-0 p-0" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>

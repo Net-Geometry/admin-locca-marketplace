@@ -19,6 +19,30 @@
             font-size: 16px;
         }
 
+        .password-feedback {
+            display: none;
+            width: 100%;
+            margin-top: .25rem;
+            font-size: .875em;
+            /* color: #35dc80; */
+        }
+
+        .invalid-feedback {
+            display: none;
+            width: 100%;
+            margin-top: .25rem;
+            font-size: .875em;
+            /* color: #35dc80; */
+        }
+
+        .valid {
+            color: green;
+        }
+
+        .invalid {
+            color: red;
+        }
+
     </style>
 @endpush
 
@@ -460,6 +484,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div id="password-feedback" class="pass password-feedback">
+                                            {{ translate('messages.password_not_matched') }}
+                                        </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
                                         <div class="js-form-message form-group mb-0">
@@ -486,6 +513,9 @@
                                                     </a>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div id="invalid-feedback" class="pass invalid-feedback">
+                                            {{ translate('messages.password_not_matched') }}
                                         </div>
                                     </div>
                                 </div>
@@ -1095,7 +1125,49 @@
                         margin: 40,
                     }
                 }
-            })
+            });
+
+            $(document).on('keyup', 'input[name="password"]', function() {
+                const password = $(this).val();
+                const feedback = $('#password-feedback');
+
+                const minLength = password.length >= 8;
+                const hasLowerCase = /[a-z]/.test(password);
+                const hasUpperCase = /[A-Z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+                if (minLength && hasLowerCase && hasUpperCase && hasNumber && hasSymbol) {
+                    feedback.text("{{ translate('Password is valid') }}");
+                    feedback.removeClass('invalid').addClass('valid');
+                    feedback.removeClass('password-feedback');
+
+                } else {
+                    feedback.text("{{ translate('Password format is invalid') }}");
+                    feedback.removeClass('valid').addClass('invalid');
+                    feedback.removeClass('password-feedback');
+
+                }
+            });
+
+            $(document).on('keyup', 'input[name="confirmPassword"]', function() {
+                const password = $('input[name="password"]').val();
+                const confirmPassword = $(this).val();
+                const feedback = $('#invalid-feedback');
+
+                if (confirmPassword == password && confirmPassword.length > 0) {
+                    feedback.text("{{ translate('Passwords Matched') }}");
+                    feedback.removeClass('invalid').addClass('valid');
+                    feedback.removeClass('invalid-feedback');
+
+                } else {
+                    feedback.text("{{ translate('confirmPassword not match') }}");
+                    feedback.removeClass('valid').addClass('invalid');
+                    feedback.removeClass('invalid-feedback');
+
+                }
+            });
+
 
             $('#nextStep').on('click', function () {
                 $('#businessSetup').removeClass('d-block').addClass('d-none');

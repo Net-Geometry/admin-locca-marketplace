@@ -457,7 +457,7 @@
                                                             <span>{{ $driverDetails->driver->fullName }}</span>
                                                             <span class="fs-10 opacity-70">({{ $driverDetails->driver->phone }})</span>
                                                         </div>
-z                                                        <div class="opacity-60">{{translate('Car No')}}: {{ $driverDetails?->vehicle_identity_data?->license_plate_number }}</div>
+                                                        <div class="opacity-60">{{translate('Car No')}}: {{ $driverDetails?->vehicle_identity_data?->license_plate_number }}</div>
                                                     </div>
                                                 </div>
                                             </td>

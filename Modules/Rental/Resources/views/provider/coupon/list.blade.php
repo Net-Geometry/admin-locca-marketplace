@@ -15,11 +15,10 @@
         </div>
         @php($language=\App\Models\BusinessSetting::where('key','language')->first())
         @php($language = $language->value ?? null)
-        @php($defaultLang = str_replace('_', '-', app()->getLocale()))
         <!-- End Page Header -->
         <div class="card mb-3">
             <div class="card-body">
-                <form action="{{route('vendor.coupon.store')}}" method="post">
+                <form action="" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-12">
