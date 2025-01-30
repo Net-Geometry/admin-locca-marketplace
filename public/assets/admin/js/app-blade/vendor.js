@@ -129,10 +129,10 @@ $(document).on("ready", function () {
             var totalWidth = 0;
             var itemsToShow = [];
             var remainingCount = 0;
-    
+
             // Get all selected items
             var selectedItems = $element.select2("data");
-    
+
             // Create a temporary container to measure item widths
             var $tempContainer = $("<div>")
                 .css({
@@ -142,7 +142,7 @@ $(document).on("ready", function () {
                     visibility: "hidden",
                 })
                 .appendTo($container);
-    
+
             // Calculate the width of items and determine how many fit
             selectedItems.forEach(function (item) {
                 var $tempItem = $("<span>")
@@ -153,9 +153,9 @@ $(document).on("ready", function () {
                         "white-space": "nowrap",
                     })
                     .appendTo($tempContainer);
-    
+
                 var itemWidth = $tempItem.outerWidth(true);
-    
+
                 if (totalWidth + itemWidth <= containerWidth - 40) {
                     totalWidth += itemWidth;
                     itemsToShow.push(item);
@@ -164,11 +164,11 @@ $(document).on("ready", function () {
                     return false;
                 }
             });
-    
+
             $tempContainer.remove();
-    
+
             const $searchForm = $rendered.find(".select2-search");
-    
+
             var html = "";
             itemsToShow.forEach(function (item) {
                 html += `<li class="name">
@@ -182,9 +182,9 @@ $(document).on("ready", function () {
                                         </li>`;
             }
             html += $searchForm.prop("outerHTML");
-    
+
             $rendered.html(html);
-    
+
             function debounce(func, wait) {
                 let timeout;
                 return function (...args) {
@@ -192,26 +192,26 @@ $(document).on("ready", function () {
                     timeout = setTimeout(() => func.apply(this, args), wait);
                 };
             }
-    
+
             // Attach event listener with debouncing
             $(".select2-search input").on(
                 "input",
                 debounce(function () {
                     const inputValue = $(this).val().toLowerCase();
-    
+
                     const $listItems = $(".select2-results__options li");
-    
+
                     $listItems.each(function () {
                         const itemText = $(this).text().toLowerCase();
                         $(this).toggle(itemText.includes(inputValue));
                     });
                 }, 100)
             );
-    
+
             $(".select2-search input").on("keydown", function (e) {
                 if (e.which === 13) {
                     e.preventDefault();
-    
+
                     const inputValue = $(this).val();
                     if (
                         !inputValue ||
@@ -221,7 +221,7 @@ $(document).on("ready", function () {
                         $(this).val("");
                         return null;
                     }
-    
+
                     if (inputValue) {
                         $element.append(
                             new Option(inputValue, inputValue, true, true)
@@ -235,26 +235,26 @@ $(document).on("ready", function () {
         }
         return this.each(function () {
             var $this = $(this);
-    
+
             $this.select2({
                 tags: true,
             });
-    
+
             // Bind change event to update display
             $this.on("change", function () {
                 updateDisplay($this);
             });
-    
+
             // Initial display update
             updateDisplay($this);
-    
+
             $(window).on("resize", function () {
                 updateDisplay($this);
             });
             $(window).on("load", function () {
                 updateDisplay($this);
             });
-    
+
             // Handle the click event for the remove icon
             $(document).on(
                 "click",
@@ -277,4 +277,46 @@ $(document).on("ready", function () {
         });
     };
     $(".multiple-select2").select2DynamicDisplay();
+});
+
+$(document).ready(function () {
+    // --- tooltip remains open
+    let activeTooltip = null;
+
+    $('[data-toggle="tooltip"][data-html="true"]')
+        .tooltip({
+            html: true,
+            trigger: "manual",
+        })
+        .on("mouseenter", function () {
+            let _this = this;
+
+            if (activeTooltip && activeTooltip !== _this) {
+                $(activeTooltip).tooltip("hide");
+            }
+
+            activeTooltip = _this;
+            $(_this).tooltip("show");
+
+            $(".tooltip")
+                .on("mouseenter", function () {
+                    $(activeTooltip).tooltip("show");
+                })
+                .on("mouseleave", function () {
+                    $(activeTooltip).tooltip("hide");
+                    activeTooltip = null;
+                });
+        })
+        .on("mouseleave", function () {
+            let _this = this;
+
+            setTimeout(function () {
+                if (!$(".tooltip:hover").length) {
+                    $(_this).tooltip("hide");
+                    if (activeTooltip === _this) {
+                        activeTooltip = null;
+                    }
+                }
+            }, 200);
+        });
 });

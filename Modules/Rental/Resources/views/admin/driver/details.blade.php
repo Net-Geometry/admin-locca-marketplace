@@ -117,10 +117,13 @@
                         <h5 class="text--title mb-20">{{ translate('Identity Image') }}</h5>
                         <div class="d-flex gap-4 flex-wrap">
                             @foreach ($driver['identity_image_full_url'] as $key => $img)
-                                <div>
+                                <div class="identify-image-single position-relative">
                                     <img width="275" data-toggle="modal" data-target="#imagemodal{{ $key }}"
                                         class="aspect-2-1 object--cover rounded-10" src="{{ $img }}"
                                         alt="Identity image">
+                                    <a href="{{ $img }}" class="download-btn" download="">
+                                        <i class="tio-download-to"></i>
+                                    </a>
                                 </div>
 
                                 <div class="modal fade" id="imagemodal{{ $key }}" tabindex="-1" role="dialog"

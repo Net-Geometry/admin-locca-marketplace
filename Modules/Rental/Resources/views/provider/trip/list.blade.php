@@ -172,7 +172,11 @@
                                                 <div class='media gap-3 {{ !$loop->last ? 'border-bottom mb-2 pb-2' : '' }}'>
                                                     <img height='40' src='{{ $tooltipDriver->driver['imageFullUrl'] }}'  class='rounded ratio-1-1' width='40' alt='...'>
                                                     <div class='media-body'>
-                                                        <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ Str::limit($tooltipDriver->driver['fullName'],12,'...')  }}</h5>
+                                                        <h5 class='d-flex align-items-center gap-2 text-white mb-0'>
+                                                            <a href='#' class='text-white'>
+                                                                {{ Str::limit($tooltipDriver->driver['fullName'],12,'...')  }}
+                                                            </a>
+                                                        </h5>
                                                         <div class='d-flex align-items-center gap-2 fs-10'>{{Str::limit( $tooltipDriver->driver->email,12,'...') }}</div>
                                                     </div>
                                                 </div>
@@ -215,15 +219,23 @@
                                          <div class='media gap-3 {{ !$loop->last ? 'border-bottom mb-2 pb-2' : '' }}'>
                                              <img src='{{  data_get($detail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}' class='rounded ratio-1-1' width='40' alt='...'>
                                              <div class='media-body'>
-                                                 <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ Str::limit($detail->vehicle_details['name'],12,'...')  }}</h5>
-                                                 <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: {{ $detail->tripVehicleDetails->count() }}</div>
+                                                 <h5 class='d-flex align-items-center gap-2 text-white mb-0'>
+                                                    <a href='#' class='text-white'>
+                                                        {{ Str::limit($detail->vehicle_details['name'],12,'...')  }}
+                                                    </a>
+                                                </h5>
+                                                <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: {{ $detail->tripVehicleDetails->count() }}</div>
                                              </div>
                                          </div>
                                          @else
                                          <div class='media gap-3 {{ !$loop->last ? 'border-bottom mb-2 pb-2' : '' }}'>
                                              <img src='{{  data_get($detail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}' class='rounded ratio-1-1' width='40' alt='...'>
                                              <div class='media-body'>
-                                                 <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ Str::limit($detail->vehicle_details['name'],12,'...')  }}</h5>
+                                                 <h5 class='d-flex align-items-center gap-2 text-white mb-0'>
+                                                     <a href='#' class='text-white'>
+                                                        {{ Str::limit($detail->vehicle_details['name'],12,'...')  }}
+                                                    </a>
+                                                </h5>
                                                  <div class='d-flex align-items-center text-danger gap-2 fs-10'>{{ translate('Vehicle_Not_Found_!!!') }}</div>
                                              </div>
                                          </div>

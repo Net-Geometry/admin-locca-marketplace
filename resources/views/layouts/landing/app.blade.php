@@ -463,10 +463,10 @@ $countryCode= strtolower($country?$country->value:'auto');
                         items: 3,
                     },
                     768: {
-                        items: 5,
+                        items: 6,
                     },
                     1200: {
-                        items: 5,
+                        items: 6,
                     },
                 },
                 onInitialized: function (e) {

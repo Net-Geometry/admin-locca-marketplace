@@ -156,9 +156,9 @@
                                     <th class="border-0">#</th>
                                     <th class="border-0">{{translate('Vehicle Details')}}</th>
                                     <th class="border-0">{{translate('Unit Fair')}}</th>
-                                    <th class="border-0">{{translate('Quantity')}}</th>
-                                    <th class="border-0">{{translate('Total Hour/Km')}}</th>
-                                    <th class="text-right  border-0">{{translate('Fare')}}</th>
+                                    <th class="border-0 text-center">{{translate('Quantity')}}</th>
+                                    <th class="border-0 text-center">{{translate('Total Hour/Km')}}</th>
+                                    <th class="border-0 text-center">{{translate('Fare')}}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -224,8 +224,8 @@
                                                 @endif
                                             @else
                                                 <div class="mt-2 bg--F6F6F6 p-2 radius-15 mb-4 d-inline-block">
-                                                    <div class="d-flex justify-content-between mb-10px text--title">
-                                                        {{translate('Assigned Vehicle')}}
+                                                    <div class="d-flex justify-content-between gap-3 mb-10px text--title">
+                                                        <span>{{translate('Assigned Vehicle')}}</span>
                                                         @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']))
                                                             <button
                                                                 class="btn btn--primary p-5px rounded-circle d-flex align-items-center justify-content-center assign-vehicle-btn"
@@ -267,12 +267,12 @@
                                                 /{{ $detail->rental_type ==  'hourly' ? translate('Hr') : translate('messages.KM')  }}
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <div class="fs-14  text--title font-bold">
                                                 {{ $detail->quantity }}
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <div class="fs-14 text--title">
                                                 @if ($trip->trip_type == 'hourly')
                                                 {{ $trip->estimated_hours }} {{ translate('hrs') }}
@@ -281,7 +281,7 @@
                                                 @endif
                                             </div>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-center">
                                             <div class="fs-14 text--title">
                                                 {{ \App\CentralLogics\Helpers::format_currency($detail->calculated_price) }}
                                             </div>
@@ -900,8 +900,8 @@ z                                                        <div class="opacity-60"
                                             <th class="border-0">{{translate('Vehicle Details')}}</th>
                                             <th class="border-0">{{translate('Unit Fair')}}</th>
                                             <th class="border-0 text-center">{{translate('Quantity')}}</th>
-                                            <th class="border-0">{{translate('Total Hour/Km')}}</th>
-                                            <th class="text-right  border-0">{{translate('Fare')}}</th>
+                                            <th class="border-0 text-center">{{translate('Total Hour/Km')}}</th>
+                                            <th class="border-0 text-center">{{translate('Fare')}}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -945,16 +945,16 @@ z                                                        <div class="opacity-60"
                                                 </div>
                                             </td>
 
-                                            <td>
-                                                <div class="d-flex flex-column gap-1 align-items-end">
+                                            <td class="text-center">
+                                                <div class="d-flex flex-column gap-1 align-items-center">
                                                     <span class="eta_amount  d-none"> </span>
-                                                <input type="number" name="quantity" class="form-control fs-14 text--title w--60px quantity-input" min="1" max="{{ $editDetail->vehicle_variations_count }}"
-                                                data-max_quantity="{{ $editDetail->vehicle_variations_count }}"
-                                                data-max_original_quantity="{{ $editDetail->quantity }}"
-                                                data-id="{{ $editDetail->id }}" data-vehicle_id="{{ $editDetail->vehicle_id }}"  value="{{ $editDetail->quantity }}" placeholder="EX:5">
-                                            </div>
+                                                    <input type="number" name="quantity" class="form-control fs-14 text--title w--60px quantity-input text-center" min="1" max="{{ $editDetail->vehicle_variations_count }}"
+                                                    data-max_quantity="{{ $editDetail->vehicle_variations_count }}"
+                                                    data-max_original_quantity="{{ $editDetail->quantity }}"
+                                                    data-id="{{ $editDetail->id }}" data-vehicle_id="{{ $editDetail->vehicle_id }}"  value="{{ $editDetail->quantity }}" placeholder="EX:5">
+                                                </div>
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <div class="d-flex flex-column align-items-center">
                                                     <span class="eta_amount  d-none"> </span>
                                                     @if ($trip->trip_type == 'hourly')
@@ -965,14 +965,14 @@ z                                                        <div class="opacity-60"
                                                 </div>
                                             </td>
 
-                                            <td class="text-right">
-                                                <div class="d-flex flex-column gap-1 align-items-end">
+                                            <td class="text-center">
+                                                <div class="d-flex flex-column gap-1 align-items-center">
                                                     <span class="eta_amount_mt d-none "> {{ translate('*System_EST_Fare:') }}
                                                         <small id="est_{{ $editDetail->id }}" class=" text--warning"> </small>
                                                     </span>
                                                     <input type="text" name="price" min="1" max="999999999"
                                                            data-price="{{ $editDetail->price }}"
-                                                           class="form-control w--120px text-right fs-14 text--title fare-total"
+                                                           class="form-control w--120px text-center fs-14 text--title fare-total"
                                                            data-id="{{ $editDetail->id }}"
                                                            data-vehicle_id="{{ $editDetail->vehicle_id }}"
                                                            data-old-value="{{ $editDetail->original_price  * $editDetail->quantity}}"
