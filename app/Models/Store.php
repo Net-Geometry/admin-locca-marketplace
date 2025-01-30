@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use App\Traits\ReportFilter;
 use Modules\Rental\Entities\Trips;
+use Modules\Rental\Entities\TripTransaction;
 use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\VehicleDriver;
 use Modules\Rental\Entities\VehicleIdentity;
@@ -441,6 +442,23 @@ class Store extends Model
     {
         return $this->hasMany(Trips::class, 'provider_id');
     }
+
+
+    public function todays_trip_earning()
+    {
+        return $this->hasMany(TripTransaction::class, 'provider_id')->whereDate('created_at',now());
+    }
+
+    public function this_week_trip_earning()
+    {
+        return $this->hasMany(TripTransaction::class, 'provider_id')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+    }
+
+    public function this_month_trip_earning()
+    {
+        return $this->hasMany(TripTransaction::class, 'provider_id')->whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'));
+    }
+
 
     /**
      * @return HasOne

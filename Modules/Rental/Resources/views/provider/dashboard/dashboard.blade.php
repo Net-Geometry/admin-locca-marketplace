@@ -63,7 +63,7 @@
                             <div class="d-flex flex-wrap justify-content-between align-items-center __gap-12px">
                                 <div class="__gross-amount" id="gross_earning">
                                     <h6 class="gross-earning">
-                                        {{ \App\CentralLogics\Helpers::format_currency(collect($total_sell)->sum()) }}</h6>
+                                        {{ \App\CentralLogics\Helpers::format_currency(collect($commission)->sum()) }}</h6>
                                     <span>{{ translate('messages.Gross_Earnings') }}</span>
                                 </div>
                                 <div class="chart--label __chart-label p-0 move-left-100 ml-auto">

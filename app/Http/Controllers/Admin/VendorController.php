@@ -1563,11 +1563,11 @@ class VendorController extends Controller
 
             }
 
-            $data = array_map(function($id){
-                return array_map(function($item)use($id){
-                    return     ['store_id'=>$id,'day'=>$item,'opening_time'=>'00:00:00','closing_time'=>'23:59:59'];
-                },[0,1,2,3,4,5,6]);
-            },$store_ids);
+            // $data = array_map(function($id){
+            //     return array_map(function($item)use($id){
+            //         return     ['store_id'=>$id,'day'=>$item,'opening_time'=>'00:00:00','closing_time'=>'23:59:59'];
+            //     },[0,1,2,3,4,5,6]);
+            // },$store_ids);
 
             try{
                 DB::beginTransaction();
@@ -1583,9 +1583,10 @@ class VendorController extends Controller
                         $insertedId = DB::table('stores')->insertGetId($store);
                         Helpers::updateStorageTable(get_class(new Store), $insertedId, $store['logo']);
                         Helpers::updateStorageTable(get_class(new Store), $insertedId, $store['cover_photo']);
+                        StoreLogic::insert_schedule($insertedId);
                     }
                 }
-                DB::table('store_schedule')->insert(array_merge(...$data));
+                // DB::table('store_schedule')->insert(array_merge(...$data));
                 DB::commit();
             }catch(\Exception $e)
             {

@@ -41,9 +41,9 @@ trait TripLogicTrait
         $store_sub = $provider?->store_sub;
         DB::beginTransaction();
         // coupon discount by Admin
-        if ($trip->coupon_created_by == 'admin') {
+        if ($trip->coupon_discount_by == 'admin') {
             $admin_coupon_discount_subsidy = $trip->coupon_discount_amount;
-            self::tripExpenseCreate(amount: $admin_coupon_discount_subsidy, type: 'coupon_discount', datetime: now(), created_by: $trip->coupon_created_by, trip_id: $trip->id);
+            self::tripExpenseCreate(amount: $admin_coupon_discount_subsidy, type: 'coupon_discount', datetime: now(), created_by: $trip->coupon_discount_by, trip_id: $trip->id);
         }
         // 1st order discount by Admin
         if ($trip->ref_bonus_amount > 0) {
@@ -51,9 +51,9 @@ trait TripLogicTrait
             self::tripExpenseCreate(amount: $ref_bonus_amount, type: 'referral_discount', datetime: now(), created_by: 'admin', trip_id: $trip->id);
         }
         // coupon discount by store
-        if ($trip->coupon_created_by == 'vendor') {
+        if ($trip->coupon_discount_by == 'vendor') {
             $store_coupon_discount_subsidy = $trip->coupon_discount_amount;
-            self::tripExpenseCreate(amount: $store_coupon_discount_subsidy, type: 'coupon_discount', datetime: now(), created_by: $trip->coupon_created_by, trip_id: $trip->id, store_id: $provider->id);
+            self::tripExpenseCreate(amount: $store_coupon_discount_subsidy, type: 'coupon_discount', datetime: now(), created_by: $trip->coupon_discount_by, trip_id: $trip->id, store_id: $provider->id);
         }
 
         if ($trip?->cashback_history) {
@@ -145,7 +145,7 @@ trait TripLogicTrait
 
             if ($received_by == 'admin') {
                 $adminWallet->digital_received = $adminWallet->digital_received + ($trip->trip_amount - $trip->partially_paid_amount);
-            } else if ($received_by == 'store' &&  ($trip->payment_method == "cash_payment" || $unpaid_pay_method == 'cash_payment')) {
+            } else if ($received_by == 'vendor' &&  ($trip->payment_method == "cash_payment" || $unpaid_pay_method == 'cash_payment')) {
                 $store_over_flow =  true;
                 $vendorWallet->collected_cash = $vendorWallet->collected_cash + ($trip->trip_amount - $trip->partially_paid_amount);
             } else if ($received_by == false) {
@@ -533,11 +533,11 @@ trait TripLogicTrait
             }
 
             $coupon->increment('total_uses');
-            $coupon_created_by = $coupon->created_by;
+            $coupon_discount_by = $coupon->created_by;
 
-            return ['coupon' => $coupon, 'coupon_created_by' => $coupon_created_by];
+            return ['coupon' => $coupon, 'coupon_discount_by' => $coupon_discount_by];
         } else {
-            return ['code' => 'coupon', 'message' => translate('messages.not_found'), 'status_code' => 404];
+            return ['code' => 'coupon', 'message' => translate('messages.coupon_not_found'), 'status_code' => 404];
         }
     }
 
