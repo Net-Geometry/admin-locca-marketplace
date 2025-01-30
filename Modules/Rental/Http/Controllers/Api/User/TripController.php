@@ -604,7 +604,7 @@ class TripController extends Controller
             $detail?->vehicle?->total_trip > 0 ? $detail?->vehicle?->decrement('total_trip',$detail->quantity) : '';
         }
 
-
+        Helpers::increment_order_count($trip->provider);
         return response()->json(['message' => translate('Trip_successfully_canceled')], 200);
 
     }

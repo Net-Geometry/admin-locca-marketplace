@@ -97,6 +97,12 @@ class VehicleController extends Controller
      */
     public function create(): Renderable
     {
+
+        if(!Helpers::get_store_data()->item_section)
+        {
+            Toastr::error(translate('messages.your_vehicle_upload_limit_is_over'));
+            return back();
+        }
         $categories = $this->vehicleCategory->ofStatus(1)->latest()->get();
         $brands = $this->vehicleBrand->ofStatus(1)->latest()->get();
 
@@ -108,8 +114,45 @@ class VehicleController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
+
+
+     private function checkVehicleLimit($store){
+        if(!$store->item_section)
+        {
+            return ['message' => translate('your_vehicle_upload_limit_is_over')];
+        }
+
+        if ( $store->store_business_model == 'subscription' ) {
+            $store_sub = $store?->store_sub;
+            if (isset($store_sub)) {
+                if ($store_sub->max_product != "unlimited" && $store_sub->max_product > 0 ) {
+                    $total_item= $this->vehicle->where('provider_id', $store->id)->count()+1;
+                    if ( $total_item >= $store_sub->max_product){
+                        $store->item_section = 0;
+                        $store->save();
+                    }
+                }
+            } else{
+                return ['message' => translate('you_are_not_subscribed_to_any_package')];
+
+            }
+        }elseif( $store->store_business_model == 'unsubscribed'){
+            return ['message' => translate('you_are_not_subscribed_to_any_package')];
+        }
+
+        return null;
+     }
+
+
+
     public function store(Request $request): RedirectResponse
     {
+
+        $checkVehicleLimit= data_get($this->checkVehicleLimit(Helpers::get_store_data()) , 'message',null);
+            if ( $checkVehicleLimit ) {
+                return response()->json(['message' => $checkVehicleLimit], 403);
+            };
+
         $request->validate([
             'name' => 'required|array',
             'brand_id' => 'required|integer|exists:brands,id',
@@ -213,6 +256,7 @@ class VehicleController extends Controller
 
         $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: Vehicle::class, data_id: $vehicle->id, data_value: $vehicle->name,model_class:true);
         $this->helpers->add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: Vehicle::class, data_id: $vehicle->id, data_value: $vehicle->description ,model_class:true);
+
 
         Toastr::success(translate('messages.vehicle_added_successfully'));
         return back();
