@@ -117,7 +117,7 @@
                                         </div>
                                     </div>
                                 @else
-                                    {{translate('messages.Food_deleted!')}}
+                                    {{translate('messages.Vehicle_deleted!')}}
                                 @endif
                             </td>
                             <td>
@@ -176,9 +176,9 @@
                                                 <a class="absolute--link" href="{{route('vendor.vehicle.details',$review->vehicle_id)}}">
                                                 </a>
                                                 <img class="avatar avatar-lg mr-3  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                                     src="{{ $review?->vehicle?->thumbnail_full_url }}" alt="{{$review?->vehicle?->name}} image">
+                                                     src="{{ $review?->vehicle?->thumbnail_full_url ?? asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="{{$review?->vehicle?->name}} image">
                                                 <div>
-                                                    <h5 class="text-hover-primary mb-0">{{ $review?->vehicle?->name }}</h5>
+                                                    <h5 class="text-hover-primary mb-0">{{ $review?->vehicle?->name ?? translate('vehicle_deleted') }}</h5>
                                                     @if ($review?->vehicle?->avg_rating == 5)
                                                         <div class="rating">
                                                             <span><i class="tio-star"></i></span>

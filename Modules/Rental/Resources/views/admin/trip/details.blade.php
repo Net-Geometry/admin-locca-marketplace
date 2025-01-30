@@ -215,7 +215,7 @@
                                                             data-category = "{{ $detail?->vehicle?->category?->name }}"
                                                             data-brand = "{{ $detail?->vehicle?->brand?->name }}"
                                                             data-list="{{ json_encode($detail?->vehicle?->vehicleIdentities) }}"
-                                                            data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
+                                                            data-trip_vehicle_details="{{ json_encode($detail?->tripVehicleDetails) }}"
                                                         >
                                                             {{translate('Assign Vehicle')}} <span class="fs-24"><i
                                                                     class="tio-add-circle"></i></span>
@@ -241,8 +241,8 @@
                                                                 data-vendor = "{{ $trip?->provider->name }}"
                                                                 data-category = "{{ $detail?->vehicle?->category?->name }}"
                                                                 data-brand = "{{ $detail?->vehicle?->brand?->name }}"
-                                                                data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
-                                                                data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
+                                                                data-list="{{ json_encode($detail?->vehicle?->vehicleIdentities) }}"
+                                                                data-trip_vehicle_details="{{ json_encode($detail?->tripVehicleDetails) }}"
                                                             >
                                                                 <i class="tio-edit fs-12"></i>
                                                             </button>

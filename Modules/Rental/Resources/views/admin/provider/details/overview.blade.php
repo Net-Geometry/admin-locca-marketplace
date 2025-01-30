@@ -522,8 +522,8 @@
             businessZonePolygon.setMap(map);
 
             const businessCenter = {
-                lat: {{$store->latitude}},  // Latitude from the server
-                lng: {{$store->longitude}}  // Longitude from the server
+                lat: {{$store->latitude}},
+                lng: {{$store->longitude}}
             };
 
             const marker = new google.maps.Marker({
@@ -582,7 +582,14 @@
                 highlightedZone = polygons['pickup_' + id];
                 highlightPolygon(highlightedZone);
             }
+
+            if (highlightedZone) {
+                const bounds = new google.maps.LatLngBounds();
+                highlightedZone.getPath().forEach(coord => bounds.extend(coord));
+                map.fitBounds(bounds);
+            }
         }
+
 
         function highlightPolygon(polygon) {
             polygon.setOptions({

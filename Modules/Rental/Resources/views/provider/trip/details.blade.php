@@ -246,7 +246,7 @@
                                                     <div class="text-wrap">
                                                         @php
                                                             $licensePlates = $detail?->tripVehicleDetails->map(function($tripVehicleDetails) {
-                                                                return $tripVehicleDetails->vehicle_identity_data->license_plate_number;
+                                                                return $tripVehicleDetails?->vehicle_identity_data?->license_plate_number;
                                                             });
                                                             $licensePlatesString = $licensePlates->implode(', ');
                                                         @endphp
@@ -452,7 +452,7 @@
                                                             <span>{{ $driverDetails->driver->fullName }}</span>
                                                             <span class="fs-10 opacity-70">({{ $driverDetails->driver->phone }})</span>
                                                         </div>
-                                                        <div class="opacity-60">{{translate('Car No')}}: {{ $driverDetails->vehicle_identity_data->license_plate_number }}</div>
+                                                        <div class="opacity-60">{{translate('Car No')}}: {{ $driverDetails?->vehicle_identity_data?->license_plate_number }}</div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -524,7 +524,7 @@
                                             {{ translate('messages.order') }},
                                         </span> --}}
                                         <span>
-                                            <span class="font-bold">{{ $trip->customer->trips->count() }}</span>
+                                            <span class="font-bold">{{ $trip?->customer?->trips->count() }}</span>
                                             {{ translate('messages.trip') }}
                                         </span>
                                     </div>
@@ -641,11 +641,11 @@
                                                         <option value="" selected disabled>
                                                             <span class="fs-12 text--title">{{ translate('Select Vendors') }}</span>
                                                         </option>
-                                                        @foreach($trip->provider->vehicleDriver as $providerDriver)
+                                                        @foreach($trip?->provider?->vehicleDriver as $providerDriver)
                                                             <option value="{{ $providerDriver->id }}"
                                                                     {{ $vehicleDetails->vehicle_driver_id == $providerDriver->id ? 'selected' : '' }}
                                                                     data-driver-id="{{ $providerDriver->id }}">
-                                                                <span class="fs-12 text--title">{{ $providerDriver->fullName }}</span>
+                                                                <span class="fs-12 text--title">{{ $providerDriver?->fullName }}</span>
                                                                 <br>
                                                                 <span class="fs-10 text--title opacity-70">({{ $providerDriver->phone }})</span>
                                                             </option>
