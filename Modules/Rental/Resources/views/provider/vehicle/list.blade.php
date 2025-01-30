@@ -13,7 +13,7 @@
                 <div>
                     <h1 class="page-header-title text-break">
                         <span class="page-header-icon">
-                            <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
+                            <img src="{{ asset('public/assets/admin/img/provider_vehicle.png') }}" class="w--22" alt="">
                         </span>
                         <span>{{ App\CentralLogics\Helpers::get_store_data()->name }}</span>
                     </h1>
@@ -29,9 +29,9 @@
                         <div class="col-sm-6 col-md-4">
                             <div class="select-item">
                                 <label for="brand-select" class="input-label">{{ translate('messages.brand') }}</label>
-                                <select id="brand-select" class="js-data-example-ajax form-control set-filter opacity-70"
+                                <select id="brand-select" class="js-data-example-ajax form-control set-filter opacity-70 text-muted"
                                         name="brand_id">
-                                    <option value="" selected disabled>{{ translate('messages.select_vehicle_brand') }}
+                                    <option class="text-muted" value="" selected disabled>{{ translate('messages.select_vehicle_brand') }}
                                     </option>
                                     @foreach($brands as $brand)
                                         <option value="{{ $brand->id }}" {{request()->brand_id == $brand->id ? 'selected' : ''}}>{{ $brand->name}}</option>
@@ -42,7 +42,7 @@
                         <div class="col-sm-6 col-md-4">
                             <div class="select-item">
                                 <label for="category-select" class="input-label">{{ translate('messages.category') }}</label>
-                                <select id="category-select" class="js-data-example-ajax form-control set-filter opacity-70"
+                                <select id="category-select" class="js-data-example-ajax form-control set-filter opacity-70 text-muted"
                                         name="category_id">
                                     <option value="" selected disabled>{{ translate('messages.select_vehicle_category') }}
                                     </option>
@@ -55,7 +55,7 @@
                         <div class="col-sm-6 col-md-4">
                             <div class="select-item">
                                 <label for="type-select" class="input-label">{{ translate('messages.type') }}</label>
-                                <select id="type-select" class="js-data-example-ajax form-control set-filter opacity-70"
+                                <select id="type-select" class="js-data-example-ajax form-control set-filter opacity-70 text-muted"
                                         name="vehicle_type">
                                     <option value="" selected disabled>
                                         {{ translate('messages.select_vehicle_type') }}

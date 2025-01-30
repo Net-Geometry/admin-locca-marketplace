@@ -78,6 +78,8 @@ class Kernel extends HttpKernel
         'current-module' => \App\Http\Middleware\CurrentModule::class,
         'apiGuestCheck' => \App\Http\Middleware\APIGuestMiddleware::class,
         'subscription' => \App\Http\Middleware\Subscription::class,
+        'admin-rental-module' => \App\Http\Middleware\AdminRentalModuleCheckMiddleware::class,
+        'provider-rental-module' => \App\Http\Middleware\ProviderRentalModuleCheckMiddleware::class,
 
     ];
 }

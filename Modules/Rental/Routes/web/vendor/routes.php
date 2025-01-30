@@ -21,7 +21,7 @@ use Modules\Rental\Http\Controllers\Web\Provider\ProviderDashBoardController;
 |
 */
 
-Route::group([ 'middleware' => ['vendor']], function () {
+Route::group([ 'middleware' => ['vendor', 'provider-rental-module']], function () {
     Route::group(['prefix' => 'provider-dashboard'], function () {
         Route::get('/', [ProviderDashBoardController::class, 'providerDashboard'])->name('providerDashboard');
         Route::get('delivery-statistics', [ProviderDashBoardController::class, 'deliveryStatistics'])->name('deliveryStatistics');
@@ -107,7 +107,7 @@ Route::group([ 'middleware' => ['vendor']], function () {
 
     });
 
-    Route::group(['prefix' => 'report', 'as' => 'report.', 'middleware' => ['module:report' ,'subscription:report']], function () {
+    Route::group(['prefix' => 'report', 'as' => 'report.', 'middleware' => ['module:report']], function () {
         Route::get('trip-report', [ReportController::class, 'tripReport'])->name('trip-report');
         Route::get('trip-report-export', [ReportController::class, 'tripReportExport'])->name('trip-report-export');
     });
@@ -118,8 +118,8 @@ Route::group([ 'middleware' => ['vendor']], function () {
     });
 
 
-    Route::get('rental-reviews', [ProviderController::class, 'reviews'])->name('rental.reviews')->middleware('module:reviews');
-    Route::post('rental-review/{id}', [ProviderController::class, 'reviewReply'])->name('rental.review.reply')->middleware('module:reviews');
+    Route::get('rental-reviews', [ProviderController::class, 'reviews'])->name('rental.reviews')->middleware('module:reviews','subscription:reviews');
+    Route::post('rental-review/{id}', [ProviderController::class, 'reviewReply'])->name('rental.review.reply')->middleware('module:reviews','subscription:reviews');
 });
 
 
