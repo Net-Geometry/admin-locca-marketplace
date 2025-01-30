@@ -25,7 +25,7 @@ class SubscriptionController extends Controller
     {
         $module = Module::whereId($request->module_id)->first();
         $packages = SubscriptionPackage::where('status', 1)
-            ->where('module_type', $module?->module_type == 'rental' && rental_module_published_status('Rental') ? 'rental' : 'all')
+            ->where('module_type', $module?->module_type == 'rental' && addon_published_status('Rental') ? 'rental' : 'all')
             ->latest()->get();
         return response()->json(['packages' => $packages], 200);
     }
@@ -176,7 +176,7 @@ class SubscriptionController extends Controller
 
         try {
             $store = Store::where('id', $request->store_id)->first();
-            if($store?->module?->module_type == 'rental' && rental_module_published_status('Rental')){
+            if($store?->module?->module_type == 'rental' && addon_published_status('Rental')){
                 if( Helpers::getRentalNotificationStatusData('provider','provider_subscription_cancel','push_notification_status',$store->id)  &&  $store?->vendor?->firebase_token){
                     $data = [
                         'title' => translate('subscription_canceled'),

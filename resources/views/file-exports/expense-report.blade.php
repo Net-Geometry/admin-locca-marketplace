@@ -46,7 +46,7 @@
             <th>{{ translate('sl') }}</th>
             @if (isset($data['module_type']))
             <th>{{$data['module_type'] == 'rental'? translate('trip_id') : translate('messages.order_id') }}</th>
-            @elseif(rental_module_published_status('Rental'))
+            @elseif(addon_published_status('Rental'))
                 <th>{{ translate('messages.order_id') }}</th>
                 <th>{{ translate('trip_id') }}</th>
             @endif
@@ -67,7 +67,7 @@
                             {{ $exp['trip_id'] }}
                         @endif
                     </td>
-                @elseif(rental_module_published_status('Rental'))
+                @elseif(addon_published_status('Rental'))
                     <td>{{ $exp['order_id'] }}</td>
                     <td>{{ $exp['trip_id'] }}</td>
                 @endif

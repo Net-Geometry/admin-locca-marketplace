@@ -255,24 +255,6 @@ if (!function_exists('addon_published_status')) {
 
 
 
-if (!function_exists('rental_module_published_status')) {
-    function rental_module_published_status($module_name = 'Rental')
-    {
-        $is_published = 0;
-        // return 1;
-        try {
-            $full_data = include("Modules/{$module_name}/Addon/info.php");
-            $is_published = $full_data['is_published'] == 1 ? 1 : 0;
-            return $is_published;
-        } catch (\Exception $exception) {
-            return 0;
-        }
-    }
-}
-
-
-
-
 if (!function_exists('config_settings')) {
     function config_settings($key, $settings_type)
     {

@@ -198,7 +198,7 @@ class ConversationController extends Controller
 
         if($conv->sender_type == 'vendor' && $conversation->sender){
             $vd = Vendor::find($conv->sender->vendor_id);
-            if($vd?->store?->module_type == 'rental' && rental_module_published_status('Rental')){
+            if($vd?->store?->module_type == 'rental' && addon_published_status('Rental')){
                 $order = Trips::where('user_id',$request->user()->id)->where('provider_id', $vd->store->id)->whereIn('trip_status',['pending','confirmed','ongoing','completed'])->where('payment_status' ,'unpaid')->count();
             } else{
                 $order = Order::where('user_id',$request->user()->id)->where('store_id', $vd->stores[0]->id)->whereIn('order_status', ['pending','accepted','confirmed','processing','handover','picked_up'])->count();
@@ -206,7 +206,7 @@ class ConversationController extends Controller
         }else if($conv->receiver_type == 'vendor' && $conversation->receiver){
             $vd = Vendor::find($conv->receiver->vendor_id);
 
-            if($vd?->store?->module_type == 'rental' && rental_module_published_status('Rental')){
+            if($vd?->store?->module_type == 'rental' && addon_published_status('Rental')){
                 $order = Trips::where('user_id',$request->user()->id)->where('provider_id', $vd->store->id)->whereIn('trip_status',['pending','confirmed','ongoing','completed'])->where('payment_status' ,'unpaid')->count();
             } else{
                 $order = Order::where('user_id',$request->user()->id)->where('store_id', $vd->stores[0]->id)->whereIn('order_status', ['pending','accepted','confirmed','processing','handover','picked_up'])->count();
@@ -405,7 +405,7 @@ class ConversationController extends Controller
         if(isset($conversation)){
             if($conversation->sender_type == 'vendor' && $conversation->sender){
                 $vd = Vendor::find($conversation->sender->vendor_id);
-                if($vd?->store?->module_type == 'rental' && rental_module_published_status('Rental')){
+                if($vd?->store?->module_type == 'rental' && addon_published_status('Rental')){
                     $order = Trips::where('user_id',$request->user()->id)->where('provider_id', $vd->store->id)->whereIn('trip_status',['pending','confirmed','ongoing','completed'])->where('payment_status' ,'unpaid')->count();
                 } else{
                     $order = Order::where('user_id',$request->user()->id)->where('store_id', $vd->stores[0]->id)->whereIn('order_status', ['pending','accepted','confirmed','processing','handover','picked_up'])->count();
@@ -413,7 +413,7 @@ class ConversationController extends Controller
 
             }else if($conversation->receiver_type == 'vendor' && $conversation->receiver){
                 $vd = Vendor::find($conversation->receiver->vendor_id);
-                if($vd?->store?->module_type == 'rental' && rental_module_published_status('Rental')){
+                if($vd?->store?->module_type == 'rental' && addon_published_status('Rental')){
                     $order = Trips::where('user_id',$request->user()->id)->where('provider_id', $vd->store->id)->whereIn('trip_status',['pending','confirmed','ongoing','completed'])->where('payment_status' ,'unpaid')->count();
                 } else{
                     $order = Order::where('user_id',$request->user()->id)->where('store_id', $vd->stores[0]->id)->whereIn('order_status', ['pending','accepted','confirmed','processing','handover','picked_up'])->count();

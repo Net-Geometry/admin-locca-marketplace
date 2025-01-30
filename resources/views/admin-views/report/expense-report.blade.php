@@ -210,7 +210,7 @@
                             <tr>
                                 <th class="border-0">{{translate('sl')}}</th>
                                 <th class="border-0">{{translate('messages.order_id')}}</th>
-                                @if (rental_module_published_status('Rental'))
+                                @if (addon_published_status('Rental'))
                                 <th class="border-0">{{translate('trip_id')}}</th>
                                 @endif
                                 <th class="border-0">{{translate('Date & Time')}}</th>
@@ -237,7 +237,7 @@
                                     <label class="badge badge-primary">{{translate('messages.Other_Expenses')}}</label>
                                     @endif
                                 </td>
-                                @if (rental_module_published_status('Rental'))
+                                @if (addon_published_status('Rental'))
                                 <td>
                                     @if ($exp->trip)
 

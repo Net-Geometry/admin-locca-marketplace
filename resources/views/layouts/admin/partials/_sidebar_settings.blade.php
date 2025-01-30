@@ -356,7 +356,7 @@
                                 <span class="text-truncate">{{ translate('messages.react_site') }}</span>
                             </a>
                         </li>
-                        @if (rental_module_published_status('Rental'))
+                        @if (addon_published_status('Rental'))
 
                             <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/rental-email-setup*') || Request::is('admin/business-settings/email-setup*') ? 'active' : '' }}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" id="tourb-3"
@@ -414,7 +414,7 @@
 
 
 
-                        @if (rental_module_published_status('Rental'))
+                        @if (addon_published_status('Rental'))
 
                         <li class="navbar-vertical-aside-has-menu @yield('notification_setup_type')">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" id="tourb-3"

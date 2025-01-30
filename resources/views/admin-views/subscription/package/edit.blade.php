@@ -213,7 +213,7 @@ active
                                     {{ translate('Set_limit') }}
                                 </div>
                             </h5>
-                            <div class="fz-12px">{{  $subscriptionackage->module_type == 'rental' && rental_module_published_status('Rental') ? translate('Set_maximum_trip_&_Vehicle_limit_for_this_package') :translate('Set_maximum_order_&_product_limit_for_this_package') }}</div>
+                            <div class="fz-12px">{{  $subscriptionackage->module_type == 'rental' && addon_published_status('Rental') ? translate('Set_maximum_trip_&_Vehicle_limit_for_this_package') :translate('Set_maximum_order_&_product_limit_for_this_package') }}</div>
                         </div>
                     </div>
                 </div>
@@ -223,7 +223,7 @@ active
                             <div class="card-body">
                                 <div class="limit-item-card">
                                     <div class="form-group mb-0">
-                                        <label class="form-label text-capitalize">{{$subscriptionackage->module_type == 'rental' && rental_module_published_status('Rental') ? translate('Maximum_Trip_Limit'):translate('Maximum_Order Limit') }}</label>
+                                        <label class="form-label text-capitalize">{{$subscriptionackage->module_type == 'rental' && addon_published_status('Rental') ? translate('Maximum_Trip_Limit'):translate('Maximum_Order Limit') }}</label>
                                         <div class="d-flex flex-wrap items-center gap-2">
                                             <div class="resturant-type-group p-0">
                                                 <label class="form-check form--check mr-2 mr-md-4">
@@ -251,7 +251,7 @@ active
                             <div class="card-body">
                                 <div class="limit-item-card">
                                     <div class="form-group mb-0">
-                                        <label class="form-label text-capitalize">{{$subscriptionackage->module_type == 'rental' && rental_module_published_status('Rental') ?  translate('Maximum_Vehicle_Limit'):translate('Maximum_Item_Limit') }}</label>
+                                        <label class="form-label text-capitalize">{{$subscriptionackage->module_type == 'rental' && addon_published_status('Rental') ?  translate('Maximum_Vehicle_Limit'):translate('Maximum_Item_Limit') }}</label>
                                         <div class="d-flex flex-wrap items-center gap-2">
                                             <div class="resturant-type-group p-0">
                                                 <label class="form-check form--check mr-2 mr-md-4">

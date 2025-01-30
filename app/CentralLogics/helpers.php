@@ -4421,7 +4421,7 @@ class Helpers
     }
     public static function disableStoreForOrderCancellation()
     {
-        if( rental_module_published_status('rental') && self::get_business_settings('order_cancelation_rate_limit_status') && self::get_business_settings('order_cancelation_rate_block_limit') > 0){
+        if( addon_published_status('Rental') && self::get_business_settings('order_cancelation_rate_limit_status') && self::get_business_settings('order_cancelation_rate_block_limit') > 0){
             $stores = Store::where('status',1)
             ->wherehas('module',function($query){
                 $query->where('module_type','rental');

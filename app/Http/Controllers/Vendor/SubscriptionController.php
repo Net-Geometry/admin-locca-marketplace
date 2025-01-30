@@ -32,7 +32,7 @@ class SubscriptionController extends Controller
         ])->withcount(['items','store_all_sub_trans'])
         ->first();
         $packages = SubscriptionPackage::where('status',1)
-        ->where('module_type', $store?->module?->module_type == 'rental' && rental_module_published_status('Rental') ? 'rental' : 'all' )
+        ->where('module_type', $store?->module?->module_type == 'rental' && addon_published_status('Rental') ? 'rental' : 'all' )
         ->latest()->get();
         $admin_commission=BusinessSetting::where('key', 'admin_commission')->first()?->value ;
         $business_name=BusinessSetting::where('key', 'business_name')->first()?->value ;
@@ -52,7 +52,7 @@ class SubscriptionController extends Controller
 
         try {
             $store=Store::where('id',Helpers::get_store_id())->first();
-            if($store?->module?->module_type == 'rental' && rental_module_published_status('Rental')){
+            if($store?->module?->module_type == 'rental' && addon_published_status('Rental')){
                 if( Helpers::getRentalNotificationStatusData('provider','provider_subscription_cancel','push_notification_status',$store->id)  &&  $store?->vendor?->firebase_token){
                     $data = [
                         'title' => translate('subscription_canceled'),

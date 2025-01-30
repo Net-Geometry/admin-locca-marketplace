@@ -60,7 +60,7 @@ class BusinessSettingsController extends Controller
         $conf->extra_packaging_status = $request->extra_packaging_status ?? 0;
         $conf->minimum_stock_for_warning = $request->minimum_stock_for_warning ?? 0;
         $conf->save();
-        if($store->module->module_type == 'rental' && rental_module_published_status('Rental')){
+        if($store->module->module_type == 'rental' && addon_published_status('Rental')){
             Toastr::success(translate('messages.provider settings updated!'));
         }else{
             Toastr::success(translate('messages.store_settings_updated'));
@@ -135,7 +135,7 @@ class BusinessSettingsController extends Controller
                 }
             }
         }
-        if($store->module->module_type == 'rental' && rental_module_published_status('Rental')){
+        if($store->module->module_type == 'rental' && addon_published_status('Rental')){
             Toastr::success(translate('messages.provider_meta_data_updated!'));
         }else{
             Toastr::success(translate('messages.store').' '.translate('messages.meta_data_updated'));
@@ -182,7 +182,7 @@ class BusinessSettingsController extends Controller
             );
             $conf[$request->menu] = $request->status;
             $conf->save();
-            if($store->module->module_type == 'rental' && rental_module_published_status('Rental')){
+            if($store->module->module_type == 'rental' && addon_published_status('Rental')){
                 Toastr::success(translate('messages.provider settings updated!'));
             }else{
                 Toastr::success(translate('messages.store settings updated!'));
@@ -193,7 +193,7 @@ class BusinessSettingsController extends Controller
 
         $store[$request->menu] = $request->status;
         $store->save();
-        if($store->module->module_type == 'rental' && rental_module_published_status('Rental')){
+        if($store->module->module_type == 'rental' && addon_published_status('Rental')){
             Toastr::success(translate('messages.provider settings updated!'));
         }else{
             Toastr::success(translate('messages.store settings updated!'));
