@@ -97,6 +97,8 @@ class ProviderTripController extends Controller
             foreach ($trip->trip_details as $detail) {
                 $detail?->vehicle?->total_trip > 0 ? $detail?->vehicle?->decrement('total_trip', $detail->quantity) : '';
             }
+            Helpers::increment_order_count($trip->provider);
+        
         } elseif ($trip->trip_status != 'pending' && $request->trip_status == 'pending') {
             $trip->vehicle_identity()->delete();
         } else if ($request->trip_status == 'completed' && $trip->payment_status == 'paid' && !$trip->trip_transaction) {

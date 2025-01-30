@@ -64,6 +64,7 @@ use App\Models\SubscriptionBillingAndRefundHistory;
 use Modules\Rental\Emails\ProviderSubscriptionSuccessful;
 use Modules\Rental\Emails\ProviderSubscriptionRenewOrShift;
 use Laravelpkg\Laravelchk\Http\Controllers\LaravelchkController;
+use Modules\Rental\Entities\Vehicle;
 
 class Helpers
 {
@@ -3725,14 +3726,17 @@ class Helpers
     public static function subscriptionConditionsCheck($store_id ,$package_id,){
         $store=Store::findOrFail($store_id);
         $package = SubscriptionPackage::withoutGlobalScope('translate')->find($package_id);
-
-        $total_food= $store->items()->withoutGlobalScope(\App\Scopes\StoreScope::class)->count();
+        if($store->module_type == 'rental'){
+            $total_food= $store->vehicles()->count();
+        } else{
+            $total_food= $store->items()->withoutGlobalScope(\App\Scopes\StoreScope::class)->count();
+        }
         if ($package->max_product != 'unlimited' &&  $total_food >= $package->max_product  ){
             return ['disable_item_count' => $total_food - $package->max_product];
-            // return 'downgrade_error';
         }
         return null;
     }
+
     public static function subscription_plan_chosen($store_id ,$package_id, $payment_method  ,$discount = 0,$pending_bill =0,$reference=null ,$type=null){
         $store=Store::find($store_id);
         $package = SubscriptionPackage::withoutGlobalScope('translate')->find($package_id);
@@ -3741,6 +3745,7 @@ class Helpers
 
         try {
             $store_subscription=$store->store_sub;
+            $store_old_subscription=$store->store_sub_update_application;
             if (isset($store_subscription) && $type == 'renew') {
                 $store_subscription->total_package_renewed= $store_subscription->total_package_renewed + 1;
 
@@ -3753,8 +3758,8 @@ class Helpers
                 }
 
             }
-            elseif($store->store_sub_update_application && $store->store_sub_update_application->package_id == $package->id && $type == 'renew' ){
-                $store_subscription=$store->store_sub_update_application;
+            elseif($store_old_subscription && $store_old_subscription->package_id == $package->id && $type == 'renew' ){
+                $store_subscription=$store_old_subscription;
                 $store_subscription->total_package_renewed= $store_subscription->total_package_renewed + 1;
             }
 
@@ -3909,99 +3914,114 @@ class Helpers
             $disable_item_count=data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count');
             $store->item_section= 0;
             $store->save();
-
-            Item::where('store_id',$store->id)->oldest()->take($disable_item_count)->update([
-                'status' => 0
-            ]);
+            if($store->module_type == 'rental'){
+                Vehicle::where('provider_id',$store->id)->oldest()->take($disable_item_count)->update([
+                    'status' => 0
+                ]);
+            }
+            else{
+                Item::where('store_id',$store->id)->oldest()->take($disable_item_count)->update([
+                    'status' => 0
+                ]);
+            }
         }
 
-
-        try {
-
-            if($type == 'renew'){
-                $push_notification_status= $store->module->module_type !== 'rental' ? Helpers::getNotificationStatusData('store','store_subscription_renew','push_notification_status',$store->id): Helpers::getRentalNotificationStatusData('provider','provider_subscription_renew','push_notification_status',$store->id);
-                $title=translate('subscription_renewed');
-                $des=translate('Your_subscription_successfully_renewed');
-                }
-                elseif($type != 'renew'){
-                    $des=translate('Your_subscription_successfully_shifted');
-                    $title=translate('subscription_shifted');
-                    $push_notification_status=  $store->module->module_type !== 'rental' ? Helpers::getNotificationStatusData('store','store_subscription_shift','push_notification_status',$store->id) : Helpers::getRentalNotificationStatusData('provider','provider_subscription_shift','push_notification_status',$store->id);
-            }
-
-            if($push_notification_status  &&  $store?->vendor?->firebase_token){
-                $data = [
-                    'title' => $title ?? '',
-                    'description' => $des ?? '',
-                    'order_id' => '',
-                    'image' => '',
-                    'type' => 'subscription',
-                    'order_status' => '',
-                ];
-                Helpers::send_push_notif_to_device($store?->vendor?->firebase_token, $data);
-                DB::table('user_notifications')->insert([
-                    'data' => json_encode($data),
-                    'vendor_id' => $store?->vendor_id,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-            }
-
-
-            if($store->module->module_type !== 'rental' &&  config('mail.status') ){
-
-                if (Helpers::get_mail_status('subscription_renew_mail_status_store') == '1' && $type == 'renew' && Helpers::getNotificationStatusData('store','store_subscription_renew','mail_status',$store->id)) {
-                    Mail::to($store->email)->send(new SubscriptionRenewOrShift($type,$store->name));
-                }
-                if ( Helpers::get_mail_status('subscription_shift_mail_status_store') == '1' && $type != 'renew'  && Helpers::getNotificationStatusData('store','store_subscription_shift','mail_status',$store->id)) {
-                    Mail::to($store->email)->send(new SubscriptionRenewOrShift($type,$store->name));
-                }
-                if ( Helpers::get_mail_status('subscription_successful_mail_status_store') == '1' && Helpers::getNotificationStatusData('store','store_subscription_success','mail_status',$store->id) ) {
-                    $url=route('subscription_invoice',['id' => base64_encode($subscription_transaction->id)]);
-                    Mail::to($store->email)->send(new SubscriptionSuccessful($store->name,$url));
-                }
-
-
-            }elseif($store->module->module_type == 'rental' &&  config('mail.status')){
-
-                if (Helpers::get_mail_status('rental_subscription_renew_mail_status_provider') == '1' && $type == 'renew' && Helpers::getRentalNotificationStatusData('provider','provider_subscription_renew','mail_status',$store->id)) {
-                    Mail::to($store->email)->send(new ProviderSubscriptionRenewOrShift($type,$store->name));
-                }
-                if ( Helpers::get_mail_status('rental_subscription_shift_mail_status_provider') == '1' && $type != 'renew'  && Helpers::getRentalNotificationStatusData('provider','provider_subscription_shift','mail_status',$store->id)) {
-                    Mail::to($store->email)->send(new ProviderSubscriptionRenewOrShift($type,$store->name));
-                }
-                if(Helpers::get_mail_status('rental_subscription_successful_mail_status_provider') == '1' && Helpers::getRentalNotificationStatusData('provider','provider_subscription_success','mail_status',$store->id)){
-                    $url=route('subscription_invoice',['id' => base64_encode($subscription_transaction->id)]);
-                    Mail::to($store->email)->send(new ProviderSubscriptionSuccessful($store->name,$url));
-                }
-            }
-
-
-            if((($store->module->module_type == 'rental' && Helpers::getNotificationStatusData('store','store_subscription_success','push_notification_status',$store->id))|| ($store->module->module_type !== 'rental' &&Helpers::getRentalNotificationStatusData('provider','provider_subscription_success','mail_status',$store->id) )) &&  $store?->vendor?->firebase_token){
-                $data = [
-                    'title' => translate('subscription_successful'),
-                    'description' => translate('You_are_successfully_subscribed'),
-                    'order_id' => '',
-                    'image' => '',
-                    'type' => 'subscription',
-                    'order_status' => '',
-                ];
-                Helpers::send_push_notif_to_device($store?->vendor?->firebase_token, $data);
-                DB::table('user_notifications')->insert([
-                    'data' => json_encode($data),
-                    'vendor_id' => $store?->vendor_id,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-            }
-
-
-        } catch (\Exception $ex) {
-            info($ex->getMessage());
+        if(!(in_array($payment_method,['manual_payment_by_admin','plan_shift_by_admin']) && $store_old_subscription == null )){
+            self::subscriptionNotifications($store,$type,$subscription_transaction);
         }
 
         return  $subscription_transaction->id;
     }
+
+
+
+        public static function subscriptionNotifications($store,$type ,$subscription_transaction ){
+            try {
+                if($type == 'renew'){
+                    $push_notification_status= $store->module->module_type !== 'rental' ? self::getNotificationStatusData('store','store_subscription_renew','push_notification_status',$store->id): self::getRentalNotificationStatusData('provider','provider_subscription_renew','push_notification_status',$store->id);
+                    $title=translate('subscription_renewed');
+                    $des=translate('Your_subscription_successfully_renewed');
+                    }
+                    elseif($type != 'renew'){
+                        $des=translate('Your_subscription_successfully_shifted');
+                        $title=translate('subscription_shifted');
+                        $push_notification_status=  $store->module->module_type !== 'rental' ? self::getNotificationStatusData('store','store_subscription_shift','push_notification_status',$store->id) : self::getRentalNotificationStatusData('provider','provider_subscription_shift','push_notification_status',$store->id);
+                }
+
+                if($push_notification_status  &&  $store?->vendor?->firebase_token){
+                    $data = [
+                        'title' => $title ?? '',
+                        'description' => $des ?? '',
+                        'order_id' => '',
+                        'image' => '',
+                        'type' => 'subscription',
+                        'order_status' => '',
+                    ];
+                    self::send_push_notif_to_device($store?->vendor?->firebase_token, $data);
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'vendor_id' => $store?->vendor_id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+
+
+                if($store->module->module_type !== 'rental' &&  config('mail.status') ){
+
+                    if (self::get_mail_status('subscription_renew_mail_status_store') == '1' && $type == 'renew' && self::getNotificationStatusData('store','store_subscription_renew','mail_status',$store->id)) {
+                        Mail::to($store->email)->send(new SubscriptionRenewOrShift($type,$store->name));
+                    }
+                    if ( self::get_mail_status('subscription_shift_mail_status_store') == '1' && $type != 'renew'  && self::getNotificationStatusData('store','store_subscription_shift','mail_status',$store->id)) {
+                        Mail::to($store->email)->send(new SubscriptionRenewOrShift($type,$store->name));
+                    }
+                    if ( self::get_mail_status('subscription_successful_mail_status_store') == '1' && self::getNotificationStatusData('store','store_subscription_success','mail_status',$store->id) ) {
+                        $url=route('subscription_invoice',['id' => base64_encode($subscription_transaction->id)]);
+                        Mail::to($store->email)->send(new SubscriptionSuccessful($store->name,$url));
+                    }
+
+
+                }elseif($store->module->module_type == 'rental' &&  config('mail.status')){
+
+                    if (self::get_mail_status('rental_subscription_renew_mail_status_provider') == '1' && $type == 'renew' && self::getRentalNotificationStatusData('provider','provider_subscription_renew','mail_status',$store->id)) {
+                        Mail::to($store->email)->send(new ProviderSubscriptionRenewOrShift($type,$store->name));
+                    }
+                    if ( self::get_mail_status('rental_subscription_shift_mail_status_provider') == '1' && $type != 'renew'  && self::getRentalNotificationStatusData('provider','provider_subscription_shift','mail_status',$store->id)) {
+                        Mail::to($store->email)->send(new ProviderSubscriptionRenewOrShift($type,$store->name));
+                    }
+                    if(self::get_mail_status('rental_subscription_successful_mail_status_provider') == '1' && self::getRentalNotificationStatusData('provider','provider_subscription_success','mail_status',$store->id)){
+                        $url=route('subscription_invoice',['id' => base64_encode($subscription_transaction->id)]);
+                        Mail::to($store->email)->send(new ProviderSubscriptionSuccessful($store->name,$url));
+                    }
+                }
+
+
+                if((($store->module->module_type == 'rental' && self::getNotificationStatusData('store','store_subscription_success','push_notification_status',$store->id))|| ($store->module->module_type !== 'rental' && self::getRentalNotificationStatusData('provider','provider_subscription_success','mail_status',$store->id) )) &&  $store?->vendor?->firebase_token){
+                    $data = [
+                        'title' => translate('subscription_successful'),
+                        'description' => translate('You_are_successfully_subscribed'),
+                        'order_id' => '',
+                        'image' => '',
+                        'type' => 'subscription',
+                        'order_status' => '',
+                    ];
+                    self::send_push_notif_to_device($store?->vendor?->firebase_token, $data);
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'vendor_id' => $store?->vendor_id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+
+            } catch (\Exception $ex) {
+                info($ex->getMessage());
+            }
+            return true;
+        }
+
+
+
     public static function subscriptionPayment($store_id,$package_id,$payment_gateway,$url,$pending_bill=0,$type='payment',$payment_platform='web'){
         $store = Store::where('id',$store_id)->first();
         $package = SubscriptionPackage::where('id',$package_id)->first();
@@ -4421,7 +4441,7 @@ class Helpers
     }
     public static function disableStoreForOrderCancellation()
     {
-        if( rental_module_published_status('rental') && self::get_business_settings('order_cancelation_rate_limit_status') && self::get_business_settings('order_cancelation_rate_block_limit') > 0){
+        if( addon_published_status('Rental') && self::get_business_settings('order_cancelation_rate_limit_status') && self::get_business_settings('order_cancelation_rate_block_limit') > 0){
             $stores = Store::where('status',1)
             ->wherehas('module',function($query){
                 $query->where('module_type','rental');

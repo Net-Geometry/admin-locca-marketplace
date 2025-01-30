@@ -28,7 +28,7 @@ class SystemController extends Controller
             $type='parcel';
             $module_id= Order::ParcelOrder()->where(['checked' => 0])->latest()->first('module_id')->module_id;
         }
-        elseif(rental_module_published_status() &&  Trips::where(['checked' => 0])->count() > 0 ){
+        elseif(addon_published_status('Rental') &&  Trips::where(['checked' => 0])->count() > 0 ){
             $new_order =1;
             $type='trip';
             $module_id=Trips::where(['checked' => 0])->latest()->first(['module_id'])->module_id;

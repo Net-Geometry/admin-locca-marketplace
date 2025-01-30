@@ -171,7 +171,7 @@
                                     title="{{ translate('set_maximum_cod_order_amount') }}"
                                     value="{{ $module->pivot->maximum_cod_order_amount }}" readonly></div>
                             </div>
-                            @elseif ($module->module_type == 'rental' && rental_module_published_status('Rental'))
+                            @elseif ($module->module_type == 'rental' && addon_published_status('Rental'))
                             <div class="row gy-1 module-row" id="module_{{ $module->id }}">
                                 <div class="col-sm-4"><input type="text" class="form-control"
                                         value="{{ $module->module_name }}"

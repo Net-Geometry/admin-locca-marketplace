@@ -157,6 +157,17 @@ class TripController extends Controller
                 return back();
             }
 
+
+            if ($status == 'canceled') {
+                $trip->canceled_by = 'vendor';
+                // $trip->cancellation_reason = $request?->cancellation_reason;
+                foreach ($trip->trip_details as $detail) {
+                    $detail?->vehicle?->total_trip > 0 ? $detail?->vehicle?->decrement('total_trip', $detail->quantity) : '';
+                }
+                Helpers::increment_order_count($trip->provider);
+            }
+
+
             $trip->trip_status = $status;
             $trip[$status] = now();
             $trip->save();

@@ -204,7 +204,7 @@
                                             }}</span>
                                         @else
                                         <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->max_product }} {{
-                                            translate('messages.vehicle_Upload') }} <small>({{ $store?->store_sub_update_application?->max_product  - $store->items_count > 0 ? $store?->store_sub_update_application?->max_product  - $store->items_count : 0 }} {{ translate('left') }}) </small></span>
+                                            translate('messages.vehicle_Upload') }} <small>({{ $store?->store_sub_update_application?->max_product  - $store->vehicles_count > 0 ? $store?->store_sub_update_application?->max_product  - $store->vehicles_count : 0 }} {{ translate('left') }}) </small></span>
                                         @endif
                                     </div>
                                 </div>

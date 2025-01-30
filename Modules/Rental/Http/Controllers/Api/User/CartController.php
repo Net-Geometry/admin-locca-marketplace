@@ -59,7 +59,10 @@ class CartController extends Controller
             'estimated_hours' => 'required_if:rental_type,hourly',
             'distance' => 'required_if:rental_type,distance_wise',
             'destination_time' => 'required_if:rental_type,distance_wise',
+        ],[
+            'destination_time.required_if' => translate('destination_address_is_required_when_rental_type_is_distance_wise')
         ]);
+
 
         if ($validator->fails()) {
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
@@ -325,14 +328,16 @@ class CartController extends Controller
         ->get();
         $total_cart_price = 0;
         foreach ($carts as $cart) {
-            $price = $this->getDiscount(price: ($request->rental_type ?? $user_data?->rental_type) == 'hourly' ? $cart->vehicle->hourly_price *   ($request->estimated_hours ?? $user_data?->estimated_hours) : $cart->vehicle->distance_price *  ($request->distance ?? $user_data?->distance), discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
-
-            $cart->user_id = $user_id;
-            $cart->is_guest = $is_guest;
-            $cart->price = $price * $cart->quantity;
-            $cart->save();
-
-            $total_cart_price += $cart->price;
+            if($cart->vehicle &&  $cart->vehicle->status == 1){
+                $price = $this->getDiscount(price: ($request->rental_type ?? $user_data?->rental_type) == 'hourly' ? $cart->vehicle->hourly_price *   ($request->estimated_hours ?? $user_data?->estimated_hours) : $cart->vehicle?->distance_price *  ($request->distance ?? $user_data?->distance), discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
+                $cart->user_id = $user_id;
+                $cart->is_guest = $is_guest;
+                $cart->price = $price * $cart->quantity;
+                $cart->save();
+                $total_cart_price += $cart->price;
+            } else{
+                $cart->delete();
+            }
         };
 
         return [

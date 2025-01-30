@@ -143,7 +143,7 @@ class SubscriptionController extends Controller
 
     public function show(SubscriptionPackage $subscriptionackage)
     {
-        $packages= SubscriptionPackage::where('status',1)->where('module_type', $subscriptionackage->module_type == 'rental' && rental_module_published_status('Rental') ? 'rental' : 'all' )->get();
+        $packages= SubscriptionPackage::where('status',1)->where('module_type', $subscriptionackage->module_type == 'rental' && addon_published_status('Rental') ? 'rental' : 'all' )->get();
         $over_view_data= $this->packageOverview($subscriptionackage);
         return view('admin-views.subscription.package.package-details', compact('subscriptionackage','over_view_data','packages'));
     }
@@ -202,7 +202,7 @@ class SubscriptionController extends Controller
             foreach ($subscribers as $subscriber){
 
 
-                if($subscriber?->store?->module->module_type == 'rental' && rental_module_published_status('Rental')){
+                if($subscriber?->store?->module->module_type == 'rental' && addon_published_status('Rental')){
 
 
                     if( Helpers::getRentalNotificationStatusData('provider','provider_subscription_plan_update','push_notification_status',$subscriber?->store?->id)  &&  $subscriber?->store?->vendor?->firebase_token){
@@ -528,7 +528,7 @@ class SubscriptionController extends Controller
             'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations','module:id,module_type'
         ])->withcount('items')
         ->first();
-        $packages = SubscriptionPackage::where('status',1)->where('module_type', $store?->module?->module_type == 'rental' && rental_module_published_status('Rental') ? 'rental' : 'all' )->latest()->get();
+        $packages = SubscriptionPackage::where('status',1)->where('module_type', $store?->module?->module_type == 'rental' && addon_published_status('Rental') ? 'rental' : 'all' )->latest()->get();
         $admin_commission=BusinessSetting::where('key', 'admin_commission')->first()?->value ;
         $business_name=BusinessSetting::where('key', 'business_name')->first()?->value ;
         try {
@@ -549,7 +549,7 @@ class SubscriptionController extends Controller
         try {
             $store=Store::where('id',$id)->first();
 
-        if($store?->module?->module_type == 'rental' && rental_module_published_status('Rental')){
+        if($store?->module?->module_type == 'rental' && addon_published_status('Rental')){
                 if( Helpers::getRentalNotificationStatusData('provider','provider_subscription_cancel','push_notification_status',$store->id)  &&  $store?->vendor?->firebase_token){
                     $data = [
                         'title' => translate('subscription_canceled'),

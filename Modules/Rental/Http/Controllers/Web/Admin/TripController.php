@@ -18,11 +18,11 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
 use Modules\Rental\Exports\TripExport;
 use Modules\Rental\Entities\TripDetails;
-use Illuminate\Support\Facades\Validator;
 use Modules\Rental\Traits\TripLogicTrait;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Rental\Entities\TripVehicleDetails;
 use Modules\Rental\Traits\RentalPushNotification;
+use App\CentralLogics\Helpers;
 
 class TripController extends Controller
 {
@@ -177,9 +177,24 @@ class TripController extends Controller
                 return back();
             }
 
+            if ($status == 'canceled') {
+                $trip->canceled_by = 'admin';
+                // $trip->cancellation_reason = $request?->cancellation_reason;
+                foreach ($trip->trip_details as $detail) {
+                    $detail?->vehicle?->total_trip > 0 ? $detail?->vehicle?->decrement('total_trip', $detail->quantity) : '';
+                }
+                Helpers::increment_order_count($trip->provider);
+            }
+
+
             $trip->trip_status = $status;
             $trip[$status] = now();
             $trip->save();
+
+
+            if($status == 'canceled' ){
+                Helpers::increment_order_count($trip->provider);
+            }
 
             if ($status == 'completed' && $trip->payment_status == 'paid' && !$trip->trip_transaction) {
                 if ($this->create_transaction($trip, 'admin') === false) {

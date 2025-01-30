@@ -233,7 +233,7 @@ class LoginController extends Controller
                 $employee->is_logged_in = 1;
                 $employee->save();
             }
-            if(Helpers::get_store_data()?->module_type == 'rental' && rental_module_published_status('Rental')){
+            if(Helpers::get_store_data()?->module_type == 'rental' && addon_published_status('Rental')){
                 return redirect()->route('vendor.providerDashboard');
             }
             return redirect()->route('vendor.dashboard');

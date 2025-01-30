@@ -363,7 +363,7 @@ class ProviderController extends Controller
 
             $store= $this->store->where('id',$store->id)->with([
                 'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations'
-            ])->withcount('items')->first();
+            ])->withcount('vehicles')->first();
 
             $packages = $this->subscriptionPackage->where('module_type','rental')->where('status',1)->latest()->get();
             $admin_commission = $this->businessSetting->where('key', 'admin_commission')->first()?->value ;

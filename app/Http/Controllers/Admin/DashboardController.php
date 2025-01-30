@@ -239,10 +239,10 @@ class DashboardController extends Controller
         if($module_type == 'settings'){
             return redirect()->route('admin.business-settings.business-setup');
         }
-        if($module_type == 'rental' && rental_module_published_status('Rental') == 1){
+        if($module_type == 'rental' && addon_published_status('Rental') == 1){
             return redirect()->route('admin.rental.dashboard');
         }
-        if($module_type == 'rental' && rental_module_published_status('Rental') == 0){
+        if($module_type == 'rental' && addon_published_status('Rental') == 0){
             return view('errors.404');
         }
         return view("admin-views.dashboard-{$module_type}", compact('data', 'total_sell', 'commission', 'delivery_commission', 'label','params','module_type'));

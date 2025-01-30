@@ -1088,7 +1088,7 @@ class CustomerAuthController extends Controller
 
             Cart::where('user_id', $guest_id)->update(['user_id' => $user->id, 'is_guest' => 0]);
 
-            if(rental_module_published_status()){
+            if(addon_published_status('Rental')){
 
                 RentalCart::where(['user_id' => $user->id, 'is_guest' => 0])
                 ->when(RentalCart::where(['user_id' => $guest_id, 'is_guest' => 1])->exists(),function ($query) {

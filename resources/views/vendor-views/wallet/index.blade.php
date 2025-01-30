@@ -1,6 +1,6 @@
 @php
     $vendorData = \App\CentralLogics\Helpers::get_store_data();
-    $title = $vendorData?->module_type == 'rental' && rental_module_published_status('Rental') ? 'Provider' : 'Store';
+    $title = $vendorData?->module_type == 'rental' && addon_published_status('Rental') ? 'Provider' : 'Store';
 @endphp
 
 @extends('layouts.vendor.app')

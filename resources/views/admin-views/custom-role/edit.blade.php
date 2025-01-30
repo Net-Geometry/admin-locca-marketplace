@@ -270,7 +270,7 @@
                                 </div>
                             </div>
                         </div>
-                        @if (rental_module_published_status('Rental'))
+                        @if (addon_published_status('Rental'))
                             <div class="pt-5">
                                 <h4>{{translate('Rental Role')}}</h4>
                             </div>
