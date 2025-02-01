@@ -65,11 +65,14 @@ class ProviderController extends Controller
 
         $vendor['order_count'] =$this->trip->where('provider_id' , $store->id)->whereIn('trip_status', ['refunded', 'completed'])
         ->count();
-        $vendor['todays_order_count'] = $this->trip->where('provider_id' , $store->id)->whereDate('created_at',now())
+
+        $vendor['todays_order_count'] = $this->trip->where('provider_id' , $store->id)->whereDate('completed',now())
         ->whereIn('trip_status', ['refunded', 'completed'])->count();
-        $vendor['this_week_order_count'] =$this->trip->where('provider_id' , $store->id)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
-            ->whereIn('trip_status', ['refunded', 'completed'])->count();
-        $vendor['this_month_order_count'] = $this->trip->where('provider_id' , $store->id)->whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))
+
+        $vendor['this_week_order_count'] =$this->trip->where('provider_id' , $store->id)->whereBetween('completed', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            ->whereIn('trip_status', ['refunded', 'completed'])->whereYear('completed', date('Y'))->count();
+
+        $vendor['this_month_order_count'] = $this->trip->where('provider_id' , $store->id)->whereMonth('completed', date('m'))->whereYear('completed', date('Y'))
             ->whereIn('trip_status', ['refunded', 'completed'])->count();
 
         $vendor['member_since_days'] = $vendor->created_at->diffInDays();

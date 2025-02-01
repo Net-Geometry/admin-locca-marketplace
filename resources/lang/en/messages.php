@@ -7318,4 +7318,5 @@ Smartly or Earn. ',
   'max_vehicle_available_quantity_is' => 'Max vehicle available quantity is',
   'vehicle_not_found' => 'Vehicle not found',
   'cart_not_found' => 'Cart not found',
+  'Trip_payment_status_updated' => 'Trip payment status updated',
 );
