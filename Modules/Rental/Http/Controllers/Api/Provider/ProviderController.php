@@ -186,7 +186,7 @@ class ProviderController extends Controller
             }
             else
             {
-                $maxProductUploads = $vendor['subscription']->max_product - $st?->items?->count() > 0?  $vendor['subscription']->max_product - $st?->items?->count() : 0 ;
+                $maxProductUploads = $vendor['subscription']->max_product - $st?->vehicles?->count() > 0?  $vendor['subscription']->max_product - $st?->vehicles?->count() : 0 ;
             }
 
             $pendingBill = $this->subscriptionBillingAndRefundHistory->where(['store_id'=>$store->id,
@@ -200,17 +200,17 @@ class ProviderController extends Controller
         }
 
 
-        if( $st?->storeConfig?->minimum_stock_for_warning > 0)
-        {
-            $items = $st?->items()->where('stock' ,'<=' , $st?->storeConfig?->minimum_stock_for_warning );
-        }
-        else
-        {
-            $items = $st?->items()->where('stock',0 );
-        }
+        // if( $st?->storeConfig?->minimum_stock_for_warning > 0)
+        // {
+        //     $items = $st?->items()->where('stock' ,'<=' , $st?->storeConfig?->minimum_stock_for_warning );
+        // }
+        // else
+        // {
+        //     $items = $st?->items()->where('stock',0 );
+        // }
 
-        $outOfStockCount = $st?->module->module_type != 'food' ? $items->orderby('stock')->latest()->count() : 0;
-        $vendor['out_of_stock_count'] = (int) $outOfStockCount;
+        // $outOfStockCount = $st?->module->module_type != 'food' ? $items->orderby('stock')->latest()->count() : 0;
+        $vendor['out_of_stock_count'] = (int) 0;
 
 
         return response()->json($vendor, 200);

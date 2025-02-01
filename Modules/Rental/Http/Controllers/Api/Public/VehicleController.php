@@ -186,6 +186,10 @@ class VehicleController extends Controller
 
         $max_price= 999999999;
         $min_price= 1;
+
+// info($request->min_price);
+// info($request->max_price);
+
         $price_column = $request->trip_type == 'distance_wise' ? 'distance_price' : ($request->trip_type == 'hourly' ? 'hourly_price' : null);
 
         if ($price_column) {

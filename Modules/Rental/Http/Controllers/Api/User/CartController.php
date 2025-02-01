@@ -3,23 +3,23 @@
 namespace Modules\Rental\Http\Controllers\Api\User;
 
 
+use App\Models\Store;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use Illuminate\Routing\Controller;
 use Modules\Rental\Entities\Vehicle;
-use Illuminate\Support\Facades\Validator;
 use Modules\Rental\Entities\RentalCart;
+use Illuminate\Support\Facades\Validator;
 use Modules\Rental\Entities\RentalCartUserData;
 
 class CartController extends Controller
 {
-    public function __construct(private RentalCart $cart, private RentalCartUserData $user_data, private Helpers $helpers, private Vehicle $vehicle,)
-    {
-        $this->cart = $cart;
-        $this->helpers = $helpers;
-        $this->user_data = $user_data;
-        $this->vehicle = $vehicle;
-    }
+    public function __construct(
+        private RentalCart $cart,
+        private RentalCartUserData $user_data,
+        private Helpers $helpers,
+        private Vehicle $vehicle
+    ) {}
 
     public function getCartList(Request $request)
     {
@@ -71,8 +71,25 @@ class CartController extends Controller
         $is_guest = $request->user ? 0 : 1;
 
         $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first();
+        $pickup_time= $request->pickup_time ? \Carbon\Carbon::parse($request->pickup_time) : $user_data?->pickup_time ?? now();
+        // dd($pickup_time );
+        $vehicle = $this->vehicle->where('id', $request->vehicle_id)->active()
+        ->withCount([
+            'vehicleIdentities as total_vehicle_count' => function ($query) use ($pickup_time) {
+                $query->where(function ($query) use ($pickup_time) {
+                    $query->whereDoesntHave('vehicle_trip_details')
+                        ->orWhere(function ($query) use ($pickup_time) {
+                            $query->whereNotExists(function ($subQuery) use ($pickup_time) {
+                                $subQuery->from('trip_vehicle_details')
+                                    ->whereColumn('trip_vehicle_details.vehicle_identity_id', 'vehicle_identities.id')
+                                    ->where('estimated_trip_end_time', '>', $pickup_time);
+                            });
+                        });
+                });
+            },
+        ])
+        ->first();
 
-        $vehicle = $this->vehicle->where('id', $request->vehicle_id)->first();
         if (!$vehicle) {
             return response()->json([
                 'errors' => [
@@ -88,6 +105,42 @@ class CartController extends Controller
                 ]
             ], 403);
         }
+        if($vehicle->total_vehicle_count <= 0){
+            return response()->json([
+                'errors' => [
+                    ['code' => 'cart_item', 'message' => translate('messages.This_Vehicle_is_not_available_on_this_pickup_time')]
+                ]
+            ], 403);
+        }
+
+        if($vehicle->total_vehicle_count < $request->quantity){
+            return response()->json([
+                'errors' => [
+                    ['code' => 'cart_item', 'message' => translate('messages.max_vehicle_available_quantity_is') .' '.$vehicle->total_vehicle_count]
+                ]
+            ], 403);
+        }
+        $provider_id= $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->first()?->provider_id;
+
+        if ($provider_id  && $provider_id != $vehicle->provider_id ) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'cart_item', 'message' => translate('messages.You_can_not_add_different_provider_vehicles')]
+                ]
+            ], 403);
+        }
+
+
+        $store = Store::selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $pickup_time->format('w') . ' and `store_schedule`.`opening_time` < "' . $pickup_time->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $pickup_time->format('H:i:s') . '") > 0), true, false) as open')->where('id', $vehicle->provider_id)->first();
+
+        if($store->open == false){
+            return response()->json([
+                'errors' => [
+                    ['code' => 'cart_item', 'message' => translate('messages.provider_is_closed_at_trip_time')]
+                ]
+            ], 403);
+        }
+
         if ($request->rental_type ==  'hourly' && $vehicle->trip_hourly != 1) {
             return response()->json([
                 'errors' => [
@@ -103,7 +156,7 @@ class CartController extends Controller
             ], 403);
         }
 
-        if($this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->exists() && $user_data?->rental_type && $user_data?->rental_type !=$request->rental_type ){
+        if($provider_id && $user_data?->rental_type && $user_data?->rental_type !=$request->rental_type ){
             return response()->json([
                 'errors' => [
                     ['code' => 'cart_item', 'message' => $vehicle->name . ' ' . translate('messages.You_can_not_add_different_rental_type_vehicles')]
@@ -152,8 +205,48 @@ class CartController extends Controller
             return response()->json(['errors' => translate('cart_not_found')], 404);
         }
 
-        $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first() ?? [];
 
+        $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first();
+        $pickup_time= $request->pickup_time ? \Carbon\Carbon::parse($request->pickup_time) : $user_data?->pickup_time ?? now();
+
+        $vehicle = $this->vehicle->where('id', $cart->vehicle_id)->active()
+        ->withCount([
+            'vehicleIdentities as total_vehicle_count' => function ($query) use ($pickup_time) {
+                $query->where(function ($query) use ($pickup_time) {
+                    $query->whereDoesntHave('vehicle_trip_details')
+                        ->orWhere(function ($query) use ($pickup_time) {
+                            $query->whereNotExists(function ($subQuery) use ($pickup_time) {
+                                $subQuery->from('trip_vehicle_details')
+                                    ->whereColumn('trip_vehicle_details.vehicle_identity_id', 'vehicle_identities.id')
+                                    ->where('estimated_trip_end_time', '>', $pickup_time);
+                            });
+                        });
+                });
+            },
+        ])
+        ->first();
+        if (!$vehicle) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'cart_item', 'message' => translate('messages.vehicle_not_found')]
+                ]
+            ], 403);
+        }
+        if($vehicle->total_vehicle_count <= 0){
+            return response()->json([
+                'errors' => [
+                    ['code' => 'cart_item', 'message' => translate('messages.This_Vehicle_is_not_available_on_this_pickup_time')]
+                ]
+            ], 403);
+        }
+
+        if($vehicle->total_vehicle_count < $request->quantity){
+            return response()->json([
+                'errors' => [
+                    ['code' => 'cart_item', 'message' => translate('messages.max_vehicle_available_quantity_is') .' '.$vehicle->total_vehicle_count]
+                ]
+            ], 403);
+        }
         $price = $this->getDiscount(price: $user_data->rental_type == 'hourly' ? $cart->vehicle->hourly_price *  $user_data->estimated_hours : $cart->vehicle->distance_price *  $user_data->distance, discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
         $cart->user_id = $user_id;
         $cart->is_guest = $is_guest;
@@ -261,13 +354,25 @@ class CartController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
 
+        $pickup_time= $request->pickup_time ? \Carbon\Carbon::parse($request->pickup_time) : $user_data?->pickup_time ?? now();
 
-        if($user_data->rental_type != $request->rental_type){
 
-            $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with(['vehicle'])->get();
 
-            $unsupported_vehicle_ids=[];
-            foreach($carts as $cart){
+        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with(['vehicle'])->get();
+        $unsupported_vehicle_ids=[];
+        foreach($carts as $cart){
+            $store = Store::selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $pickup_time->format('w') . ' and `store_schedule`.`opening_time` < "' . $pickup_time->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $pickup_time->format('H:i:s') . '") > 0), true, false) as open')->where('id', $cart->provider_id)->first();
+
+            if($store->open == false){
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'cart_item', 'message' => translate('messages.provider_is_closed_at_trip_time')]
+                    ]
+                ], 403);
+            }
+
+
+                if($user_data->rental_type != $request->rental_type){
                     if ($request->rental_type ==  'hourly' && $cart?->vehicle->trip_hourly != 1) {
                         $unsupported_vehicle_ids[]= $cart?->id;
                     }
@@ -345,6 +450,5 @@ class CartController extends Controller
             'user_data' => $this->setUserData($request, $user_id, $is_guest, $total_cart_price)
         ];
     }
-
 
 }
