@@ -400,10 +400,13 @@ class VendorController extends Controller
     public function view(Request $request,$store_id, $tab=null, $sub_tab='cash')
     {
         $filter= $request?->filter;
-
         $key = explode(' ', request()->search);
-
         $store = Store::findOrFail($store_id);
+
+        if(addon_published_status('Rental') && $store->module_type == 'rental'){
+          return to_route('admin.rental.provider.details',['id' => $store_id,'tab' =>$tab]);
+        }
+
         $wallet = $store->vendor->wallet;
         if(!$wallet)
         {

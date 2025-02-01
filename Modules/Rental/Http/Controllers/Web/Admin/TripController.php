@@ -191,11 +191,6 @@ class TripController extends Controller
             $trip[$status] = now();
             $trip->save();
 
-
-            if($status == 'canceled' ){
-                Helpers::increment_order_count($trip->provider);
-            }
-
             if ($status == 'completed' && $trip->payment_status == 'paid' && !$trip->trip_transaction) {
                 if ($this->create_transaction($trip, 'admin') === false) {
                     DB::rollBack();

@@ -238,7 +238,8 @@ active
                                     }}</span>
                                 @else
                                 <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->max_product }} {{
-                                   $store?->module->module_type == 'rental' && addon_published_status('Rental') ? translate('messages.Upload') : translate('messages.product_Upload') }} <small>({{ $store?->store_sub_update_application?->max_product  - $store->items_count > 0 ? $store?->store_sub_update_application?->max_product  - $store->items_count : 0 }} {{ translate('left') }}) </small></span>
+                                   $store?->module->module_type == 'rental' && addon_published_status('Rental') ? translate('messages.Upload') : translate('messages.product_Upload') }} <small>
+                                    ({{ $store?->store_sub_update_application?->max_product  - $store->items_count > 0 ? $store?->store_sub_update_application?->max_product  - $store->items_count : 0 }} {{ translate('left') }}) </small></span>
                                 @endif
                             </div>
                         </div>

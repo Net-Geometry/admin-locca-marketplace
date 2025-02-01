@@ -29,8 +29,13 @@ class SubscriptionController extends Controller
     public function subscriberDetail(){
         $store= Store::where('id',Helpers::get_store_id())->with([
             'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations','module:id,module_type'
-        ])->withcount(['items','store_all_sub_trans'])
+        ])
+        ->withcount(['items','store_all_sub_trans'])
         ->first();
+        if($store->module_type == 'rental') {
+            $store->loadCount('vehicles as items_count' );
+        }
+
         $packages = SubscriptionPackage::where('status',1)
         ->where('module_type', $store?->module?->module_type == 'rental' && addon_published_status('Rental') ? 'rental' : 'all' )
         ->latest()->get();
