@@ -68,7 +68,7 @@
                                     </span>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
                                         <span>{{translate('Provider')}}</span> <span>:</span>
-                                        <span class="font-bold">{{ $trip->provider->name }}</span>
+                                        <span class="font-bold">{{ $trip?->provider?->name }}</span>
                                         <button type="button" class="btn btn--primary-light px-2 py-1 shadow-none"
                                                 data-toggle="modal" data-target="#providerLocationModal">
                                             <i class="tio-poi"></i> {{translate('View map')}}
@@ -211,7 +211,7 @@
                                                             data-quantity = "{{ $detail->quantity }}"
                                                             data-img = "{{ data_get($detail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}"
                                                             data-name = "{{ $detail?->vehicle_details['name'] }}"
-                                                            data-vendor = "{{ $trip?->provider->name }}"
+                                                            data-vendor = "{{ $trip?->provider?->name }}"
                                                             data-category = "{{ $detail?->vehicle?->category?->name }}"
                                                             data-brand = "{{ $detail?->vehicle?->brand?->name }}"
                                                             data-list="{{ json_encode($detail?->vehicle?->vehicleIdentities) }}"
@@ -238,7 +238,7 @@
                                                                 data-quantity = "{{ $detail->quantity }}"
                                                                 data-img = "{{ data_get($detail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}"
                                                                 data-name = "{{ $detail?->vehicle_details['name'] }}"
-                                                                data-vendor = "{{ $trip?->provider->name }}"
+                                                                data-vendor = "{{ $trip?->provider?->name }}"
                                                                 data-category = "{{ $detail?->vehicle?->category?->name }}"
                                                                 data-brand = "{{ $detail?->vehicle?->brand?->name }}"
                                                                 data-list="{{ json_encode($detail?->vehicle?->vehicleIdentities) }}"
@@ -253,9 +253,15 @@
                                                             $licensePlates = $detail?->tripVehicleDetails->map(function($tripVehicleDetails) {
                                                                 return $tripVehicleDetails?->vehicle_identity_data?->license_plate_number;
                                                             });
-                                                            $licensePlatesString = $licensePlates->implode(', ');
+                                                            $licensePlatesString = $licensePlates->filter()->implode(', '); // Remove any null or empty values
                                                         @endphp
-                                                        {{ $licensePlatesString }}
+
+                                                        @if ($licensePlatesString)
+                                                            {{ $licensePlatesString }}
+                                                        @else
+                                                        {{translate('Not Found')}}
+                                                        @endif
+
                                                     </div>
                                                 </div>
                                             @endif
@@ -592,7 +598,7 @@
                             <div class="avatar avatar-circle">
                                 <img class="avatar-img w-75px border-000-01 onerror-image"
                                      data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                     src="{{ $trip?->provider['logoFullUrl'] }}"
+                                     src="{{ $trip?->provider?->logoFullUrl }}"
                                      alt="Image Description">
                             </div>
                             <div class="media-body">
@@ -601,17 +607,17 @@
                                 </div>
 
                                 <div class="text--title">
-                                    <span class="font-bold">{{ $trip->provider->trips()->where('trip_status' ,'completed')->count() }}</span>
+                                    <span class="font-bold">{{ $trip?->provider?->trips()?->where('trip_status' ,'completed')->count() }}</span>
                                     {{ translate('messages.Trip_served') }}
                                 </div>
 
                                 <div class="text--title d-flex align-items-center">
-                                    {{ $trip->provider->email }}
+                                    {{ $trip?->provider?->email }}
                                 </div>
 
                                 <div class="text--title d-flex align-items-baseline">
                                     <i class="tio-poi mr-2"></i>
-                                    {{ $trip->provider->address }}
+                                    {{ $trip?->provider?->address }}
                                 </div>
 
                             </div>
@@ -681,7 +687,7 @@
                                                         <option value="" selected disabled>
                                                             <span class="fs-12 text--title">{{ translate('Select Vendors') }}</span>
                                                         </option>
-                                                        @foreach($trip->provider->vehicleDriver as $providerDriver)
+                                                        @foreach($trip?->provider?->vehicleDriver ?? [] as $providerDriver)
                                                             <option value="{{ $providerDriver->id }}"
                                                                     {{ $vehicleDetails->vehicle_driver_id == $providerDriver->id ? 'selected' : '' }}
                                                                     data-driver-id="{{ $providerDriver->id }}">
@@ -1124,8 +1130,8 @@
                 const map = new google.maps.Map(
                     document.getElementById("provider_map_canvas"), {
                         center: {
-                            lat: {{ $trip->provider->latitude }},
-                            lng: {{ $trip->provider->longitude }}
+                            lat: {{ $trip?->provider?->latitude }},
+                            lng: {{ $trip?->provider?->longitude }}
                         },
                         zoom: 14,
                         styles: grayStyle,
@@ -1135,8 +1141,8 @@
                 const infowindow = new google.maps.InfoWindow();
 
                 const providerLocation = {
-                    lat: {{ $trip->provider->latitude }},
-                    lng: {{ $trip->provider->longitude }}
+                    lat: {{ $trip?->provider?->latitude }},
+                    lng: {{ $trip?->provider?->longitude }}
                 };
 
                 const providerMarker = new google.maps.Marker({
@@ -1147,7 +1153,7 @@
                 });
 
                 google.maps.event.addListener(providerMarker, "click", function() {
-                    infowindow.setContent("<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ $trip?->provider?->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}'></div> <div style='float:right; padding: 10px;'><b>{{ Str::limit($trip?->provider?->name, 15, '...') }}</b><br /> {{ $trip?->provider?->address }}</div>");
+                    infowindow.setContent("<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ $trip?->provider?->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}'></div> <div style='float:right; padding: 10px;'><b>{{ Str::limit($trip?->provider?->name, 15, '...') }}</b><br /> {{ Str::limit($trip?->provider?->address, 15, '...' }}</div>");
                     infowindow.open(map, providerMarker);
                 });
             }

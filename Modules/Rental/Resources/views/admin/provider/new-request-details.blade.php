@@ -61,7 +61,13 @@
                             <div>
                                 <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.Business_Plan') }}
                                 </h5>
-                                <span class="fs-13 lh--12 color-484848">{{ ucwords($store->store_business_model) }}</span>
+                                @if($store->store_business_model == 'none')
+                                    <span class="fs-13 lh--12 color-484848">{{ translate($store->package->package_name ) }}</span><br>
+                                    <span class="fs-13 lh--12 color-484848">{{ translate('payment_failed') }}</span>
+                                @else
+                                <span class="fs-13 lh--12 color-484848">{{ translate($store->store_business_model ) }}</span>
+                                @endif
+
                             </div>
                         </div>
                         <div class="details-single d-flex align-items-center gap-2">
@@ -205,12 +211,24 @@
                                             <span>: {{$store->vendor->phone}}</span>
                                         </li>
                                     </ul>
+                                </div>
 
+                                <div class="resturant--info-address">
+                                    <ul class="address-info address-info-2 p-0 text-dark">
+                                        <li class="d-flex align-items-start">
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Email') }}</span>
+                                            <span>: {{ $store->vendor->email }}</span>
+                                        </li>
+                                        <li class="d-flex align-items-start">
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Password') }}</span>
+                                            <span>: {{ translate('*************') }}</span>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
                         <div class="card __bg-FAFAFA border-0 h-100">
                             <div class="card-body">
                                 <h5 class="mb-10px font-bold"> {{ translate('messages.Pickup_Zone') }}
@@ -224,27 +242,6 @@
                                             {{ $zoneName }}
                                         </label>
                                     @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card __bg-FAFAFA border-0 h-100">
-                            <div class="card-body">
-                                <h5 class="mb-10px font-bold"> {{ translate('messages.Login_Information') }}
-                                </h5>
-                                <div class="resturant--info-address">
-                                    <ul class="address-info address-info-2 p-0 text-dark">
-                                        <li class="d-flex align-items-start">
-                                            <span class="label min-w-sm-auto">{{ translate('messages.Email') }}</span>
-                                            <span>: {{ $store->vendor->email }}</span>
-                                        </li>
-                                        <li class="d-flex align-items-start">
-                                            <span class="label min-w-sm-auto">{{ translate('messages.Password') }}</span>
-                                            <span>: {{ translate('*************') }}</span>
-                                        </li>
-                                    </ul>
-
                                 </div>
                             </div>
                         </div>

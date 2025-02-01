@@ -164,6 +164,11 @@ class VehicleController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'documents' => 'nullable|array',
             'documents.*' => 'max:2048',
+        ], [
+            'vehicle.vin_number.*.unique' => 'The VIN number has already been taken.',
+            'vehicle.license_plate_number.*.unique' => 'The license plate number has already been taken.',
+            'vehicle.vin_number.required' => 'VIN number is required.',
+            'vehicle.license_plate_number.required' => 'License plate number is required.',
         ]);
 
         if ($request->has('thumbnail')) {

@@ -32,6 +32,7 @@ class DashboardController extends Controller
      */
     public function dashboard(Request $request): Application|Factory|View|RedirectResponse|JsonResponse
     {
+//        dd($request->all(), auth('admin')->user()->email);
         $zone_id = $request->get('zone_id', 'all');
         $statistics_type = $request->get('statistics_type', 'all');
         $statistics_chart_type = $request->get('statistics_chart_type', 'all');
@@ -173,18 +174,15 @@ class DashboardController extends Controller
             ->get();
 
 
-        $topProvider = Store::select('stores.*')
-            ->selectRaw('COUNT(trips.id) as trip_count')
-            ->leftJoin('trips', 'trips.provider_id', '=', 'stores.id')
+        $topProvider = Store::withcount('trips')
             ->when(is_numeric($request['module_id']), function ($q) use ($request) {
-                return $q->where('stores.module_id', $request['module_id']);
+                return $q->where('module_id', $request['module_id']);
             })
             ->when(is_numeric($request['zone_id']), function ($q) use ($request) {
-                return $q->where('stores.zone_id', $request['zone_id']);
+                return $q->where('zone_id', $request['zone_id']);
             })
-            ->groupBy('stores.id')
-            ->having('trip_count', '>', 0)
-            ->orderBy('trip_count', 'desc')
+            ->having('trips_count', '>', 0)
+            ->orderBy('trips_count', 'desc')
             ->take(5)
             ->get();
 

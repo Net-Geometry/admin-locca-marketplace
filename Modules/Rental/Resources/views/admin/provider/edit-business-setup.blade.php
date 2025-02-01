@@ -360,7 +360,7 @@
             if(storeBusinessModel){
                 $('#loading').hide();
                 toastr.success('{{ translate('Business Plan updated successfully') }}!');
-                location.reload();
+                window.location.href = '{{ route("admin.rental.provider.list") }}';
                 return;
             }
             shift_to_commission(url, message, event)
@@ -412,7 +412,7 @@
             if(oldPackage == activePackage.val()){
                 $('#loading').hide();
                 toastr.success('{{ translate('Business Plan updated successfully') }}');
-                location.reload();
+                window.location.href = '{{ route("admin.rental.provider.list") }}';
                 return;
             }
 

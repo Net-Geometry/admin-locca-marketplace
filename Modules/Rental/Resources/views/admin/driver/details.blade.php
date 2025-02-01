@@ -89,11 +89,11 @@
                                 <h5 class="">{{ translate('Provider Info') }}</h5>
                                 <div class="align-items-center d-flex gap-2 resturant--information-single text-left">
                                     <img height="45" class="aspect-ratio-1 onerror-image rounded"
-                                        src="{{ $driver?->provider?->logo_full_url }}"
+                                        src="{{ $driver?->provider?->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}"
                                         alt="{{ translate('Image Description') }}">
                                     <div class="text--title">
                                         <a class="media align-items-center deco-none resturant--information-single"
-                                            href="{{ route('admin.rental.provider.details', $driver?->provider->id) }}">
+                                            href="{{ isset($driver?->provider) ? route('admin.rental.provider.details', $driver?->provider?->id) : '#' }}">
                                             <h5 class="text-capitalize font-semibold text-hover-primary d-block mb-1">
                                                 {{ $driver?->provider?->name }}
                                                 <span class="btn btn--warning fs-12 rounded-20 text-white py-1 px-2 ml-1">

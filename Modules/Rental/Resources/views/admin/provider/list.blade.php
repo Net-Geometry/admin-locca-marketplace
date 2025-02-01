@@ -59,7 +59,7 @@
                     })->where('created_at', '>=', now()->subDays(30)->toDateTimeString())->where('module_id', Config::get('module.current_module_id'))->count())
                     <h4 class="title">{{$data}}</h4>
                     <span class="subtitle">{{translate('messages.newly_joined_providers')}}</span>
-                    <img class="resturant-icon" src="{{asset('/public/assets/admin/img/new_provider.png')}}" alt="store">
+                    <img class="resturant-icon" src="{{asset('/public/assets/admin/img/new_provider.png')}}" alt="{{translate('provider')}}">
                 </div>
             </div>
         </div>
@@ -113,7 +113,7 @@
                                     <!-- Search -->
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}" name="search" class="form-control"
-                                    placeholder="{{translate('ex_:_Search_Store_Name')}}" aria-label="{{translate('messages.search')}}" >
+                                    placeholder="{{translate('ex_:_Search_provider_Name')}}" aria-label="{{translate('messages.search')}}" >
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
 
                         </div>
@@ -186,7 +186,7 @@
                             <td>{{$key+$stores->firstItem()}}</td>
                             <td>
                                 <div>
-                                    <a href="{{route('admin.rental.provider.details', $store->id)}}" class="table-rest-info" alt="view store">
+                                    <a href="{{route('admin.rental.provider.details', $store->id)}}" class="table-rest-info" alt="{{translate('view provider')}}">
                                     <img class="img--60 circle onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
 
                                             src="{{ $store['logo_full_url'] ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
@@ -255,7 +255,7 @@
                                     href="{{route('admin.rental.provider.edit-basic-setup',[$store['id']])}}" title="{{translate('messages.edit_provider')}}"><i class="tio-edit"></i>
                                     </a>
                                     <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
-                                    data-id="vendor-{{$store['id']}}" data-message="{{translate('You want to remove this store')}}" title="{{translate('messages.delete_store')}}"><i class="tio-delete-outlined"></i>
+                                    data-id="vendor-{{$store['id']}}" data-message="{{translate('You want to remove this provider')}}" title="{{translate('messages.delete_provider')}}"><i class="tio-delete-outlined"></i>
                                     </a>
                                     <form action="{{route('admin.store.delete',[$store['id']])}}" method="post" id="vendor-{{$store['id']}}">
                                         @csrf @method('delete')

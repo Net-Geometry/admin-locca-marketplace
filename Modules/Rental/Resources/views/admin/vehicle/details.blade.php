@@ -283,7 +283,7 @@
                     <div class="card-body d-flex flex-column justify-content-center">
                         <a class="resturant--information-single" href="{{ route('admin.rental.provider.details', $vehicle->provider_id) }}">
                             <img class="img--65 rounded mx-auto mb-3 onerror-image" data-onerror-image=""
-                                 src="{{ $vehicle?->provider['logoFullUrl'] }}" alt="Image Description">
+                                 src="{{ $vehicle?->provider?->logoFullUrl ?? asset('public/assets/admin/img/100x100/1.png') }}" alt="Image Description">
                             <div class="text-center text--title">
                                 <h5 class="text-capitalize font-semibold text-hover-primary d-block mb-1">
                                     {{ $vehicle?->provider?->name }}

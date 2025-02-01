@@ -43,6 +43,129 @@
             color: red;
         }
 
+        /* Mutiple Select2 */
+
+        .basic-multiple-select2
+        + .select2-container--default
+        .select2-selection--multiple
+        .select2-selection__choice {
+            display: inline-flex;
+            align-items: center;
+            padding: 0 5px;
+            margin: 2px;
+            background-color: #e4e4e4;
+            border-radius: 4px;
+        }
+        .basic-multiple-select2
+        + .select2-container--default
+        .select2-selection--multiple
+        .select2-selection__choice__remove {
+            cursor: pointer;
+            margin-left: 5px;
+            color: #333;
+        }
+        .basic-multiple-select2
+        + .select2-container--default
+        .select2-selection--multiple
+        .close-icon {
+            cursor: pointer;
+            color: #00000078;
+        }
+        .basic-multiple-select2
+        + .select2-container--default
+        .select2-selection--multiple
+        .select2-selection__rendered
+        li {
+            list-style: none;
+        }
+        .basic-multiple-select2
+        + .select2-container--default
+        .select2-selection--multiple
+        ul.select2-selection__rendered
+        .select2-search
+        input {
+            width: 100% !important;
+            margin: 0 !important;
+            height: 30px;
+        }
+        .basic-multiple-select2
+        + .select2-container--default
+        .select2-selection--multiple
+        ul.select2-selection__rendered
+        .select2-search {
+            width: 30px;
+            flex-grow: 1;
+            margin-right: -15px;
+            height: 30px;
+        }
+        .basic-multiple-select2
+        + .select2-container--default
+        .select2-selection--multiple
+        ul.select2-selection__rendered {
+            display: flex;
+            height: 38px;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+            gap: 5px;
+        }
+        .basic-multiple-select2
+        + .select2-container--default
+        .select2-selection--multiple
+        ul.select2-selection__rendered
+        .name {
+            padding: 5px;
+            border-radius: 3px;
+            background: #009faa26;
+            color: #333;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pickup-zone-tag
+        .basic-multiple-select2
+        + .select2-container--default
+        .select2-selection--multiple
+        ul.select2-selection__rendered
+        .name {
+            background: rgba(51, 66, 87, 0.06) !important;
+            border-radius: 33px !important;
+            color: rgba(51, 66, 87, 0.9) !important;
+            font-weight: 500;
+            padding: 5px 7px;
+        }
+
+        .pickup-zone-tag .select2-selection__rendered span {
+            margin-left: 3px;
+        }
+
+        .select2-container .more {
+            background: var(--primary-clr);
+            border-radius: 30px;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 13px;
+            padding: 4px 12px;
+        }
+
+        /* Optional: Add a plus sign for remaining items */
+        .basic-multiple-select2
+        + .select2-container--default
+        .select2-selection--multiple
+        .select2-selection__rendered::after {
+            content: attr(data-placeholder);
+            color: #334257;
+            font-weight: 600;
+            display: inline-block;
+            width: auto;
+            text-align: center;
+            background: transparent;
+            margin-left: auto;
+            display: none;
+        }
+
     </style>
 @endpush
 
@@ -290,7 +413,7 @@
                                                     data-original-title="{{ translate('messages.Select zones from where customer can choose their pickup locations for trip booking') }}">
                                                     <i class="tio-info text--title opacity-60"></i>
                                                 </span></label>
-                                            <select name="pickup_zones[]" id="pickup_zones" class="form-control multiple-select2" multiple="multiple">
+                                            <select name="pickup_zones[]" id="pickup_zones" class="form-control basic-multiple-select2" multiple="multiple">
                                                 @foreach ($zones as $zone)
                                                     <?php
                                                         $pickupZoneIds = json_decode($store->pickup_zone_id) ?? [];
@@ -702,7 +825,7 @@
                         var itemId = $removeIcon.data("id");
                         var $this2 = $removeIcon
                             .closest(".select2")
-                            .siblings(".multiple-select2");
+                            .siblings(".basic-multiple-select2");
                         $this2.val(
                             $this2.val().filter(function (id) {
                                 return id != itemId;
@@ -713,7 +836,7 @@
                 );
             });
         };
-        $(".multiple-select2").select2DynamicDisplay();
+        $(".basic-multiple-select2").select2DynamicDisplay();
     </script>
 
     <script>
@@ -946,7 +1069,7 @@
         })
 
         let initialSelectedZones = [];
-        $(".multiple-select2 option:selected").each(function () {
+        $(".basic-multiple-select2 option:selected").each(function () {
             initialSelectedZones.push($(this).val());
         });
 
@@ -978,7 +1101,7 @@
             $('#coordinates').val(null);
             $('#latitude').val(null);
             $('#longitude').val(null);
-            $(".multiple-select2").val(initialSelectedZones).trigger("change");
+            $(".basic-multiple-select2").val(initialSelectedZones).trigger("change");
         });
 
 

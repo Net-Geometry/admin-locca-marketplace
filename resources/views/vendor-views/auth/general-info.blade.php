@@ -761,9 +761,11 @@
                         $('#show_sub_packages').empty().html(response.view);
                         if (response.module_type === 'rental') {
                             $('#pickup-zone-container').show();
+                            $('.multiple-select2').prop('disabled', false);
                             $('.module-select-time').text('{{ translate('messages.Estimated_pickup_time') }}');
                         } else {
                             $('#pickup-zone-container').hide();
+                            $('.multiple-select2').prop('disabled', true);
                         }
                     },
                     error: function(xhr, status, error) {

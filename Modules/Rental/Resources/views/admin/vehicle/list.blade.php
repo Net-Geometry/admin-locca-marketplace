@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.vehicale_list'))
+@section('title', translate('messages.vehicle_list'))
 
 @push('css_or_js')
 @endpush
@@ -15,7 +15,7 @@
                         <span class="page-header-icon">
                             <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
                         </span>
-                        <span>{{ translate('messages.Auto_Focus_Car_Service') }}</span>
+                        <span>{{ translate('messages.vehicle_list') }}</span>
                     </h1>
                 </div>
             </div>

@@ -24,6 +24,7 @@
             <th>{{ translate('Vehicle_Category') }}</th>
             <th>{{ translate('Vehicle_Brand') }}</th>
             <th>{{ translate('Trip Fair') }}</th>
+            <th>{{ translate('New Tag') }}</th>
             <th>{{ translate('Status') }}</th>
 
         </thead>
@@ -49,7 +50,8 @@
                         </div>
                     @endif
                 </td>
-                 <td>{{ $vehicle->status == 1 ? translate('messages.Active') : translate('messages.Inactive')  }}</td>
+                <td>{{ $vehicle->new_tag == 1 ? translate('messages.Yes') : translate('messages.No')  }}</td>
+                <td>{{ $vehicle->status == 1 ? translate('messages.Active') : translate('messages.Inactive')  }}</td>
             </tr>
         @endforeach
         </tbody>
