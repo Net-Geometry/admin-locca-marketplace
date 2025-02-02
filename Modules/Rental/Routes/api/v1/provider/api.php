@@ -131,6 +131,8 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
         Route::group(['prefix' => 'provider'], function () {
             Route::get('get-provider-details/{provider}', [Provider::class, 'getProvidereDetails']);
             Route::get('get-provider-reviews/{provider}', [Provider::class, 'getProvidereReviews']);
+            Route::get('popular', [Provider::class, 'getPopularProvider']);
+            Route::get('latest', [Provider::class, 'getLatestProvider']);
         });
 
         Route::group(['prefix' => 'user', 'middleware' => 'apiGuestCheck'], function () {
