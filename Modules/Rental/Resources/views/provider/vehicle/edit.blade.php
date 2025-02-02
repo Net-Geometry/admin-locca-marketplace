@@ -725,8 +725,8 @@
                 let inputValue = parseFloat($(this).val());
                 let applicablePrice = getApplicablePrice();
 
-                if (discountType === 'percent' && inputValue > 100) {
-                    $(this).val(100);
+                if (discountType === 'percent' && inputValue >= 100) {
+                    $(this).val(99);
                 } else if (discountType === 'amount' && inputValue > applicablePrice) {
                     $(this).val(applicablePrice);
                 }

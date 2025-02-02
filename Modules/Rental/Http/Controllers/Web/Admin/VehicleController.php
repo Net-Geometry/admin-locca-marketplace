@@ -147,7 +147,7 @@ class VehicleController extends Controller
                         $applicablePrice = $distancePrice;
                     }
 
-                    if ($request->discount_type === 'percent' && $value > 100) {
+                    if ($request->discount_type === 'percent' && $value >= 100) {
                         $fail(translate('messages.discount_cannot_exceed_100_percent'));
                     }
 
@@ -327,7 +327,7 @@ class VehicleController extends Controller
                         $applicablePrice = $distancePrice;
                     }
 
-                    if ($request->discount_type === 'percent' && $value > 100) {
+                    if ($request->discount_type === 'percent' && $value >= 100) {
                         $fail(translate('messages.discount_cannot_exceed_100_percent'));
                     }
 

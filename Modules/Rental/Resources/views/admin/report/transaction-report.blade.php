@@ -246,13 +246,13 @@
                                             href="{{ route('admin.transactions.rental.trip.details', $ot->trip_id) }}">{{ $ot->trip_id }}</a>
                                     </td>
                                     <td class="text-capitalize">
-                                        {{ Str::limit($ot->trip->provider->name, 25, '...') }}
+                                        {{ Str::limit($ot?->trip?->provider?->name ?? translate('messages.Not Found'), 25, '...') }}
                                     </td>
                                     <td class="white-space-nowrap">
                                         @if ($ot->trip->customer)
                                             <a class="text-body text-capitalize"
                                                 href="{{ route('admin.users.customer.view', [$ot->trip['user_id']]) }}">
-                                                <strong>{{ $ot->trip->customer['f_name'] . ' ' . $ot->trip->customer['l_name'] }}</strong>
+                                                <strong>{{ $ot->trip?->customer?->f_name . ' ' . $ot->trip?->customer?->l_name }}</strong>
                                             </a>
                                         @elseif($ot->trip?->user_info['contact_person_name'])
                                             <a class="text-body text-capitalize" href="#">
