@@ -187,8 +187,8 @@
                                                             {{ $detail?->vehicle_details['name'] }}</div>
                                                             @if ($detail?->vehicle)
 
-                                                            <div><span class="font-semibold mr-2">{{translate('Category')}} :</span>{{ $detail?->vehicle?->category?->name }}</div>
-                                                            <div><span class="font-semibold mr-2">{{translate('Brand')}} :</span>{{ $detail?->vehicle?->brand?->name }}</div>
+                                                            <div><span class="font-semibold mr-2">{{translate('Category')}} :</span>{{ Str::limit($detail?->vehicle?->category?->name, 15, '...') }}</div>
+                                                            <div><span class="font-semibold mr-2">{{translate('Brand')}} :</span>{{ Str::limit($detail?->vehicle?->brand?->name, 15, '...') }}</div>
                                                             @else
                                                             <div><span class="text--danger mr-2">{{translate('Vehicle_Not_Found_!!!')}} </span></div>
 
@@ -212,8 +212,8 @@
                                                             data-img = "{{ data_get($detail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}"
                                                             data-name = "{{ $detail?->vehicle_details['name'] }}"
                                                             data-vendor = "{{ $trip?->provider?->name }}"
-                                                            data-category = "{{ $detail?->vehicle?->category?->name }}"
-                                                            data-brand = "{{ $detail?->vehicle?->brand?->name }}"
+                                                            data-category = "{{ Str::limit($detail?->vehicle?->category?->name, 15, '...') }}"
+                                                            data-brand = "{{ Str::limit($detail?->vehicle?->brand?->name, 15, '...') }}"
                                                             data-list="{{ json_encode($detail?->vehicle?->vehicleIdentities) }}"
                                                             data-trip_vehicle_details="{{ json_encode($detail?->tripVehicleDetails) }}"
                                                         >
@@ -239,8 +239,8 @@
                                                                 data-img = "{{ data_get($detail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}"
                                                                 data-name = "{{ $detail?->vehicle_details['name'] }}"
                                                                 data-vendor = "{{ $trip?->provider?->name }}"
-                                                                data-category = "{{ $detail?->vehicle?->category?->name }}"
-                                                                data-brand = "{{ $detail?->vehicle?->brand?->name }}"
+                                                                data-category = "{{ Str::limit($detail?->vehicle?->category?->name, 15, '...') }}"
+                                                                data-brand = "{{ Str::limit($detail?->vehicle?->brand?->name, 15, '...') }}"
                                                                 data-list="{{ json_encode($detail?->vehicle?->vehicleIdentities) }}"
                                                                 data-trip_vehicle_details="{{ json_encode($detail?->tripVehicleDetails) }}"
                                                             >
@@ -935,9 +935,9 @@
                                                         <div class="fs-12 text--title">
                                                             <div class="fz-12 font-semibold line--limit-1">
                                                                 {{ $editDetail?->vehicle_details['name'] }}</div>
-                                                            <div><span class="font-semibold mr-2">{{ translate('Category') }} :</span>{{ $editDetail?->vehicle?->category?->name }}
+                                                            <div><span class="font-semibold mr-2">{{ translate('Category') }} :</span>{{ Str::limit($editDetail?->vehicle?->category?->name, 15, '...') }}
                                                             </div>
-                                                            <div><span class="font-semibold mr-2">{{ translate('Brand') }} :</span>{{ $editDetail?->vehicle?->brand?->name }}
+                                                            <div><span class="font-semibold mr-2">{{ translate('Brand') }} :</span>{{ Str::limit($editDetail?->vehicle?->brand?->name, 15, '...') }}
                                                             </div>
                                                         </div>
                                                     </div>
