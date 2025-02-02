@@ -77,7 +77,7 @@
                 <td>{{ $key+1}}</td>
                 <td>{{ $ot->trip_id }}</td>
                 <td >
-                    {{Str::limit($ot->trip?->provider?->name,25,'...')}}
+                    {{Str::limit($ot->trip?->provider?->name ?? translate('messages.Not Found'),25,'...')}}
                 </td>
                 <td>
                     @if ($ot->trip->customer)
