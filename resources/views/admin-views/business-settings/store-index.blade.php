@@ -33,10 +33,10 @@
                                     @php($canceled_by_store = $canceled_by_store ? $canceled_by_store->value : 0)
                                     <div class="form-group mb-0">
                                         <label class="input-label text-capitalize d-flex alig-items-center"><span
-                                                class="line--limit-1">{{ translate('messages.Can_a_Store_Cancel_Order?') }}
+                                                class="line--limit-1">{{ translate('messages.Can_a_Vendor_Cancel_Order?') }}
                                             </span><span class="input-label-secondary text--title" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('messages.Admin_can_enable/disable_Store’s_order_cancellation_option.') }}">
+                                                data-original-title="{{ translate('messages.Admin_can_enable/disable_Vendor’s_order_cancellation_option.') }}">
                                                 <i class="tio-info-outined"></i>
                                             </span></label>
                                         <div class="restaurant-type-group border">
@@ -68,13 +68,13 @@
                                             class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                             <span class="pr-1 d-flex align-items-center switch--label">
                                                 <span class="line--limit-1">
-                                                    {{ translate('messages.store_self_registration') }}
+                                                    {{ translate('messages.Vendor_self_registration') }}
                                                 </span>
                                                 <span class="form-label-secondary text-danger d-flex"
                                                     data-toggle="tooltip" data-placement="right"
-                                                    data-original-title="{{ translate('messages.A_store_can_send_a_registration_request_through_their_store_or_customer.') }}"><img
+                                                    data-original-title="{{ translate('messages.A_vendor_can_send_a_registration_request_through_their_vendor_or_customer.') }}"><img
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                        alt="{{ translate('messages.store_self_registration') }}"> *
+                                                        alt="{{ translate('messages.vendor_self_registration') }}"> *
                                                 </span>
                                             </span>
                                             <input type="checkbox"
@@ -84,8 +84,8 @@
                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/store-self-reg-off.png') }}"
                                                    data-title-on=""
                                                    data-title-off=""
-                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_Stores_can_do_self-registration_from_the_store_or_customer_app_or_website.') }}</p>"
-                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_Store_Self-Registration_feature_will_be_hidden_from_the_store_or_customer_app,_website,_or_admin_landing_page.') }}</p>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_vendors_can_do_self-registration_from_the_vendor_or_customer_app_or_website.') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_Vendor_Self-Registration_feature_will_be_hidden_from_the_vendor_or_customer_app,_website,_or_admin_landing_page.') }}</p>"
                                                    class="status toggle-switch-input dynamic-checkbox-toggle"
                                                    value="1"
                                                 name="store_self_registration" id="store_self_registration1"
@@ -108,7 +108,7 @@
                                                 </span>
                                                 <span class="form-label-secondary text-danger d-flex"
                                                     data-toggle="tooltip" data-placement="right"
-                                                    data-original-title="{{ translate('messages.If_you_enable_this,_any_store_can_duplicate_product_and_create_a_new_product_by_use_this.')}}"><img
+                                                    data-original-title="{{ translate('messages.If_you_enable_this,_any_vendor_can_duplicate_product_and_create_a_new_product_by_use_this.')}}"><img
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.Product_Gallery') }}"> *
                                                 </span>
@@ -144,7 +144,7 @@
                                                 </span>
                                                 <span class="form-label-secondary text-danger d-flex"
                                                     data-toggle="tooltip" data-placement="right"
-                                                    data-original-title="{{ translate('messages.If_you_enable_this_Stores_can_access_all_products_of_other_stores.')}}"><img
+                                                    data-original-title="{{ translate('messages.If_you_enable_this_vendors_can_access_all_products_of_other_vendors.')}}"><img
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.access_all_products') }}"> *
                                                 </span>
@@ -157,8 +157,8 @@
                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/store-reg-off.png') }}"
                                                    data-title-on="<strong>{{translate('messages.Want_to_enable_access_all_products?')}}</strong>"
                                                    data-title-off="<strong>{{translate('messages.Want_to_disable_access_all_products?')}}</strong>"
-                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_Stores_can_access_all_products_of_other_available_stores') }}</p>"
-                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_Stores_can_not_access_all_products_of_other_stores.') }}</p>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_vendors_can_access_all_products_of_other_available_vendors') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_vendors_can_not_access_all_products_of_other_vendors.') }}</p>"
                                                    class="status toggle-switch-input dynamic-checkbox-toggle"
                                                    value="1"
                                                 name="access_all_products" id="access_all_products"
@@ -213,11 +213,11 @@
                                             class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                             <span class="pr-1 d-flex align-items-center switch--label">
                                                 <span class="line--limit-1">
-                                                    {{ translate('Store_Can_Reply_Review') }}
+                                                    {{ translate('Vendor_Can_Reply_Review') }}
                                                 </span>
                                                 <span class="form-label-secondary text-danger d-flex"
                                                       data-toggle="tooltip" data-placement="right"
-                                                      data-original-title="{{ translate('If enabled, stores can actively engage with the customers by responding to the reviews left for their orders') }}"><img
+                                                      data-original-title="{{ translate('If enabled, vendors can actively engage with the customers by responding to the reviews left for their orders') }}"><img
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.store_review_reply') }}">
                                                 </span>
@@ -228,10 +228,10 @@
                                                    data-type="toggle"
                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/store-self-reg-on.png') }}"
                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/store-self-reg-off.png') }}"
-                                                   data-title-on="{{ translate('Want to enable the option store to reply?') }}"
-                                                   data-title-off="{{ translate('Want_to_disable_the_option_store_to_reply?') }}"
-                                                   data-text-on="<p>{{ translate('If enabled, stores can actively engage with the customers by responding to the reviews left for their orders.') }}</p>"
-                                                   data-text-off="<p>{{ translate('If_disabled,_a_store_can_not_reply_to_a_review') }}</p>"
+                                                   data-title-on="{{ translate('Want to enable the option vendor to reply?') }}"
+                                                   data-title-off="{{ translate('Want_to_disable_the_option_vendor_to_reply?') }}"
+                                                   data-text-on="<p>{{ translate('If enabled, vendors can actively engage with the customers by responding to the reviews left for their orders.') }}</p>"
+                                                   data-text-off="<p>{{ translate('If_disabled,_a_vendor_can_not_reply_to_a_review') }}</p>"
                                                    class="toggle-switch-input dynamic-checkbox-toggle"
 
                                                    value="1"
@@ -284,7 +284,7 @@
                                                 </span>
                                                 <span class="form-label-secondary text-danger d-flex"
                                                       data-toggle="tooltip" data-placement="right"
-                                                      data-original-title="{{ translate('If_enabled,_stores_will_be_automatically_suspended_by_the_system_when_their_‘Cash_in_Hand’_limit_is_exceeded.') }}"><img
+                                                      data-original-title="{{ translate('If_enabled,_vendors_will_be_automatically_suspended_by_the_system_when_their_‘Cash_in_Hand’_limit_is_exceeded.') }}"><img
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.cash_in_hand_overflow') }}"> *
                                                 </span>
@@ -296,8 +296,8 @@
                                                data-image-off="{{ asset('/public/assets/admin/img/modal/show-earning-in-apps-off.png') }}"
                                                data-title-on="{{translate('Want_to_enable')}} <strong>{{translate('Cash_In_Hand_Overflow')}}</strong>"
                                                data-title-off="{{translate('Want_to_disable')}} <strong>{{translate('Cash_In_Hand_Overflow')}}</strong> "
-                                               data-text-on="<p>{{ translate('If_enabled,_stores_have_to_provide_collected_cash_by_them_self') }}</p>"
-                                               data-text-off="<p>{{ translate('If_disabled,_stores_do_not_have_to_provide_collected_cash_by_them_self') }}</p>"
+                                               data-text-on="<p>{{ translate('If_enabled,_vendors_have_to_provide_collected_cash_by_them_self') }}</p>"
+                                               data-text-off="<p>{{ translate('If_disabled,_vendors_do_not_have_to_provide_collected_cash_by_them_self') }}</p>"
                                                class="status toggle-switch-input dynamic-checkbox-toggle"
                                                 value="1"
                                                name="cash_in_hand_overflow_store" id="cash_in_hand_overflow"
@@ -324,7 +324,7 @@
 
                                         <span class="form-label-secondary"
                                               data-toggle="tooltip" data-placement="right"
-                                              data-original-title="{{ translate('Enter_the_maximum_cash_amount_stores_can_hold._If_this_number_exceeds,_stores_will_be_suspended_and_not_receive_any_orders.') }}"><img
+                                              data-original-title="{{ translate('Enter_the_maximum_cash_amount_vendors_can_hold._If_this_number_exceeds,_vendors_will_be_suspended_and_not_receive_any_orders.') }}"><img
                                                 src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                 alt="{{ translate('messages.dm_cancel_order_hint') }}"></span>
                                     </label>
@@ -347,7 +347,7 @@
 
                                         <span class="form-label-secondary"
                                               data-toggle="tooltip" data-placement="right"
-                                              data-original-title="{{ translate('Enter_the_minimum_cash_amount_stores_can_pay') }}"><img
+                                              data-original-title="{{ translate('Enter_the_minimum_cash_amount_vendors_can_pay') }}"><img
                                                 src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                 alt="{{ translate('messages.dm_cancel_order_hint') }}"></span>
                                     </label>
