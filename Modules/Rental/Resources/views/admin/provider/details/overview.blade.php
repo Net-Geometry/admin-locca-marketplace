@@ -320,13 +320,14 @@
                                                 </div>
                                             @endforeach
                                         @endif
-                                    <div class="hs-unfold mt-1">
-                                        <button
-                                            class="btn order--details-btn-sm btn--varify btn-outline-varify btn--sm font-regular d-flex align-items-center __gap-5px"
-                                            data-toggle="modal" data-target="#locationModal"><i
-                                                class="tio-poi"></i>
-                                            {{ translate('messages.map_view') }}</button>
-                                    </div>
+                                        <div class="d-flex align-items-start">
+                                            <span class="label min-w150 min-w-sm-auto"></span>
+                                            <button
+                                                class="btn order--details-btn-sm btn--varify btn-outline-varify btn--sm font-regular d-flex align-items-center __gap-5px"
+                                                data-toggle="modal" data-target="#locationModal"><i
+                                                    class="tio-poi"></i>
+                                                {{ translate('messages.map_view') }}</button>
+                                        </div>
                                 </div>
                             </div>
                         </div>

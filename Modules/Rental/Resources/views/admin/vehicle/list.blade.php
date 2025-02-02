@@ -29,12 +29,12 @@
                         <div class="col-sm-6 col-md-4">
                             <div class="select-item">
                                 <label for="brand-select" class="input-label">{{ translate('messages.brand') }}</label>
-                                <select id="brand-select" class="js-data-example-ajax form-control set-filter opacity-70"
+                                <select id="brand-select" class="select-30 js-data-example-ajax form-control set-filter opacity-70"
                                         name="brand_id">
                                     <option value="" selected disabled>{{ translate('messages.select_vehicle_brand') }}
                                     </option>
                                     @foreach($brands as $brand)
-                                        <option value="{{ $brand->id }}" {{request()->brand_id == $brand->id ? 'selected' : ''}}>{{ $brand->name}}</option>
+                                        <option  value="{{ $brand->id }}" {{request()->brand_id == $brand->id ? 'selected' : ''}}>{{ $brand->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -298,4 +298,11 @@
 
 
 @push('script_2')
+<script>
+    document.querySelectorAll("select.select-30 option").forEach((option) => {
+        if (option.text.length > 30) {
+            option.text = option.text.substring(0, 27) + "...";
+        }
+    });
+</script>
 @endpush

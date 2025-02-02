@@ -200,7 +200,7 @@
                                    <!-- Existing Images dynamically loaded here -->
                                     @foreach($vehicle['images_full_url'] as $img)
                                     <div class="image-single h-100 max-w-200px p-0" data-existing="true" data-url="{{ $img }}">
-                                        <a href="javascript:void(0);" class="remove-btn_doc" onclick="removeImage(event, this, '{{ $img }}')">
+                                        <a href="javascript:void(0);" class="remove-btn remove-btn_doc" onclick="removeImage(event, this, '{{ $img }}')">
                                             <i class="tio-clear"></i>
                                         </a>
                                         <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="{{ $img }}" alt="">
@@ -805,24 +805,32 @@
             });
 
             // Remove images logic
-            window.removedImages = [];
+            // window.removedImages = [];
 
-            window.removeImage = function (event, element) {
+            // window.removeImage = function (event, element) {
+            //     event.stopPropagation();
+
+            //     const imageSingle = element.closest(".image-single");
+            //     const imageUrl = imageSingle.getAttribute("data-url");
+
+            //     const imageName = imageUrl.split('/').pop();
+
+            //     imageSingle.remove();
+
+            //     removedImages.push(imageName);
+
+            //     document.getElementById('removed_images').value = JSON.stringify(removedImages);
+
+            //     console.log("Updated removed images array:", removedImages);
+
+            //     toggleUploadWrapper();
+            // };
+
+            window.removeImage = function (event, element, fileName) {
                 event.stopPropagation();
-
                 const imageSingle = element.closest(".image-single");
-                const imageUrl = imageSingle.getAttribute("data-url");
-
-                const imageName = imageUrl.split('/').pop();
-
                 imageSingle.remove();
-
-                removedImages.push(imageName);
-
-                document.getElementById('removed_images').value = JSON.stringify(removedImages);
-
-                console.log("Updated removed images array:", removedImages);
-
+                fileSet.delete(fileName); // Remove the file from the set
                 toggleUploadWrapper();
             };
 

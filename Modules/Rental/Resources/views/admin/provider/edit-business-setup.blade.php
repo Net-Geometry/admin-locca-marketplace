@@ -260,7 +260,9 @@
         });
 
         $(document).on('ready', function() {
-            $('.plan-slider').owlCarousel({
+            var owl = $('.plan-slider');
+
+            owl.owlCarousel({
                 loop: false,
                 margin: 30,
                 responsiveClass: true,
@@ -268,7 +270,7 @@
                 dots: false,
                 items: 3,
                 center: true,
-                startPosition: 1,
+                // startPosition: 1,
 
                 responsive: {
                     0: {
@@ -296,6 +298,22 @@
                     }
                 }
             })
+            function centerActiveSlide() {
+                $(".owl-item").each(function () {
+                if ($(this).find("label").hasClass("active")) {
+                    var index = $(this).index();
+                    owl.trigger("to.owl.carousel", [index, 300, true]);
+                }
+                });
+            }
+
+            // Check on initialization
+            centerActiveSlide();
+
+            // Check on every change
+            // owl.on("changed.owl.carousel", function () {
+            //     centerActiveSlide();
+            // });
 
             $('#nextStep').on('click', function () {
                 $('#businessSetup').removeClass('d-block').addClass('d-none');

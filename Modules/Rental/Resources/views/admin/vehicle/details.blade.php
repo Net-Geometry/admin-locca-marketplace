@@ -387,7 +387,7 @@
                     <tbody id="set-rows">
                     <tr>
                         <td>
-                            <div class="row">
+                            <div class="g-3 row">
                                 @foreach($vehicle->vehicleIdentities as $multi)
                                 <div class="col-lg-4 col-md-6">
                                     <div class="font-semibold text--title">

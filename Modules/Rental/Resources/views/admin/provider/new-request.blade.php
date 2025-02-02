@@ -181,7 +181,7 @@
                                             @csrf
                                             <div class="form-floating">
                                                 <input type="hidden" value="1" name="status">
-                                                <div class="d-flex justify-content-end gap-3">
+                                                <div class="d-flex justify-content-center gap-3">
                                                     <button type="button" data-dismiss="modal" aria-label="Close"
                                                             class="btn btn--reset">{{ translate('Cancel') }}</button>
                                                     <button type="submit" class="btn btn--primary">{{ translate('Approve') }}</button>

@@ -216,10 +216,10 @@
                                                         </h6>
                                                     </div>
                                                     <div class="icon-file-group outside">
-                                                        <div id="logoEditIcon" class="icon-file rounded-circle">
+                                                        {{-- <div id="logoEditIcon" class="icon-file rounded-circle">
                                                             <i class="tio-edit"></i>
-                                                            
-                                                        </div>
+
+                                                        </div> --}}
                                                         <input type="file" name="logo" id="customFileEg1"
                                                                 class="custom-file-input"
                                                                 accept=".jpg, .png, .jpeg|image/*">
@@ -260,9 +260,9 @@
                                                         </h6>
                                                     </div>
                                                     <div class="icon-file-group outside">
-                                                        <div id="coverEditIcon" class="icon-file rounded-circle">
+                                                        {{-- <div id="coverEditIcon" class="icon-file rounded-circle">
                                                             <i class="tio-edit"></i>
-                                                        </div>
+                                                        </div> --}}
                                                         <input type="file" name="cover_photo" id="coverImageUpload"
                                                                 class="custom-file-input"
                                                                 accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
