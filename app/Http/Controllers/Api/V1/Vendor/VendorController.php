@@ -151,7 +151,11 @@ class VendorController extends Controller
                         $max_product_uploads= -1;
                     }
                     else{
-                        $max_product_uploads= $vendor['subscription']->max_product - $st?->items?->count() > 0?  $vendor['subscription']->max_product - $st?->items?->count() : 0 ;
+                        if($st?->module_type == 'rental'){
+                            $max_product_uploads = $vendor['subscription']->max_product - $st?->vehicles()->count() > 0?  $vendor['subscription']->max_product - $st?->vehicles()->count() : 0 ;
+                        } else{
+                            $max_product_uploads= $vendor['subscription']->max_product - $st?->items()->count() > 0?  $vendor['subscription']->max_product - $st?->items()->count() : 0 ;
+                        }
                     }
 
                     $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,

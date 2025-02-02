@@ -57,7 +57,8 @@ class VehicleController extends Controller
 
         $limit = $request['limit'];
         $offset = $request['offset'];
-
+        // $seating_capacity = json_decode($request->seating_capacity) ?? null;
+        $seating_capacity = $request->seating_capacity?? null;
         $vehicles = $this->vehicle->with('vehicleIdentities','provider', 'category', 'brand', 'translations')
             ->when($request->filled('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request->input('search'));
@@ -72,9 +73,6 @@ class VehicleController extends Controller
             ->when($request->filled('brand_id'), function ($query) use ($request) {
                 $query->where('brand_id', $request->input('brand_id'));
             })
-            ->when($request->filled('seating_capacity'), function ($query) use ($request) {
-                $query->where('seating_capacity', $request->input('seating_capacity'));
-            })
             ->when($request->filled('air_condition'), function ($query) use ($request) {
                 $query->where('air_condition', $request->input('air_condition'));
             })
@@ -86,6 +84,14 @@ class VehicleController extends Controller
             })
             ->when($request->filled('fuel_type'), function ($query) use ($request) {
                 $query->where('fuel_type', $request->input('fuel_type'));
+            })
+            ->when($seating_capacity, function ($query) use ($seating_capacity) {
+                $query->where(function ($q) use ($seating_capacity) {
+                    // foreach ($seating_capacity as $range) {
+                        $limits = explode('-', $seating_capacity);
+                        $q->orWhereBetween('seating_capacity', [(int) $limits[0], (int)$limits[1]]);
+                    // }
+                });
             })
             ->latest()
             ->paginate($limit, ['*'], 'page', $offset);
@@ -101,6 +107,35 @@ class VehicleController extends Controller
         return response()->json($data, 200);
     }
 
+
+    private function checkVehicleLimit($store){
+        if(!$store->item_section)
+        {
+            return ['message' => translate('your_vehicle_upload_limit_is_over')];
+        }
+
+        if ( $store->store_business_model == 'subscription' ) {
+            $store_sub = $store?->store_sub;
+            if (isset($store_sub)) {
+                if ($store_sub->max_product != "unlimited" && $store_sub->max_product > 0 ) {
+                    $total_item= $this->vehicle->where('provider_id', $store->id)->count()+1;
+                    if ( $total_item >= $store_sub->max_product){
+                        $store->item_section = 0;
+                        $store->save();
+                    }
+                }
+            } else{
+                return ['message' => translate('you_are_not_subscribed_to_any_package')];
+
+            }
+        }elseif( $store->store_business_model == 'unsubscribed'){
+            return ['message' => translate('you_are_not_subscribed_to_any_package')];
+        }
+
+        return null;
+    }
+
+
     /**
      * Store a newly created resource in storage.
      * @param Request $request
@@ -108,6 +143,13 @@ class VehicleController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+
+        $checkVehicleLimit= data_get($this->checkVehicleLimit($this->store->where('id', $request->provider_id)->first()) , 'message',null);
+            if ( $checkVehicleLimit ) {
+                return response()->json(['message' => $checkVehicleLimit], 403);
+            };
+
+
         $validator = Validator::make($request->all(), [
             'category_id' => 'required',
             'brand_id' => 'required',
@@ -480,8 +522,11 @@ class VehicleController extends Controller
     public function status(Request $request, $id): JsonResponse
     {
         $vehicle = $this->vehicle->find($id);
-
         if ($vehicle) {
+            $status= !$vehicle->status;
+            if($request->vendor->store->product_uploaad_check !== null &&  !in_array($request->vendor->store->product_uploaad_check,['unlimited' ,'commission'])  && $request->vendor->store->product_uploaad_check >= 0 && $status == 1){
+                return response()->json(['message' => translate('messages.Your_current_package_doesnot_allow_to_activate_more_then_allocated_vehicles_in_your_package.')], 400);
+            }
             $vehicle->update(['status' => !$vehicle->status]);
             return response()->json(['message' => translate('messages.vehicle_status_updated.')], 200);
         }

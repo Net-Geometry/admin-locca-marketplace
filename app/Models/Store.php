@@ -280,6 +280,9 @@ class Store extends Model
             if($this->store_sub->max_product == 'unlimited' ){
                 return 'unlimited';
             } else{
+                if($this->module_type == 'rental'){
+                    return  $this->vehicles()->where('status' , 1)->count() - $this->store_sub->max_product;
+                }
                 return  $this->items()->where('status' , 1)->withoutGlobalScope(\App\Scopes\StoreScope::class)->count() - $this->store_sub->max_product;
             }
             unset($this->store_sub);
@@ -389,8 +392,6 @@ class Store extends Model
     public function items(): HasMany
     {
         return $this->hasMany(Item::class);
-
-
     }
 
     /**

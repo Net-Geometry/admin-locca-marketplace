@@ -95,7 +95,7 @@ class VehicleController extends Controller
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create(): Renderable
+    public function create(): Renderable|RedirectResponse
     {
 
         if(!Helpers::get_store_data()->item_section)
@@ -116,7 +116,7 @@ class VehicleController extends Controller
      */
 
 
-     private function checkVehicleLimit($store){
+    private function checkVehicleLimit($store){
         if(!$store->item_section)
         {
             return ['message' => translate('your_vehicle_upload_limit_is_over')];
@@ -141,7 +141,7 @@ class VehicleController extends Controller
         }
 
         return null;
-     }
+    }
 
 
 
@@ -149,8 +149,9 @@ class VehicleController extends Controller
     {
 
         $checkVehicleLimit= data_get($this->checkVehicleLimit(Helpers::get_store_data()) , 'message',null);
-            if ( $checkVehicleLimit ) {
-                return response()->json(['message' => $checkVehicleLimit], 403);
+            if ($checkVehicleLimit) {
+                Toastr::error($checkVehicleLimit);
+                return back();
             };
 
         $request->validate([
@@ -485,6 +486,11 @@ class VehicleController extends Controller
             return back();
         }
 
+        $status= !$vehicle->status;
+        if(Helpers::get_store_data()->product_uploaad_check !== null && !in_array(Helpers::get_store_data()->product_uploaad_check,['unlimited' ,'commission']) && Helpers::get_store_data()->product_uploaad_check >= 0 && $status == 1 ){
+            Toastr::error(translate('messages.Your_current_package_doesnot_allow_to_activate_more_then_allocated_vehicles_in_your_package'));
+            return back();
+        }
         $vehicle->update(['status' => !$vehicle->status]);
 
         Toastr::success(translate('messages.vehicle_status_updated_successfully'));
