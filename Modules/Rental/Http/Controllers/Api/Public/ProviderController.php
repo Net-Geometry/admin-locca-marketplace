@@ -121,4 +121,85 @@ class ProviderController extends Controller
 
         return response()->json($data, 200);
     }
+
+    public function getLatestProvider(Request $request)
+    {
+        if (!$request->hasHeader('zoneId')) {
+            $errors = [];
+            array_push($errors, ['code' => 'zoneId', 'message' => translate('messages.zone_id_required')]);
+            return response()->json([
+                'errors' => $errors
+            ], 403);
+        }
+
+        $zone_id= $request->header('zoneId');
+        $longitude= $request->header('longitude');
+        $latitude= $request->header('latitude');
+        $paginator = Store::withOpen($longitude??0,$latitude??0)
+        ->withCount(['vehicles','campaigns'])
+        ->with(['discount'=>function($q){
+            return $q->validate();
+        }])
+        ->when(config('module.current_module_data'), function($query)use($zone_id){
+            $query->whereHas('zone.modules', function($query){
+                $query->where('modules.id', config('module.current_module_data')['id']);
+            })->module(config('module.current_module_data')['id']);
+            if(!config('module.current_module_data')['all_zone_service']) {
+                $query->whereIn('zone_id', json_decode($zone_id, true));
+            }
+        })
+        ->Active()
+        ->latest()->paginate($limit??50, ['*'], 'page', $offset??1);
+
+        $provider = [
+            'total_size' => $paginator->total(),
+            'limit' => $limit??50,
+            'offset' => $offset??1,
+            'stores' => $paginator->items()
+        ];
+
+        return response()->json($provider, 200);
+    }
+
+    public function getPopularProvider(Request $request)
+    {
+        if (!$request->hasHeader('zoneId')) {
+            $errors = [];
+            array_push($errors, ['code' => 'zoneId', 'message' => translate('messages.zone_id_required')]);
+            return response()->json([
+                'errors' => $errors
+            ], 403);
+        }
+        $zone_id= $request->header('zoneId');
+        $longitude= $request->header('longitude');
+        $latitude= $request->header('latitude');
+        $paginator = Store::withOpen($longitude??0,$latitude??0)
+        ->withCount(['vehicles','campaigns'])
+        ->with(['discount'=>function($q){
+            return $q->validate();
+        }])
+        ->when(config('module.current_module_data'), function($query)use($zone_id){
+            $query->whereHas('zone.modules', function($query){
+                $query->where('modules.id', config('module.current_module_data')['id']);
+            })->module(config('module.current_module_data')['id']);
+            if(!config('module.current_module_data')['all_zone_service']) {
+                $query->whereIn('zone_id', json_decode($zone_id, true));
+            }
+        })
+        ->withCount('reviews')
+        ->withCount('trips')->Active()
+        ->orderBy('trips_count', 'desc')
+        ->orderBy('open', 'desc')
+        ->orderBy('distance')
+        ->paginate($limit??50, ['*'], 'page', $offset??1);
+
+        $provider = [
+            'total_size' => $paginator->total(),
+            'limit' => $limit??50,
+            'offset' => $offset??1,
+            'stores' => $paginator->items()
+        ];
+
+        return response()->json($provider, 200);
+    }
 }
