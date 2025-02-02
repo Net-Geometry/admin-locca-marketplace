@@ -71,7 +71,9 @@ class CartController extends Controller
         $is_guest = $request->user ? 0 : 1;
 
         $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first();
-        $pickup_time= $request->pickup_time ? \Carbon\Carbon::parse($request->pickup_time) : $user_data?->pickup_time ?? now();
+        $pickup_time = $request->pickup_time
+        ? \Carbon\Carbon::parse($request->pickup_time)
+        : ($user_data?->pickup_time ? \Carbon\Carbon::parse($user_data->pickup_time) : now());
         // dd($pickup_time );
         $vehicle = $this->vehicle->where('id', $request->vehicle_id)->active()
         ->withCount([
@@ -207,7 +209,9 @@ class CartController extends Controller
 
 
         $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first();
-        $pickup_time= $request->pickup_time ? \Carbon\Carbon::parse($request->pickup_time) : $user_data?->pickup_time ?? now();
+        $pickup_time = $request->pickup_time
+        ? \Carbon\Carbon::parse($request->pickup_time)
+        : ($user_data?->pickup_time ? \Carbon\Carbon::parse($user_data->pickup_time) : now());
 
         $vehicle = $this->vehicle->where('id', $cart->vehicle_id)->active()
         ->withCount([
@@ -354,9 +358,9 @@ class CartController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
 
-        $pickup_time= $request->pickup_time ? \Carbon\Carbon::parse($request->pickup_time) : $user_data?->pickup_time ?? now();
-
-
+        $pickup_time = $request->pickup_time
+        ? \Carbon\Carbon::parse($request->pickup_time)
+        : ($user_data?->pickup_time ? \Carbon\Carbon::parse($user_data->pickup_time) : now());
 
         $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with(['vehicle'])->get();
         $unsupported_vehicle_ids=[];

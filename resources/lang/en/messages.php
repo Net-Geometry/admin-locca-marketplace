@@ -7367,4 +7367,6 @@ Smartly or Earn. ',
   'If_disabled,_vendors_do_not_have_to_provide_collected_cash_by_them_self' => 'If disabled, vendors do not have to provide collected cash by them self',
   'Enter_the_maximum_cash_amount_vendors_can_hold._If_this_number_exceeds,_vendors_will_be_suspended_and_not_receive_any_orders.' => 'Enter the maximum cash amount vendors can hold. If this number exceeds, vendors will be suspended and not receive any orders.',
   'Enter_the_minimum_cash_amount_vendors_can_pay' => 'Enter the minimum cash amount vendors can pay',
+  'This_Vehicle_is_not_available_on_this_pickup_time' => 'This Vehicle is not available on this pickup time',
+  'destination_location' => 'Destination location',
 );
