@@ -62,7 +62,7 @@
                 <!-- dispatch -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('order'))
                     <!-- Order dispachment -->
-                    @php($modules = \App\Models\Module::when(auth('admin')->user()->zone_id, function($query){
+                    @php($modules = \App\Models\Module::where('module_type', '!=' ,'rental')->when(auth('admin')->user()->zone_id, function($query){
                                 $query->whereHas('zones',function($query){
                                     $query->where('zone_id',auth('admin')->user()->zone_id);
                                 });

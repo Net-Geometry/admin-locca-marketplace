@@ -237,7 +237,7 @@ class TripController extends Controller
     }
 
     private function createCashBackHistory($trip_amount, $user_id,$trip_id){
-        $cashBack =  Helpers::getCalculatedCashBackAmount(amount:$trip_amount, customer_id:$user_id);
+        $cashBack =  Helpers::getCalculatedCashBackAmount(amount:$trip_amount, customer_id:$user_id,type:1);
         if(data_get($cashBack,'calculated_amount') > 0){
             $CashBackHistory = new CashBackHistory();
             $CashBackHistory->user_id = $user_id;

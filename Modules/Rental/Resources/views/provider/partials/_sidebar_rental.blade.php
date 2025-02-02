@@ -60,16 +60,17 @@
                     <?php
                     $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                             COUNT(*) AS total_trips,
-                            SUM(CASE WHEN scheduled = 1 THEN 1 ELSE 0 END) AS scheduled_trips,
-                            SUM(CASE WHEN trip_status = 'pending' THEN 1 ELSE 0 END) AS pending_trips,
-                            SUM(CASE WHEN trip_status = 'confirmed' THEN 1 ELSE 0 END) AS confirmed_trips,
-                            SUM(CASE WHEN trip_status = 'ongoing' THEN 1 ELSE 0 END) AS ongoing_trips,
-                            SUM(CASE WHEN trip_status = 'completed' THEN 1 ELSE 0 END) AS completed_trips,
-                            SUM(CASE WHEN trip_status = 'canceled' THEN 1 ELSE 0 END) AS canceled_trips,
-                            SUM(CASE WHEN trip_status = 'payment_failed' THEN 1 ELSE 0 END) AS payment_failed_trips
-                        FROM trips  WHERE  provider_id = :provider_id", ['provider_id' => \App\CentralLogics\Helpers::get_store_id()]);
+                            COALESCE(SUM(CASE WHEN scheduled = 1 THEN 1 ELSE 0 END), 0) AS scheduled_trips,
+                            COALESCE(SUM(CASE WHEN trip_status = 'pending' THEN 1 ELSE 0 END), 0) AS pending_trips,
+                            COALESCE(SUM(CASE WHEN trip_status = 'confirmed' THEN 1 ELSE 0 END), 0) AS confirmed_trips,
+                            COALESCE(SUM(CASE WHEN trip_status = 'ongoing' THEN 1 ELSE 0 END), 0) AS ongoing_trips,
+                            COALESCE(SUM(CASE WHEN trip_status = 'completed' THEN 1 ELSE 0 END), 0) AS completed_trips,
+                            COALESCE(SUM(CASE WHEN trip_status = 'canceled' THEN 1 ELSE 0 END), 0) AS canceled_trips,
+                            COALESCE(SUM(CASE WHEN trip_status = 'payment_failed' THEN 1 ELSE 0 END), 0) AS payment_failed_trips
+                        FROM trips
+                        WHERE provider_id = :provider_id", ['provider_id' => \App\CentralLogics\Helpers::get_store_id()]);
 
-                        $tripCount=(array) $tripCount[0];
+                    $tripCount = (array) $tripCount[0];
                     ?>
 
                     @if (\App\CentralLogics\Helpers::employee_module_permission_check('trip'))

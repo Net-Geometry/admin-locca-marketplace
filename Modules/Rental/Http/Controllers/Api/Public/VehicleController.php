@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\CentralLogics\StoreLogic;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
 use Modules\Rental\Entities\Vehicle;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
@@ -40,7 +39,18 @@ class VehicleController extends Controller
         $limit = $request['limit'] ?? 25;
         $offset = $request['offset'] ?? 1;
 
-        $vehicles = $this->vehicle->active()->whereIn('zone_id', $zone_id)->with('provider:id,name,address,tax', 'provider.discount')->withcount('vehicleIdentities as total_vehicle_count')
+        $vehicles = $this->vehicle->active()->when(count($zone_id) > 0, function ($query) use ($zone_id) {
+            $query->whereHas('provider', function ($query) use ($zone_id) {
+                $query->active()->where(function ($query) use ($zone_id) {
+                    $query->whereJsonContains('pickup_zone_id', (string) $zone_id[0]);
+                    for ($i = 1; $i < count($zone_id); $i++) {
+                        $query->orWhereJsonContains('pickup_zone_id', (string) $zone_id[$i]);
+                    }
+                    return $query;
+                });
+            });
+        })
+            ->with('provider:id,name,address,tax', 'provider.discount')->withcount('vehicleIdentities as total_vehicle_count')
             ->orderBy('avg_rating', 'desc')
             ->orderBy('total_trip', 'desc')
             ->latest()
@@ -78,12 +88,12 @@ class VehicleController extends Controller
             ], 403);
         }
 
-            $vehicleData=$this->getVelicleListData($request, $zones ?? [], $pick_up_lat, $pick_up_lng);
-            $vehicles = $vehicleData['vehicles']->paginate($limit, ['*'], 'page', $offset);
-            $extraData=[
-                'max_price' => (int) $vehicleData['max_price'],
-                'min_price' => (int) $vehicleData['min_price'],
-            ];
+        $vehicleData = $this->getVelicleListData($request, $zones ?? [], $pick_up_lat, $pick_up_lng);
+        $vehicles = $vehicleData['vehicles']->paginate($limit, ['*'], 'page', $offset);
+        $extraData = [
+            'max_price' => (int) $vehicleData['max_price'],
+            'min_price' => (int) $vehicleData['min_price'],
+        ];
 
         $data = $this->helpers->preparePaginatedResponse(pagination: $vehicles, limit: $limit, offset: $offset, key: 'vehicles', extraData: $extraData);
         return response()->json($data, 200);
@@ -102,7 +112,22 @@ class VehicleController extends Controller
         $zone_id = $request->header('zoneId');
         $zone_id = json_decode($zone_id, true);
 
-        $vehicles = $this->vehicle->active()->whereIn('zone_id', $zone_id)->with('brand:id,name')
+        $vehicles = $this->vehicle->active()
+
+            ->when(count($zone_id) > 0, function ($query) use ($zone_id) {
+                $query->whereHas('provider', function ($query) use ($zone_id) {
+                    $query->active()->where(function ($query) use ($zone_id) {
+                        $query->whereJsonContains('pickup_zone_id', (string) $zone_id[0]);
+                        for ($i = 1; $i < count($zone_id); $i++) {
+                            $query->orWhereJsonContains('pickup_zone_id', (string) $zone_id[$i]);
+                        }
+                        return $query;
+                    });
+                });
+            })
+
+
+            ->with('brand:id,name')
             ->when($request->filled('name'), function ($query) use ($request) {
                 $keys = explode(' ', $request->input('name'));
                 $query->where(function ($query) use ($keys) {
@@ -150,9 +175,9 @@ class VehicleController extends Controller
         $limit = $request['limit'] ?? 25;
         $offset = $request['offset'] ?? 1;
 
-        $vehicleData= $this->getVelicleListData($request);
+        $vehicleData = $this->getVelicleListData($request);
         $vehicles = $vehicleData['vehicles']->paginate($limit, ['*'], 'page', $offset);
-        $extraData=[
+        $extraData = [
             'max_price' => (int) $vehicleData['max_price'],
             'min_price' => (int) $vehicleData['min_price'],
         ];
@@ -169,7 +194,7 @@ class VehicleController extends Controller
         }
         $vehicle =  $this->vehicle->where(function ($query) use ($id) {
             $query->where('id', $id)->orWhere('slug', $id);
-        })->with('brand:id,name,image', 'provider:id,name,logo,cover_photo,rating,address,delivery_time','provider.discount')->withCount('vehicleIdentities as total_vehicles')->first();
+        })->with('brand:id,name,image', 'provider:id,name,logo,cover_photo,rating,address,delivery_time', 'provider.discount')->withCount('vehicleIdentities as total_vehicles')->first();
         if (!$vehicle) {
             return response()->json(['error' => 'vehicle_not_found'], 404);
         }
@@ -184,11 +209,9 @@ class VehicleController extends Controller
         $zone_id = $request->header('zoneId');
         $zone_id = json_decode($zone_id, true);
 
-        $max_price= 999999999;
-        $min_price= 1;
+        $max_price = 999999999;
+        $min_price = 1;
 
-// info($request->min_price);
-// info($request->max_price);
 
         $price_column = $request->trip_type == 'distance_wise' ? 'distance_price' : ($request->trip_type == 'hourly' ? 'hourly_price' : null);
 
@@ -211,7 +234,7 @@ class VehicleController extends Controller
         $vehicles = $this->vehicle->active()
             ->when($pick_up_lat &&  $pick_up_lng && count($zones) > 0, function ($query) use ($zones) {
                 $query->whereHas('provider', function ($query) use ($zones) {
-                    $query->where(function ($query) use ($zones) {
+                    $query->active()->where(function ($query) use ($zones) {
                         $query->whereJsonContains('pickup_zone_id', (string) $zones[0]);
                         for ($i = 1; $i < count($zones); $i++) {
                             $query->orWhereJsonContains('pickup_zone_id', (string) $zones[$i]);
@@ -220,7 +243,7 @@ class VehicleController extends Controller
                     });
                 });
             })
-            ->with('provider:id,name,address,tax', 'provider.discount','vehicleIdentities.vehicle_trip_details');
+            ->with('provider:id,name,address,tax', 'provider.discount', 'vehicleIdentities.vehicle_trip_details');
         if ($request?->date) {
             $vehicles = $vehicles->withCount([
                 'vehicleIdentities as total_vehicle_count' => function ($query) use ($request) {
@@ -236,7 +259,7 @@ class VehicleController extends Controller
                     });
                 },
             ])
-            ->having('total_vehicle_count', '>', 0);
+                ->having('total_vehicle_count', '>', 0);
         } else {
             $vehicles = $vehicles->withcount('vehicleIdentities as total_vehicle_count');
         }
@@ -300,23 +323,23 @@ class VehicleController extends Controller
                 $query->where('fuel_type', $request->fuel_type);
             });
 
-            $vehicles = $vehicles->when(in_array($request->sortby_price, ['asc', 'desc']), function ($query) use ($request) {
-                if ($request->trip_type == 'distance_wise') {
-                    return  $query->orderBy('distance_price', $request->sortby_price);
-                } elseif ($request->trip_type == 'hourly') {
-                    return  $query->orderBy('hourly_price', $request->sortby_price);
-                }
-            });
-            $vehicles = $vehicles->when($request->top_rated == 1, function ($query) {
-                $query->orderBy('total_trip', 'desc');
-            });
-
-            if(!in_array($request->sortby_price, ['asc', 'desc']) && $request->top_rated != 1 ){
-                $vehicles = $vehicles->latest();
+        $vehicles = $vehicles->when(in_array($request->sortby_price, ['asc', 'desc']), function ($query) use ($request) {
+            if ($request->trip_type == 'distance_wise') {
+                return  $query->orderBy('distance_price', $request->sortby_price);
+            } elseif ($request->trip_type == 'hourly') {
+                return  $query->orderBy('hourly_price', $request->sortby_price);
             }
+        });
+        $vehicles = $vehicles->when($request->top_rated == 1, function ($query) {
+            $query->orderBy('total_trip', 'desc');
+        });
+
+        if (!in_array($request->sortby_price, ['asc', 'desc']) && $request->top_rated != 1) {
+            $vehicles = $vehicles->latest();
+        }
 
 
-        return [ 'vehicles' =>$vehicles , 'max_price'=> $max_price , 'min_price' => $min_price];
+        return ['vehicles' => $vehicles, 'max_price' => $max_price, 'min_price' => $min_price];
     }
 
 

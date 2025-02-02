@@ -83,8 +83,8 @@ class RentalWishlistController extends Controller
         $latitude= $request->header('latitude');
 
         $wishlists = RentalWishlish::where('user_id', $request->user()->id)->with(['vehicle'=>function($q)use($zone_id){
-            return $q->whereHas('provider', function($query)use($zone_id){
-                $query->when(config('module.current_module_data'), function($query){
+            return $q->active()->whereHas('provider', function($query)use($zone_id){
+                $query->active()->when(config('module.current_module_data'), function($query){
                     $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules',function($query){
                         $query->where('modules.id', config('module.current_module_data')['id']);
                     });
@@ -97,7 +97,7 @@ class RentalWishlistController extends Controller
                 $query->whereHas('zone.modules', function($query){
                     $query->where('modules.id', config('module.current_module_data')['id']);
                 })->module(config('module.current_module_data')['id']);
-            })->withOpen($longitude??0,$latitude??0)->whereHas('module',function($query){
+            })->withOpen($longitude??0,$latitude??0)->active()->whereHas('module',function($query){
                 $query->where('status',1);
             })->whereIn('zone_id', json_decode($zone_id, true));
         }])
