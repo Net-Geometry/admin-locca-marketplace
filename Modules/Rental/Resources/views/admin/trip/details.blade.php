@@ -1153,7 +1153,7 @@
                 });
 
                 google.maps.event.addListener(providerMarker, "click", function() {
-                    infowindow.setContent("<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ $trip?->provider?->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}'></div> <div style='float:right; padding: 10px;'><b>{{ Str::limit($trip?->provider?->name, 15, '...') }}</b><br /> {{ Str::limit($trip?->provider?->address, 15, '...' }}</div>");
+                    infowindow.setContent("<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ $trip?->provider?->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}'></div> <div style='float:right; padding: 10px;'><b>{{ Str::limit($trip?->provider?->name, 15, '...') }}</b><br /> {{ Str::limit($trip?->provider?->address, 15, '...') }}</div>");
                     infowindow.open(map, providerMarker);
                 });
             }
