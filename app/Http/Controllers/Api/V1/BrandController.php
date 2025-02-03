@@ -15,11 +15,27 @@ class BrandController extends Controller
 {
     public function get_brands(Request $request,$search=null)
     {
+
         try {
             $brand_default_status = BusinessSetting::where('key', 'brand_default_status')->first()?->value ?? 1;
             $brand_sort_by_general = PriorityList::where('name', 'brand_sort_by_general')->where('type','general')->first()?->value ?? '';
             $key = explode(' ', $search);
-            $brands = Brand::Active()->withCount(['items'])
+
+        $zone_id= $request->header('zoneId');
+
+            $brands =Brand::Active()
+            // ->with(['items.store' => function($query) use($zone_id) {
+            //     $query->whereIn('zone_id', json_decode($zone_id, true));
+            // }])
+            ->withCount(['items' => function($query) use($zone_id) {
+                $query->whereHas('store', function($q) use($zone_id) {
+                    $q->whereIn('zone_id', json_decode($zone_id, true));
+                });
+            }])
+
+
+
+
             ->when($search, function($query)use($key){
                 $query->where(function ($q) use ($key) {
                     foreach ($key as $value) {

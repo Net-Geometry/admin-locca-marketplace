@@ -36,4 +36,25 @@ class VehicleIdentity extends Model
         return $this->belongsTo(VehicleDriver::class, 'vehicle_driver_id', 'id');
     }
 
+
+    public function scopeDynamicVehicleQuantity($query,$pickup_time)
+    {
+        if($pickup_time){
+            return $query->where(function ($query) use ($pickup_time) {
+                    $query->whereDoesntHave('vehicle_trip_details')
+                        ->orWhere(function ($query) use ($pickup_time) {
+                            $query->whereNotExists(function ($subQuery) use ($pickup_time) {
+                                $subQuery->from('trip_vehicle_details')
+                                    ->whereColumn('trip_vehicle_details.vehicle_identity_id', 'vehicle_identities.id')
+                                    ->where('estimated_trip_end_time', '>', $pickup_time)->where('is_completed',0);
+                            });
+                    });
+            });
+        }
+        
+        return $query;
+
+    }
+
+
 }
