@@ -562,11 +562,11 @@ class TripController extends Controller
                     $identity->reply = $review?->reply;
                     $identity->replied_at = $review?->replied_at;
                 });
-
-            $ratings = StoreLogic::calculate_store_rating($trip['provider']['rating']);
-            $trip['provider']['avg_rating'] =$ratings['rating'];
-            $trip['provider']['rating_count'] =$ratings['total'];
-
+                if(isset($trip['provider'])){
+                    $ratings = StoreLogic::calculate_store_rating($trip['provider']['rating']);
+                    $trip['provider']['avg_rating'] =$ratings['rating'];
+                    $trip['provider']['rating_count'] =$ratings['total'];
+                }
 
         return response()->json($trip, 200);
     }

@@ -456,7 +456,12 @@ class CartController extends Controller
         };
 
         return [
-            'carts' => $carts,
+            'carts' =>  $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))
+            ->with(['vehicle' => function($query) {
+                $query->withCount('vehicleIdentities as total_vehicle_count');
+            }, 'provider:id,name,address,tax', 'provider.discount'])
+            ->get(),
+
             'user_data' => $this->setUserData($request, $user_id, $is_guest, $total_cart_price)
         ];
     }
