@@ -88,20 +88,20 @@
                                                     </div>
                                                 </div>
                                                 @foreach (json_decode($language) as $lang)
-                                                    <?php
-                                                    if(count($vehicle['translations'])){
-                                                        $translate = [];
-                                                        foreach($vehicle['translations'] as $t)
-                                                        {
-                                                            if($t->locale == $lang && $t->key=="name"){
-                                                                $translate[$lang]['name'] = $t->value;
-                                                            }
-                                                            if($t->locale == $lang && $t->key=="description"){
-                                                                $translate[$lang]['description'] = $t->value;
+                                                        <?php
+                                                        if(count($vehicle['translations'])){
+                                                            $translate = [];
+                                                            foreach($vehicle['translations'] as $t)
+                                                            {
+                                                                if($t->locale == $lang && $t->key=="name"){
+                                                                    $translate[$lang]['name'] = $t->value;
+                                                                }
+                                                                if($t->locale == $lang && $t->key=="description"){
+                                                                    $translate[$lang]['description'] = $t->value;
+                                                                }
                                                             }
                                                         }
-                                                    }
-                                                    ?>
+                                                        ?>
                                                     <div class="d-none lang_form" id="{{ $lang }}-form">
                                                         <div class="form-group mb-0">
                                                             <label class="input-label font-semibold"
@@ -142,7 +142,7 @@
                                                 <i class="tio-clear"></i>
                                             </a>
                                             <input type="file" name="thumbnail" class="upload-file__input single_file_input"
-                                                accept=".jpg, .jpeg, .png"  value="{{ $vehicle['thumbnail_full_url'] ?? '' }}">
+                                                   accept=".jpg, .jpeg, .png"  value="{{ $vehicle['thumbnail_full_url'] ?? '' }}">
                                             <label
                                                 class="upload-file-wrapper height-150px max-w-300px aspect-2-1">
                                                 <div class="upload-file-textbox text-center w-100">
@@ -178,35 +178,35 @@
                         </div>
                         <div class="card-body py-1">
                             <div class="d-flex pt-20 pb-2 overflow-x-auto">
-                               <div class="d-flex gap-3 flex-shrink-0" id="image_container">
+                                <div class="d-flex gap-3 flex-shrink-0" id="image_container">
                                     <!-- Upload Wrapper for New Files -->
-                                   <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
-                                        id="image_upload_wrapper">
-                                       <input type="file" name="images[]" class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
-                                       <input type="hidden" name="removed_images" id="removed_images" value="">
-                                       <div
-                                           class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
-                                           <div class="upload-file__textbox">
-                                               <img width="34" height="34"
-                                                    src="{{ asset('public/assets/admin/img/document-upload.png') }}"
-                                                    alt="" class="svg">
-                                               <h6 class="mt-2 font-semibold">
-                                                   <span class="text-info">{{ translate('Click to upload') }}</span><br>
-                                                   {{ translate('or drag and drop') }}
-                                               </h6>
-                                           </div>
-                                       </div>
-                                   </div>
-                                   <!-- Existing Images dynamically loaded here -->
-                                    @foreach($vehicle['images_full_url'] as $img)
-                                    <div class="image-single h-100 max-w-200px p-0" data-existing="true" data-url="{{ $img }}">
-                                        <a href="javascript:void(0);" class="remove-btn remove-btn_doc" onclick="removeImage(event, this, '{{ $img }}')">
-                                            <i class="tio-clear"></i>
-                                        </a>
-                                        <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="{{ $img }}" alt="">
+                                    <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
+                                         id="image_upload_wrapper">
+                                        <input type="file" name="images[]" class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
+                                        <input type="hidden" name="removed_images" id="removed_images" value="">
+                                        <div
+                                            class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
+                                            <div class="upload-file__textbox">
+                                                <img width="34" height="34"
+                                                     src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                     alt="" class="svg">
+                                                <h6 class="mt-2 font-semibold">
+                                                    <span class="text-info">{{ translate('Click to upload') }}</span><br>
+                                                    {{ translate('or drag and drop') }}
+                                                </h6>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <!-- Existing Images dynamically loaded here -->
+                                    @foreach($vehicle['images_full_url'] as $img)
+                                        <div class="image-single h-100 max-w-200px p-0" data-existing="true" data-url="{{ $img }}">
+                                            <a href="javascript:void(0);" class="remove-btn_doc" onclick="removeImage(event, this, '{{ $img }}')">
+                                                <i class="tio-clear"></i>
+                                            </a>
+                                            <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="{{ $img }}" alt="">
+                                        </div>
                                     @endforeach
-                               </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -326,7 +326,7 @@
                                             <label class="form-check form--check mr-2 mr-md-4">
                                                 <input class="form-check-input" type="radio" value="yes"
                                                        name="air_condition" id="order_confirmation_model"
-                                                       {{ $vehicle->air_condition == 1 ? 'checked' : ''}}>
+                                                    {{ $vehicle->air_condition == 1 ? 'checked' : ''}}>
                                                 <span class="form-check-label">
                                                     {{ translate('messages.yes') }}
                                                 </span>
@@ -399,7 +399,7 @@
                                     {{ translate('messages.Same Model Multiple Vehicles') }}
                                 </span>
                                 <input class="form-check-input single-select position-relative m-0" type="checkbox" name="multiple_vehicles"
-                                       {{ $vehicle->multiple_vehicles == 1 ? 'checked' : '' }}>
+                                    {{ $vehicle->multiple_vehicles == 1 ? 'checked' : '' }}>
                             </label>
                         </div>
                         <div class="card-body d-flex flex-column gap-20px">
@@ -577,15 +577,15 @@
                                 <div class="d-flex gap-3 flex-shrink-0" id="pdf-container">
                                     <div class="upload-file text-wrapper document-wrapper" id="upload-wrapper">
                                         <input type="file" name="documents[]"
-                                            class="upload-file__input multiple_document_input" accept="*"
-                                            multiple>
+                                               class="upload-file__input multiple_document_input" accept="*"
+                                               multiple>
                                         <input type="hidden" name="removed_documents" id="removed_documents" value="">
                                         <div
                                             class="upload-file__img d-flex justify-content-center align-items-center h-100 max-w-300px p-0">
                                             <div class="upload-file__textbox pdf">
                                                 <img width="34" height="34"
-                                                    src="{{ asset('public/assets/admin/img/document-upload.png') }}"
-                                                    alt="" class="svg">
+                                                     src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                     alt="" class="svg">
                                                 <h6 class="font-semibold">
                                                     <span class="text-info">{{ translate('Click to upload') }}</span><br>
                                                     {{ translate('or drag and drop') }}
@@ -597,11 +597,11 @@
                                     <!-- Uploaded files will be appended here as .pdf-single divs -->
                                     @foreach($vehicle['documents_full_url'] as $doc)
                                         <div class="pdf-single" data-pdf-url="{{ $doc }}" data-existing="true"
-                                            onclick="window.open('{{$doc}}', '_blank')">
+                                             onclick="window.open('{{$doc}}', '_blank')">
                                             <div class="pdf-frame">
                                                 <canvas class="pdf-preview" style="display: none;"></canvas>
                                                 <img class="pdf-thumbnail" src="{{ $doc }}"
-                                                    alt="File Thumbnail">
+                                                     alt="File Thumbnail">
                                             </div>
                                             <div class="overlay">
                                                 <a href="javascript:void(0);" class="remove-btn" onclick="removeDocument(event, this)">
@@ -609,7 +609,7 @@
                                                 </a>
                                                 <div class="pdf-info d-flex gap-10px align-items-center">
                                                     <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34"
-                                                        alt="Document Logo">
+                                                         alt="Document Logo">
                                                     <div class="fs-13 text--title d-flex flex-column">
                                                         <span class="file-name">demo.pdf</span>
                                                         <span class="opacity-50">{{translate('Click to view the file')}}</span>
@@ -680,8 +680,8 @@
                 }
             });
 
-           // Handle remove button click
-           $('.remove-btn').click(function () {
+            // Handle remove button click
+            $('.remove-btn').click(function () {
                 var $card = $(this).closest('.upload-file');
                 $card.find('.single_file_input').val('');
                 $card.find('.upload-file-img').attr('src', '{{ $vehicle['thumbnail_full_url'] ?? '' }}');
@@ -805,34 +805,34 @@
             });
 
             // Remove images logic
-            // window.removedImages = [];
+            window.removedImages = [];
 
-            // window.removeImage = function (event, element) {
-            //     event.stopPropagation();
-
-            //     const imageSingle = element.closest(".image-single");
-            //     const imageUrl = imageSingle.getAttribute("data-url");
-
-            //     const imageName = imageUrl.split('/').pop();
-
-            //     imageSingle.remove();
-
-            //     removedImages.push(imageName);
-
-            //     document.getElementById('removed_images').value = JSON.stringify(removedImages);
-
-            //     console.log("Updated removed images array:", removedImages);
-
-            //     toggleUploadWrapper();
-            // };
-
-            window.removeImage = function (event, element, fileName) {
+            window.removeImage = function (event, element) {
                 event.stopPropagation();
+
                 const imageSingle = element.closest(".image-single");
+                const imageUrl = imageSingle.getAttribute("data-url");
+
+                const imageName = imageUrl.split('/').pop();
+
                 imageSingle.remove();
-                fileSet.delete(fileName); // Remove the file from the set
+
+                removedImages.push(imageName);
+
+                document.getElementById('removed_images').value = JSON.stringify(removedImages);
+
+                console.log("Updated removed images array:", removedImages);
+
                 toggleUploadWrapper();
             };
+
+            // window.removeImage = function (event, element, fileName) {
+            //     event.stopPropagation();
+            //     const imageSingle = element.closest(".image-single");
+            //     imageSingle.remove();
+            //     fileSet.delete(fileName); // Remove the file from the set
+            //     toggleUploadWrapper();
+            // };
 
             // Toggle visibility of the upload wrapper
             function toggleUploadWrapper() {
@@ -904,8 +904,8 @@
 
         // ----- mutiple image upload ends
 
-         // ----- mutiple document upload
-         $(document).ready(function () {
+        // ----- mutiple document upload
+        $(document).ready(function () {
             const MAX_FILES = 5;
             const pdfContainer = document.getElementById("pdf-container");
             const documentUploadWrapper = document.getElementById("upload-wrapper");

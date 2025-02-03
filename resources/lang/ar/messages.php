@@ -5459,4 +5459,6 @@
   'Manage_your_business' => 'Manage your business',
   'Smartly_or_Earn' => 'Smartly or Earn',
   'vendor_registration' => 'Vendor registration',
+  'Your Name' => 'Your Name',
+  'Terms_And' => 'Terms And',
 );

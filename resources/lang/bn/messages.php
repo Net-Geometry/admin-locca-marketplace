@@ -3228,4 +3228,5 @@
   'type_subtitle' => 'Type subtitle',
   '52/110' => '52/110',
   'Low_Stock_List' => 'Low Stock List',
+  'guest_verified' => 'Guest verified',
 );

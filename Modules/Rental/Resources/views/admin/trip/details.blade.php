@@ -166,7 +166,7 @@
                                 @php
                                     $subtotal = 0;
                                 @endphp
-                                @foreach($trip->trip_details as $detail)
+                                @foreach($trip?->trip_details as $detail)
                                     <tr>
                                         <td>
                                             <div>
@@ -253,7 +253,7 @@
                                                             $licensePlates = $detail?->tripVehicleDetails->map(function($tripVehicleDetails) {
                                                                 return $tripVehicleDetails?->vehicle_identity_data?->license_plate_number;
                                                             });
-                                                            $licensePlatesString = $licensePlates->filter()->implode(', '); // Remove any null or empty values
+                                                            $licensePlatesString = $licensePlates->filter()->implode(', ');
                                                         @endphp
 
                                                         @if ($licensePlatesString)
@@ -460,8 +460,8 @@
                                                     <div>{{ $loop->iteration }}</div>
                                                     <div class="fs-12 font-semibold text--title">
                                                         <div>
-                                                            <span>{{ $driverDetails->driver->fullName }}</span>
-                                                            <span class="fs-10 opacity-70">({{ $driverDetails->driver->phone }})</span>
+                                                            <span>{{ $driverDetails?->driver?->fullName }}</span>
+                                                            <span class="fs-10 opacity-70">({{ $driverDetails?->driver?->phone }})</span>
                                                         </div>
                                                         <div class="opacity-60">{{translate('Car No')}}: {{ $driverDetails?->vehicle_identity_data?->license_plate_number }}</div>
                                                     </div>
@@ -530,22 +530,18 @@
                                     <span class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">{{ $trip->customer->fullName }}</span>
 
                                     <div class="text--title d-flex align-items-center gap-1">
-                                        {{-- <span>
-                                            <span class="font-bold">{{ $trip->customer->orders->count() }}</span>
-                                            {{ translate('messages.order') }},
-                                        </span> --}}
                                         <span>
-                                            <span class="font-bold">{{ $trip->customer->trips->count() }}</span>
+                                            <span class="font-bold">{{ $trip?->customer?->trips?->count() }}</span>
                                             {{ translate('messages.trip') }}
                                         </span>
                                     </div>
 
                                     <div class="text--title">
-                                        {{ $trip->customer->phone }}
+                                        {{ $trip?->customer?->phone }}
                                     </div>
 
                                     <div class="text--title">
-                                        {{ $trip->customer->email }}
+                                        {{ $trip?->customer?->email }}
                                     </div>
 
                                 </div>
@@ -645,7 +641,7 @@
                         <h5 class="font-bold">{{ translate('Assign Driver') }}</h5>
                         <div class="fs-12 mb-20">
                         <span id="vehicle-assign-count">
-                            {{ count($trip->vehicle_identity->filter(fn($v) => !$v->vehicle_driver_id)) }}
+                            {{ count($trip?->vehicle_identity?->filter(fn($v) => !$v->vehicle_driver_id)) }}
                         </span>
                             {{ translate('Vehicle need to assign driver') }}
                         </div>
@@ -672,7 +668,7 @@
                                                     </a>
                                                     <div class="media-body">
                                                         <div class="fs-12 text--title">
-                                                            <div class="font-bold">{{ ucwords($vehicleDetails?->vehicles?->name)}}</div>
+                                                            <div class="font-bold">{{ translate($vehicleDetails?->vehicles?->name)}}</div>
                                                             <div class="font-semibold opacity-60">{{translate('Car No')}}: {{ $vehicleDetails?->vehicle_identity_data?->license_plate_number }}</div>
                                                         </div>
                                                     </div>
@@ -691,7 +687,7 @@
                                                             <option value="{{ $providerDriver->id }}"
                                                                     {{ $vehicleDetails->vehicle_driver_id == $providerDriver->id ? 'selected' : '' }}
                                                                     data-driver-id="{{ $providerDriver->id }}">
-                                                                <span class="fs-12 text--title">{{ $providerDriver->fullName }}</span>
+                                                                <span class="fs-12 text--title">{{ $providerDriver?->fullName }}</span>
                                                                 <br>
                                                                 <span class="fs-10 text--title opacity-70">({{ $providerDriver->phone }})</span>
                                                             </option>
@@ -912,84 +908,82 @@
                                         </thead>
                                         <tbody>
                                         @php
-                                        $subtotal = 0;
+                                            $subtotal = 0;
                                         @endphp
-                                            @foreach($trip->trip_details as $editDetail)
-                                        <tr>
-                                            <td>
-                                                <div class="eta_amount">
-
-                                                    {{ $loop->iteration }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="media media--sm eta_amount">
-
-                                                    <a class="avatar avatar-xl mr-3" href="{{ route('admin.rental.provider.vehicle.details', $editDetail->vehicle_id) }}">
-                                                        <img class="img-fluid rounded aspect-ratio-1 onerror-image"
-                                                             src="{{ data_get($editDetail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}"
-                                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                             alt="Image Description">
-                                                    </a>
-                                                    <div class="media-body">
-                                                        <div class="fs-12 text--title">
-                                                            <div class="fz-12 font-semibold line--limit-1">
-                                                                {{ $editDetail?->vehicle_details['name'] }}</div>
-                                                            <div><span class="font-semibold mr-2">{{ translate('Category') }} :</span>{{ Str::limit($editDetail?->vehicle?->category?->name, 15, '...') }}
-                                                            </div>
-                                                            <div><span class="font-semibold mr-2">{{ translate('Brand') }} :</span>{{ Str::limit($editDetail?->vehicle?->brand?->name, 15, '...') }}
+                                        @foreach($trip?->trip_details as $editDetail)
+                                            <tr>
+                                                <td>
+                                                    <div class="eta_amount">
+                                                        {{ $loop->iteration }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="media media--sm eta_amount">
+                                                        <a class="avatar avatar-xl mr-3" href="{{ route('admin.rental.provider.vehicle.details', $editDetail->vehicle_id) }}">
+                                                            <img class="img-fluid rounded aspect-ratio-1 onerror-image"
+                                                                 src="{{ data_get($editDetail?->vehicle,'thumbnailFullUrl',asset('public/assets/admin/img/160x160/img2.jpg') ) }}"
+                                                                 data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                                 alt="Image Description">
+                                                        </a>
+                                                        <div class="media-body">
+                                                            <div class="fs-12 text--title">
+                                                                <div class="fz-12 font-semibold line--limit-1">
+                                                                    {{ $editDetail?->vehicle_details['name'] }}</div>
+                                                                <div><span class="font-semibold mr-2">{{ translate('Category') }} :</span>{{ Str::limit($editDetail?->vehicle?->category?->name, 15, '...') }}
+                                                                </div>
+                                                                <div><span class="font-semibold mr-2">{{ translate('Brand') }} :</span>{{ Str::limit($editDetail?->vehicle?->brand?->name, 15, '...') }}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="fs-14 eta_amount text--title">
+                                                </td>
+                                                <td>
+                                                    <div class="fs-14 eta_amount text--title">
 
-                                                    {{ \App\CentralLogics\Helpers::format_currency($editDetail->rental_type == 'hourly' ? $editDetail->vehicle_details['hourly_price'] : $editDetail->vehicle_details['distance_price']) }}
-                                                    /{{ $detail->rental_type ==  'hourly' ? translate('Hr') : translate('messages.KM')  }}
-                                                </div>
-                                            </td>
+                                                        {{ \App\CentralLogics\Helpers::format_currency($editDetail->rental_type == 'hourly' ? $editDetail->vehicle_details['hourly_price'] : $editDetail->vehicle_details['distance_price']) }}
+                                                        /{{ $detail->rental_type ==  'hourly' ? translate('Hr') : translate('messages.KM')  }}
+                                                    </div>
+                                                </td>
 
-                                            <td class="text-center">
-                                                <div class="d-flex flex-column gap-1 align-items-center">
-                                                    <span class="eta_amount  d-none"> </span>
-                                                    <input type="number" name="quantity" class="form-control fs-14 text--title w--60px quantity-input text-center" min="1" max="{{ $editDetail->vehicle_variations_count }}"
-                                                    data-max_quantity="{{ $editDetail->vehicle_variations_count }}"
-                                                    data-max_original_quantity="{{ $editDetail->quantity }}"
-                                                    data-id="{{ $editDetail->id }}" data-vehicle_id="{{ $editDetail->vehicle_id }}"  value="{{ $editDetail->quantity }}" placeholder="EX:5">
-                                                </div>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="d-flex flex-column align-items-center">
-                                                    <span class="eta_amount  d-none"> </span>
-                                                    @if ($trip->trip_type == 'hourly')
-                                                    <span> {{ $trip->estimated_hours }} {{ translate('hrs') }}</span>
-                                                    @else
-                                                    <span class="distance-input">  {{ $trip->distance }} {{  translate('KM')  }}</span>
-                                                    @endif
-                                                </div>
-                                            </td>
+                                                <td class="text-center">
+                                                    <div class="d-flex flex-column gap-1 align-items-center">
+                                                        <span class="eta_amount  d-none"> </span>
+                                                        <input type="number" name="quantity" class="form-control fs-14 text--title w--60px quantity-input text-center" min="1" max="{{ $editDetail->vehicle_variations_count }}"
+                                                        data-max_quantity="{{ $editDetail?->vehicle_variations_count }}"
+                                                        data-max_original_quantity="{{ $editDetail->quantity }}"
+                                                        data-id="{{ $editDetail->id }}" data-vehicle_id="{{ $editDetail->vehicle_id }}"  value="{{ $editDetail->quantity }}" placeholder="EX:5">
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <span class="eta_amount  d-none"> </span>
+                                                        @if ($trip->trip_type == 'hourly')
+                                                        <span> {{ $trip->estimated_hours }} {{ translate('hrs') }}</span>
+                                                        @else
+                                                        <span class="distance-input">  {{ $trip->distance }} {{  translate('KM')  }}</span>
+                                                        @endif
+                                                    </div>
+                                                </td>
 
-                                            <td class="text-center">
-                                                <div class="d-flex flex-column gap-1 align-items-center">
-                                                    <span class="eta_amount_mt d-none "> {{ translate('*System_EST_Fare:') }}
-                                                        <small id="est_{{ $editDetail->id }}" class=" text--warning"> </small>
-                                                    </span>
-                                                    <input type="text" name="price" min="1" max="999999999"
-                                                           data-price="{{ $editDetail->price }}"
-                                                           class="form-control w--120px text-center fs-14 text--title fare-total"
-                                                           data-id="{{ $editDetail->id }}"
-                                                           data-vehicle_id="{{ $editDetail->vehicle_id }}"
-                                                           data-old-value="{{ $editDetail->original_price  * $editDetail->quantity}}"
-                                                           data-quantity="{{ $editDetail->quantity }}"
-                                                           value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->calculated_price) }}"
-                                                           placeholder="fare">
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                <td class="text-center">
+                                                    <div class="d-flex flex-column gap-1 align-items-center">
+                                                        <span class="eta_amount_mt d-none "> {{ translate('*System_EST_Fare:') }}
+                                                            <small id="est_{{ $editDetail->id }}" class=" text--warning"> </small>
+                                                        </span>
+                                                        <input type="text" name="price" min="1" max="999999999"
+                                                               data-price="{{ $editDetail->price }}"
+                                                               class="form-control w--120px text-center fs-14 text--title fare-total"
+                                                               data-id="{{ $editDetail->id }}"
+                                                               data-vehicle_id="{{ $editDetail->vehicle_id }}"
+                                                               data-old-value="{{ $editDetail->original_price  * $editDetail->quantity}}"
+                                                               data-quantity="{{ $editDetail->quantity }}"
+                                                               value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->calculated_price) }}"
+                                                               placeholder="fare">
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             @php
-                                            $subtotal += $editDetail->calculated_price;
+                                                $subtotal += $editDetail->calculated_price;
                                             @endphp
                                         @endforeach
                                         <!-- End Media -->
