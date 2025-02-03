@@ -3,6 +3,7 @@
 namespace Modules\Rental\Http\Controllers\Api\User;
 
 
+use App\Models\Zone;
 use App\Models\Store;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
@@ -10,6 +11,7 @@ use Illuminate\Routing\Controller;
 use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\RentalCart;
 use Illuminate\Support\Facades\Validator;
+use MatanYadaev\EloquentSpatial\Objects\Point;
 use Modules\Rental\Entities\RentalCartUserData;
 
 class CartController extends Controller
@@ -435,8 +437,15 @@ class CartController extends Controller
             $query->withCount('vehicleIdentities as total_vehicle_count');
         }, 'provider:id,name,address,tax', 'provider.discount'])
         ->get();
+
+        $user_data=   $this->setUserData($request, $user_id, $is_guest, 0);
+
+        if (data_get($user_data,'pickup_location.lat')  && data_get($user_data ,'pickup_location.lng') ) {
+            $zones = Zone::whereContains('coordinates', new Point(data_get($user_data ,'pickup_location.lat'), data_get($user_data ,'pickup_location.lng'), POINT_SRID))->pluck('id')->toArray();
+        }
+
         $total_cart_price = 0;
-        foreach ($carts as $cart) {
+        foreach ($carts as  $cart) {
             if($cart->vehicle &&  $cart->vehicle->status == 1){
                 $price = $this->getDiscount(price: ($request->rental_type ?? $user_data?->rental_type) == 'hourly' ? $cart->vehicle->hourly_price *   ($request->estimated_hours ?? $user_data?->estimated_hours) : $cart->vehicle?->distance_price *  ($request->distance ?? $user_data?->distance), discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
                 $cart->user_id = $user_id;
@@ -445,6 +454,20 @@ class CartController extends Controller
                 $cart->save();
                 $total_cart_price += $cart->price;
             } else{
+                $cart->delete();
+            }
+
+            if(!$cart->vehicle()->when(count($zones) > 0, function ($query) use ($zones) {
+                $query->whereHas('provider', function ($query) use ($zones) {
+                    $query->active()->where(function ($query) use ($zones) {
+                        $query->whereJsonContains('pickup_zone_id', (string) $zones[0]);
+                        for ($i = 1; $i < count($zones); $i++) {
+                            $query->orWhereJsonContains('pickup_zone_id', (string) $zones[$i]);
+                        }
+                        return $query;
+                    });
+                });
+            })->exists()){
                 $cart->delete();
             }
         };

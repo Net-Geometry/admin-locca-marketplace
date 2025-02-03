@@ -224,7 +224,7 @@ class VehicleController extends Controller
             });
 
             $min_price = Cache::rememberForever($cache_key_min, function () use ($price_column) {
-                return $this->vehicle->min($price_column);
+                return $this->vehicle->where($price_column ,'>','0')->min($price_column);
             });
         }
 
