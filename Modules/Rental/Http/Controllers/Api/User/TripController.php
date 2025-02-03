@@ -533,7 +533,7 @@ class TripController extends Controller
                 'vehicle_identity.vehicle_identity_data:id,vin_number,license_plate_number',
                 'vehicle_identity.vehicles:id,name,thumbnail',
                 'provider' => function ($query) {
-                    $query->select('id', 'name', 'logo', 'cover_photo', 'rating', 'phone')
+                    $query->select('id', 'name', 'logo', 'cover_photo', 'rating', 'phone','reviews_section')->with('store_sub')
                         ->withCount('vehicle_identity as total_vehicles');
                 }
             ])
@@ -551,6 +551,7 @@ class TripController extends Controller
                     unset($detail->tripVehicleDetails);
                 });
 
+
             $trip->vehicle_identity->each(function ($identity) {
                 $review=null;
                 $identity->license_plate_number = $identity?->vehicle_identity_data?->license_plate_number;
@@ -566,6 +567,15 @@ class TripController extends Controller
                     $ratings = StoreLogic::calculate_store_rating($trip['provider']['rating']);
                     $trip['provider']['avg_rating'] =$ratings['rating'];
                     $trip['provider']['rating_count'] =$ratings['total'];
+                    if(isset($trip['provider']->store_sub)){
+                        $trip['provider']['chat'] =$trip?->provider?->store_sub?->chat ?? 0;
+                        $trip['provider']['reviews_section'] =$trip?->provider?->store_sub?->review ??  $trip['provider']['reviews_section'] ?? 0;
+                        unset($trip['provider']->store_sub);
+                    } else{
+                        $trip['provider']['chat'] =1;
+                        $trip['provider']['reviews_section'] = $trip['provider']['reviews_section'] ?? 0;
+                    }
+
                 }
 
         return response()->json($trip, 200);
