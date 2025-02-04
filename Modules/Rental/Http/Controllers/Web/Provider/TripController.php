@@ -452,9 +452,9 @@ class TripController extends Controller
         }
         $scheduled = $request->scheduled ?? $trip->scheduled;
 
-        $estimatedTripEndTime = $scheduleAt->copy()->addHours(
+        $estimatedTripEndTime = $scheduleAt->copy()->addHours(ceil(
             $trip->rental_type === 'hourly' ? $estimatedHours : ($request->destination_time ?? $trip->destination_time)
-        );
+        ));
 
         $vehicleQuantities = array_combine($request->vehicle_ids, $request->quantities);
         $modifiedPrices = array_combine($request->vehicle_ids, $request->prices);

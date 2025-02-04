@@ -91,7 +91,8 @@ class TripController extends Controller
                 ]
             ], 403);
         }
-        $estimated_trip_end_time = $schedule_at->copy()->addHours($user_data->rental_type == 'hourly' ? $user_data->estimated_hours ?? 1 : $user_data->destination_time ?? 1);
+        $estimated_trip_end_time = $schedule_at->copy()->addHours(
+            ceil($user_data->rental_type == 'hourly' ? $user_data->estimated_hours ?? 1 : $user_data->destination_time ?? 1));
 
         $trip_validation_check =  $this->tripValidationCheck($request, $schedule_at,$user_data);
 
@@ -547,7 +548,7 @@ class TripController extends Controller
                 $query->whereIn('trip_status', ['completed','canceled']);
             })
             ->when($type == 'running', function ($query) {
-                $query->whereIn('trip_status', ['pending','confirmed','ongoing']);
+                $query->whereIn('trip_status', ['pending','confirmed','ongoing','payment_failed']);
             })
             ->latest()->paginate($limit, ['*'], 'page', $offset);
         $data = $this->helpers->preparePaginatedResponse(pagination: $trips, limit: $limit, offset: $offset, key: 'trips', extraData: []);

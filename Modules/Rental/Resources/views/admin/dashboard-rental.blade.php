@@ -6,18 +6,23 @@
 @endpush
 
 @section('content')
+@php($mod = \App\Models\Module::find(Config::get('module.current_module_id')))
     <div class="content container-fluid">
         <div class="page-header">
             <div class="row align-items-center py-2">
                 <div class="col-sm mb-2 mb-sm-0">
                     <div class="d-flex align-items-center">
                         <img class="onerror-image" data-onerror-image="{{ asset('/public/assets/admin/img/grocery.svg') }}"
-                             src="{{ asset('/public/assets/admin/img/100x100/2.jpg') }}" width="38" alt="img">
+                             src="{{$mod->icon_full_url }}" width="38" alt="img">
                         <div class="w-0 flex-grow pl-2">
                             <h1 class="page-header-title text-title mb-0">
-                                {{ translate('messages.Car_Rental_Module_Dashboard') }}</h1>
+
+                                {{translate($mod->module_name)}} {{translate('messages.Dashboard')}}
+                            </h1>
+
+                                {{-- {{ translate('messages.Car_Rental_Module_Dashboard') }} --}}
                             <p class="page-header-text text-title fs-12 m-0">{{ translate('messages.Monitor_your') }}
-                                <strong class="font-bold"> {{ translate('messages.car_rental_business') }}</strong>
+                                <strong class="font-bold"> {{translate($mod->module_name)}} {{ translate('messages.business') }}</strong>
                             </p>
                         </div>
                     </div>
@@ -25,7 +30,7 @@
                 <div class="col-sm-auto min--280">
                     <select name="zone_id" class="form-control js-select2-custom fetch_data_zone_wise" >
                         <option value="all">{{ translate('messages.All_Zones') }}</option>
-                        @foreach(\App\Models\Zone::orderBy('name')->get() as $zone)
+                        @foreach(\App\Models\Zone::orderBy('name')->get(['name','id']) as $zone)
                             <option
                                 value="{{$zone['id']}}" {{request()->zone_id == $zone['id']?'selected':''}}>
                                 {{$zone['name']}}

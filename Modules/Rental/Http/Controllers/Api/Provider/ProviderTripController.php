@@ -294,9 +294,9 @@ class ProviderTripController extends Controller
         $distance = $request->distance ?? $trip->distance;
         $scheduled = $request->scheduled ?? $trip->scheduled;
 
-        $estimatedTripEndTime = $scheduleAt->copy()->addHours(
+        $estimatedTripEndTime = $scheduleAt->copy()->addHours(ceil(
             $trip->rental_type === 'hourly' ? $estimatedHours : ($request->destination_time ?? $trip->destination_time)
-        );
+        ));
 
         $vehicleQuantities = json_decode($request->vehicle_quantities ?? '[]', true);
         $modifiedPrices = json_decode($request->modified_prices ?? '[]', true);

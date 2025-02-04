@@ -237,7 +237,7 @@
                             </td>
                             <td>
                                 <div class="rating">
-                                    <span><i class="tio-star"></i></span>{{ round($vehicle->avg_rating,1) }} ({{ $vehicle->rating_count }})
+                                    <span><i class="tio-star"></i></span>{{ round($vehicle->avg_rating,1) }} ({{ $vehicle->total_reviews }})
                                 </div>
                             </td>
                         </tr>
