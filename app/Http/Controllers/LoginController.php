@@ -189,6 +189,12 @@ class LoginController extends Controller
         elseif ($request->role == 'vendor') {
             $vendor = Vendor::where('email', $request->email)->first();
             if ($vendor) {
+                if($vendor?->stores[0]?->module?->module_type == 'rental'){
+                    if(!addon_published_status('Rental')){
+                        return redirect()->back()->withInput($request->only('email', 'remember'))
+                        ->withErrors([translate('messages.rental_module_is_not_available')]);
+                    }
+                }
                 if ($vendor?->stores[0]?->store_business_model == 'none') {
                     $key = ['subscription_free_trial_days', 'subscription_free_trial_type', 'subscription_free_trial_status'];
                     $free_trial_settings = BusinessSetting::whereIn('key', $key)->pluck('value', 'key');
@@ -208,6 +214,12 @@ class LoginController extends Controller
             }
         } elseif ($request->role == 'vendor_employee') {
             $employee = VendorEmployee::where('email', $request->email)->first();
+                if($employee?->store?->module?->module_type == 'rental'){
+                    if(!addon_published_status('Rental')){
+                        return redirect()->back()->withInput($request->only('email', 'remember'))
+                        ->withErrors([translate('messages.rental_module_is_not_available')]);
+                    }
+                }
                 if ($employee && (in_array($employee?->store?->store_business_model, ['none', 'unsubscribed']) || $employee?->store?->status == 0)) {
                     return redirect()->back()->withInput($request->only('email', 'remember'))
                         ->withErrors([translate('messages.store_is_inactive')]);

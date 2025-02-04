@@ -63,6 +63,10 @@ class AddonController extends Controller
 
     public function publish(Request $request): JsonResponse|int
     {
+        if (env('APP_MODE') == 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+            return back();
+        }
         $full_data = include($request['path'] . '/Addon/info.php');
         $path = $request['path'];
         $addon_name = $full_data['name'];
@@ -88,6 +92,10 @@ class AddonController extends Controller
 
     public function activation(Request $request): Redirector|RedirectResponse|Application
     {
+        if (env('APP_MODE') == 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+            return back();
+        }
         $remove = ["http://", "https://", "www."];
         $url = str_replace($remove, "", url('/'));
         $full_data = include($request['path'] . '/Addon/info.php');
@@ -169,6 +177,10 @@ class AddonController extends Controller
     }
 
     public function delete_theme(Request $request){
+        if (env('APP_MODE') == 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+            return back();
+        }
         $path = $request->path;
 
         $full_path = base_path($path);

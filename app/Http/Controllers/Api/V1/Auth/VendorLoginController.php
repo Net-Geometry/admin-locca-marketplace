@@ -54,7 +54,15 @@ class VendorLoginController extends Controller
                         return response()->json(data_get($storeSubscriptionCheck,'data'), data_get($storeSubscriptionCheck,'code'));
                     }
 
-
+                    if($vendor?->stores[0]?->module?->module_type == 'rental'){
+                        if(!addon_published_status('Rental')){
+                            $errors = [];
+                            array_push($errors, ['code' => 'auth-001', 'message' => translate('rental_module_is_not_available')]);
+                            return response()->json([
+                                'errors' => $errors
+                            ], 401);
+                        }
+                    }
                 $vendor->auth_token = $token;
                 $vendor->save();
                 return response()->json(['token' => $token, 'zone_wise_topic'=> $vendor->stores[0]->zone->store_wise_topic, 'module_type' => $vendor?->stores[0]?->module?->module_type], 200);
@@ -73,6 +81,16 @@ class VendorLoginController extends Controller
                 $storeSubscriptionCheck=  $this->storeSubscriptionCheck($vendor?->store,$vendor,$token);
                 if(data_get($storeSubscriptionCheck,'type') != null){
                     return response()->json(data_get($storeSubscriptionCheck,'data'), data_get($storeSubscriptionCheck,'code'));
+                }
+
+                if($vendor?->store?->module_type == 'rental'){
+                    if(!addon_published_status('Rental')){
+                        $errors = [];
+                        array_push($errors, ['code' => 'auth-001', 'message' => translate('rental_module_is_not_available')]);
+                        return response()->json([
+                            'errors' => $errors
+                        ], 401);
+                    }
                 }
 
                 $vendor->auth_token = $token;
