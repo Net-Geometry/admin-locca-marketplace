@@ -219,6 +219,12 @@ class TripController extends Controller
                 Toastr::success(translate('messages.trip_not_found'));
                 return back();
             }
+
+            if($trip->payment_status == 'paid' && $status == 'paid'){
+                Toastr::success(translate('messages.This_trip_is_already_paid'));
+                return back();
+            }
+
             $trip->payment_method =  $trip->payment_method ?? 'cash_payment';
             $trip->transaction_reference =  $trip?->transaction_reference;
             $trip->payment_status = $status;

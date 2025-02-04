@@ -651,6 +651,10 @@ class TripController extends Controller
             return response()->json(['message' => translate('This_payment_method_is_not_available_for_guest_users')], 403);
         }
 
+        if($trip->payment_status == 'paid'){
+            return response()->json(['message' => translate('This_trip_is_already_paid')], 403);
+        }
+
         $user = $request->user ? $request->user: $this->getGuestUserDetails($trip, $user_id);
 
         switch ($request->payment_method) {
