@@ -88,7 +88,7 @@
                                                 <i class="tio-clear"></i>
                                             </a>
                                             <input type="file" name="image" class="upload-file__input single_file_input"
-                                                accept=".jpg, .jpeg, .png" data-max-size="1" required>
+                                                accept=".webp, .jpg, .jpeg, .png" data-max-size="1" required>
                                             <label
                                                 class="upload-file-wrapper w--180px">
                                                 <div class="upload-file-textbox text-center">
@@ -160,7 +160,7 @@
                                            <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
                                                 id="image_upload_wrapper">
                                                <input type="file" name="identity_image[]"
-                                                      class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple required>
+                                                      class="upload-file__input multiple_image_input" accept=".webp, .jpg,.jpeg,.png" multiple required>
                                                <div
                                                    class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
                                                    <div class="upload-file__textbox">

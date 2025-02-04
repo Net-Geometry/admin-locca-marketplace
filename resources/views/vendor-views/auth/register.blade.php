@@ -229,7 +229,7 @@
                                         <div class="icon-file">
                                             <input type="file" name="cover_photo" id="coverImageUpload"
                                             class="form-control __form-control"
-                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                            accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                             <img src="{{ asset('public/assets/admin/img/pen.png') }}" alt="">
                                         </div>
                                     </div>
@@ -248,7 +248,7 @@
                                     <div class="icon-file-group">
                                         <div class="icon-file">
                                             <input type="file" name="logo" id="customFileEg1" class="form-control __form-control"
-                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
+                                            accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
                                             <img src="{{ asset('public/assets/admin/img/pen.png') }}" alt="">
                                         </div>
                                     </div>

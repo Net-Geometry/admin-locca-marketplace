@@ -193,7 +193,7 @@ $countryCode= strtolower($country?$country->value:'auto');
                                             <div class="icon-file-group">
                                                 <div class="icon-file">
                                                     <input type="file" name="image" id="customFileEg1" class="form-control __form-control"
-                                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
+                                                    accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
                                                     <img src="{{asset('/public/assets/admin/img/pen.png')}}" alt="">
                                                 </div>
                                             </div>

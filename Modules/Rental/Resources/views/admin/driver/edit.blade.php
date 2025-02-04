@@ -88,7 +88,7 @@
                                                 <i class="tio-clear"></i>
                                             </a>
                                             <input type="file" name="image" class="upload-file__input single_file_input"
-                                                accept=".jpg, .jpeg, .png"  value="{{ $driver['image_full_url'] ?? '' }}">
+                                                accept=".webp, .jpg, .jpeg, .png"  value="{{ $driver['image_full_url'] ?? '' }}">
                                             <label
                                                 class="upload-file-wrapper w--180px">
                                                 <div class="upload-file-textbox text-center">
@@ -114,7 +114,7 @@
                                         </div>
                                         <div class="custom-file">
                                             <input type="file" name="image" id="customFileEg1" class="custom-file-input"
-                                                   accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                                   accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                             <label class="custom-file-label" for="customFileEg1">{{translate('messages.choose_file')}}</label>
                                         </div>
                                     </div> --}}
@@ -187,7 +187,7 @@
                                             <div class="d-flex gap-3 flex-shrink-0" id="image_container">
                                                 <!-- Upload Wrapper for New Files -->
                                                 <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0" id="image_upload_wrapper">
-                                                    <input type="file" name="identity_image[]" class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
+                                                    <input type="file" name="identity_image[]" class="upload-file__input multiple_image_input" accept=".webp, .jpg,.jpeg,.png" multiple>
                                                     <div class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
                                                         <div class="upload-file__textbox">
                                                             <img width="34" height="34" src="{{ asset('public/assets/admin/img/document-upload.png') }}" alt="" class="svg">

@@ -160,7 +160,7 @@
                                         <img class="img--176 border" id="viewer" src="{{ asset('public/assets/admin/img/upload-img.png') }}" alt="thumbnail" />
                                         <div class="icon-file-group">
                                             <div class="icon-file"><input type="file" name="image" id="customFileEg1" class="custom-file-input d-none"
-                                            accept=".jpg, .png, .webp, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                            accept=".webp, .jpg, .png, .webp, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                     <i class="tio-edit"></i>
                                             </div>
                                         </div>

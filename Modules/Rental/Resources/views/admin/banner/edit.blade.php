@@ -136,7 +136,7 @@
                                                 <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
                                                     <i class="tio-clear"></i>
                                                 </a>
-                                                <input type="file" name="image" class="upload-file__input single_file_input" value="{{ $banner['image_full_url'] }}" accept=".jpg, .jpeg, .png" title="" />
+                                                <input type="file" name="image" class="upload-file__input single_file_input" value="{{ $banner['image_full_url'] }}" accept=".webp, .jpg, .jpeg, .png" title="" />
                                                 <label class="upload-file-wrapper fullwidth">
                                                     <div class="upload-file-textbox text-center">
                                                         <img width="34" height="34" src="{{ asset('public/assets/admin/img/document-upload.svg') }}" alt="">

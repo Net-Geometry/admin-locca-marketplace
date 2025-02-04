@@ -146,7 +146,7 @@
                                                     alt="image" />
                                                     <div class="icon-file-group">
                                                         <div class="icon-file">
-                                                            <input type="file" name="icon" id="customFileEg1" class="custom-file-input" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                                            <input type="file" name="icon" id="customFileEg1" class="custom-file-input" accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                             <i class="tio-edit"></i>
                                                         </div>
                                                     </div>
@@ -164,7 +164,7 @@
                                                     alt="image" />
                                                     <div class="icon-file-group">
                                                         <div class="icon-file">
-                                                            <input type="file" name="thumbnail" id="customFileEg2" class="custom-file-input" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                                            <input type="file" name="thumbnail" id="customFileEg2" class="custom-file-input" accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                             <i class="tio-edit"></i>
                                                         </div>
                                                     </div>

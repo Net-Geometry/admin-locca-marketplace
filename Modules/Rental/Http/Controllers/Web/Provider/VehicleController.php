@@ -170,9 +170,9 @@ class VehicleController extends Controller
             'discount_type' => 'nullable|string|max:50',
             'tag' => 'nullable|array',
             'tag.*' => 'string|max:50',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'thumbnail' => 'required|image|mimes:webp,jpeg,png,jpg|max:2048',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'image|mimes:webp,jpeg,png,jpg,gif|max:2048',
             'documents' => 'nullable|array',
             'documents.*' => 'max:2048',
         ]);
@@ -302,9 +302,9 @@ class VehicleController extends Controller
             'discount_type' => 'nullable|string|max:50',
             'tag' => 'nullable|array',
             'tag.*' => 'string|max:50',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'thumbnail' => 'nullable|image|mimes:webp,jpeg,png,jpg|max:2048',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'image|mimes:webp,jpeg,png,jpg,gif|max:2048',
             'documents' => 'nullable|array',
             'documents.*' => 'max:2048',
         ]);

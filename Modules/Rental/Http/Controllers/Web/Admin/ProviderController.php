@@ -1015,7 +1015,7 @@ class ProviderController extends Controller
             'logo' => [
                 $id ? 'nullable' : 'required',
                 'image',
-                'mimes:jpg,jpeg,png',
+                'mimes:webp,jpg,jpeg,png',
                 'max:2048',
             ],
             'tax' => 'required',

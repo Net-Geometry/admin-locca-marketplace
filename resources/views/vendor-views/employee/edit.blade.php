@@ -79,7 +79,7 @@
                                     <label class="form-label">{{translate('messages.Employee image size max 2 MB')}} <span class="text-danger">*</span></label>
                                     <div class="custom-file">
                                         <input type="file" name="image" id="customFileUpload" class="custom-file-input read-url"
-                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                            accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                         <label class="custom-file-label" for="customFileUpload">{{translate('messages.choose_file')}}</label>
                                     </div>
                                 </div>

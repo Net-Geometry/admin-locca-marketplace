@@ -58,7 +58,7 @@
 
                                             <div class="upload-file">
                                                 <input type="file" name="image" class="upload-file__input"
-                                                       accept=".jpg, .jpeg, .png">
+                                                       accept=".webp, .jpg, .jpeg, .png">
                                                 <label class="upload-file-wrapper three-one">
                                                     <div class="upload-file-textbox text-center">
                                                         <img width="34" height="34"

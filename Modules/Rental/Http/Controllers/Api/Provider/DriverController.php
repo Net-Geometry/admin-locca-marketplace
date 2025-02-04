@@ -81,7 +81,7 @@ class DriverController extends Controller
             'phone' => 'required|string|unique:vehicle_drivers,phone',
             'identity_type' => 'required|string',
             'identity_number' => 'required|string|max:50',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:webp,jpeg,png,jpg,gif|max:2048',
         ]);
 
 
@@ -142,7 +142,7 @@ class DriverController extends Controller
             'phone' => 'required|string|max:20|unique:vehicle_drivers,phone,' . $id,
             'identity_type' => 'required|string',
             'identity_number' => 'required|string|max:50',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:webp,jpeg,png,jpg,gif|max:2048',
         ]);
 
 

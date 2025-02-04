@@ -207,7 +207,7 @@
                                 </div>
                                 {{-- <div class="upload-file text-wrapper">
                                     <input type="file" name="image"
-                                        class="upload-file__input single_file_input" accept=".jpg, .jpeg, .png">
+                                        class="upload-file__input single_file_input" accept=".webp, .jpg, .jpeg, .png">
                                     <div
                                         class="upload-file__img d-flex justify-content-center align-items-center height-200px max-w-300px m-auto p-0">
                                         <div class="upload-file__textbox text-center">
@@ -229,7 +229,7 @@
                                         <i class="tio-clear"></i>
                                     </a>
                                     <input type="file" name="image" class="upload-file__input single_file_input" 
-                                        accept=".jpg, .jpeg, .png"  value="{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}">
+                                        accept=".webp, .jpg, .jpeg, .png"  value="{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}">
                                     <label
                                         class="upload-file-wrapper aspect-3-2">
                                         <div class="upload-file-textbox text-center w-100">

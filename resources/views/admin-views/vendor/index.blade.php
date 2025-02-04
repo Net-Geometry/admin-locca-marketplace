@@ -127,7 +127,7 @@
                                             <div class="icon-file">
                                                 <i class="tio-edit"></i>
                                                 <input type="file" name="logo" id="customFileEg1" class="custom-file-input"
-                                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" >
+                                                    accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" >
                                             </div>
                                         </div>
                                     </label>
@@ -148,7 +148,7 @@
                                             <div class="icon-file">
                                                 <i class="tio-edit"></i>
                                                 <input type="file" name="cover_photo" id="coverImageUpload"  class="custom-file-input"
-                                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                                    accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                             </div>
                                         </div>
                                     </label>

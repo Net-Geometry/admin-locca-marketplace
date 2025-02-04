@@ -121,7 +121,7 @@
                                                     <i class="tio-clear"></i>
                                                 </a>
                                                 <input type="file" name="image" class="upload-file__input single_file_input"
-                                                    accept=".jpg, .jpeg, .png" required>
+                                                    accept=".webp, .jpg, .jpeg, .png" required>
                                                 <label class="upload-file-wrapper fullwidth">
                                                     <div class="upload-file-textbox text-center">
                                                         <img width="34" height="34"

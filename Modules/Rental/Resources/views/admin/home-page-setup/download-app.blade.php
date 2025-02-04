@@ -173,7 +173,7 @@
                                             <i class="tio-clear"></i>
                                         </a>
                                         <input type="file" name="image" class="upload-file__input single_file_input" 
-                                            accept=".jpg, .jpeg, .png"  value="{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}">
+                                            accept=".webp, .jpg, .jpeg, .png"  value="{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}">
                                         <label
                                             class="upload-file-wrapper w--180px">
                                             <div class="upload-file-textbox text-center">

@@ -158,7 +158,7 @@
                             </div>
                             <div class="custom-file">
                                 <input type="file" name="image" id="customFileUpload" class="custom-file-input"
-                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                    accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                 <label class="custom-file-label" for="customFileUpload">{{translate('messages.choose_file')}}</label>
                             </div>
                         </div>
@@ -179,7 +179,7 @@
                             </div>
                             <div class="custom-file">
                                 <input type="file" name="photo" id="coverImageUpload" class="custom-file-input"
-                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                    accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                 <label class="custom-file-label" for="coverImageUpload">{{translate('messages.choose_file')}}</label>
                             </div>
                         </div>

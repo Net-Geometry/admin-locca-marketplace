@@ -134,7 +134,7 @@
                                                 <i class="tio-clear"></i>
                                             </a>
                                             <input type="file" name="thumbnail" class="upload-file__input single_file_input"
-                                                accept=".jpg, .jpeg, .png" data-max-size="1" value="{{ $vehicle->thumbnail ?? '' }}">
+                                                accept=".webp, .jpg, .jpeg, .png" data-max-size="1" value="{{ $vehicle->thumbnail ?? '' }}">
                                             <label
                                                 class="upload-file-wrapper height-150px max-w-300px aspect-2-1">
                                                 <div class="upload-file-textbox text-center w-100">
@@ -174,7 +174,7 @@
                                     <!-- Upload Wrapper for New Files -->
                                    <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
                                         id="image_upload_wrapper">
-                                       <input type="file" name="images[]" class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
+                                       <input type="file" name="images[]" class="upload-file__input multiple_image_input" accept=".webp, .jpg,.jpeg,.png" multiple>
                                        <input type="hidden" name="removed_images" id="removed_images" value="">
                                        <div
                                            class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">

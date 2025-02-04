@@ -212,7 +212,7 @@ class CategoryController extends Controller
             [
                 'name' => 'required|unique:categories,name' . ($id ? ','.$id : ''),
                 'name.0' => 'required',
-                'image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:10240',
+                'image' => 'nullable|image|mimes:webp,jpeg,jpg,png,gif|max:10240',
             ],
             [
                 'name.0.required' => translate('default_name_is_required'),

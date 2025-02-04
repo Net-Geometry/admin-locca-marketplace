@@ -474,7 +474,7 @@
                                                      alt="{{ translate('meta_image') }}" />
                                             </div>
                                             <input type="file" name="meta_image" id="customFileEg1" class="custom-file-input"
-                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                                accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                         </label>
                                     </div>
                                 </div>

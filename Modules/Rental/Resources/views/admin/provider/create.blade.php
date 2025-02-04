@@ -222,7 +222,7 @@
                                                         </div> --}}
                                                         <input type="file" name="logo" id="customFileEg1"
                                                                 class="custom-file-input"
-                                                                accept=".jpg, .png, .jpeg|image/*">
+                                                                accept=".webp, .jpg, .png, .jpeg|image/*">
                                                     </div>
                                                 </label>
                                             </div>
@@ -265,7 +265,7 @@
                                                         </div> --}}
                                                         <input type="file" name="cover_photo" id="coverImageUpload"
                                                                 class="custom-file-input"
-                                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                                                accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                     </div>
                                                 </label>
                                             </div>

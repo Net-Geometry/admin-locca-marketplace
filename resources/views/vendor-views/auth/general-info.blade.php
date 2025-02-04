@@ -324,7 +324,7 @@
                                                     <div class="icon-file">
                                                         <input type="file" name="cover_photo" id="coverImageUpload"
                                                             class="form-control __form-control"
-                                                            accept=".jpg, .png, .jpeg|image/*">
+                                                            accept=".webp, .jpg, .png, .jpeg|image/*">
                                                         <img src="{{ asset('public/assets/admin/img/pen.png') }}"
                                                             alt="">
                                                     </div>
@@ -360,7 +360,7 @@
                                                     <div class="icon-file">
                                                         <input type="file" name="logo" id="customFileEg1"
                                                             class="form-control __form-control"
-                                                            accept=".jpg, .png, .jpeg|image/*">
+                                                            accept=".webp, .jpg, .png, .jpeg|image/*">
                                                         <img src="{{ asset('public/assets/admin/img/pen.png') }}"
                                                             alt="">
                                                     </div>

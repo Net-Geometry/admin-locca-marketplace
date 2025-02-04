@@ -94,7 +94,7 @@ class VendorController extends Controller
             'module_id' => 'required',
             'logo' => [ 'required',
                 'image',
-                'mimes:jpg,jpeg,png',
+                'mimes:webp,jpg,jpeg,png',
                 'max:2048',
             ],
             'tax' => 'required',

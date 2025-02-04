@@ -7371,4 +7371,6 @@ Smartly or Earn. ',
   'Enter_the_minimum_cash_amount_vendors_can_pay' => 'Enter the minimum cash amount vendors can pay',
   'This_Vehicle_is_not_available_on_this_pickup_time' => 'This Vehicle is not available on this pickup time',
   'destination_location' => 'Destination location',
+  'business' => 'Business',
+  'The image must be a file of type: jpeg, jpg, png, gif.' => 'The image must be a file of type: jpeg, jpg, png, gif.',
 );

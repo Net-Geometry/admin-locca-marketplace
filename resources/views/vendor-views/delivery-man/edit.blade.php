@@ -112,7 +112,7 @@
                             </div>
                             <div class="custom-file mt-3">
                                 <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
-                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                    accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                 <label class="custom-file-label" for="customFileEg1">{{translate('messages.choose_file')}}</label>
                             </div>
                         </div>
