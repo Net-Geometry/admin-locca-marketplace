@@ -5,7 +5,7 @@
              src="{{ $provider['logo_full_url'] }}">
         <div class="cont pt-2">
             <h6 class="mb-1">{{ $provider->name }}</h6>
-            <span>+{{ $provider->phone }}</span>
+            <span>{{ $provider->phone }}</span>
         </div>
         <div class="ml-auto">
             <span class="badge badge-soft">{{ translate('Trips') }} : {{ count($provider->trips) }}</span>

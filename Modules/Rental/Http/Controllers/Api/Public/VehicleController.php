@@ -194,7 +194,16 @@ class VehicleController extends Controller
         }
         $vehicle =  $this->vehicle->where(function ($query) use ($id) {
             $query->where('id', $id)->orWhere('slug', $id);
-        })->with('brand:id,name,image', 'provider:id,name,logo,cover_photo,rating,address,delivery_time', 'provider.discount')->withCount('vehicleIdentities as total_vehicles')->first();
+        })->withCount('vehicleIdentities as total_vehicles')
+
+        ->with(['provider' => function($query) {
+            $query->select('id','name','logo','cover_photo','rating','address','delivery_time')
+            ->withCount([
+                'vehicle_identity as provider_total_vehicle_count',
+            ]);
+        },'brand:id,name,image', 'provider.discount'])
+
+        ->first();
         if (!$vehicle) {
             return response()->json(['error' => 'vehicle_not_found'], 404);
         }
@@ -373,6 +382,7 @@ class VehicleController extends Controller
             $item['vehicle_name'] = null;
             $item['vehicle_image'] = null;
             $item['customer_name'] = null;
+            $item['customer_image'] = null;
             if ($item->vehicle) {
                 $item['vehicle_name'] = $item->vehicle->name;
                 $item['vehicle_image'] = $item->vehicle->image;
@@ -381,6 +391,7 @@ class VehicleController extends Controller
 
             if ($item->customer) {
                 $item['customer_name'] = $item->customer->f_name . ' ' . $item->customer->l_name;
+                $item['customer_image'] = $item->customer->image_full_url;
             }
 
             unset($item['vehicle']);
