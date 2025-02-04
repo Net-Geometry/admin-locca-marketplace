@@ -200,6 +200,14 @@ class TripController extends Controller
                 }
             }
 
+
+            if($status == 'completed'){
+                TripVehicleDetails::where('trip_id' , $trip->id)->update([
+                    'is_completed' => 1
+                ]);
+            }
+
+
             $this->sendTripNotificationCustomer($trip);
 
             DB::commit();

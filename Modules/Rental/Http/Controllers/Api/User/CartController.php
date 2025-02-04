@@ -76,20 +76,12 @@ class CartController extends Controller
         $pickup_time = $request->pickup_time
         ? \Carbon\Carbon::parse($request->pickup_time)
         : ($user_data?->pickup_time ? \Carbon\Carbon::parse($user_data->pickup_time) : now());
-        // dd($pickup_time );
+
+
         $vehicle = $this->vehicle->where('id', $request->vehicle_id)->active()
         ->withCount([
             'vehicleIdentities as total_vehicle_count' => function ($query) use ($pickup_time) {
-                $query->where(function ($query) use ($pickup_time) {
-                    $query->whereDoesntHave('vehicle_trip_details')
-                        ->orWhere(function ($query) use ($pickup_time) {
-                            $query->whereNotExists(function ($subQuery) use ($pickup_time) {
-                                $subQuery->from('trip_vehicle_details')
-                                    ->whereColumn('trip_vehicle_details.vehicle_identity_id', 'vehicle_identities.id')
-                                    ->where('estimated_trip_end_time', '>', $pickup_time);
-                            });
-                        });
-                });
+                $query->DynamicVehicleQuantity($pickup_time);
             },
         ])
         ->first();
@@ -218,16 +210,7 @@ class CartController extends Controller
         $vehicle = $this->vehicle->where('id', $cart->vehicle_id)->active()
         ->withCount([
             'vehicleIdentities as total_vehicle_count' => function ($query) use ($pickup_time) {
-                $query->where(function ($query) use ($pickup_time) {
-                    $query->whereDoesntHave('vehicle_trip_details')
-                        ->orWhere(function ($query) use ($pickup_time) {
-                            $query->whereNotExists(function ($subQuery) use ($pickup_time) {
-                                $subQuery->from('trip_vehicle_details')
-                                    ->whereColumn('trip_vehicle_details.vehicle_identity_id', 'vehicle_identities.id')
-                                    ->where('estimated_trip_end_time', '>', $pickup_time);
-                            });
-                        });
-                });
+                $query->DynamicVehicleQuantity($pickup_time);
             },
         ])
         ->first();
@@ -473,7 +456,12 @@ class CartController extends Controller
         };
 
         return [
-            'carts' => $carts,
+            'carts' =>  $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))
+            ->with(['vehicle' => function($query) {
+                $query->withCount('vehicleIdentities as total_vehicle_count');
+            }, 'provider:id,name,address,tax', 'provider.discount'])
+            ->get(),
+
             'user_data' => $this->setUserData($request, $user_id, $is_guest, $total_cart_price)
         ];
     }

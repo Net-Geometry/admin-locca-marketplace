@@ -247,16 +247,7 @@ class VehicleController extends Controller
         if ($request?->date) {
             $vehicles = $vehicles->withCount([
                 'vehicleIdentities as total_vehicle_count' => function ($query) use ($request) {
-                    $query->where(function ($query) use ($request) {
-                        $query->whereDoesntHave('vehicle_trip_details')
-                            ->orWhere(function ($query) use ($request) {
-                                $query->whereNotExists(function ($subQuery) use ($request) {
-                                    $subQuery->from('trip_vehicle_details')
-                                        ->whereColumn('trip_vehicle_details.vehicle_identity_id', 'vehicle_identities.id')
-                                        ->where('estimated_trip_end_time', '>', \Carbon\Carbon::parse($request?->date) ?? now());
-                                });
-                            });
-                    });
+                    $query->DynamicVehicleQuantity(\Carbon\Carbon::parse($request?->date) ?? now());
                 },
             ])
                 ->having('total_vehicle_count', '>', 0);

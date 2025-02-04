@@ -98,7 +98,7 @@ class ProviderTripController extends Controller
                 $detail?->vehicle?->total_trip > 0 ? $detail?->vehicle?->decrement('total_trip', $detail->quantity) : '';
             }
             Helpers::increment_order_count($trip->provider);
-        
+
         } elseif ($trip->trip_status != 'pending' && $request->trip_status == 'pending') {
             $trip->vehicle_identity()->delete();
         } else if ($request->trip_status == 'completed' && $trip->payment_status == 'paid' && !$trip->trip_transaction) {
@@ -108,6 +108,14 @@ class ProviderTripController extends Controller
         }
         $trip[$request->trip_status] = now();
         $trip->save();
+
+        if($request->trip_status == 'completed'){
+            TripVehicleDetails::where('trip_id' , $trip->id)->update([
+                'is_completed' => 1
+            ]);
+        }
+
+
         $this->sendTripNotificationCustomer($trip);
         return response()->json(['message' => translate('Trip_successfully_updated')], 200);
     }
