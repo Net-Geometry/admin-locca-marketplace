@@ -369,9 +369,48 @@ class TripController extends Controller
         $discount_on_trip_by = 'vendor';
         foreach ($carts as $cart) {
 
-            if (!$cart->vehicle) {
-                return ['code' => 'details_data', 'message' => translate('messages.Vehicle_not_found'), 'status_code' => 404];
+            $vehicle = $this->vehicle->where('id', $cart->vehicle_id)->active()
+            ->withCount([
+                'vehicleIdentities as total_vehicle_count' => function ($query) use ($schedule_at) {
+                    $query->DynamicVehicleQuantity($schedule_at);
+                },
+            ])->first();
+
+
+            $response = match (true) {
+                !$vehicle => [
+                    'code' => 'details_data',
+                    'message' =>  'Vehicle_not_found',
+                    'status' => 404
+                ],
+                !$cart->vehicle => [
+                    'code' => 'details_data',
+                    'message' =>  'Vehicle_not_found',
+                    'status' => 404
+                ],
+                $cart->vehicle->status != 1 => [
+                    'code' => 'details_data',
+                    'message' =>  'Vehicle_is_unavailable',
+                    'status' => 403
+                ],
+                $vehicle->total_vehicle_count <= 0 => [
+                    'code' => 'details_data',
+                    'message' =>  'This_Vehicle_is_not_available_on_this_pickup_time',
+                    'status' => 403
+                ],
+                $vehicle->total_vehicle_count < $cart->quantity => [
+                    'code' => 'details_data',
+                    'message' =>  'Quantity_not_available',
+                    'status' => 403
+                ],
+
+                default => null
+            };
+
+            if ($response) {
+                return ['code' => $response['code'], 'message' => translate($response['message']), 'status_code' => $response['status']];
             }
+
 
             $discount_data = $this->getDiscount(price: $user_data->rental_type == 'hourly' ? $cart->vehicle->hourly_price *  $user_data->estimated_hours : $cart->vehicle->distance_price *  $user_data->distance, discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
 

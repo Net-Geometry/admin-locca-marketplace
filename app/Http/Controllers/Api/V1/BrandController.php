@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\BusinessSetting;
 use App\Models\Item;
+use App\Models\Brand;
 use App\Models\PriorityList;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
-use App\Models\Brand;
+use App\Models\BusinessSetting;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,21 +21,16 @@ class BrandController extends Controller
             $brand_sort_by_general = PriorityList::where('name', 'brand_sort_by_general')->where('type','general')->first()?->value ?? '';
             $key = explode(' ', $search);
 
-        $zone_id= $request->header('zoneId');
+            $zone_id= $request->header('zoneId');
+            $module_id= $request->header('moduleId');
 
-            $brands =Brand::Active()
-            // ->with(['items.store' => function($query) use($zone_id) {
-            //     $query->whereIn('zone_id', json_decode($zone_id, true));
-            // }])
-            ->withCount(['items' => function($query) use($zone_id) {
-                $query->whereHas('store', function($q) use($zone_id) {
-                    $q->whereIn('zone_id', json_decode($zone_id, true));
+            $brands = Brand::Active()
+            ->withCount(['items' => function($query) use($zone_id, $module_id) {
+                $query->whereHas('item.store', function($q) use($zone_id, $module_id) {
+                    $q->whereIn('zone_id', json_decode($zone_id, true))
+                    ->where('module_id', $module_id);
                 });
             }])
-
-
-
-
             ->when($search, function($query)use($key){
                 $query->where(function ($q) use ($key) {
                     foreach ($key as $value) {

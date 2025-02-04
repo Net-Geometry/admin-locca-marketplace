@@ -455,10 +455,18 @@ class CartController extends Controller
             }
         };
 
+        $pickup_time = $request->pickup_time
+        ? \Carbon\Carbon::parse($request->pickup_time)
+        : ($user_data?->pickup_time ? \Carbon\Carbon::parse($user_data->pickup_time) : now());
+
         return [
             'carts' =>  $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))
-            ->with(['vehicle' => function($query) {
-                $query->withCount('vehicleIdentities as total_vehicle_count');
+            ->with(['vehicle' => function($query) use($pickup_time){
+                $query->withCount([
+                    'vehicleIdentities as total_vehicle_count' => function ($query) use ($pickup_time) {
+                        $query->DynamicVehicleQuantity($pickup_time);
+                    },
+                ]);
             }, 'provider:id,name,address,tax', 'provider.discount'])
             ->get(),
 
