@@ -279,10 +279,8 @@ $(document).on("ready", function () {
     $(".multiple-select2").select2DynamicDisplay();
 });
 
-$(document).ready(function () {
-    // --- tooltip remains open
+function initializeTooltipWithHoverContent() {
     let activeTooltip = null;
-
     $('[data-toggle="tooltip"][data-html="true"]')
         .tooltip({
             html: true,
@@ -290,33 +288,44 @@ $(document).ready(function () {
         })
         .on("mouseenter", function () {
             let _this = this;
-
             if (activeTooltip && activeTooltip !== _this) {
-                $(activeTooltip).tooltip("hide");
+                $(activeTooltip).tooltip("dispose");
             }
-
             activeTooltip = _this;
             $(_this).tooltip("show");
-
-            $(".tooltip")
-                .on("mouseenter", function () {
-                    $(activeTooltip).tooltip("show");
-                })
-                .on("mouseleave", function () {
-                    $(activeTooltip).tooltip("hide");
-                    activeTooltip = null;
-                });
+            let tooltipElement = $(".tooltip");
+            tooltipElement.off("mouseenter mouseleave").on({
+                mouseenter: function () {
+                    $(activeTooltip)
+                        .tooltip("dispose")
+                        .tooltip({
+                            html: true,
+                            trigger: "manual",
+                        })
+                        .tooltip("show");
+                },
+                mouseleave: function () {
+                    setTimeout(function () {
+                        if (!$(".tooltip:hover").length) {
+                            $(activeTooltip).tooltip("dispose");
+                            activeTooltip = null;
+                        }
+                    }, 200);
+                },
+            });
         })
         .on("mouseleave", function () {
             let _this = this;
-
             setTimeout(function () {
                 if (!$(".tooltip:hover").length) {
-                    $(_this).tooltip("hide");
+                    $(_this).tooltip("dispose");
                     if (activeTooltip === _this) {
                         activeTooltip = null;
                     }
                 }
             }, 200);
         });
+}
+$(document).ready(function () {
+    initializeTooltipWithHoverContent();
 });

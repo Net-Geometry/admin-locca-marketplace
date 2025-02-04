@@ -134,7 +134,7 @@
                                                 <i class="tio-clear"></i>
                                             </a>
                                             <input type="file" name="thumbnail" class="upload-file__input single_file_input"
-                                                accept=".jpg, .jpeg, .png" data-max-size="1" required value="{{ $vehicle->thumbnail ?? '' }}">
+                                                accept=".jpg, .jpeg, .png" data-max-size="1" value="{{ $vehicle->thumbnail ?? '' }}">
                                             <label
                                                 class="upload-file-wrapper height-150px max-w-300px aspect-2-1">
                                                 <div class="upload-file-textbox text-center w-100">
