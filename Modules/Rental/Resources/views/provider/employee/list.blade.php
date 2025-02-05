@@ -226,7 +226,7 @@
                             </td>
                             <td>{{date('d-M-y',strtotime($r['created_at']))}}</td>
                             <td>
-                                @if (auth('vendor_employee')->user()->employee_role_id  != $r['id'])
+                                @if (auth('vendor_employee')?->user()?->employee_role_id  != $r['id'])
                                     <div class="btn--container justify-content-center">
                                         <a class="btn action-btn btn--primary btn-outline-primary"
                                             href="{{route('vendor.custom-role.update',$r['id'])}}" title="{{translate('messages.edit_role')}}"><i class="tio-edit"></i>
