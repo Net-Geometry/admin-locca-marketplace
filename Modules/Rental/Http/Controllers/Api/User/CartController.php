@@ -129,6 +129,31 @@ class CartController extends Controller
 
         $store = Store::selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $pickup_time->format('w') . ' and `store_schedule`.`opening_time` < "' . $pickup_time->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $pickup_time->format('H:i:s') . '") > 0), true, false) as open')->where('id', $vehicle->provider_id)->first();
 
+
+        $pickup_location =$request->pickup_location ? $request->pickup_location : $user_data->pickup_location;
+
+        if (data_get($pickup_location,'lat')  && data_get($pickup_location ,'lng') ) {
+            $zones = Zone::whereContains('coordinates', new Point(data_get($pickup_location ,'lat'), data_get($pickup_location ,'lng'), POINT_SRID))->pluck('id')->toArray();
+        }
+
+        $pickup_location_id=json_decode($store->pickup_zone_id, true)??[];
+
+        if(  count($pickup_location_id)==0){
+            return response()->json([
+                'errors' => [
+                    ['code' => 'cart_item', 'message' => translate('messages.Provider_pickup_zone_not_found')]
+                ]
+            ], 403);
+        }
+        if( count($zones?? []) > 0 &&  count($pickup_location_id)>0 &&  empty(array_intersect($pickup_location_id, $zones)) == true){
+            return response()->json([
+                'errors' => [
+                    ['code' => 'cart_item', 'message' => translate('messages.This vehicle is not available for this pickup location. Please choose a different vehicle or location.')]
+                ]
+            ], 403);
+        }
+
+
         if($store->open == false){
             return response()->json([
                 'errors' => [
@@ -155,7 +180,7 @@ class CartController extends Controller
         if($provider_id && $user_data?->rental_type && $user_data?->rental_type !=$request->rental_type ){
             return response()->json([
                 'errors' => [
-                    ['code' => 'cart_item', 'message' => $vehicle->name . ' ' . translate('messages.You_can_not_add_different_rental_type_vehicles')]
+                    ['code' => 'cart_item', 'message' => $vehicle->name.' '.translate('does_not_support').' '.translate($user_data?->rental_type).' ' .translate('messages.You cannot add a vehicle with a different rental type')]
                 ]
             ], 403);
         }
@@ -422,7 +447,7 @@ class CartController extends Controller
         ->get();
 
         $user_data=   $this->setUserData($request, $user_id, $is_guest, 0);
-
+        $zones= [];
         if (data_get($user_data,'pickup_location.lat')  && data_get($user_data ,'pickup_location.lng') ) {
             $zones = Zone::whereContains('coordinates', new Point(data_get($user_data ,'pickup_location.lat'), data_get($user_data ,'pickup_location.lng'), POINT_SRID))->pluck('id')->toArray();
         }

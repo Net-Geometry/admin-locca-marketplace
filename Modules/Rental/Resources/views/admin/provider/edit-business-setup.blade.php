@@ -270,7 +270,7 @@
                 dots: false,
                 items: 3,
                 center: true,
-                // startPosition: 1,
+                startPosition: '{{ $index }}',
 
                 responsive: {
                     0: {

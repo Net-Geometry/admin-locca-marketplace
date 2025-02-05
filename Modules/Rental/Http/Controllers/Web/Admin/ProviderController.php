@@ -534,19 +534,22 @@ class ProviderController extends Controller
      */
     public function editBusinessSetup($id): Factory|\Illuminate\Foundation\Application|View|RedirectResponse|Application
     {
-        if(env('APP_MODE')=='demo' && $id == 2)
-        {
-            Toastr::warning(translate('messages.you_can_not_edit_this_provider_please_add_a_new_provider_to_edit'));
-            return back();
-        }
-
         $admin_commission = $this->helpers->get_business_data('admin_commission');
         $business_name = $this->helpers->get_business_data('business_name');
         $packages = $this->subscriptionPackage->ofStatus(1)->where('module_type','rental')->latest()->get();
         $zones = $this->zone->active(1)->latest()->get();
         $store = $this->store->withoutGlobalScope('translate')->findOrFail($id);
 
-        return view('rental::admin.provider.edit-business-setup', compact('store', 'zones', 'business_name', 'admin_commission', 'packages'));
+
+        try {
+            $index=  $store->store_business_model == 'commission' ? 0 : 1+ array_search($store?->store_sub_update_application?->package_id??1 ,array_column($packages->toArray() ,'id') );
+            $index=  $index > 0 ?  $index :1;
+        } catch (\Throwable $th) {
+            $index= 1;
+        }
+
+
+        return view('rental::admin.provider.edit-business-setup', compact('store', 'zones', 'business_name', 'admin_commission', 'packages','index'));
     }
 
     /**
