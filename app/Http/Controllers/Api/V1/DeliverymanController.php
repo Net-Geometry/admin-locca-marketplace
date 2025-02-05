@@ -262,6 +262,14 @@ class DeliverymanController extends Controller
                 ]
             ], 404);
         }
+        if($dm->active != 1)
+        {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'active_status', 'message' => translate('messages.You_can_not_accept_order_on_offline')]
+                ]
+            ], 404);
+        }
         if($dm->current_orders >= config('dm_maximum_orders'))
         {
             return response()->json([

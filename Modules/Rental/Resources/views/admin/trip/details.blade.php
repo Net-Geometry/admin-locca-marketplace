@@ -198,7 +198,7 @@
                                                 </div>
                                             </div>
                                             @if($detail?->tripVehicleDetails->isEmpty())
-                                                @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']) && $is_deleted != 1)
+                                                @if(!in_array($trip->trip_status, ['ongoing','pending', 'completed', 'canceled']) && $is_deleted != 1)
                                                     <div class="mt-2">
                                                         <button
                                                             class="btn btn--primary btn-outline-primary p-5px rounded-20 d-flex align-items-center gap-1 assign-vehicle-btn"
@@ -226,7 +226,7 @@
                                                 <div class="mt-2 bg--F6F6F6 p-2 radius-15 mb-4 d-inline-block">
                                                     <div class="d-flex justify-content-between gap-3 mb-10px text--title">
                                                         <span>{{translate('Assigned Vehicle')}}</span>
-                                                        @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']))
+                                                        @if(!in_array($trip->trip_status, ['ongoing','pending', 'completed', 'canceled']))
                                                             <button
                                                                 class="btn btn--primary p-5px rounded-circle d-flex align-items-center justify-content-center assign-vehicle-btn"
                                                                 type="button"
@@ -514,9 +514,18 @@
                 </div>
                 <div class="card mt-2">
                     <div class="card-body">
-                        <h5 class="card-title mb-3 d-flex flex-wrap align-items-center">
-                            <span>{{ translate('messages.Customer_Info') }}</span>
-                        </h5>
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title mb-3 d-flex flex-wrap align-items-center">
+                                <span>{{ translate('messages.Customer_Info') }}</span>
+                            </h5>
+
+                            @if ($trip->is_guest == 1)
+                                <small class="badge-pill badge-soft-primary p-2 font-bold">
+                                    {{ translate('Guest_user') }}
+                                </small>
+                            @endif
+                        </div>
+
 
                         @if ($trip->customer)
                             <a class="media align-items-center deco-none customer--information-single" href="{{ route('admin.users.customer.rental.view', $trip->user_id) }}?module=1">
@@ -558,12 +567,7 @@
                                 <div class="media-body">
                                     <span class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">{{ $trip?->user_info['contact_person_name'] }}</span>
 
-                                    <div class="text--title d-flex align-items-center gap-1">
-                                        <span class="font-bold">
-                                            {{ translate('Guest_user') }},
-                                        </span>
 
-                                    </div>
 
                                     <div class="text--title">
                                         {{ $trip?->user_info['contact_person_number'] }}
@@ -1089,65 +1093,59 @@
         $(document).ready(function() {
 
             function providerLocationMap() {
-                const grayStyle = [{
-                    featureType: "all",
-                    stylers: [{
-                        saturation: -100
+                const grayStyle = [
+                    {
+                        featureType: "all",
+                        stylers: [{ saturation: -100 }, { lightness: 20 }]
                     },
-                        {
-                            lightness: 20
-                        },
-                    ],
-                },
                     {
                         featureType: "road",
-                        stylers: [{
-                            visibility: "on"
-                        },
-                            {
-                                lightness: 30
-                            },
-                        ],
+                        stylers: [{ visibility: "on" }, { lightness: 30 }]
                     },
                     {
                         featureType: "landscape",
-                        stylers: [{
-                            lightness: 10
-                        },
-                            {
-                                saturation: -80
-                            },
-                        ],
-                    },
+                        stylers: [{ lightness: 10 }, { saturation: -80 }]
+                    }
                 ];
 
-                const map = new google.maps.Map(
-                    document.getElementById("provider_map_canvas"), {
-                        center: {
-                            lat: {{ $trip?->provider?->latitude }},
-                            lng: {{ $trip?->provider?->longitude }}
-                        },
-                        zoom: 14,
-                        styles: grayStyle,
-                    }
-                );
-
-                const infowindow = new google.maps.InfoWindow();
+                const map = new google.maps.Map(document.getElementById("provider_map_canvas"), {
+                    center: {
+                        lat: {{ $trip?->provider?->latitude ?? 0 }},
+                        lng: {{ $trip?->provider?->longitude ?? 0 }}
+                    },
+                    zoom: 14,
+                    styles: grayStyle
+                });
 
                 const providerLocation = {
-                    lat: {{ $trip?->provider?->latitude }},
-                    lng: {{ $trip?->provider?->longitude }}
+                    lat: {{ $trip?->provider?->latitude ?? 0 }},
+                    lng: {{ $trip?->provider?->longitude ?? 0 }}
                 };
 
                 const providerMarker = new google.maps.Marker({
                     position: providerLocation,
                     map: map,
-                    title: "{{ Str::limit($trip?->provider?->name, 15, '...') }}",
-                    icon: "{{ asset('public/assets/admin/img/icons/pickup.svg') }}",
+                    title: "{{ Str::limit($trip?->provider?->name ?? '', 15, '...') }}",
+                    icon: "{{ asset('public/assets/admin/img/icons/pickup.svg') }}"
+                });
+
+                const infowindow = new google.maps.InfoWindow({
+                    content: `
+                        <div style='float:left'>
+                            <img style='max-height:40px; width:auto;' src="{{ $trip?->provider?->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}">
+                        </div>
+                        <div style='float:right; padding: 10px;'>
+                            <b>{{ Str::limit($trip?->provider?->name ?? '', 15, '...') }}</b><br />
+                            {{ Str::limit($trip?->provider?->address ?? '', 15, '...') }}
+                        </div>
+                    `
                 });
 
                 google.maps.event.addListener(providerMarker, "click", function() {
-                    infowindow.setContent("<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ $trip?->provider?->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}'></div> <div style='float:right; padding: 10px;'><b>{{ Str::limit($trip?->provider?->name, 15, '...') }}</b><br /> {{ Str::limit($trip?->provider?->address, 15, '...') }}</div>");
+                    infowindow.open(map, providerMarker);
+                });
+
+                google.maps.event.addListenerOnce(map, "idle", function() {
                     infowindow.open(map, providerMarker);
                 });
             }
