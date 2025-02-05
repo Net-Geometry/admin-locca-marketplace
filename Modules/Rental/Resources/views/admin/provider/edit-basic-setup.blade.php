@@ -177,7 +177,7 @@
                 <div>
                     <h1 class="page-header-title text-break">
                         <span class="page-header-icon">
-                            <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
+                            <img src="{{ asset('/public/assets/admin/img/rental/add_business_man_plus.png') }}" class="w--22" alt="">
                         </span>
                         <span>{{ $store->name}}
                     </h1></span>
@@ -323,9 +323,13 @@
                                             <div class="__custom-upload-img mr-lg-5">
                                                 @php($logo = \App\Models\BusinessSetting::where('key', 'logo')->first())
                                                 @php($logo = $logo->value ?? '')
-                                                <label class="form-label">
-                                                    {{ translate('logo') }} <span class="text--primary">({{ translate('1:1') }})</span>
+                                                <label class="form-label mb-1">
+                                                    {{ translate('logo') }}
                                                 </label>
+                                                <div class="mb-20">
+                                                    <p class="fs-12 max-width-170px">{{ translate('JPG, JPEG, PNG Less Than 2MB') }} <strong
+                                                            class="font-semibold">({{ translate('Ratio 1:1') }})</strong></p>
+                                                </div>
                                                 <label class="text-center position-relative">
                                                     <img class="img--110 min-height-170px min-width-170px onerror-image image--border" id="logoImageViewer"
                                                          data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
@@ -344,9 +348,16 @@
                                             <div class="__custom-upload-img">
                                                 @php($icon = \App\Models\BusinessSetting::where('key', 'icon')->first())
                                                 @php($icon = $icon->value ?? '')
-                                                <label class="form-label">
-                                                    {{ translate('Cover') }}  <span class="text--primary">({{ translate('3:2') }})</span>
+                                                <label class="form-label mb-1">
+                                                    {{ translate('Cover') }}
                                                 </label>
+                                                <div class="mb-20">
+                                                    <p class="fs-12">
+                                                        {{ translate('JPG, JPEG, PNG Less Than 2MB') }}
+                                                        <br>
+                                                        <strong class="font-semibold">({{ translate('Ratio 2:1') }})</strong>
+                                                    </p>
+                                                </div>
                                                 <label class="text-center position-relative">
                                                     <img class="img--vertical min-height-170px min-width-170px onerror-image image--border" id="coverImageViewer"
                                                          data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"

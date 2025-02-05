@@ -13,7 +13,7 @@
                 <div>
                     <h1 class="page-header-title text-break">
                         <span class="page-header-icon">
-                            <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
+                            <img src="{{ asset('/public/assets/admin/img/rental/provider-details.png') }}" class="w--22" alt="">
                         </span>
                         <span>{{ translate('messages.Provider_Details') }}
                     </h1></span>
@@ -71,7 +71,7 @@
                             </div>
                         </div>
                         <div class="details-single d-flex align-items-center gap-2">
-                            <img src="{{ asset('public/assets/admin/img/icons/wallet.png') }}" width="36"
+                            <img src="{{ asset('/public/assets/admin/img/rental/det-icon.png') }}" width="36"
                                  height="36" class="rounded" alt="">
                             <div>
                                 <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.Approx. Pickup Time') }}
@@ -213,22 +213,11 @@
                                     </ul>
                                 </div>
 
-                                <div class="resturant--info-address">
-                                    <ul class="address-info address-info-2 p-0 text-dark">
-                                        <li class="d-flex align-items-start">
-                                            <span class="label min-w-sm-auto">{{ translate('messages.Email') }}</span>
-                                            <span>: {{ $store->vendor->email }}</span>
-                                        </li>
-                                        <li class="d-flex align-items-start">
-                                            <span class="label min-w-sm-auto">{{ translate('messages.Password') }}</span>
-                                            <span>: {{ translate('*************') }}</span>
-                                        </li>
-                                    </ul>
-                                </div>
+
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-12">
+                    <div class="col-lg-6">
                         <div class="card __bg-FAFAFA border-0 h-100">
                             <div class="card-body">
                                 <h5 class="mb-10px font-bold"> {{ translate('messages.Pickup_Zone') }}
@@ -242,6 +231,28 @@
                                             {{ $zoneName }}
                                         </label>
                                     @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card __bg-FAFAFA border-0 h-100">
+                            <div class="card-body">
+                                <h5 class="mb-10px font-bold"> {{ translate('messages.Login Information') }}
+                                </h5>
+
+
+                                <div class="resturant--info-address">
+                                    <ul class="address-info address-info-2 p-0 text-dark">
+                                        <li class="d-flex align-items-start">
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Email') }}</span>
+                                            <span>: {{ $store->vendor->email }}</span>
+                                        </li>
+                                        <li class="d-flex align-items-start">
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Password') }}</span>
+                                            <span>: {{ translate('*************') }}</span>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>

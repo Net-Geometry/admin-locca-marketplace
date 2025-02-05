@@ -33,7 +33,7 @@
                                     {{ translate('messages.General_Information') }}
                                 </h5>
                                 <p class="fs-12 mb-0">
-                                    {{ translate('messages.Provider Logo & Covers') }}
+                                    {{ translate('messages.Insert the basic information of the vehicle') }}
                                 </p>
                             </div>
                         </div>

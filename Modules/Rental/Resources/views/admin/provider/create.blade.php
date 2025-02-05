@@ -193,9 +193,8 @@
                                                     {{ translate('logo') }}
                                                 </label>
                                                 <div class="mb-20">
-                                                    <p class="fs-12 max-width-170px">JPG, JPEG, PNG Less Than 2MB <strong
-                                                            class="font-semibold">(Ratio
-                                                            1:1)</strong></p>
+                                                    <p class="fs-12 max-width-170px">{{ translate('JPG, JPEG, PNG Less Than 2MB') }} <strong
+                                                            class="font-semibold">({{ translate('Ratio 1:1') }})</strong></p>
                                                 </div>
                                                 <label
                                                     class="position-relative d-inline-block image--border cursor-pointer w-100 h-165 max-w-165">
@@ -235,10 +234,9 @@
                                                 </label>
                                                 <div class="mb-20">
                                                     <p class="fs-12">
-                                                        JPG, JPEG, PNG Less Than 2MB
+                                                        {{ translate('JPG, JPEG, PNG Less Than 2MB') }}
                                                         <br>
-                                                        <strong class="font-semibold">(Ratio
-                                                            2:1)</strong>
+                                                        <strong class="font-semibold">({{ translate('Ratio 2:1') }})</strong>
                                                     </p>
                                                 </div>
                                                 <label

@@ -1,7 +1,7 @@
 <div class="row g-4" id="order_stats">
     <div class="col-lg-3">
         <a class="__card-1 bg-E6F6EE h-100" href="{{ route('admin.rental.trip.list') }}?status=all">
-            <img src="{{ asset('/public/assets/admin/img/report/new/total.png') }}" class="icon"
+            <img src="{{ asset('public/assets/admin/img/rental/1.png') }}"class="icon"
                  alt="report/new">
             <h3 class="title text-success">{{ $totalCount }}</h3>
             <h6 class="subtitle font-regular">{{ translate('messages.total_trip') }}</h6>
@@ -17,7 +17,7 @@
                         </span>
                     <h4 class="title">{{ $pendingCount }}</h4>
                     <span class="subtitle font-regular">{{ translate('messages.pending_trip') }}</span>
-                    <img src="{{ asset('/public/assets/admin/img/dashboard/1.png') }}" alt="img"
+                    <img src="{{ asset('public/assets/admin/img/rental/5.png') }}" alt="img"
                          class="resturant-icon top-50px">
                 </a>
                 <!-- End Card -->
@@ -31,7 +31,7 @@
                     <h4 class="title">{{ $ongoingCount }}</h4>
                     <span class="subtitle font-regular"> {{ translate('messages.Ongoing_Trip') }}
                         </span>
-                    <img src="{{ asset('/public/assets/admin/img/dashboard/4.png') }}" alt="img"
+                    <img src="{{ asset('public/assets/admin/img/rental/2.png') }}" alt="img"
                          class="resturant-icon top-50px">
                 </a>
                 <!-- End Card -->
@@ -45,7 +45,7 @@
                     <h4 class="title text-success">{{ $completedCount }}</h4>
                     <span class="subtitle font-regular"> {{ translate('messages.Completed') }}
                         </span>
-                    <img src="{{ asset('/public/assets/admin/img/dashboard/2.png') }}" alt="img"
+                    <img src="{{ asset('public/assets/admin/img/rental/3.png') }}" alt="img"
                          class="resturant-icon top-50px">
                 </a>
                 <!-- End Card -->
@@ -59,7 +59,7 @@
                     <h4 class="title">{{ $canceledCount }}</h4>
                     <span class="subtitle font-regular"> {{ translate('messages.Canceled_Trip') }}
                         </span>
-                    <img src="{{ asset('/public/assets/admin/img/dashboard/5.png') }}" alt="img"
+                    <img src="{{ asset('public/assets/admin/img/rental/4.png') }}" alt="img"
                          class="resturant-icon top-50px">
                 </a>
                 <!-- End Card -->

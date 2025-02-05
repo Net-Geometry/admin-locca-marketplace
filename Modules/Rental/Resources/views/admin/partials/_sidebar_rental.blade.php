@@ -236,7 +236,7 @@
                                         <span class="text-truncate">{{ translate('messages.create_new') }}</span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ Request::is('admin/rental/provider/vehicle/list') || Request::is('admin/rental/provider/vehicle/edit/*')  ? 'active' : '' }}">
+                                <li class="nav-item {{ Request::is('admin/rental/provider/vehicle/list')  ||Request::is('admin/rental/provider/vehicle/update/*') ||Request::is('admin/rental/provider/vehicle/details/*') || Request::is('admin/rental/provider/vehicle/edit/*')  ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('admin.rental.provider.vehicle.list') }}" title="{{ translate('messages.vehicle_list') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate">{{ translate('messages.list') }}</span>

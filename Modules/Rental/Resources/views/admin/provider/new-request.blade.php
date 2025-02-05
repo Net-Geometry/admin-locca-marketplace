@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.new_joining_requests'))
+@section('title',translate('messages.new_provider_requests'))
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -10,14 +10,17 @@
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
-            <h1 class="page-header-title"><i class="tio-filter-list"></i> {{translate('messages.new_joining_requests')}}</h1>
+            <h1 class="page-header-title">
+                <img class="onerror-image"
+                src="{{ asset('/public/assets/admin/img/rental/provider.png') }}" width="30" alt="img"> &nbsp;
+                {{translate('messages.new_provider_requests')}}</h1>
             <div class="page-header-select-wrapper">
 
                 @if(!isset(auth('admin')->user()->zone_id))
                     <div class="select-item">
                         <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{url()->full()}}" data-filter="zone_id">
                             <option value="" {{!request('zone_id')?'selected':''}}>{{ translate('messages.All_Zones') }}</option>
-                            @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
+                            @foreach(\App\Models\Zone::orderBy('name')->get(['name','id' ]) as $z)
                                 <option
                                     value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
                                     {{$z['name']}}
@@ -33,10 +36,10 @@
                         <!-- Nav -->
                         <ul class="nav nav-tabs mb-3 border-0 nav--tabs">
                             <li class="nav-item">
-                                <a class="nav-link {{request('request_type') == 'pending_provider' ? 'active' : ''}}" href="{{ route('admin.rental.provider.new-requests') }}?request_type=pending_provider"   aria-disabled="true">{{translate('messages.pending_providers')}}</a>
+                                <a class="nav-link {{request('request_type') == 'pending_provider' ? 'active' : ''}}" href="{{ route('admin.rental.provider.new-requests') }}?request_type=pending_provider"   aria-disabled="true">{{translate('messages.Pending_Request')}}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{request('request_type') == 'denied_provider' ? 'active' : ''}}" href="{{ route('admin.rental.provider.new-requests') }}?request_type=denied_provider"  aria-disabled="true">{{translate('messages.denied_providers')}}</a>
+                                <a class="nav-link {{request('request_type') == 'denied_provider' ? 'active' : ''}}" href="{{ route('admin.rental.provider.new-requests') }}?request_type=denied_provider"  aria-disabled="true">{{translate('messages.Rejected_Request')}}</a>
                             </li>
                         </ul>
                     </div>
@@ -54,7 +57,7 @@
                         @csrf
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                   placeholder="{{translate('ex_:_Search_provider_Name')}}" value="{{isset($search_by) ? $search_by : ''}}" aria-label="{{translate('messages.search')}}" required>
+                                   placeholder="{{translate('ex_:_Search_Provider_Name')}}" value="{{isset($search_by) ? $search_by : ''}}" aria-label="{{translate('messages.search')}}" required>
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
                     </form>
