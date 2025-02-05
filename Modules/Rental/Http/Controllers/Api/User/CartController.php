@@ -452,6 +452,13 @@ class CartController extends Controller
             $zones = Zone::whereContains('coordinates', new Point(data_get($user_data ,'pickup_location.lat'), data_get($user_data ,'pickup_location.lng'), POINT_SRID))->pluck('id')->toArray();
         }
 
+        $zone_ids= $request->header('zoneId');
+        $zone_ids=  json_decode($zone_ids, true)?? [];
+
+        if( count($zones) > 0 &&  count($zone_ids)>0 &&  empty(array_intersect($zone_ids, $zones)) == true){
+            $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->delete();
+            info('deleted');
+        }
         $total_cart_price = 0;
         foreach ($carts as  $cart) {
             if($cart->vehicle &&  $cart->vehicle->status == 1){
