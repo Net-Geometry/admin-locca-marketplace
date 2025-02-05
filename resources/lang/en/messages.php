@@ -7373,4 +7373,8 @@ Smartly or Earn. ',
   'destination_location' => 'Destination location',
   'business' => 'Business',
   'The image must be a file of type: jpeg, jpg, png, gif.' => 'The image must be a file of type: jpeg, jpg, png, gif.',
+  'Extra_Service_Charge' => 'Extra Service Charge',
+  'New York State' => 'New York State',
+  'Test2' => 'Test2',
+  'Test3' => 'Test3',
 );

@@ -14141,7 +14141,8 @@ ul.address-info .label {
 }
 
 .custom-group-btn {
-    border: 1px solid rgba(51, 66, 87, 0.2);
+    /* border: 1px solid rgba(51, 66, 87, 0.2); */
+    border: 1px solid #e7eaf3;
     display: flex;
     align-items: center;
     width: 100%;
@@ -14180,6 +14181,10 @@ ul.address-info .label {
     box-shadow: none;
     width: 100%;
     color: var(--title-clr);
+}
+
+.custom-group-btn:not(:has(.floating-label)) .form-control {
+    padding-inline-start: 0.938rem;
 }
 
 .custom-group-btn .form-control:focus,
@@ -15047,7 +15052,7 @@ ul.address-info .label {
     min-width: 150px;
 }
 
-.dropdown-icon  + .select2 {
+.dropdown-icon + .select2 {
     position: relative;
 }
 
@@ -15071,4 +15076,9 @@ ul.address-info .label {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
+}
+
+.select2-container--default .custom-select.select2-selection--multiple,
+.select2-container--default .form-control.select2-selection--multiple {
+    height: 45px;
+}
