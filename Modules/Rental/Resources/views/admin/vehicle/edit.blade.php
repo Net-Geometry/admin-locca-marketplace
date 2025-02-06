@@ -742,7 +742,7 @@
         $(document).ready(function () {
             const MAX_FILE_SIZE_MB = 1; // Maximum file size in MB
             const MAX_FILES = 5;
-            const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+            const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
             const imageContainer = document.getElementById("image_container");
             const imageUploadWrapper = document.getElementById("image_upload_wrapper");
             const inputElement = document.querySelector('.multiple_image_input');
