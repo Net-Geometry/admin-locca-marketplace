@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Vendor;
 
-use DateTime;
 use Carbon\Carbon;
 use App\Models\Tag;
 use App\Models\Item;
@@ -14,12 +13,10 @@ use App\Models\Nutrition;
 use App\Scopes\StoreScope;
 use App\Models\GenericName;
 use App\Models\TempProduct;
-use App\Models\Translation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\FlashSaleItem;
 use App\CentralLogics\Helpers;
-use App\Models\BusinessSetting;
 use App\Models\CommonCondition;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +25,6 @@ use App\Models\PharmacyItemDetails;
 use App\Http\Controllers\Controller;
 use App\Models\EcommerceItemDetails;
 use Brian2694\Toastr\Facades\Toastr;
-use Illuminate\Support\Facades\File;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;

@@ -1962,6 +1962,12 @@ class ItemController extends Controller
                 'temp_product_id' => null
                 ]);
         }
+        if($item->module->module_type == 'ecommerce'){
+            DB::table('ecommerce_item_details')->where('temp_product_id' , $data->id)->update([
+                'item_id' => $item->id,
+                'temp_product_id' => null
+                ]);
+        }
 
         $item?->translations()?->delete();
         Translation::where('translationable_type' , 'App\Models\TempProduct')->where('translationable_id' , $data->id)->update([

@@ -12,6 +12,7 @@ use App\Models\BusinessSetting;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use App\Models\StoreNotificationSetting;
+use App\Models\Zone;
 use Illuminate\Support\Facades\Validator;
 
 class BusinessSettingsController extends Controller
@@ -21,8 +22,15 @@ class BusinessSettingsController extends Controller
 
     public function store_index()
     {
+
+
         $store = Helpers::get_store_data();
         $store = Store::withoutGlobalScope('translate')->findOrFail($store->id);
+
+        if($store->module_type == 'rental' ){
+            $zones=Zone::active()->get(['id','name']);
+            return view('rental::provider.settings.settings', compact('store','zones'));
+        }
         return view('vendor-views.business-settings.restaurant-index', compact('store'));
     }
 
@@ -43,6 +51,11 @@ class BusinessSettingsController extends Controller
                 return back();
         }
 
+        if($store->module_type == 'rental' && addon_published_status('Rental')){
+            $store->pickup_zone_id =json_encode($request->pickup_zones ?? []);
+            $store->schedule_order = $request->schedule_order ?? 0;
+        }
+
         $store->minimum_order = $request->minimum_order??0;
         $store->gst = json_encode(['status'=>$request->gst_status, 'code'=>$request->gst]);
         // $store->delivery_charge = $store->self_delivery_system?$request->delivery_charge??0: $store->delivery_charge;
@@ -60,7 +73,7 @@ class BusinessSettingsController extends Controller
         $conf->extra_packaging_status = $request->extra_packaging_status ?? 0;
         $conf->minimum_stock_for_warning = $request->minimum_stock_for_warning ?? 0;
         $conf->save();
-        if($store->module->module_type == 'rental' && addon_published_status('Rental')){
+        if($store->module_type == 'rental' && addon_published_status('Rental')){
             Toastr::success(translate('messages.provider settings updated!'));
         }else{
             Toastr::success(translate('messages.store_settings_updated'));
@@ -204,7 +217,7 @@ class BusinessSettingsController extends Controller
     public function active_status(Request $request)
     {
         $store = Helpers::get_store_data();
-        $store->active = $store->active?0:1;
+        $store->active = !$store->active;
         $store->save();
         return response()->json(['message' => $store->active?($store->module->module_type == 'rental' ? translate('provider') : translate('store')).' '.translate('messages.opened'):($store->module->module_type == 'rental' ? translate('provider') : translate('store')).' '.translate('messages.temporarily_closed')], 200);
     }

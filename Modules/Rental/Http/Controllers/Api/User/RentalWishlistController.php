@@ -79,6 +79,7 @@ class RentalWishlistController extends Controller
         $limit = $request['limit'] ?? 25;
         $offset = $request['offset'] ?? 1;
         $zone_id= $request->header('zoneId');
+        $zone_id=json_decode($zone_id, true);
         $longitude= $request->header('longitude');
         $latitude= $request->header('latitude');
 
@@ -90,7 +91,13 @@ class RentalWishlistController extends Controller
                     });
                 })->whereHas('module',function($query){
                     $query->where('status',1);
-                })->whereIn('zone_id', json_decode($zone_id, true));
+                })->where(function ($query) use ($zone_id) {
+                    $query->whereJsonContains('pickup_zone_id', (string) $zone_id[0]);
+                    for ($i = 1; $i < count($zone_id); $i++) {
+                        $query->orWhereJsonContains('pickup_zone_id', (string) $zone_id[$i]);
+                    }
+                    return $query;
+                });
             });
         }, 'provider'=>function($q)use($zone_id,$longitude,$latitude){
             return $q->when(config('module.current_module_data'), function($query){
@@ -99,7 +106,15 @@ class RentalWishlistController extends Controller
                 })->module(config('module.current_module_data')['id']);
             })->withOpen($longitude??0,$latitude??0)->active()->whereHas('module',function($query){
                 $query->where('status',1);
-            })->whereIn('zone_id', json_decode($zone_id, true));
+            })->where(function ($query) use ($zone_id) {
+                $query->whereJsonContains('pickup_zone_id', (string) $zone_id[0]);
+                for ($i = 1; $i < count($zone_id); $i++) {
+                    $query->orWhereJsonContains('pickup_zone_id', (string) $zone_id[$i]);
+                }
+                return $query;
+            });
+
+            
         }])
         ->paginate($limit, ['*'], 'page', $offset);
 

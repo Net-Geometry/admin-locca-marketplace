@@ -197,12 +197,12 @@ class CartController extends Controller
             ],
             $request->rental_type ==  'hourly' && $vehicle->trip_hourly != 1 => [
                 'code' => 'cart_item',
-                'message' =>  $vehicle->name . ' ' . 'Does_Not_Support_Hourly_Trips',
+                'message' =>  $vehicle->name . ' ' . 'Does_not_Hourly_rental type.You cannot add a vehicle with a different rental type',
                 'status' => 403
             ],
             $request->rental_type ==  'distance_wise' && $vehicle->trip_distance != 1 => [
                 'code' => 'cart_item',
-                'message' =>  $vehicle->name . ' ' . 'Does_Not_Support_Distance_Wise_Trips',
+                'message' =>  $vehicle->name . ' ' . 'Does_not_Distance-wise rental type.You cannot add a vehicle with a different rental type',
                 'status' => 403
             ],
             $provider_id && $user_data?->rental_type && $user_data?->rental_type != $request->rental_type => [
