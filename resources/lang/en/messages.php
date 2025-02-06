@@ -7382,4 +7382,8 @@ Smartly or Earn. ',
   'Login Information' => 'Login Information',
   'Title (Default)' => 'Title (Default)',
   'Redirection URL / Link' => 'Redirection URL / Link',
+  'Extra_Service_Charge' => 'Extra Service Charge',
+  'New York State' => 'New York State',
+  'Test2' => 'Test2',
+  'Test3' => 'Test3',
 );

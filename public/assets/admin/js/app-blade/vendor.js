@@ -279,6 +279,21 @@ $(document).on("ready", function () {
     $(".multiple-select2").select2DynamicDisplay();
 });
 
+$(document).ready(function () {
+    // --- select2 dropdown icon add
+    $("select.js-select2-custom, select.multiple-select2")
+        .on("select2:open", function () {
+            setTimeout(() => {
+                $(this)
+                    .next(".select2")
+                    .find(".select2-selection--multiple")
+                    .addClass("custom-select");
+            }, 10);
+        })
+        .trigger("select2:open")
+        .select2("close");
+});
+
 function initializeTooltipWithHoverContent() {
     let activeTooltip = null;
     $('[data-toggle="tooltip"][data-html="true"]')
