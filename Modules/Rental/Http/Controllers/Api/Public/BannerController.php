@@ -45,32 +45,38 @@ class BannerController extends Controller
         $zone_id = $request->header('zoneId');
         $moduleData = config('module.current_module_data');
         $moduleId = isset($moduleData['id']) ? $moduleData['id'] : 'default';
-        $cacheKey = 'store_banners_' . md5(implode('_', [
+        $cacheKey = 'banners_' . md5(implode('_', [
             $zone_id,
             $moduleId,
             $store_id
         ]));
-        $banners = Cache::remember($cacheKey, now()->addMinutes(20), function () use ($zone_id, $store_id) {
-            $banners = Banner::active()->wherehas('module', function ($query) {
-                $query->where('module_type', 'rental')->active();
-            });
-
-            if (config('module.current_module_data')) {
-                $banners = $banners->whereHas('zone.modules', function ($query) {
-                    $query->where('modules.id', config('module.current_module_data')['id']);
+        $banners = Cache::rememberForever($cacheKey, function () use ($zone_id,$store_id) {
+            return  Banner::active()->Where('data',$store_id)->wherehas('module', function ($query) {
+                $query->where('module_type', 'rental');
+            })
+               ->whereIn('zone_id', json_decode($zone_id, true))
+                ->whereHas('module', function ($query) {
+                    $query->active();
                 })
-                    ->module(config('module.current_module_data')['id'])
-                    ->when(!config('module.current_module_data')['all_zone_service'], function ($query) use ($zone_id) {
-                        $query->whereIn('zone_id', json_decode($zone_id, true));
-                    });
-            }
-
-            $banners = $banners->whereIn('zone_id', json_decode($zone_id, true))
-                ->where('data', $store_id)
-                ->where('created_by', 'admin')
+                ->orderBy('featured','desc')
+                ->where('created_by', 'store')
                 ->get();
-            return $banners;
         });
+
+
+        $data = [];
+        foreach ($banners as $banner) {
+            $data[] = [
+                'id' => $banner->id,
+                'title' => $banner->title,
+                'type' =>'default',
+                'image' => $banner->image,
+                'link' => $banner->default_link,
+                'provider_id' => null,
+                'image_full_url' => $banner->image_full_url
+            ];
+    }
+    return $data;
 
         return response()->json($banners, 200);
     }
@@ -96,6 +102,12 @@ class BannerController extends Controller
                 ->get();
         });
 
+        return $this->fromatBannerData($banners);
+    }
+
+
+
+    private function fromatBannerData($banners){
         $data = [];
         foreach ($banners as $banner) {
             if ($banner->type == 'store_wise') {

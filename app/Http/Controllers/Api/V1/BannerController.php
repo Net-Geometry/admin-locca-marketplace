@@ -67,7 +67,7 @@ class BannerController extends Controller
         $zone_id= $request->header('zoneId');
         $moduleData = config('module.current_module_data');
         $moduleId = isset($moduleData['id']) ? $moduleData['id'] : 'default';
-        $cacheKey = 'store_banners_' . md5(implode('_', [
+        $cacheKey = 'banners_' . md5(implode('_', [
                 $zone_id,
                 $moduleId,
                 $store_id
