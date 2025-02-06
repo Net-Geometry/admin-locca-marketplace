@@ -3,7 +3,6 @@
 namespace Modules\Rental\Http\Controllers\Web\Provider\Promotions;
 
 use Exception;
-use App\Models\Store;
 use App\Models\Banner;
 use Illuminate\Http\Request;
 use App\Traits\FileManagerTrait;
@@ -15,10 +14,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\RedirectResponse;
 use App\CentralLogics\Helpers;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Support\Facades\Config;
 use Modules\Rental\Exports\BannerExport;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class BannerController extends Controller
@@ -59,6 +56,7 @@ class BannerController extends Controller
         try {
             DB::beginTransaction();
             $banner = $this->createBanner($request);
+            Helpers::add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Banner', data_id: $banner->id, data_value: $banner->title);
             DB::commit();
         } catch (Exception) {
             DB::rollBack();
@@ -92,6 +90,7 @@ class BannerController extends Controller
         $this->validateRequest($request, false, $banner->id);
         try {
             $this->updateBanner($request, $banner);
+            Helpers::add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Banner', data_id: $banner->id, data_value: $banner->title);
             Toastr::success(translate('messages.banner_updated_successfully'));
             return to_route('vendor.rental_banner.list');
 
@@ -183,16 +182,12 @@ class BannerController extends Controller
     private function createBanner(Request $request): Banner
     {
         $store = $this->helpers->get_store_data();
-        $storeId = $store->id;
-        $zoneId = $store->zone_id ?? 0;
-        $moduleId = $store->module_id ?? null;
-
         $banner = $this->banner;
-        $banner->title = $request->title;
-        $banner->zone_id = $zoneId;
-        $banner->data = $storeId;
+        $banner->title = $request->title[array_search('default', $request->lang)];
+        $banner->zone_id = $store->zone_id ?? 0;
+        $banner->data = $store->id;
         $banner->image = $this->upload('banner/', 'png', $request->file('image'));
-        $banner->module_id = $moduleId;
+        $banner->module_id = $store->module_id ?? null;
         $banner->type = 'store_wise';
         $banner->default_link = $request->default_link;
         $banner->created_by = 'store';
@@ -203,23 +198,16 @@ class BannerController extends Controller
 
     private function updateBanner(Request $request, Banner $banner): void
     {
-        $store = $this->helpers->get_store_data() ?? 0;
-        $storeId = $store->id ?? 0;
-        $zoneId = $store->zone_id ?? 0;
-        $moduleId = $store->module_id ?? null;
-
         if ($request->hasFile('image')) {
             $banner->image = $this->updateAndUpload('banner/', $banner->image ,'png', $request->file('image'));
         }
-
-        $banner->title = $request->title;
+        $banner->title = $request->title[array_search('default', $request->lang)];
         $banner->default_link = $request->default_link;
         $banner->save();
     }
 
     private function getListData($request)
     {
-        $providerId = $this->helpers->get_store_id();
         return $this->banner
             ->when($request->filled('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request->input('search'));
@@ -228,7 +216,7 @@ class BannerController extends Controller
                         $subQuery->where('title', 'LIKE', '%' . $key . '%');
                     }
                 });
-            })->where('data', $providerId)
+            })->where('data', $this->helpers->get_store_id())
             ->where('created_by', 'store')
             ->latest();
     }

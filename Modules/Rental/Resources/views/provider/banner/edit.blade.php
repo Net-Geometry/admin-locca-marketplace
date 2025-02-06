@@ -1,6 +1,7 @@
 @extends('layouts.vendor.app')
 
-@section('title', translate('messages.banner'))
+@push('css_or_js')
+@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -27,23 +28,73 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form action="" method="post" enctype="multipart/form-data">
+                        <form action="{{route('vendor.rental_banner.update',[$banner->id])}}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="row g-3">
                                 <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="input-label font-semibold" for="">Title
-                                            (Default)
-                                        </label>
-                                        <input type="text" name="title" id="" class="form-control"
-                                               value="{{ $banner->title }}" required>
+                                    <div class="__bg-FAFAFA p-4 radius-10 mb-4">
+                                        @if ($language)
+                                            <ul class="nav nav-tabs mb-3 border-0">
+                                                <li class="nav-item">
+                                                    <a class="nav-link lang_link active" href="#"
+                                                        id="default-link">{{ translate('messages.default') }}</a>
+                                                </li>
+                                                @foreach ($language as $lang)
+                                                    <li class="nav-item">
+                                                        <a class="nav-link lang_link" href="#"
+                                                            id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                            <div class="lang_form" id="default-form">
+                                                <div class="form-group mb-0">
+                                                    <label class="input-label"
+                                                        for="default_title">{{ translate('messages.title') }}
+                                                        ({{ translate('Default') }})
+                                                    </label>
+                                                    <input type="text" name="title[]" id="default_title"
+                                                        class="form-control" value="{{$banner?->getRawOriginal('title')}}"
+                                                        placeholder="{{ translate('messages.new_banner') }}">
+                                                </div>
+                                                <input type="hidden" name="lang[]" value="default">
+                                            </div>
+                                            @foreach ($language as $lang)
+
+                                            <?php
+                                            if(count($banner['translations'])){
+                                                $translate = [];
+                                                foreach($banner['translations'] as $t)
+                                                {
+                                                    if($t->locale == $lang && $t->key=="title"){
+                                                        $translate[$lang]['title'] = $t->value;
+                                                    }
+                                                }
+                                            }
+                                        ?>
+
+                                                <div class="d-none lang_form" id="{{ $lang }}-form">
+                                                    <div class="form-group mb-0">
+                                                        <label class="input-label"
+                                                            for="{{ $lang }}_title">{{ translate('messages.title') }}
+                                                            ({{ strtoupper($lang) }})
+                                                        </label>
+                                                        <input type="text" name="title[]" id="{{ $lang }}_title"
+                                                            class="form-control" value="{{$translate[$lang]['title']??''}}"
+                                                            placeholder="{{ translate('messages.new_banner') }}">
+                                                    </div>
+                                                    <input type="hidden" name="lang[]" value="{{ $lang }}">
+                                                </div>
+                                            @endforeach
+                                        @endif
+
                                     </div>
-                                    <div class="form-group">
-                                        <label class="input-label font-semibold" for="">
-                                            Redirection URL / Link
-                                        </label>
-                                        <input type="text" name="default_link" id="" class="form-control"
-                                               value="{{ $banner->default_link }}">
+
+
+                                    <div class="form-group mb-0" id="default">
+                                        <label class="input-label"
+                                            for="exampleFormControlInput1">{{ translate('messages.default_link') }}({{ translate('messages.optional') }})</label>
+                                        <input type="url" name="default_link" class="form-control" value="{{ $banner->default_link }}"
+                                            placeholder="{{ translate('messages.default_link') }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -51,33 +102,33 @@
                                         <div class="form-group">
                                             <label
                                                 class="fs-16 text-title font-semibold  mb-0">{{ translate('messages.Banner_Image') }}</label>
-                                            <p class="mb-20">JPG, JPEG, PNG Less Than 1MB <span
-                                                    class="font-weight-bold">(Ratio
-                                                    3:1)</span>
+                                            <p class="mb-20">{{ translate('JPG, JPEG, PNG Less Than 2MB') }} <span
+                                                    class="font-weight-bold">({{ translate('Ratio 3:1') }})</span>
                                             </p>
-
-                                            <div class="upload-file">
-                                                <input type="file" name="image" class="upload-file__input"
-                                                       accept=".webp, .jpg, .jpeg, .png">
-                                                <label class="upload-file-wrapper three-one">
+                                            <div class="upload-file image-general">
+                                                <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
+                                                    <i class="tio-clear"></i>
+                                                </a>
+                                                <input type="file" name="image" class="upload-file__input single_file_input" value="{{ $banner['image_full_url'] }}" accept=".webp, .jpg, .jpeg, .png" title="" />
+                                                <label class="upload-file-wrapper fullwidth">
                                                     <div class="upload-file-textbox text-center">
-                                                        <img width="34" height="34"
-                                                             src="{{ asset('public/assets/admin/img/document-upload.svg') }}"
-                                                             alt="">
-                                                        <h6 class="mt-2 font-semibold  text-center">
+                                                        <img width="34" height="34" src="{{ asset('public/assets/admin/img/document-upload.svg') }}" alt="">
+                                                        <h6 class="mt-2 font-semibold text-center">
                                                             <span>{{ translate('Click to upload') }}</span>
-                                                            <br class="d-block d-sm-none">
+                                                            <br>
                                                             {{ translate('or drag and drop') }}
                                                         </h6>
                                                     </div>
-                                                    <img class="upload-file-img" loading="lazy" style="" src="{{ $banner['image_full_url'] }}"
-                                                         alt="">
+                                                    <img class="upload-file-img" loading="lazy" style="display: none;" src="{{ $banner['image_full_url'] }}" alt="">
                                                 </label>
                                             </div>
+
                                         </div>
                                         <div class="btn--container justify-content-end">
-                                            <button type="reset" id="reset_btn" class="btn btn--reset">Reset</button>
-                                            <button type="submit" class="btn btn--primary">Submit</button>
+                                            <button type="reset" id="reset_btn"
+                                                class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                                            <button type="submit"
+                                                class="btn btn--primary">{{ translate('messages.submit') }}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -96,22 +147,57 @@
     <script>
         "use strict";
 
-        $(document).ready(function() {
-            $('.upload-file__input').on('change', function(event) {
+        $(document).ready(function () {
+            $('.single_file_input').on('change', function (event) {
                 var file = event.target.files[0];
                 var $card = $(event.target).closest('.upload-file');
                 var $textbox = $card.find('.upload-file-textbox');
                 var $imgElement = $card.find('.upload-file-img');
+                var $removeBtn = $card.find('.remove-btn');
 
                 if (file) {
                     var reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         $textbox.hide();
                         $imgElement.attr('src', e.target.result).show();
+                        $removeBtn.css('opacity', 1);
                     };
                     reader.readAsDataURL(file);
                 }
             });
+
+            $('.upload-file').each(function () {
+                var $card = $(this);
+                var $textbox = $card.find('.upload-file-textbox');
+                var $imgElement = $card.find('.upload-file-img');
+                var $removeBtn = $card.find('.remove-btn');
+                if ($imgElement.attr('src') && $imgElement.attr('src') !== window.location.href) {
+                    $textbox.hide();
+                    $imgElement.show();
+                }
+            });
+
+           $('.remove-btn').click(function () {
+                var $card = $(this).closest('.upload-file');
+                $card.find('.single_file_input').val('');
+                $card.find('.upload-file-img').attr('src', '{{ $banner['image_full_url'] }}');
+                $(this).css('opacity', 0);
+            });
+
+            $('#reset_btn').click(function () {
+                var $cards = $('.upload-file');
+                $cards.each(function () {
+                    $(this).find('.single_file_input').val('');
+                    $(this).find('.upload-file-img').attr('src', '{{ $banner['image_full_url'] }}');
+                    $(this).find('.remove-btn').css('opacity', 0);
+                });
+            });
         });
+
+
+
+
+
+
     </script>
 @endpush

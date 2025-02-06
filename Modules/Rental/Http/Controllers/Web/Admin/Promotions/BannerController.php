@@ -231,6 +231,7 @@ class BannerController extends Controller
                     $query->orWhere('title', 'LIKE', '%' . $key . '%');
                 }
             })->where('module_id', Config::get('module.current_module_id'))
+            ->where('created_by', 'admin')
             ->latest();
         return $banners;
     }

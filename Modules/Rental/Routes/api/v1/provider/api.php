@@ -115,6 +115,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
         });
         Route::group(['prefix' => 'banners'], function () {
             Route::get('/', [Banner::class, 'list']);
+            Route::get('/{store_id}', [Banner::class, 'list']);
         });
         Route::group(['prefix' => 'vehicle'], function () {
             Route::get('top-rated/', [Vehicle::class, 'topRatedVehicleList']);

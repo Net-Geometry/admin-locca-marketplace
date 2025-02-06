@@ -7380,4 +7380,6 @@ Smartly or Earn. ',
   'Pending_Requests' => 'Pending Requests',
   'Rejected_Requests' => 'Rejected Requests',
   'Login Information' => 'Login Information',
+  'Title (Default)' => 'Title (Default)',
+  'Redirection URL / Link' => 'Redirection URL / Link',
 );

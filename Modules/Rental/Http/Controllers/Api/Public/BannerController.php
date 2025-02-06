@@ -82,7 +82,7 @@ class BannerController extends Controller
         $moduleId = isset($moduleData['id']) ? $moduleData['id'] : 'default';
         $cacheKey = 'banners_' . md5($zone_id . '_' . ($featured ? 'featured' : 'non_featured') . '_' . $moduleId);
 
-        $banners = Cache::remember($cacheKey, now()->addMinutes(20), function () use ($zone_id, $featured) {
+        $banners = Cache::rememberForever($cacheKey, function () use ($zone_id, $featured) {
             return  Banner::active()->wherehas('module', function ($query) {
                 $query->where('module_type', 'rental');
             })
@@ -113,8 +113,7 @@ class BannerController extends Controller
                         'type' => $banner->type,
                         'image' => $banner->image,
                         'link' => null,
-                        'store' => $store ? Helpers::store_data_formatting($store, false) : null,
-                        'item' => null,
+                        'provider_id' => $store ? Helpers::store_data_formatting($store, false)?->id : null,
                         'image_full_url' => $banner->image_full_url
                     ];
                 }
@@ -126,8 +125,7 @@ class BannerController extends Controller
                     'type' => $banner->type,
                     'image' => $banner->image,
                     'link' => $banner->default_link,
-                    'store' => null,
-                    'item' => null,
+                    'provider_id' => null,
                     'image_full_url' => $banner->image_full_url
                 ];
             }
@@ -138,12 +136,11 @@ class BannerController extends Controller
                     'type' => $banner->type,
                     'image' => $banner->image,
                     'link' => null,
-                    'store' => null,
-                    'item' => null,
+                    'provider_id' => null,
                     'image_full_url' => $banner->image_full_url
                 ];
             }
         }
-        return $banners;
+        return $data;
     }
 }

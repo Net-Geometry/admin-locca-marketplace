@@ -76,7 +76,7 @@ Route::group([ 'middleware' => ['vendor', 'provider-rental-module']], function (
         Route::get('/', [BannerController::class,'list'])->name('list');
         Route::post('/', [BannerController::class,'store']);
         Route::get('edit/{banner}', [BannerController::class,'edit'])->name('edit');
-        Route::post('edit/{banner}', [BannerController::class,'update']);
+        Route::post('edit/{banner}', [BannerController::class,'update'])->name('update');
         Route::delete('delete/{banner}', [BannerController::class,'destroy'])->name('delete');
         Route::get('status/{banner}/{status}', [BannerController::class,'status'])->name('status');
         Route::get('featured/{banner}/{status}', [BannerController::class,'updateFeatured'])->name('featured');
