@@ -22,9 +22,8 @@
                         </p>
                     </div>
                 </div>
-
-                <div class="alert bg--10" role="alert">
-                    This is a primary alert—check it out!
+                <div class="alert bg--10 font-bold fs-14" role="alert">
+                    {{ translate('This_section_only_contains_Order_Data') }}
                 </div>
             </div>
         </div>

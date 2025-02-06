@@ -7386,4 +7386,6 @@ Smartly or Earn. ',
   'New York State' => 'New York State',
   'Test2' => 'Test2',
   'Test3' => 'Test3',
+  'This_section_only_contains_Order_Data' => 'This section only contains Order Data',
+  'The selected brand id is invalid.' => 'The selected brand id is invalid.',
 );

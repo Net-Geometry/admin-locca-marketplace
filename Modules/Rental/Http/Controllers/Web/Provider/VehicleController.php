@@ -156,8 +156,8 @@ class VehicleController extends Controller
 
         $request->validate([
             'name' => 'required|array',
-            'brand_id' => 'required|integer|exists:brands,id',
-            'category_id' => 'required|integer|exists:categories,id',
+            'brand_id' => 'required|integer|exists:vehicle_brands,id',
+            'category_id' => 'required|integer|exists:vehicle_categories,id',
             'model' => 'required|string|max:255',
             'type' => 'required|string|max:255',
             'engine_capacity' => 'nullable|numeric|min:0',
@@ -288,8 +288,8 @@ class VehicleController extends Controller
     {
         $request->validate([
             'name' => 'required|array',
-            'brand_id' => 'required|integer|exists:brands,id',
-            'category_id' => 'required|integer|exists:categories,id',
+            'brand_id' => 'required|integer|exists:vehicle_brands,id',
+            'category_id' => 'required|integer|exists:vehicle_categories,id',
             'model' => 'required|string|max:255',
             'type' => 'required|string|max:255',
             'engine_capacity' => 'nullable|numeric|min:0',
