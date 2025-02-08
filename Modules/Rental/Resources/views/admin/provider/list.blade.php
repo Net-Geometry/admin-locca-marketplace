@@ -10,7 +10,13 @@
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
-            <h1 class="page-header-title"><i class="tio-filter-list"></i> {{translate('messages.Provider')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$stores->total()}}</span></h1>
+            <h1 class="page-header-title">
+                <span class="page-header-icon">
+                    <img src="{{ asset('public/assets/admin/img/rental/provider.png') }}" class="w--22" alt="">
+                </span>
+                <span>
+                    {{translate('messages.Provider')}}
+                </span></h1>
             <div class="page-header-select-wrapper">
             </div>
         </div>
@@ -31,7 +37,7 @@
                 </div>
             </div>
             <div class="col-xl-3 col-sm-6">
-                <div class="resturant-card card--bg-2">
+                <div class="resturant-card card--bg-3">
                     @php($active_stores = \App\Models\Store::whereHas('vendor', function($query){
                         return $query->where('status', 1);
                     })->where(['status'=>1])->where('module_id', Config::get('module.current_module_id'))->count())
@@ -42,7 +48,7 @@
                 </div>
             </div>
             <div class="col-xl-3 col-sm-6">
-                <div class="resturant-card card--bg-3">
+                <div class="resturant-card card--bg-4">
                     @php($inactive_stores = \App\Models\Store::whereHas('vendor', function($query){
                         return $query->where('status', 1);
                     })->where(['status'=>0])->where('module_id', Config::get('module.current_module_id'))->count())
@@ -53,7 +59,7 @@
                 </div>
             </div>
             <div class="col-xl-3 col-sm-6">
-                <div class="resturant-card card--bg-4">
+                <div class="resturant-card card--bg-2">
                     @php($data = \App\Models\Store::whereHas('vendor', function($query){
                         return $query->where('status', 1);
                     })->where('created_at', '>=', now()->subDays(30)->toDateTimeString())->where('module_id', Config::get('module.current_module_id'))->count())
@@ -94,7 +100,7 @@
             <!-- Header -->
             <div class="card-header py-2">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{translate('messages.providers_list')}}</h5>
+                    <h5 class="card-title">{{translate('messages.providers_list')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$stores->total()}}</span></h5>
 
                 @if(!isset(auth('admin')->user()->zone_id))
                 <div class="select-item min--280">
@@ -153,6 +159,9 @@
 
                         </div>
                     </div>
+                    <a href="{{  route('admin.rental.provider.create') }}" type="button" target="_blank" class="btn btn--primary ml-2 location-reload-to-base" rel="noopener noreferrer">{{translate('messages.New_Provider')}}</a>
+
+
                     <!-- End Unfold -->
                 </div>
             </div>
@@ -217,13 +226,13 @@
                                 {{$store->vehicles->count()}}
                             </td>
                             <td>
-                                {{ $store->trips->count() }}
                                 <span class="form-label-secondary cursor-pointer" data-toggle="tooltip" data-placement="bottom" data-html="true"
+
                                       data-original-title="<div class='text-left p-3'><div>{{translate('Complete')}} : {{ $store->trips()->Completed()->count() }}</div>
                                       <div>{{translate('Ongoing')}} : {{ $store->trips()->Ongoing()->count() }}</div>
                                       <div>{{translate('Canceled')}} : {{ $store->trips()->Canceled()->count() }}</div>
                                       <div class='text-danger font-bold'>{{translate('Cancelation Rate')}} : {{ number_format($store->trips()->Canceled()->count() > 0 ? ($store->trips()->Canceled()->count() / $store->trips->count()) * 100 : 0) }}%</div></div>">
-                                        <i class="tio-info"></i>
+                                      {{ $store->trips->count() }} <i class="tio-info"></i>
                                 </span>
                             </td>
 

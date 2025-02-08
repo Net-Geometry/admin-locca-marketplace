@@ -114,8 +114,22 @@
                                 </div>
                                 <div class="text-right mt-3 order-invoice-right-contents text-capitalize">
                                     <h6>
+
+                                        @php
+                                        $statusClasses = [
+                                            'pending' => 'badge--pending-1',
+                                            'completed' => 'badge--accepted',
+                                            'canceled' => 'badge--cancel',
+                                            'ongoing' => 'badge--pending',
+                                            'payment_failed' => 'badge--cancel',
+                                        ];
+
+                                        $badgeClass = $statusClasses[$trip->trip_status] ?? 'badge--accepted';
+                                    @endphp
+
+
                                         <span>{{translate('Trip Status')}}</span> <span>:</span>
-                                        <span class="{{ $trip->trip_status  !== 'canceled' ? 'badge--accepted' :'badge--cancel' }} badge  ml-2 ml-sm-3 text-capitalize">
+                                        <span class="{{ $badgeClass }} badge  ml-2 ml-sm-3 text-capitalize">
                                             {{ translate($trip->trip_status) }}
                                         </span>
                                     </h6>

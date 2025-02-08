@@ -73,8 +73,8 @@
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"
                                    name="search" class="form-control"
-                                   placeholder="{{ translate('Search by provider name, owner info...') }}"
-                                   aria-label="{{ translate('messages.Search by provider name, owner info...') }}">
+                                   placeholder="{{ translate('Search by name, owner info...') }}"
+                                   aria-label="{{ translate('messages.Search by name, owner info...') }}">
                             <button type="submit" class="btn btn--secondary bg--primary"><i
                                     class="tio-search"></i></button>
 

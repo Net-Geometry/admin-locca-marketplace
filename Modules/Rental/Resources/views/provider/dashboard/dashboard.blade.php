@@ -17,9 +17,9 @@
                                 src="{{ asset('/public/assets/admin/img/rental/image_car.png') }}" width="38" alt="img">
                             <div class="w-0 flex-grow pl-2">
                                 <h1 class="page-header-title text-title mb-0">
-                                    {{ translate('messages.Car_Rental_Module_Dashboard') }}</h1>
+                                    {{ translate('messages.Dashboard') }}</h1>
                                 <p class="page-header-text text-title fs-12 m-0">{{ translate('messages.Monitor_your') }}
-                                    <strong class="font-bold"> {{ translate('messages.car_rental_business') }}</strong>
+                                    <strong class="font-bold"> {{ translate('messages.business') }}</strong>
                                 </p>
                             </div>
                         </div>
@@ -134,7 +134,7 @@
         options = {
             series: [ {
                 name: 'Earning',
-                data: [{{ implode(',', $commission) }}]
+                data: [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $commission)) }}]
             }],
             chart: {
                 height: 350,

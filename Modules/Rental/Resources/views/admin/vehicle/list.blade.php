@@ -13,7 +13,7 @@
                 <div>
                     <h1 class="page-header-title text-break">
                         <span class="page-header-icon">
-                            <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
+                            <img src="{{ asset('public/assets/admin/img/rental/veh.png') }}" class="w--22" alt="">
                         </span>
                         <span>{{ translate('messages.vehicle_list') }}</span>
                     </h1>
@@ -96,8 +96,8 @@
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"
                                    name="search" class="form-control"
-                                   placeholder="{{ translate('Search by provider name, owner info...') }}"
-                                   aria-label="{{ translate('messages.Search by provider name, owner info...') }}">
+                                   placeholder="{{ translate('Search by name, owner info...') }}"
+                                   aria-label="{{ translate('messages.Search by name, owner info...') }}">
                             <button type="submit" class="btn btn--secondary bg--primary"><i
                                     class="tio-search"></i></button>
 

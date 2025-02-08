@@ -306,14 +306,14 @@
                                             data-toggle="tooltip"
                                             title="<div class='d-flex flex-column p-2'>
                                          @foreach ($driverTrip?->trip?->trip_details as $index => $detail)
-<div class='media gap-3 {{ !$loop->last ? 'border-bottom mb-2 pb-2' : '' }}'>
-                                                <img src='{{ $detail->vehicle['thumbnailFullUrl'] }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                            <div class='media gap-3 {{ !$loop->last ? 'border-bottom mb-2 pb-2' : '' }}'>
+                                                <img src='{{ $detail->vehicle?->thumbnailFullUrl }}' class='rounded ratio-1-1' width='40' alt='...'>
                                                 <div class='media-body'>
                                                     <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ $detail->vehicle_details['name'] }}</h5>
                                                     <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: {{ $detail->tripVehicleDetails->count() }}</div>
                                                 </div>
                                             </div>
-@endforeach
+                                        @endforeach
                                     </div>">
                                             {{ $totalVehicle }} {{ translate('messages.vehicles') }}
                                         </div>
@@ -336,9 +336,22 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <label class="badge badge-soft-info border-0">
-                                            {{ translate($driverTrip?->trip?->trip_status) }}
-                                        </label>
+
+                                        @php
+                                        $statusClasses = [
+                                            'pending' => 'badge-soft-info',
+                                            'completed' => 'badge-soft-success',
+                                            'canceled' => 'badge-soft-danger',
+                                            'ongoing' => 'badge-soft-warning',
+                                            'payment_failed' => 'badge-soft-danger',
+                                        ];
+
+                                        $badgeClass = $statusClasses[$driverTrip?->trip?->trip_status] ?? 'badge-soft-info';
+                                    @endphp
+                                    <label class="badge {{ $badgeClass }} border-0">
+                                        {{ translate($driverTrip?->trip?->trip_status) }}
+                                    </label>
+
                                     </div>
                                 </td>
                                 <td>

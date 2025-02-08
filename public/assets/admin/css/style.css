@@ -4101,6 +4101,10 @@ td .amount--input {
     min-width: 80px;
 }
 
+.badge--pending-1 {
+    color: #09c0d8;
+    background: rgba(0, 198, 174, 0.05);
+}
 .badge--accepted {
     color: #00c6ae;
     background: rgba(0, 198, 174, 0.05);

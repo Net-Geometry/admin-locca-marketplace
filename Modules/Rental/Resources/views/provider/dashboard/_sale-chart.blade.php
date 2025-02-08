@@ -4,7 +4,7 @@
     options = {
         series: [ {
             name: 'Commission Earning',
-            data: [{{ implode(",",$commission) }}]
+            data: [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $commission)) }}]
         }],
         chart: {
             height: 350,

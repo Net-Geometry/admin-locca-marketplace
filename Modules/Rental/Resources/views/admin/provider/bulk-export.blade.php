@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.restaurant_bulk_export'))
+@section('title',translate('messages.provider_bulk_export'))
 
 @push('css_or_js')
 
@@ -14,7 +14,7 @@
                     <img src="{{asset('public/assets/admin/img/resturant.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{translate('messages.export_stores')}}
+                    {{translate('messages.export_providers')}}
                 </span>
             </h1>
         </div>

@@ -13,7 +13,7 @@
                 <div>
                     <h1 class="page-header-title text-break">
                         <span class="page-header-icon">
-                            <img src="{{ asset('public/assets/admin/img/provider_vehicle.png') }}" class="w--22" alt="">
+                            <img src="{{ asset('public/assets/admin/img/rental/veh.png') }}" class="w--22" alt="">
                         </span>
                         <span>{{ App\CentralLogics\Helpers::get_store_data()->name }}</span>
                     </h1>

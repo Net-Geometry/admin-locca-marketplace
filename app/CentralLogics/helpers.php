@@ -4486,7 +4486,7 @@ class Helpers
         }else{
             $user_fcm = $trip?->customer?->cm_firebase_token;
         }
-        $value = $trip->payment_status == 'paid' ? translate('your_trip_has_been_marked_as_paid'):translate('your_trip_payment_status_has_been_updated');
+        $value = $trip->payment_status == 'paid' ? translate('Your transaction has been completed'):translate('Your payment has not been received yet');
 
         if (Helpers::getRentalNotificationStatusData('customer','customer_trip_notification','push_notification_status') &&  $value && $user_fcm) {
             $data = [

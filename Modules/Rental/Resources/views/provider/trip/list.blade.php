@@ -260,16 +260,27 @@
                                 <div class="font-semobold">
                                     {{ \App\CentralLogics\Helpers::format_currency($trip->trip_amount) }}
                                 </div>
-                                <div class="opacity-lg font-medium text--success">
+                                <div class="opacity-lg font-medium {{ $trip->payment_status  == 'paid' ? 'text--success' : 'text--danger' }} ">
                                     {{ translate($trip->payment_status) }}
                                 </div>
                             </div>
                         </td>
                         <td>
                             <div class="d-flex justify-content-center">
-                                <label class="badge badge-soft-info border-0">
-                                    {{ translate($trip->trip_status) }}
-                                </label>
+                                @php
+                                $statusClasses = [
+                                    'pending' => 'badge-soft-info',
+                                    'completed' => 'badge-soft-success',
+                                    'canceled' => 'badge-soft-danger',
+                                    'ongoing' => 'badge-soft-warning',
+                                    'payment_failed' => 'badge-soft-danger',
+                                ];
+
+                                $badgeClass = $statusClasses[$trip->trip_status] ?? 'badge-soft-info';
+                            @endphp
+                            <label class="badge {{ $badgeClass }} border-0">
+                                {{ translate($trip->trip_status) }}
+                            </label>
                             </div>
                         </td>
                         <td>

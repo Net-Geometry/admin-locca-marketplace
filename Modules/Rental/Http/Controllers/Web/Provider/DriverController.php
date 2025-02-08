@@ -37,7 +37,7 @@ class DriverController extends Controller
      */
     public function list(Request $request): Renderable
     {
-        $drivers = $this->driver
+        $query = $this->driver
             ->when($request->has('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request['search']);
                 foreach ($keys as $key) {
@@ -45,8 +45,13 @@ class DriverController extends Controller
                 }
             })
             ->where('provider_id', $this->helpers->get_store_id())
-            ->latest()->paginate(config('default_pagination'));
-        return view('rental::provider.driver.list', compact('drivers'));
+            ->latest();
+
+            $totalDrivers = $query->count();
+            $activeDrivers = (clone $query)->ofStatus(1)->count();
+            $inactiveDrivers = (clone $query)->ofStatus(0)->count();
+            $drivers = $query->latest()->paginate(config('default_pagination'));
+        return view('rental::provider.driver.list', compact('drivers','totalDrivers','activeDrivers','inactiveDrivers'));
     }
 
     /**

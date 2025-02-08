@@ -18,9 +18,52 @@
                 </span>
             </h1>
         </div>
+
+        <div class="row g-2 mb-20">
+            <div class="col-sm-6 col-lg-4">
+                <a class="order--card h-100" href="javascript:">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="card-subtitle m-0">
+                            <span>{{ translate('All') }}</span>
+                        </h6>
+                        <span class="card-title text-title">
+                            {{ $totalDrivers ?? 0}}
+                        </span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-sm-6 col-lg-4">
+                <a class="order--card h-100" href="javascript:">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="card-subtitle m-0">
+                            <span>{{ translate('messages.Active') }}</span>
+                        </h6>
+                        <span class="card-title text--success">
+                            {{ $activeDrivers?? 0 }}
+                        </span>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <a class="order--card h-100" href="javascript:">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="card-subtitle m-0">
+                            <span>{{ translate('messages.Inactive') }}</span>
+                        </h6>
+                        <span class="card-title text--info">
+                            {{ $inactiveDrivers ?? 0}}
+                        </span>
+                    </div>
+                </a>
+            </div>
+        </div>
         <!-- End Page Header -->
         <div class="row gx-2 gx-lg-3">
             <div class="col-sm-12 col-lg-12 mb-3 mb-lg-2">
+
+
+
                 <div class="card">
                     <div class="card-header py-2">
                         <div class="search--button-wrapper gap-20px">
@@ -75,6 +118,8 @@
 
                                 </div>
                             </div>
+                            <a class="btn btn--primary font-weight-bold float-right mr-2 mb-0"
+                            href="{{ route('vendor.driver.create', request()->id) }}">{{ translate('messages.new_driver') }}</a>
                             <!-- End Unfold -->
                         </div>
                     </div>
@@ -109,13 +154,13 @@
                                         </div>
                                     </td>
                                     <td>
-                                        123
+                                        {{ $driver->trips()->count() }}
                                     </td>
                                     <td>
-                                        13
+                                        {{ count($driver->completedTrips) }}
                                     </td>
                                     <td>
-                                        110
+                                        {{ count($driver->canceledTrips) }}
                                     </td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$driver->id}}">

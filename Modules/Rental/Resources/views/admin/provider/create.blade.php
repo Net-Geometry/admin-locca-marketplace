@@ -57,31 +57,17 @@
                             <img src="{{ asset('public/assets/admin/img/provider.png') }}" class="w--22" alt="">
                         </span>
                         <span>{{ translate('messages.Create New Provider') }}
-                    </h1></span>
-                    </h1>
+                    </span> </h1>
+
                 </div>
             </div>
         </div>
-        @php
-            $delivery_time_start = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode('-', $store->delivery_time)[0]
-                : 10;
-            $delivery_time_end = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode(' ', explode('-', $store->delivery_time)[1])[0]
-                : 30;
-            $delivery_time_type = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode(' ', explode('-', $store->delivery_time)[1])[1]
-                : 'min';
-        @endphp
-        @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
-        @php($language = $language->value ?? null)
-        @php($defaultLang = 'en')
-        <!-- End Page Header -->
 
+        @php($language = \App\Models\BusinessSetting::where('key', 'language')->first()?->value ?? null)
+        <!-- End Page Header -->
         <form action="#" method="post" enctype="multipart/form-data" id="providerFormSubmit">
             @csrf
 
-            {{-- timeline --}}
             <div id="businessSetup">
                 <div class="custom-timeline d-flex flex-wrap gap-40px text-title mb-2">
                     <h4 class="single"><span class="count">1</span>{{translate('Business Basic Setup')}}</h4>
@@ -371,7 +357,7 @@
                                                     <label class="floating-label"
                                                         for="min">{{ translate('Min') }}:</label>
                                                     <input id="min" type="number" name="minimum_delivery_time"
-                                                        value="{{ $delivery_time_start }}"
+                                                        value=""
                                                         class="form-control h--45px border-0"
                                                         placeholder="{{ translate('messages.Ex :') }} 20"
                                                         pattern="^[0-9]{2}$" required>
@@ -381,7 +367,7 @@
                                                     <label class="floating-label"
                                                         for="max">{{ translate('Max') }}:</label>
                                                     <input id="max" type="number" name="maximum_delivery_time"
-                                                        value="{{ $delivery_time_end }}"
+                                                        value=""
                                                         class="form-control h--45px border-0"
                                                         placeholder="{{ translate('messages.Ex :') }} 30" pattern="[0-9]{2}$"
                                                         required>
@@ -390,16 +376,13 @@
                                                 <div class="item flex-shrink-0">
                                                     <select name="delivery_time_type" id="delivery_time_type"
                                                         class="custom-select border-0">
-                                                        <option value="min"
-                                                            {{ $delivery_time_type == 'min' ? 'selected' : '' }}>
+                                                        <option value="min"  >
                                                             {{ translate('messages.minutes') }}
                                                         </option>
-                                                        <option value="hours"
-                                                            {{ $delivery_time_type == 'hours' ? 'selected' : '' }}>
+                                                        <option value="hours" >
                                                             {{ translate('messages.hours') }}
                                                         </option>
-                                                        <option value="days"
-                                                            {{ $delivery_time_type == 'days' ? 'selected' : '' }}>
+                                                        <option value="days" >
                                                             {{ translate('messages.days') }}
                                                         </option>
                                                     </select>

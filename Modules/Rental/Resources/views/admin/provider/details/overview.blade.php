@@ -36,7 +36,7 @@
                     <div class="card h-100 card--bg-1">
                         <div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
                             <h5 class="cash--subtitle text-white">
-                                {{translate('messages.collected_cash_by_store')}}
+                                {{translate('messages.collected_cash_by_provider')}}
                             </h5>
                             <div class="d-flex align-items-center justify-content-center mt-3">
                                 <div class="cash-icon mr-3">
@@ -48,7 +48,7 @@
                         <div class="card-footer pt-0 bg-transparent border-0">
                             <button class="btn text-white text-capitalize bg--title h--45px w-100" id="collect_cash"
                                     type="button" data-toggle="modal" data-target="#collect-cash"
-                                    title="Collect Cash">{{ translate('messages.collect_cash_from_store') }}
+                                    title="Collect Cash">{{ translate('messages.collect_cash_from_provider') }}
                             </button>
                             {{-- <a class="btn text-white text-capitalize bg--title h--45px w-100" href="{{$store->vendor->status ? route('admin.transactions.account-transaction.index') : '#'}}" title="{{translate('messages.goto_account_transaction')}}">{{translate('messages.collect_cash_from_store')}}</a> --}}
                         </div>
@@ -199,7 +199,7 @@
                             </div>
                         </div>
                         <div class="details-single d-flex align-items-center gap-2">
-                            <img src="{{ asset('public/assets/admin/img/icons/wallet.png') }}" width="36"
+                            <img src="{{ asset('public/assets/admin/img/rental/det-icon.png') }}" width="36"
                                  height="36" class="rounded" alt="">
                             <div>
                                 <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.Approx. Pickup Time') }}
@@ -321,7 +321,7 @@
                                             @endforeach
                                         @endif
                                         <div class="d-flex align-items-start">
-                                            <span class="label min-w150 min-w-sm-auto"></span>
+                                            {{-- <span class="label min-w150 min-w-sm-auto"></span> --}}
                                             <button
                                                 class="btn order--details-btn-sm btn--varify btn-outline-varify btn--sm font-regular d-flex align-items-center __gap-5px"
                                                 data-toggle="modal" data-target="#locationModal"><i
