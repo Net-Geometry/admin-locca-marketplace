@@ -401,7 +401,7 @@ class VehicleController extends Controller
 
         if (!empty($request->file('documents'))) {
             foreach ($request->documents as $doc) {
-                $extension = $img->getClientOriginalExtension();
+                $extension = $doc->getClientOriginalExtension();
                 $file= $this->updateAndUpload('vehicle/', $vehicle->images, $extension, $doc);
                 $docNames[] = ['img' => $file, 'storage' => $this->helpers->getDisk()];
             }

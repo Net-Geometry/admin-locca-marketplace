@@ -1127,7 +1127,7 @@
                         // Fallback to blank image if there's an error
                         thumbnail.src = "{{ asset('public/assets/admin/img/blank2.png') }}";
                     }
-                } else if (["jpg", "jpeg", "png", "gif", "bmp"].includes(fileExtension)) {
+                } else if (["jpg", "jpeg", "png", "gif", "bmp", "webp"].includes(fileExtension)) {
                     // Handle image file types (JPG, PNG, GIF, etc.)
                     thumbnail.src = fileUrl; // Set the image URL as the thumbnail
                 } else {

@@ -7400,4 +7400,5 @@ Smartly or Earn. ',
   'Provider_Meta_Data_&_Image' => 'Provider Meta Data & Image',
   'Provder_Active_Time' => 'Provder Active Time',
   'Set the time when Provder is active to show in app and website' => 'Set the time when Provder is active to show in app and website',
+  'CityLink Taxis' => 'CityLink Taxis',
 );
