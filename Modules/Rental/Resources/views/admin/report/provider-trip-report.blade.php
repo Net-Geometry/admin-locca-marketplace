@@ -171,7 +171,7 @@
                         {{ $trips->count() > 0 ? \App\CentralLogics\Helpers::number_format_short($total_trip_amount / $trips->total()) : 0 }}
                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                     data-placement="right"
-                    data-original-title="{{ translate('Average Value of all type of trips.') }}">
+                    data-original-title="{{ translate('This Average Trip Value is calculated from all completed trips.') }}">
                     <i class="tio-info-outined"></i>
                 </span>
                     </h5>
@@ -281,7 +281,7 @@
         <div class="mt-11px card">
             <div class="card-header border-0 py-2">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{ translate('Total Sales') }}</h5>
+                    <h5 class="card-title">{{ translate('Total Trip') }}</h5>
                     <form class="search-form">
                         <!-- Search -->
                         {{-- @csrf --}}
@@ -337,7 +337,7 @@
                                 <th class="border-top border-bottom text-capitalize">{{ translate('Trip Booking Date') }}</th>
                                 <th class="border-top border-bottom text-capitalize">{{ translate('Trip Schedule Date') }}</th>
                                 <th class="border-top border-bottom text-capitalize">{{ translate('Customer Info') }}</th>
-                                <th class="border-top border-bottom text-capitalize">{{ translate('Total Amount') }}</th>
+                                <th class="border-top border-bottom text-capitalize">{{ translate('Total Trip Amount') }}</th>
                                 <th class="border-top border-bottom text-capitalize text-center">
                                     {{ translate('Discount') }}</th>
                                 <th class="border-top border-bottom text-capitalize text-center">{{ translate('Tax') }}

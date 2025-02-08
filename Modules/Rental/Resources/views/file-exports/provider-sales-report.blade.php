@@ -38,7 +38,7 @@
                 <th></th>
                 <th></th>
                 <th>
-                    {{ translate('gross_sale')  }}- {{ \App\CentralLogics\Helpers::number_format_short($data['trips']->sum('trip_amount')) }}
+                    {{ translate('Total Trip Amount')  }}- {{ \App\CentralLogics\Helpers::number_format_short($data['trips']->sum('trip_amount')) }}
                     <br>
                     {{ translate('total_tax')  }}- {{ \App\CentralLogics\Helpers::number_format_short($data['trips']->sum('tax_amount')) }}
                     <br>
@@ -53,11 +53,11 @@
             </tr>
         <tr>
             <th>{{ translate('sl') }}</th>
-            <th>{{translate('provider_image')}}</th>
-            <th>{{ translate('provider_name') }}</th>
-            <th>{{ translate('QTY_Booked') }}</th>
+            <th>{{translate('vehicle_image')}}</th>
+            <th>{{ translate('Vehicle Info') }}</th>
+            <th>{{ translate('Total Trip') }}</th>
             <th>
-                {{ translate('Gross_Sale') }}</th>
+                {{ translate('Total Trip Amount') }}</th>
             <th>
                 {{ translate('Discount_Given') }}</th>
         </thead>
@@ -68,7 +68,7 @@
             <td></td>
             <td>{{  $item['name']  }}</td>
             <td>
-                {{ $item->trip_details_sum_quantity ?? 0 }}
+                {{ $item->trips_count ?? 0 }}
             </td>
             <td>
                 {{\App\CentralLogics\Helpers::format_currency($item->trips_sum_price) }}

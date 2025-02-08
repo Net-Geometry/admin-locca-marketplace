@@ -109,7 +109,7 @@
                                 </h3>
                                 <h6 class="subtitle">{{ translate('Completed Transaction') }}</h6>
                                 <div class="info-icon" data-toggle="tooltip" data-placement="top"
-                                    data-original-title="{{ translate('When the order is successfully delivered full order amount goes to this section.') }}">
+                                    data-original-title="{{ translate('After a successful trip completion, the full Trip amount goes to this section.') }}">
                                     <img src="{{ asset('/public/assets/admin/img/report/new/info1.png') }}"
                                         alt="report/new">
                                 </div>
@@ -124,7 +124,7 @@
                                 </h3>
                                 <h6 class="subtitle">{{ translate('Admin Earning') }}</h6>
                                 <div class="info-icon" data-toggle="tooltip" data-placement="top"
-                                    data-original-title="{{ translate('If the order is successfully refunded, the full order amount goes to this section without the delivery fee and delivery tips.') }}">
+                                    data-original-title="{{ translate('After a successful trip completion, the admin commission and service fee will be added to the admin\'s earnings.') }}">
                                     <img src="{{ asset('/public/assets/admin/img/report/new/info2.png') }}"
                                         alt="report/new">
                                 </div>
@@ -139,7 +139,7 @@
                                 </h3>
                                 <h6 class="subtitle">{{ translate('Provider Earning') }}</h6>
                                 <div class="info-icon" data-toggle="tooltip" data-placement="top"
-                                    data-original-title="{{ translate('If the order is successfully refunded, the full order amount goes to this section without the delivery fee and delivery tips.') }}">
+                                    data-original-title="{{ translate('After a successful trip completion, the trip amount without discount will be added to the provider’s earnings') }}">
                                     <img src="{{ asset('/public/assets/admin/img/report/new/info1.png') }}"
                                         alt="report/new">
                                 </div>
@@ -216,25 +216,25 @@
                                 <th class="border-0">{{ translate('sl') }}</th>
                                 <th class="border-0">{{ translate('messages.trip_id') }}</th>
                                 <th class="border-0">{{ translate('messages.provider') }}</th>
-                                <th class="border-0">{{ translate('messages.customer_name') }}</th>
-                                <th class="border-0 min-w-120">{{ translate('messages.total_trip_amount') }}</th>
-                                <th class="border-0">{{ translate('messages.vehicle_wise_discount') }}</th>
-                                <th class="border-0">{{ translate('messages.coupon_discount') }}</th>
-                                <th class="border-0">{{ translate('messages.referral_discount') }}</th>
-                                <th class="border-0">{{ translate('messages.discounted_amount') }}</th>
+                                <th class="border-0">{{ translate('messages.customer') }}</th>
+                                <th class="border-0 min-w-120">{{ translate('messages.Total_Trip_Amount') }}</th>
+                                <th class="border-0">{{ translate('messages.Discount on Vehicle') }}</th>
+                                <th class="border-0">{{ translate('messages.Coupon_Discount') }}</th>
+                                <th class="border-0">{{ translate('messages.Referral_Discount') }}</th>
+                                <th class="border-0">{{ translate('messages.Total Discounted Amount') }}</th>
                                 <th class="border-0">{{ translate('messages.vat/tax') }}</th>
-                                <th class="border-0">{{ translate('messages.admin_commission') }}</th>
+                                <th class="border-0">{{ translate('messages.Admin_Commission') }}</th>
                                 <th class="border-0">
                                     {{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name') ?? translate('messages.additional_charge') }}
                                 </th>
-                                <th class="border-0">{{ translate('messages.admin_discount') }}</th>
-                                <th class="min-w-140 text-capitalize">{{ translate('admin_net_income') }}</th>
-                                <th class="border-0">{{ translate('messages.provider_discount') }}</th>
+                                <th class="border-0">{{ translate('messages.Admin_Discount') }}</th>
+                                <th class="min-w-140 text-capitalize">{{ translate('Admin_net_income') }}</th>
+                                <th class="border-0 text-capitalize">{{ translate('messages.provider_discount') }}</th>
                                 <th class="min-w-140 text-capitalize">{{ translate('provider_net_income') }}</th>
-                                <th class="border-0 min-w-120">{{ translate('messages.amount_received_by') }}</th>
+                                <th class="border-0 min-w-120 text-capitalize">{{ translate('messages.Total Amount Received by') }}</th>
                                 <th class="border-top border-bottom text-capitalize">
                                     {{ translate('messages.payment_method') }}</th>
-                                <th class="border-0">{{ translate('messages.payment_status') }}</th>
+                                <th class="border-0 text-capitalize">{{ translate('messages.payment_status') }}</th>
                                 <th class="border-0">{{ translate('messages.action') }}</th>
                             </tr>
                         </thead>

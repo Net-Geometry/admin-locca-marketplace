@@ -38,13 +38,13 @@
             <tr>
                 <th>{{ translate('messages.sl') }}</th>
                 <th>{{ translate('messages.trip_id') }}</th>
-                <th>{{ translate('messages.customer_name') }}</th>
+                <th>{{ translate('messages.Customer info') }}</th>
                 <th>{{ translate('messages.provider_name') }}</th>
-                <th>{{ translate('messages.vehicle_price') }}</th>
-                <th>{{ translate('messages.vehicle_wise_discount') }}</th>
+                <th>{{ translate('messages.Total Fare of Vehicle') }}</th>
+                <th>{{ translate('messages.Discount on Vehicle') }}</th>
                 <th>{{ translate('messages.coupon_discount') }}</th>
                 <th>{{ translate('messages.referral_discount') }}</th>
-                <th>{{ translate('messages.discounted_amount') }}</th>
+                <th>{{ translate('messages.Total_discounted_amount') }}</th>
                 <th>{{  \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge')  }}</th>
                 <th>{{ translate('messages.tax') }}</th>
                 <th>{{ translate('messages.total_amount') }}</th>

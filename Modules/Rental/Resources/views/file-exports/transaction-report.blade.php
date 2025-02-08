@@ -51,25 +51,28 @@
                 <th></th>
             </tr>
         <tr>
-            <th>{{ translate('sl') }}</th>
-            <th>{{ translate('messages.trip_id') }}</th>
-            <th>{{ translate('messages.provider') }}</th>
-            <th>{{ translate('messages.customer_name') }}</th>
-            <th>{{ translate('messages.total_trip_amount') }}</th>
-            <th>{{ translate('messages.vehicle_wise_discount') }}</th>
-            <th>{{ translate('messages.coupon_discount') }}</th>
-            <th>{{ translate('messages.referral_discount') }}</th>
-            <th>{{ translate('messages.discounted_amount') }}</th>
-            <th>{{ translate('messages.vat/tax') }}</th>
-            <th>{{ translate('messages.admin_commission') }}</th>
-            <th>{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</th>
-            <th>{{ translate('messages.admin_discount') }}</th>
-            <th>{{ translate('admin_net_income') }}</th>
-            <th>{{ translate('messages.store_discount') }}</th>
-            <th>{{ translate('store_net_income') }}</th>
-            <th>{{ translate('messages.amount_received_by') }}</th>
-            <th>{{ translate('messages.payment_method') }}</th>
-            <th>{{ translate('messages.payment_status') }}</th>
+            <th class="border-0">{{ translate('sl') }}</th>
+            <th class="border-0">{{ translate('messages.trip_id') }}</th>
+            <th class="border-0">{{ translate('messages.provider') }}</th>
+            <th class="border-0">{{ translate('messages.customer') }}</th>
+            <th class="border-0 min-w-120">{{ translate('messages.Total_Trip_Amount') }}</th>
+            <th class="border-0">{{ translate('messages.Discount on Vehicle') }}</th>
+            <th class="border-0">{{ translate('messages.Coupon_Discount') }}</th>
+            <th class="border-0">{{ translate('messages.Referral_Discount') }}</th>
+            <th class="border-0">{{ translate('messages.Total Discounted Amount') }}</th>
+            <th class="border-0">{{ translate('messages.vat/tax') }}</th>
+            <th class="border-0">{{ translate('messages.Admin_Commission') }}</th>
+            <th class="border-0">
+                {{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name') ?? translate('messages.additional_charge') }}
+            </th>
+            <th class="border-0">{{ translate('messages.Admin_Discount') }}</th>
+            <th class="min-w-140 text-capitalize">{{ translate('Admin_net_income') }}</th>
+            <th class="border-0 text-capitalize">{{ translate('messages.provider_discount') }}</th>
+            <th class="min-w-140 text-capitalize">{{ translate('provider_net_income') }}</th>
+            <th class="border-0 min-w-120 text-capitalize">{{ translate('messages.Total Amount Received by') }}</th>
+            <th class="border-top border-bottom text-capitalize">
+                {{ translate('messages.payment_method') }}</th>
+            <th class="border-0 text-capitalize">{{ translate('messages.payment_status') }}</th>
         </thead>
         <tbody>
         @foreach($data['tripTransactions'] as $key => $ot)

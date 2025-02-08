@@ -60,7 +60,7 @@
             <th>{{ translate('messages.trip_schedule_date') }}</th>
             <th>{{ translate('messages.customer_name') }}</th>
             <th>{{ translate('messages.provider_name') }}</th>
-            <th>{{ translate('messages.total_amount') }}</th>
+            <th>{{ translate('messages.Total Trip Amount') }}</th>
             <th>{{ translate('messages.payment_status') }}</th>
             <th>{{ translate('messages.discounted_amount') }}</th>
             <th>{{ translate('messages.tax') }}</th>

@@ -62,9 +62,9 @@
         <tr>
             <th>{{ translate('sl') }}</th>
             <th>{{translate('provider_name')}}</th>
+            <th>{{translate('Total Amount')}}</th>
             <th>{{translate('Total Trip')}}</th>
             <th>{{translate('Total Completed Trip')}}</th>
-            <th>{{translate('Total Amount')}}</th>
             <th>{{translate('Completion Rate')}}</th>
             <th>{{translate('Ongoing Rate')}}</th>
             <th>{{translate('Cancelation Rate')}}</th>
@@ -81,13 +81,13 @@
                 {{  $provider->name  }}
             </td>
             <td>
+                {{\App\CentralLogics\Helpers::number_format_short($provider->trips->where('trip_status','completed')->sum('trip_amount'))}}
+            </td>
+            <td>
                 {{ $provider->trips->count() }}
             </td>
             <td>
                 {{ $completed }}
-            </td>
-            <td>
-                {{\App\CentralLogics\Helpers::number_format_short($provider->trips->where('trip_status','completed')->sum('tri_amount'))}}
             </td>
             <td>
                 {{ ($provider->trips->count() > 0 && $completed > 0)? number_format((100*$completed)/$provider->trips->count(), config('round_up_to_digit')): 0 }}%

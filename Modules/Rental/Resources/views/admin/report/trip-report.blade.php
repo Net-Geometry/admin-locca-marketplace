@@ -119,7 +119,7 @@
                         <div class="col-sm-6 col-md-6">
                             <a class="__card-2 __bg-1" href="#">
                             <h4 class="title">{{$total_progress_count}}</h4>
-                            <span class="subtitle">{{translate('messages.in_progress_trips')}} <span data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Including accepted and processing orders')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.in_progress_trips')}}"></span></span>
+                            <span class="subtitle">{{translate('messages.in_progress_trips')}} <span data-toggle="tooltip" data-placement="right" data-original-title="{{translate('This count includes all the pending & confirmed trips')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.in_progress_trips')}}"></span></span>
                             <img src="{{asset('/public/assets/admin/img/report/new/progress-report.png')}}" alt="report/new" class="card-icon">
                             </a>
                         </div>
@@ -225,22 +225,22 @@
                     <table class="table table-borderless middle-align __txt-14px">
                         <thead class="thead-light white--space-false">
                             <tr>
-                                <th class="border-top border-bottom">{{ translate('messages.sl') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.trip_id') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.provider') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.customer_name') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.total_vehicle_amount') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.vehicle_wise_discount') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.coupon_discount') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.referral_discount') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.discounted_amount') }}</th>
-                                <th class="border-top border-bottom text-center">{{ translate('messages.tax') }}</th>
-                                <th class="border-top border-bottom text-center">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.trip_amount') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.amount_received_by') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.payment_method') }}</th>
-                                <th class="border-top border-bottom">{{ translate('messages.tri_status') }}</th>
-                                <th class="border-top border-bottom text-center">{{ translate('messages.action') }}
+                                <th class="text-capitalize border-top border-bottom">{{ translate('messages.sl') }}</th>
+                                <th class="text-capitalize border-top border-bottom">{{ translate('messages.trip_id') }}</th>
+                                <th class="text-capitalize border-top border-bottom">{{ translate('messages.Provider info') }}</th>
+                                <th class="text-capitalize border-top border-bottom">{{ translate('messages.Customer info') }}</th>
+                                <th class="text-capitalize border-top border-bottom">{{ translate('messages.Total Fare of Vehicle') }}</th>
+                                <th class="text-capitalize border-top border-bottom">{{ translate('messages.Discount on Vehicle') }}</th>
+                                <th class="text-capitalize border-top border-bottom">{{ translate('messages.coupon_discount') }}</th>
+                                <th class="text-capitalize border-top border-bottom">{{ translate('messages.referral_discount') }}</th>
+                                <th class="text-capitalize border-top border-bottom">{{ translate('messages.Total_discounted_amount') }}</th>
+                                <th class="text-capitalize border-top border-bottom text-center">{{ translate('messages.tax') }}</th>
+                                <th class="text-capitalize border-top border-bottom text-center">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</th>
+                                <th class="text-capitalize border-top border-bottom">{{ translate('messages.Total Trip Amount') }}</th>
+                                <th class="text-capitalize border-top border-bottom">{{ translate('messages.Total Amount Received By') }}</th>
+                                <th class="text-capitalize border-top border-bottom">{{ translate('messages.payment_method') }}</th>
+                                <th class="text-capitalize border-top border-bottom">{{ translate('messages.Trip Status') }}</th>
+                                <th class="text-capitalize border-top border-bottom text-center">{{ translate('messages.action') }}
                                 </th>
                             </tr>
                         </thead>
@@ -375,7 +375,7 @@
                                                 </span>
                                             @else
                                                 <span class="badge badge-soft-danger">
-                                                  {{str_replace('_',' ',$tri['trip_status'])}}
+                                                  {{str_replace('_',' ',$trip['trip_status'])}}
                                                 </span>
                                             @endif
 

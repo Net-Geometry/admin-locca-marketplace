@@ -262,13 +262,14 @@ class ReportController extends Controller
 
         $total_canceled_count = $trips_list->where('trip_status', 'canceled')->count();
         $total_completed_count = $trips_list->where('trip_status', 'completed')->count();
-        $total_progress_count = $trips_list->whereIn('trip_status', ['confirmed'])->count();
+        $total_progress_count = $trips_list->whereIn('trip_status', ['confirmed','pending'])->count();
         $total_failed_count = $trips_list->where('trip_status', 'failed')->count();
         $total_ongoing_count = $trips_list->whereIn('trip_status', ['ongoing'])->count();
         return view('rental::admin.report.trip-report', compact('trips', 'trips_list', 'zone', 'provider', 'filter', 'customer', 'total_ongoing_count', 'total_failed_count', 'total_progress_count', 'total_canceled_count', 'total_completed_count'));
     }
     public function tripReportExport(Request $request)
     {
+
         $key = isset($request['search']) ? explode(' ', $request['search']) : [];
 
         if (session()->has('from_date') == false) {

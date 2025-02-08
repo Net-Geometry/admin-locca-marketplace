@@ -170,16 +170,16 @@
                     <thead class="thead-light">
                     <tr>
                         <th>{{translate('sl')}}</th>
-                        <th class="w--2">{{translate('messages.vehicle_name')}}</th>
+                        <th class="w--2">{{translate('messages.Vehicle Info')}}</th>
+                        <th>{{translate('messages.Number of Vehicles')}}</th>
                         <th class="w--2">{{translate('messages.provider')}}</th>
-                        <th>{{translate('messages.vehicles_of_same_model')}}</th>
-                        <th>{{translate('messages.total_trip_count')}}</th>
-                        <th>{{translate('messages.total_trip_vehicles')}}</th>
                         <th>{{translate('messages.hourly_rate')}}</th>
                         <th>{{translate('messages.distance_wise_rate')}}</th>
+                        <th>{{translate('messages.total_trip_count')}}</th>
+                        <th>{{translate('messages.total_trip_vehicles')}}</th>
                         <th>{{translate('messages.total_trip_amount')}}</th>
                         <th>{{translate('messages.total_discount_given')}}</th>
-                        <th>{{translate('messages.average_sale_value')}}</th>
+                        <th>{{translate('messages.Average Trip Value')}}</th>
                         <th>{{translate('messages.average_ratings')}}</th>
                     </tr>
                     </thead>
@@ -205,26 +205,26 @@
                                 </a>
                             </td>
                             <td>
-                                @if($vehicle->provider)
-                                {{Str::limit($vehicle->provider->name,25,'...')}}
-                                @else
-                                {{translate('messages.provider_deleted')}}
-                                @endif
-                            </td>
-                            <td>
                                 {{$vehicle->vehicle_identities_count ?? 0}}
                             </td>
                             <td>
-                                {{$vehicle->trips_count ?? 0}}
-                            </td>
-                            <td>
-                                {{$vehicle->trip_details_sum_quantity ?? 0}}
+                                @if($vehicle->provider)
+                                {{Str::limit($vehicle->provider->name,20,'...')}}
+                                @else
+                                {{translate('messages.provider_deleted')}}
+                                @endif
                             </td>
                             <td>
                                 {{ \App\CentralLogics\Helpers::format_currency($vehicle->hourly_price) }}
                             </td>
                             <td>
                                 {{ \App\CentralLogics\Helpers::format_currency($vehicle->distance_price) }}
+                            </td>
+                            <td>
+                                {{$vehicle->trips_count ?? 0}}
+                            </td>
+                            <td>
+                                {{$vehicle->trip_details_sum_quantity ?? 0}}
                             </td>
                             <td>
                                 {{ \App\CentralLogics\Helpers::format_currency($vehicle->trips_sum_price) }}

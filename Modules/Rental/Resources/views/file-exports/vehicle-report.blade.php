@@ -36,15 +36,15 @@
         <tr>
             <th>{{ translate('sl') }}</th>
             <th>{{translate('messages.vehicle_image')}}</th>
-            <th>{{translate('messages.vehicle_name')}}</th>
-            <th>{{translate('messages.provider_name')}}</th>
-            <th>{{translate('messages.total_trip_count')}}</th>
-            <th>{{translate('messages.total_trip_vehicles')}}</th>
+            <th>{{translate('messages.Vehicle Info')}}</th>
+            <th>{{translate('messages.provider')}}</th>
             <th>{{translate('messages.hourly_rate')}}</th>
             <th>{{translate('messages.distance_wise_rate')}}</th>
+            <th>{{translate('messages.total_trip_count')}}</th>
+            <th>{{translate('messages.total_trip_vehicles')}}</th>
             <th>{{translate('messages.total_trip_amount')}}</th>
             <th>{{translate('messages.total_discount_given')}}</th>
-            <th>{{translate('messages.average_sale_value')}}</th>
+            <th>{{translate('messages.Average Trip Value')}}</th>
             <th>{{translate('messages.total_reviews')}}</th>
             <th>{{translate('messages.average_ratings')}}</th>
         </thead>
@@ -62,17 +62,18 @@
                     @endif
                 </td>
                 <td>
-                    {{$vehicle->trips_count ?? 0}}
-                </td>
-                <td>
-                    {{$vehicle->trip_details_sum_quantity ?? 0}}
-                </td>
-                <td>
                     {{ \App\CentralLogics\Helpers::format_currency($vehicle->hourly_price) }}
                 </td>
                 <td>
                     {{ \App\CentralLogics\Helpers::format_currency($vehicle->distance_price) }}
                 </td>
+                <td>
+                    {{$vehicle->trips_count ?? 0}}
+                </td>
+                <td>
+                    {{$vehicle->trip_details_sum_quantity ?? 0}}
+                </td>
+
                 <td>
                     {{ \App\CentralLogics\Helpers::format_currency($vehicle->trips_sum_price) }}
                 </td>

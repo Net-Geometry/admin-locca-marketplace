@@ -114,7 +114,7 @@
                     {{ $total_completed > 0 ? \App\CentralLogics\Helpers::number_format_short($total_trip_amount/ $total_completed) : 0 }}
                     <span class="input-label-secondary text--title" data-toggle="tooltip"
                     data-placement="right"
-                    data-original-title="{{ translate('Average Value of completed trips.') }}">
+                    data-original-title="{{ translate('This Average Trip Value is calculated from all completed trips.') }}">
                     <i class="tio-info-outined"></i>
                 </span></h5>
             </div>
@@ -271,12 +271,12 @@
                         <tr>
                             <th class="border-top border-bottom text-capitalize">{{translate('SL')}}</th>
                             <th class="border-top border-bottom text-capitalize">{{translate('Provider')}}</th>
+                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Total Amount')}}</th>
                             <th class="border-top border-bottom text-capitalize">{{translate('Total Trips')}}</th>
                             <th class="border-top border-bottom text-capitalize">{{translate('Total Completed Trips')}}</th>
-                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Total Amount')}}</th>
-                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Completion Rate')}}</th>
-                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Ongoing Rate')}}</th>
-                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Cancelation Rate')}}</th>
+                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Trip Completion Rate')}}</th>
+                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Ongoing Trip Rate')}}</th>
+                            <th class="border-top border-bottom text-capitalize text-center">{{translate('Trip Cancelation Rate')}}</th>
                             <th class="border-top border-bottom text-capitalize text-center">{{translate('Action')}}</th>
                         </tr>
                     </thead>
@@ -289,14 +289,14 @@
                             <td>
                                 <a href="{{route('admin.rental.provider.details', $provider->id)}}">{{ $provider->name }}</a>
                             </td>
+                            <td class="text-center white-space-nowrap">
+                                {{\App\CentralLogics\Helpers::number_format_short($provider->trips->where('trip_status','completed')->sum('trip_amount'))}}
+                            </td>
                             <td class="text-center">
                                 {{ $provider->trips->count() }}
                             </td>
                             <td class="text-center">
                                 {{ $completed }}
-                            </td>
-                            <td class="text-center white-space-nowrap">
-                                {{\App\CentralLogics\Helpers::number_format_short($provider->trips->where('trip_status','completed')->sum('trip_amount'))}}
                             </td>
                             <td class="text-center white-space-nowrap">
                                 {{ ($provider->trips->count() > 0 && $completed > 0)? number_format((100*$completed)/$provider->trips->count(), config('round_up_to_digit')): 0 }}%

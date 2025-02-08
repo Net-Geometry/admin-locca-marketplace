@@ -118,7 +118,7 @@
                     <div class="info">
                         <h4 class="subtitle">
                             {{ \App\CentralLogics\Helpers::number_format_short($trips->sum('trip_amount')) }}</h4>
-                        <h6 class="subtext">{{ translate('Gross Sale') }}</h6>
+                        <h6 class="subtext">{{ translate('Total Trip Amount') }}</h6>
                     </div>
                 </div>
                 <div class="left-content-card">
@@ -146,7 +146,7 @@
                         {{ $trips->count() > 0 ? \App\CentralLogics\Helpers::number_format_short($trips->sum('trip_amount') / $trips->count()) : 0 }}
                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                     data-placement="right"
-                    data-original-title="{{ translate('Average Value of completed trips.') }}">
+                    data-original-title="{{ translate('This Average Trip Value is calculated from all completed trips') }}">
                     <i class="tio-info-outined"></i>
                 </span>
                     </h5>
@@ -230,7 +230,7 @@
         <div class="mt-11px card">
             <div class="card-header border-0 py-2">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{ translate('Total Sales') }}</h5>
+                    <h5 class="card-title">{{ translate('Total Trips') }}</h5>
                     <form class="search-form">
                         <!-- Search -->
                         {{-- @csrf --}}
@@ -282,10 +282,10 @@
                         <thead class="thead-light white--space-false">
                             <tr>
                                 <th class="border-top border-bottom text-capitalize">{{ translate('SL') }}</th>
-                                <th class="border-top border-bottom text-capitalize">{{ translate('Vehicle') }}</th>
-                                <th class="border-top border-bottom text-capitalize text-center">{{ translate('QTY Booked') }}</th>
+                                <th class="border-top border-bottom text-capitalize">{{ translate('Vehicle Info') }}</th>
+                                <th class="border-top border-bottom text-capitalize text-center">{{ translate('Total Trip') }}</th>
                                 <th class="border-top border-bottom text-capitalize text-center">
-                                    {{ translate('Gross Sale') }}</th>
+                                    {{ translate('Total Trip Amount') }}</th>
                                 <th class="border-top border-bottom text-capitalize text-center">
                                     {{ translate('Discount Given') }}</th>
                                 <th class="border-top border-bottom text-capitalize text-center">{{ translate('Action') }}
@@ -306,7 +306,7 @@
                                         </a>
                                     </td>
                                     <td class="text-center">
-                                        {{ $vehicle->trip_details_sum_quantity ?? 0 }}
+                                        {{ $vehicle->trips_count ?? 0 }}
                                     </td>
                                     <td class="text-center">
                                         {{ \App\CentralLogics\Helpers::format_currency($vehicle->trips_sum_price) }}
