@@ -4539,5 +4539,12 @@ class Helpers
             Cache::forget($key);
         }
     }
+
+    public static function minDiscountCheck($productPrice, $discount)
+    {
+        $discountApplied = min($productPrice, $discount);
+        $finalPrice = max(0, $productPrice - $discountApplied);
+        return ['final_price' => $finalPrice, 'discount_applied' => $discountApplied];
+    }
 }
 

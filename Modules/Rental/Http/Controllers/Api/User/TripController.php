@@ -144,17 +144,19 @@ class TripController extends Controller
             $details_data = data_get($details_data, 'details_data');
         }
 
-
-        $price = $price - $discount_on_trip;
+        $discount_on_trip =$this->helpers->minDiscountCheck(productPrice: $price, discount: $discount_on_trip)['discount_applied'];
+        $price -=  $discount_on_trip;
         $coupon_discount_amount = isset($coupon) ? CouponLogic::get_discount($coupon, $price) : 0;
-        $price = $price - $coupon_discount_amount;
+        $coupon_discount_amount =$this->helpers->minDiscountCheck(productPrice: $price, discount: $coupon_discount_amount)['discount_applied'];
+        $price -=  $coupon_discount_amount;
 
         if ($is_guest == 0 && $user_id) {
             $user = User::withcount('trips')->find($user_id);
             $discount_data = $this->helpers->getCusromerFirstOrderDiscount(order_count: $user->trips_count, user_creation_date: $user->created_at, refby: $user->ref_by, price: $price);
             if (data_get($discount_data, 'is_valid') == true &&  data_get($discount_data, 'calculated_amount') > 0) {
-                $price = $price - data_get($discount_data, 'calculated_amount');
                 $ref_bonus_amount = data_get($discount_data, 'calculated_amount');
+                $ref_bonus_amount =$this->helpers->minDiscountCheck(productPrice: $price, discount: $ref_bonus_amount)['discount_applied'];
+                $price -= $ref_bonus_amount;
             }
         }
         $tax_status = 'excluded';
@@ -170,11 +172,7 @@ class TripController extends Controller
             $additional_charge = BusinessSetting::where('key', 'additional_charge')->first()?->value ?? 0;
         }
 
-        if ($price < 0) {
-            $price = 0;
-        }
-
-        $price= $price+$tax_amount + $additional_charge;
+        $price= max(0, $price)+$tax_amount + $additional_charge;
 
         $user_info = [
             'contact_person_name' => $request->contact_person_name ? $request->contact_person_name : ($request->user?$request->user->f_name . ' ' . $request->user->l_name:''),

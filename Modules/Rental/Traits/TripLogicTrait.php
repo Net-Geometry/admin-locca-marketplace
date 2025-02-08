@@ -436,9 +436,13 @@ trait TripLogicTrait
         $price = $totalPrice - $discount;
 
         $couponDiscount = self::calculateCouponDiscount($trip, $price);
+        $couponDiscount =Helpers::minDiscountCheck(productPrice: $price, discount: $couponDiscount)['discount_applied'];
+
         $price -= $couponDiscount;
 
         $refBonus = self::calculateReferralBonus($trip, $price);
+        $refBonus = Helpers::minDiscountCheck(productPrice: $price, discount: $refBonus)['discount_applied'];
+
         $finalPrice = max(0,$price - $refBonus);
 
         $calculatedTax = Helpers::product_tax($finalPrice, $taxPercentage, self::taxIncluded());
