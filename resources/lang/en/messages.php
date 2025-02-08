@@ -7413,4 +7413,5 @@ Smartly or Earn. ',
   'Toyata-v500' => 'Toyata-v500',
   'Search by name, owner info...' => 'Search by name, owner info...',
   'search_by_brand_name' => 'Search by brand name',
+  'CityLink Taxis' => 'CityLink Taxis',
 );
