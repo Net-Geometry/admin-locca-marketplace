@@ -377,7 +377,7 @@
             let storeBusinessModel = '{{ $store->store_business_model }}' == 'commission';
             if(storeBusinessModel){
                 $('#loading').hide();
-                toastr.success('{{ translate('Business Plan updated successfully') }}!');
+                // toastr.success('{{ translate('Business Plan updated successfully') }}!');
                 window.location.href = '{{ route("admin.rental.provider.list") }}';
                 return;
             }
@@ -429,7 +429,7 @@
 
             if(oldPackage == activePackage.val()){
                 $('#loading').hide();
-                toastr.success('{{ translate('Business Plan updated successfully') }}');
+                // toastr.success('{{ translate('Business Plan updated successfully') }}');
                 window.location.href = '{{ route("admin.rental.provider.list") }}';
                 return;
             }

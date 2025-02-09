@@ -282,7 +282,7 @@ class TripController extends Controller
         $trip->distance = $make_trip_data['distance'];
         $trip->estimated_hours = $make_trip_data['estimated_hours'];
         $trip->ref_bonus_amount = $make_trip_data['ref_bonus_amount'];
-        $trip->trip_note = $request->trip_note;
+        $trip->trip_note = $request->additional_note;
         $trip->otp = rand(1000, 9999);
         $trip->is_guest = $make_trip_data['is_guest'];
         $trip->scheduled = $request->scheduled ?? 0;
@@ -671,7 +671,6 @@ class TripController extends Controller
         if ($validator->fails()) {
             return response()->json(['message' => $this->helpers->error_processor($validator)], 403);
         }
-
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
 
@@ -679,21 +678,20 @@ class TripController extends Controller
             'user_id' => $user_id,
             'is_guest' => $is_guest,
             'id' => $request->trip_id,
-        ])->first();
+            ])->first();
 
-        if (!$trip) {
-            return response()->json(['message' => translate('trip_data_not_found')], 404);
-        }
+            if (!$trip) {
+                return response()->json(['message' => translate('trip_data_not_found')], 404);
+            }
 
-        if ($is_guest && in_array($request->payment_method, ['wallet', 'partial_payment'])) {
-            return response()->json(['message' => translate('This_payment_method_is_not_available_for_guest_users')], 403);
-        }
+            if ($is_guest && in_array($request->payment_method, ['wallet', 'partial_payment'])) {
+                return response()->json(['message' => translate('This_payment_method_is_not_available_for_guest_users')], 403);
+            }
 
-        if($trip->payment_status == 'paid'){
-            return response()->json(['message' => translate('This_trip_is_already_paid')], 403);
-        }
-
-        $user = $request->user ? $request->user: $this->getGuestUserDetails($trip, $user_id);
+            if($trip->payment_status == 'paid'){
+                return response()->json(['message' => translate('This_trip_is_already_paid')], 403);
+            }
+            $user = $request->user ? $request->user : $this->getGuestUserDetails($trip, $user_id);
 
         switch ($request->payment_method) {
             case 'cash_payment':
@@ -807,9 +805,9 @@ class TripController extends Controller
     private function digitalPayment($trip,$user,$payment_gateway,$url,$payment_platform='web'){
 
         $payer = new Payer(
-            $user->f_name.' '.$user->l_name ,
-            $user->email,
-            $user->phone,
+            (string) data_get($user,'f_name',''),
+            (string) data_get($user,'email',''),
+             (string)data_get($user,'phone',''),
             ''
         );
 
@@ -825,7 +823,7 @@ class TripController extends Controller
             currency_code: Helpers::currency_code(),
             payment_method: $payment_gateway,
             payment_platform: $payment_platform,
-            payer_id: $user->id,
+            payer_id: $trip->user_id,
             receiver_id:  1,
             additional_data: $additional_data,
             payment_amount: $trip->trip_amount- $trip->partially_paid_amount ,

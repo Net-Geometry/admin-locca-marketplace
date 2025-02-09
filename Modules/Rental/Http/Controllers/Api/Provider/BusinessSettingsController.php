@@ -52,7 +52,7 @@ class BusinessSettingsController extends Controller
         $store->meta_title = $data[2]['value'];
         $store->meta_description = $data[3]['value'];
         $store->meta_image = $request->has('meta_image') ? Helpers::update('store/', $store->meta_image, 'png', $request->file('meta_image')) : $store->meta_image;
-
+        $store->pickup_zone_id = $request['pickup_zone_id'] ?? json_encode([]);
         $store->save();
 
         $conf = StoreConfig::firstOrNew(

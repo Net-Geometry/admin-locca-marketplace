@@ -167,7 +167,6 @@ class VendorController extends Controller
         $store->store_business_model = 'none';
         $store->save();
 
-
         Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Store', data_id: $store->id, data_value: $store->name);
         Helpers::add_or_update_translations(request: $request, key_data: 'address', name_field: 'address', model_name: 'Store', data_id: $store->id, data_value: $store->address);
 

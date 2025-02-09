@@ -428,7 +428,7 @@ class ProviderController extends Controller
 
         $vendor = $this->createVendor($request);
         $store = $this->createStore($request, $vendor);
-
+        // $store?->module?->increment('stores_count');
 
         $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Store', data_id: $store->id, data_value: $store->name);
         $this->helpers->add_or_update_translations(request: $request, key_data: 'address', name_field: 'address', model_name: 'Store', data_id: $store->id, data_value: $store->address);

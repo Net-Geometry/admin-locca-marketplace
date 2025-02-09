@@ -141,7 +141,7 @@ class VendorController extends Controller
         $store->module_id = Config::get('module.current_module_id');
         try {
             $store->save();
-            $store->module->increment('stores_count');
+            // $store->module->increment('stores_count');
             if(config('module.'.$store->module->module_type)['always_open'])
             {
                 StoreLogic::insert_schedule($store->id);

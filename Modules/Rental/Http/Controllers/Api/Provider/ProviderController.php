@@ -56,7 +56,7 @@ class ProviderController extends Controller
         $minAmountToPayStore = $this->businessSetting->where('key' , 'min_amount_to_pay_store')->first()->value ?? 0;
         $store = $this->helpers->store_data_formatting($vendor->stores[0], false);
         $discount = $this->helpers->get_store_discount($vendor->stores[0]);
-
+        $vendor->stores[0]['pickup_zone_id']= json_decode($vendor->stores[0]['pickup_zone_id'], true);
         unset($store['discount']);
 
         $store['discount'] = $discount;
