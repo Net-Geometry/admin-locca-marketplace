@@ -120,102 +120,103 @@ class CartController extends Controller
     }
 
 
-    private function addToCartValidations($vehicle, $request, $user_id, $is_guest, $pickup_time, $user_data)
+    private function addToCartValidations($vehicle, $request, $user_id, $is_guest, $pickup_time, $user_data, $provider_check = true)
     {
+        try {
+            $provider_id = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->first()?->provider_id;
 
-        $provider_id = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->first()?->provider_id;
+            $response = match (true) {
+                !$vehicle => [
+                    'code' => 'cart_item',
+                    'message' =>  'vehicle_not_found',
+                    'status' => 403
+                ],
+                $this->cart->where('vehicle_id', $request->vehicle_id)->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->exists() => [
+                    'code' => 'cart_item',
+                    'message' =>  'vehicle_already_exists',
+                    'status' => 403
+                ],
 
-        $response = match (true) {
-            !$vehicle => [
-                'code' => 'cart_item',
-                'message' =>  'vehicle_not_found',
-                'status' => 403
-            ],
-            $this->cart->where('vehicle_id', $request->vehicle_id)->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->exists() => [
-                'code' => 'cart_item',
-                'message' =>  'vehicle_already_exists',
-                'status' => 403
-            ],
+                $vehicle->total_vehicle_count <= 0 => [
+                    'code' => 'cart_item',
+                    'message' =>  'This_Vehicle_is_not_available_on_this_pickup_time',
+                    'status' => 403
+                ],
+                $vehicle->total_vehicle_count < $request->quantity => [
+                    'code' => 'cart_item',
+                    'message' =>  translate('messages.max_vehicle_available_quantity_is') . ' ' . $vehicle->total_vehicle_count,
+                    'status' => 403
+                ],
 
-            $vehicle->total_vehicle_count <= 0 => [
-                'code' => 'cart_item',
-                'message' =>  'This_Vehicle_is_not_available_on_this_pickup_time',
-                'status' => 403
-            ],
-            $vehicle->total_vehicle_count < $request->quantity => [
-                'code' => 'cart_item',
-                'message' =>  translate('messages.max_vehicle_available_quantity_is') . ' ' . $vehicle->total_vehicle_count,
-                'status' => 403
-            ],
-
-            $provider_id  && $provider_id != $vehicle->provider_id => [
-                'code' => 'cart_item',
-                'message' =>  'You_can_not_add_different_provider_vehicles',
-                'status' => 403
-            ],
-
-            default => null
-        };
+                default => null
+            };
 
 
-        if ($response) {
-            return ['code' => $response['code'], 'message' => translate($response['message']), 'status_code' => $response['status']];
-        }
+            if ($response) {
+                return ['code' => $response['code'], 'message' => translate($response['message']), 'status_code' => $response['status']];
+            }
 
 
-        $store = Store::selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $pickup_time->format('w') . ' and `store_schedule`.`opening_time` < "' . $pickup_time->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $pickup_time->format('H:i:s') . '") > 0), true, false) as open')->where('id', $vehicle->provider_id)->active()->first();
+            $store = Store::selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $pickup_time->format('w') . ' and `store_schedule`.`opening_time` < "' . $pickup_time->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $pickup_time->format('H:i:s') . '") > 0), true, false) as open')->where('id', $vehicle->provider_id)->active()->first();
 
 
-        $pickup_location = $request->pickup_location ? $request->pickup_location : $user_data->pickup_location;
+            $pickup_location = $request->pickup_location ? $request->pickup_location : $user_data?->pickup_location;
 
-        if (data_get($pickup_location, 'lat')  && data_get($pickup_location, 'lng')) {
-            $zones = Zone::whereContains('coordinates', new Point(data_get($pickup_location, 'lat'), data_get($pickup_location, 'lng'), POINT_SRID))->pluck('id')->toArray();
-        }
-        $pickup_location_id = json_decode($store->pickup_zone_id, true) ?? [];
+            if (data_get($pickup_location, 'lat')  && data_get($pickup_location, 'lng')) {
+                $zones = Zone::whereContains('coordinates', new Point(data_get($pickup_location, 'lat'), data_get($pickup_location, 'lng'), POINT_SRID))->pluck('id')->toArray();
+            }
+            $pickup_location_id = json_decode($store->pickup_zone_id, true) ?? [];
 
 
-        $response = match (true) {
-            !$store => [
-                'code' => 'cart_item',
-                'message' =>  'provider_not_found',
-                'status' => 403
-            ],
-            count($pickup_location_id) == 0 => [
-                'code' => 'cart_item',
-                'message' =>  'Provider_pickup_zone_not_found',
-                'status' => 403
-            ],
-            count($zones ?? []) > 0 && count($pickup_location_id) > 0 && empty(array_intersect($pickup_location_id, $zones)) == true => [
-                'code' => 'cart_item',
-                'message' =>  'This vehicle is not available for this pickup location. Please choose a different vehicle or location',
-                'status' => 403
-            ],
-            $store->open == false => [
-                'code' => 'cart_item',
-                'message' =>  'provider_is_closed_at_trip_time',
-                'status' => 403
-            ],
-            $request->rental_type ==  'hourly' && $vehicle->trip_hourly != 1 => [
-                'code' => 'cart_item',
-                'message' =>  $vehicle->name . ' ' . 'Does_not_Hourly_rental type.You cannot add a vehicle with a different rental type',
-                'status' => 403
-            ],
-            $request->rental_type ==  'distance_wise' && $vehicle->trip_distance != 1 => [
-                'code' => 'cart_item',
-                'message' =>  $vehicle->name . ' ' . 'Does_not_Distance-wise rental type.You cannot add a vehicle with a different rental type',
-                'status' => 403
-            ],
-            $provider_id && $user_data?->rental_type && $user_data?->rental_type != $request->rental_type => [
-                'code' => 'cart_item',
-                'message' =>  $vehicle->name . ' ' . translate('does_not_support') . ' ' . translate($user_data?->rental_type) . ' ' . translate('messages.You cannot add a vehicle with a different rental type'),
-                'status' => 403
-            ],
+            $response = match (true) {
+                !$store => [
+                    'code' => 'cart_item',
+                    'message' =>  'provider_not_found',
+                    'status' => 403
+                ],
+                count($pickup_location_id) == 0 => [
+                    'code' => 'cart_item',
+                    'message' =>  'Provider_pickup_zone_not_found',
+                    'status' => 403
+                ],
+                count($zones ?? []) > 0 && count($pickup_location_id) > 0 && empty(array_intersect($pickup_location_id, $zones)) == true => [
+                    'code' => 'cart_item',
+                    'message' =>  'This vehicle is not available for this pickup location. Please choose a different vehicle or location',
+                    'status' => 403
+                ],
+                $store->open == false => [
+                    'code' => 'cart_item',
+                    'message' =>  'provider_is_closed_at_trip_time',
+                    'status' => 403
+                ],
+                $request->rental_type ==  'hourly' && $vehicle->trip_hourly != 1 => [
+                    'code' => 'cart_item',
+                    'message' =>  $vehicle->name . ' ' . 'Does_not_Hourly_rental type.You cannot add a vehicle with a different rental type',
+                    'status' => 403
+                ],
+                $request->rental_type ==  'distance_wise' && $vehicle->trip_distance != 1 => [
+                    'code' => 'cart_item',
+                    'message' =>  $vehicle->name . ' ' . 'Does_not_Distance-wise rental type.You cannot add a vehicle with a different rental type',
+                    'status' => 403
+                ],
+                $provider_check && $provider_id && $user_data?->rental_type && $user_data?->rental_type != $request->rental_type => [
+                    'code' => 'cart_item',
+                    'message' =>  $vehicle->name . ' ' . translate('does_not_support') . ' ' . translate($user_data?->rental_type) . ' ' . translate('messages.You cannot add a vehicle with a different rental type'),
+                    'status' => 403
+                ],
+                $provider_check && $provider_id  && $provider_id != $vehicle->provider_id => [
+                    'code' => 'cart_item',
+                    'message' =>  'You_can_not_add_different_provider_vehicles',
+                    'status' => 403
+                ],
+                default => null
+            };
 
-            default => null
-        };
-
-        if ($response) {
-            return ['code' => $response['code'], 'message' => translate($response['message']), 'status_code' => $response['status']];
+            if ($response) {
+                return ['code' => $response['code'], 'message' => translate($response['message']), 'status_code' => $response['status']];
+            }
+        } catch (\Exception $exception) {
+            return ['code' => 'fatal_error', 'message' =>$exception->getMessage(), 'status_code' => 500];
         }
 
         return null;
@@ -354,12 +355,45 @@ class CartController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
 
+
+
+        if($request->vehicle_id && $request->pickup_time){
+
+            $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first();
+            $pickup_time = $request->pickup_time
+                ? \Carbon\Carbon::parse($request->pickup_time)
+                : ($user_data?->pickup_time ? \Carbon\Carbon::parse($user_data->pickup_time) : now());
+
+
+            $vehicle = $this->vehicle->where('id', $request->vehicle_id)->active()
+            ->withCount([
+                'vehicleIdentities as total_vehicle_count' => function ($query) use ($pickup_time) {
+                    $query->DynamicVehicleQuantity($pickup_time);
+                },
+            ])
+            ->first();
+
+            $validation_check =  $this->addToCartValidations($vehicle, $request, $user_id, $is_guest, $pickup_time, $user_data,false);
+
+            if (data_get($validation_check, 'status_code') === 403) {
+                return response()->json([
+                    'errors' => [
+                        ['code' => data_get($validation_check, 'code'), 'message' => data_get($validation_check, 'message')]
+                    ]
+                ], data_get($validation_check, 'status_code'));
+            }
+
+        }
+
+
+
         $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->delete();
         $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->delete();
 
         $data = [
             'carts' => [],
             'user_data' => [],
+            'status'=> 'success'
         ];
         return response()->json($data, 200);
     }
