@@ -7444,4 +7444,6 @@ Smartly or Earn. ',
   'Insert_The_Tags_For_Appear_In_User\'s_Search_List' => 'Insert The Tags For Appear In User s Search List',
   'Upload_Vehicle\'s_Important_Documents' => 'Upload Vehicle s Important Documents',
   'Only_For_React_Web' => 'Only For React Web',
+  'Pin the business location on the map to auto input latitude of that location' => 'Pin the business location on the map to auto input latitude of that location',
+  'Pin the business location on the map to auto input longitude of that location' => 'Pin the business location on the map to auto input longitude of that location',
 );

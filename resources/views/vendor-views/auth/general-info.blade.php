@@ -166,12 +166,12 @@
                             <div class="row g-4 mb-30">
                                 <div class="col-lg-6">
                                     <div class="form-group mb-4">
-                                        <label class="input-label" title="{{ translate('messages.select_zone_for_map') }}"
+                                        <label class="input-label" title="{{ translate('messages.Select the zone from where the business will be operated') }}"
                                             for="choice_zones">{{ translate('messages.business_zone') }}<span class="text-danger">*</span> <span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.select_zone_for_map') }}"><img
+                                                data-original-title="{{ translate('messages.Select the zone from where the business will be operated') }}"><img
                                                     src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.select_zone_for_map') }}"></span></label>
+                                                    alt="{{ translate('messages.Select the zone from where the business will be operated') }}"></span></label>
                                         <select name="zone_id" id="choice_zones" required
                                             class="form-control __form-control js-select2-custom js-example-basic-single"
                                             data-placeholder="{{ translate('messages.select_zone') }}">
@@ -201,12 +201,12 @@
                                     </div>
                                     <div class="form-group mb-4 pickup-zone-container pickup-zone-tag" id="pickup-zone-container">
                                         <label class="input-label"
-                                               title="{{ translate('messages.select_pickup_zone_for_map') }}"
+                                               title="{{ translate('messages.Select zones from where customer can choose their pickup locations for trip booking') }}"
                                                for="choice_zones">{{ translate('messages.pickup_zone') }}<span class="text-danger">*</span> <span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}"><img
+                                                data-original-title="{{ translate('messages.Select zones from where customer can choose their pickup locations for trip booking') }}"><img
                                                     src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.select_pickup_zone_for_map') }}"></span></label>
+                                                    alt="{{ translate('messages.Select zones from where customer can choose their pickup locations for trip booking') }}"></span></label>
                                         <select name="pickup_zone_id[]" required
                                                 class="form-control multiple-select2"
                                                 data-placeholder="{{ translate('messages.select_zone') }}" multiple="multiple">
@@ -227,9 +227,9 @@
                                     <div class="form-group mb-4">
                                         <label class="input-label" for="latitude">{{ translate('messages.latitude') }}<span class="text-danger">*</span>
                                             <span class="input-label-secondary"
-                                                title="{{ translate('messages.vendor_lat_lng_warning') }}"><img
+                                                title="{{ translate('messages.Pin the business location on the map to auto input latitude of that location') }}"><img
                                                     src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.vendor_lat_lng_warning') }}"></span></label>
+                                                    alt="{{ translate('messages.Pin the business location on the map to auto input latitude of that location') }}"></span></label>
                                         <input type="text" id="latitude" name="latitude"
                                             class="form-control __form-control"
                                             placeholder="{{ translate('messages.Ex:') }} -94.22213"
@@ -238,9 +238,9 @@
                                     <div class="form-group mb-4">
                                         <label class="input-label" for="longitude">{{ translate('messages.longitude') }}<span class="text-danger">*</span>
                                             <span class="input-label-secondary"
-                                                title="{{ translate('messages.vendor_lat_lng_warning') }}"><img
+                                                title="{{ translate('messages.Pin the business location on the map to auto input longitude of that location') }}"><img
                                                     src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.vendor_lat_lng_warning') }}"></span></label>
+                                                    alt="{{ translate('messages.Pin the business location on the map to auto input longitude of that location') }}"></span></label>
                                         <input type="text" name="longitude" class="form-control __form-control"
                                             placeholder="{{ translate('messages.Ex:') }} 103.344322" id="longitude"
                                             value="{{ old('longitude') }}" required readonly>
@@ -377,7 +377,7 @@
                                             {{ translate('messages.owner_information') }}
                                         </h5>
                                         <p class="fs-12 mb-0">
-                                            {{ translate('messages.Provider Logo & Covers') }}
+                                            {{ translate('messages.Insert_Owner\'s_General_Information') }}
                                         </p>
                                     </div>
                                 </div>
@@ -425,7 +425,7 @@
                                             {{ translate('messages.account_information') }}
                                         </h5>
                                         <p class="fs-12 mb-0">
-                                            {{ translate('messages.Provider Logo & Covers') }}
+                                            {{ translate('Insert_Owner\'s_account_information') }}
                                         </p>
                                     </div>
                                 </div>
