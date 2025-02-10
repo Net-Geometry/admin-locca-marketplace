@@ -1,5 +1,10 @@
 @extends('layouts.admin.app')
 
+
+@section($trip?->trip_status)
+active
+@endsection
+
 @section('title','')
 
 

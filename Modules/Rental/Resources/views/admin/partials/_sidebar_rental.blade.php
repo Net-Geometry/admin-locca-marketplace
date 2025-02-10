@@ -46,7 +46,7 @@
 
                 <ul class="navbar-nav navbar-nav-lg nav-tabs">
                     <!-- Dashboards -->
-                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin') ? 'show active' : '' }}">
+                    <li class="navbar-vertical-aside-has-menu @yield('dashboard') {{ Request::is('admin') ? 'show active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.dashboard') }}?module_id={{Config::get('module.current_module_id')}}" title="{{ translate('messages.dashboard') }}">
                             <i class="tio-home-vs-1-outlined nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
@@ -80,7 +80,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ request()->status == 'scheduled' ? 'active' : '' }}">
+                                <li class="nav-item {{ request()->status == 'scheduled' ? 'active' : '' }} @yield('scheduled')">
                                     <a class="nav-link" href="{{ route('admin.rental.trip.list') }}?status=scheduled" title="{{ translate('messages.scheduled_trips') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
@@ -91,7 +91,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ request()->status == 'pending' ? 'active' : '' }}">
+                                <li class="nav-item {{ request()->status == 'pending' ? 'active' : '' }} @yield('pending')">
                                     <a class="nav-link " href="{{ route('admin.rental.trip.list') }}?status=pending" title="{{ translate('messages.pending_trips') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
@@ -103,7 +103,7 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item {{ request()->status == 'confirmed' ? 'active' : '' }}">
+                                <li class="nav-item {{ request()->status == 'confirmed' ? 'active' : '' }} @yield('confirmed')">
                                     <a class="nav-link " href="{{ route('admin.rental.trip.list') }}?status=confirmed" title="{{ translate('messages.confirmed_trips') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
@@ -114,7 +114,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ request()->status == 'ongoing' ? 'active' : '' }}">
+                                <li class="nav-item {{ request()->status == 'ongoing' ? 'active' : '' }} @yield('ongoing')">
                                     <a class="nav-link " href="{{ route('admin.rental.trip.list') }}?status=ongoing" title="{{ translate('messages.Ongoing_trips') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
@@ -125,7 +125,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ request()->status == 'completed' ? 'active' : '' }}">
+                                <li class="nav-item {{ request()->status == 'completed' ? 'active' : '' }} @yield('completed')">
                                     <a class="nav-link text-capitalize" href="{{ route('admin.rental.trip.list') }}?status=completed" title="{{ translate('messages.Completed_trips') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
@@ -136,7 +136,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ request()->status == 'canceled' ? 'active' : '' }}">
+                                <li class="nav-item {{ request()->status == 'canceled' ? 'active' : '' }} @yield('canceled')">
                                     <a class="nav-link " href="{{ route('admin.rental.trip.list') }}?status=canceled" title="{{ translate('messages.canceled_trips') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container">
@@ -147,7 +147,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ request()->status == 'payment_failed' ? 'active' : '' }}">
+                                <li class="nav-item {{ request()->status == 'payment_failed' ? 'active' : '' }} @yield('payment_failed')">
                                     <a class="nav-link " href="{{ route('admin.rental.trip.list') }}?status=payment_failed" title="{{ translate('messages.payment_failed_trips') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate sidebar--badge-container text-capitalize">

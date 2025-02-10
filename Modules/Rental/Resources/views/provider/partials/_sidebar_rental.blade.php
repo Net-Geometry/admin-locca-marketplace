@@ -114,7 +114,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ request()->status == 'pending' ? 'active' : '' }}">
+                                <li class="nav-item {{ request()->status == 'pending' ? 'active' : '' }} @yield('pending')">
                                     <a class="nav-link " href="{{ route('vendor.trip.list') }}?status=pending"
                                         title="{{ translate('messages.pending_trips') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
@@ -127,7 +127,7 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item {{ request()->status == 'confirmed' ? 'active' : '' }}">
+                                <li class="nav-item {{ request()->status == 'confirmed' ? 'active' : '' }}  @yield('confirmed')">
                                     <a class="nav-link " href="{{ route('vendor.trip.list') }}?status=confirmed"
                                         title="{{ translate('messages.confirmed_trips') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
@@ -139,7 +139,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ request()->status == 'ongoing' ? 'active' : '' }}">
+                                <li class="nav-item {{ request()->status == 'ongoing' ? 'active' : '' }} @yield('ongoing')">
                                     <a class="nav-link " href="{{ route('vendor.trip.list') }}?status=ongoing"
                                         title="{{ translate('messages.Ongoing_trips') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
@@ -151,7 +151,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ request()->status == 'completed' ? 'active' : '' }}">
+                                <li class="nav-item {{ request()->status == 'completed' ? 'active' : '' }} @yield('completed')">
                                     <a class="nav-link text-capitalize"
                                         href="{{ route('vendor.trip.list') }}?status=completed"
                                         title="{{ translate('messages.Completed_trips') }}">
@@ -164,7 +164,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ request()->status == 'canceled' ? 'active' : '' }}">
+                                <li class="nav-item {{ request()->status == 'canceled' ? 'active' : '' }} @yield('canceled')">
                                     <a class="nav-link " href="{{ route('vendor.trip.list') }}?status=canceled"
                                         title="{{ translate('messages.canceled_trips') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
@@ -176,7 +176,7 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ request()->status == 'payment_failed' ? 'active' : '' }}">
+                                <li class="nav-item {{ request()->status == 'payment_failed' ? 'active' : '' }}  @yield('payment_failed')">
                                     <a class="nav-link "
                                         href="{{ route('vendor.trip.list') }}?status=payment_failed"
                                         title="{{ translate('messages.payment_failed_trips') }}">
@@ -211,7 +211,7 @@
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display:{{ Request::is('vendor-panel/vehicle/*') ? 'block' : 'none' }}">
                                 <li
-                                    class="nav-item {{ Request::is('vendor-panel/vehicle/create') || Request::is('vendor-panel/vehicle/edit/*') ? 'active' : '' }}">
+                                    class="nav-item {{ Request::is('vendor-panel/vehicle/create')  ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.vehicle.create') }}"
                                         title="{{ translate('messages.create_new') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
@@ -219,7 +219,7 @@
                                     </a>
                                 </li>
                                 <li
-                                    class="nav-item {{ Request::is('vendor-panel/vehicle/list') || Request::is('vendor-panel/vehicle/edit/*') ? 'active' : '' }}">
+                                    class="nav-item {{ Request::is('vendor-panel/vehicle/list') || Request::is('vendor-panel/vehicle/details/*')|| Request::is('vendor-panel/vehicle/update/*') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.vehicle.list') }}"
                                         title="{{ translate('messages.vehicle_list') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
@@ -290,7 +290,7 @@
                         </li>
 
                         <li
-                            class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/driver/list') ? 'active' : '' }}">
+                            class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/driver/list') || Request::is('vendor-panel/driver/details/*') || Request::is('vendor-panel/driver/update/*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('vendor.driver.list') }}" title="{{ translate('messages.driver') }}">
                                 <i class="tio-filter-list nav-icon"></i>

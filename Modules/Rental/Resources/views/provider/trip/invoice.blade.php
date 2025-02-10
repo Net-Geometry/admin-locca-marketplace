@@ -1,5 +1,8 @@
 @extends('layouts.vendor.app')
 
+@section($trip?->trip_status)
+active
+@endsection
 @section('title',translate('Invoice'))
 
 

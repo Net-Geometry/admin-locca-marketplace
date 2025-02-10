@@ -2,6 +2,12 @@
 
 @section('title', translate('messages.Car Rental Module Dashboard'))
 
+
+@section('dashboard')
+
+show active
+@endsection
+
 @push('css_or_js')
 @endpush
 

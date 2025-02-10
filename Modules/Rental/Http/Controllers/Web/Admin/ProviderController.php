@@ -1269,7 +1269,7 @@ class ProviderController extends Controller
         }
         catch (\Exception $e) {
 
-            dd($e);
+            // dd($e);
             Toastr::warning(translate('messages.push_notification_faild'));
         }
 

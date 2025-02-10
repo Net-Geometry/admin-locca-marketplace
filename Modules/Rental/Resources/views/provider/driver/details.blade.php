@@ -154,7 +154,11 @@
             <!-- Header -->
             <div class="card-header py-2">
                 <div class="search--button-wrapper gap-20px">
-                    <h5 class="card-title text--title flex-grow-1">{{ translate('messages.Total_Trips') }}</h5>
+                    <h5 class="card-title text--title flex-grow-1">{{ translate('messages.Total_Trips') }}
+                        <span class="badge badge-soft-dark ml-2" id="itemCount">{{$driverTrips->count()}}</span>
+
+
+                    </h5>
                     <form class="search-form flex-grow-1 max-w-353px">
                         <!-- Search -->
                         <div class="input-group input--group">

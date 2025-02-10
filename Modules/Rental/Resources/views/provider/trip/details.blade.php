@@ -1,6 +1,10 @@
 @extends('layouts.vendor.app')
 @section('title', translate('Trip Details'))
 
+@section($trip->trip_status)
+active
+@endsection
+
 @push('css_or_js')
     <style>
         #map {
@@ -144,9 +148,9 @@
                         </div>
                         @if(!empty($trip->trip_note))
                             <div class="__bg-FAFAFA p-2 rounded">
-                                <h6 class="fs-14 text-title opacity-lg">
+                                <h6 class="fs-14 text-title">
                                     {{translate('Note')}}:
-                                    <span class="opacity-70 font-regular">{{ $trip->trip_note }}</span>
+                                    <span class=" font-regular">{{ $trip->trip_note }}</span>
                                 </h6>
                             </div>
                         @endif

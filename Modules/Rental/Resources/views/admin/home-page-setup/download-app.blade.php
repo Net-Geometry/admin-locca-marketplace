@@ -12,7 +12,7 @@
                         <span class="page-header-icon">
                             <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
                         </span>
-                        <span>{{ translate('messages.Home_Page_Setup') }}
+                        <span>{{ translate('messages.Home_Page_Setup') }} ({{ translate('Only_For_React_Web') }})
                     </h1></span>
                     </h1>
                 </div>
@@ -172,7 +172,7 @@
                                         <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
                                             <i class="tio-clear"></i>
                                         </a>
-                                        <input type="file" name="image" class="upload-file__input single_file_input" 
+                                        <input type="file" name="image" class="upload-file__input single_file_input"
                                             accept=".webp, .jpg, .jpeg, .png"  value="{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}">
                                         <label
                                             class="upload-file-wrapper w--180px">
@@ -253,16 +253,16 @@
            // Handle remove button click
            $('.remove-btn').click(function () {
                 var $card = $(this).closest('.upload-file');
-                $card.find('.single_file_input').val(''); 
+                $card.find('.single_file_input').val('');
                 $card.find('.upload-file-img').attr('src', '{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}');
                 $(this).css('opacity', 0);
             });
 
             // Handle reset button click
             $('#reset_btn').click(function () {
-                var $cards = $('.upload-file'); 
+                var $cards = $('.upload-file');
                 $cards.each(function () {
-                    $(this).find('.single_file_input').val(''); 
+                    $(this).find('.single_file_input').val('');
                     $(this).find('.upload-file-img').attr('src', '{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}');
                     $(this).find('.remove-btn').css('opacity', 0);
                 });

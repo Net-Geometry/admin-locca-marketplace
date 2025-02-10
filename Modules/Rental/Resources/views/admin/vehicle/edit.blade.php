@@ -219,7 +219,7 @@
                                     {{ translate('messages.Vehicle_Information') }}
                                 </h5>
                                 <p class="fs-12 mb-0">
-                                    {{ translate('messages.Provider Logo & Covers') }}
+                                    {{ translate('messages.Update_The_Vehicle\'s_General_Informations') }}
                                 </p>
                             </div>
                         </div>
@@ -391,7 +391,7 @@
                                     {{ translate('messages.Vehicle Identity') }}
                                 </h5>
                                 <p class="fs-12 mb-0">
-                                    {{ translate('messages.Provider Logo & Covers') }}
+                                    {{ translate('messages.Update_The_Vehicle\'s_Unique_Informations') }}
                                 </p>
                             </div>
                             <label class="d-flex align-items-center gap-2">
@@ -454,7 +454,7 @@
                                     {{ translate('messages.Pricing & Discounts') }}
                                 </h5>
                                 <p class="fs-12 mb-0">
-                                    {{ translate('messages.Provider Logo & Covers') }}
+                                    {{ translate('messages.Update_The_Pricing & Discount Informations') }}
                                 </p>
                             </div>
                         </div>
@@ -542,7 +542,7 @@
                                     {{ translate('messages.Search_Tags') }}
                                 </h5>
                                 <p class="fs-12 mb-0">
-                                    {{ translate('messages.Provider Logo & Covers') }}
+                                    {{ translate('messages.Update_The_Tags_For_Appear_In_User\'s_Search_List') }}
                                 </p>
                             </div>
                         </div>
@@ -568,7 +568,7 @@
                                     {{ translate('messages.Vehicle_Documents') }}<span class="text-danger">*</span>
                                 </h5>
                                 <p class="fs-12 mb-0">
-                                    {{ translate('messages.Provider Logo & Covers') }}
+                                    {{ translate('messages.Update_Vehicle\'s_Important_Documents') }}
                                 </p>
                             </div>
                         </div>
