@@ -84,7 +84,7 @@ class RentalWishlistController extends Controller
         $latitude= $request->header('latitude');
 
         $wishlists = RentalWishlish::where('user_id', $request->user()->id)->with(['vehicle'=>function($q)use($zone_id){
-            return $q->active()->whereHas('provider', function($query)use($zone_id){
+            return $q->active()->withWhereHas('provider', function($query)use($zone_id){
                 $query->active()->when(config('module.current_module_data'), function($query){
                     $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules',function($query){
                         $query->where('modules.id', config('module.current_module_data')['id']);
@@ -114,7 +114,7 @@ class RentalWishlistController extends Controller
                 return $query;
             });
 
-            
+
         }])
         ->paginate($limit, ['*'], 'page', $offset);
 
