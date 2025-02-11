@@ -729,7 +729,7 @@
                     </div>
                     <div class="modal-footer border-0 flex-shrink-0 px-4">
                         <div class="btn--container justify-content-end">
-                            <button type="button" data-dismiss="modal" aria-label="Close"
+                            <button type="reset" data-dismiss="modal" aria-label="Close"
                                     class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
                             <button type="submit"
                                     class="btn btn--primary min-w-120px">{{ translate('messages.assign') }}</button>
@@ -1073,7 +1073,8 @@
                     </div>
                     <div class="modal-footer border-0 flex-shrink-0 px-4">
                         <div class="btn--container justify-content-end">
-                            <button type="reset" id="reset_btn" data-dismiss="modal" aria-label="Close"  class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
+                            
+                            <button type="reset" id="reset_btn"  class="btn btn--warning-light min-w-120px close-modal">{{ translate('messages.cancel') }}</button>
                             <button id="edit-trip" type="button"  class="btn btn--primary  min-w-120px">{{ translate('messages.update') }}</button>
                         </div>
                     </div>
@@ -1770,6 +1771,11 @@
         });
         $('.eta_amount_mt').addClass('d-none');
         // $('.fare-old-value').text('');
+    });
+
+    $('.close-modal').on('click', function() {
+        $('.eta_amount_mt').addClass('d-none');
+        $('#editTripModal').modal('hide');
     });
 
 

@@ -7446,4 +7446,5 @@ Smartly or Earn. ',
   'Only_For_React_Web' => 'Only For React Web',
   'Pin the business location on the map to auto input latitude of that location' => 'Pin the business location on the map to auto input latitude of that location',
   'Pin the business location on the map to auto input longitude of that location' => 'Pin the business location on the map to auto input longitude of that location',
+  'Car of Justice' => 'Car of Justice',
 );
