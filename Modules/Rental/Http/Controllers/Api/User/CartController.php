@@ -553,7 +553,11 @@ class CartController extends Controller
             ->get();
             $carts->each(function ($cart) {
                 if (!empty($cart->provider->pickup_zone_id)) {
-                    $cart->provider->pickup_zone_id =  json_decode($cart->provider->pickup_zone_id, true);
+                    $cart->provider->pickup_zone_id = is_string($cart->provider->pickup_zone_id)
+                        ? json_decode($cart->provider->pickup_zone_id, true)
+                        : (array) $cart->provider->pickup_zone_id;
+                } else {
+                    $cart->provider->pickup_zone_id = [];
                 }
             });
 
