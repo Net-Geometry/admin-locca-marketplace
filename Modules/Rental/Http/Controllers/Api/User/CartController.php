@@ -497,6 +497,9 @@ class CartController extends Controller
         $user_data =   $this->setUserData($request, $user_id, $is_guest, 0);
         $zones = [];
         if (data_get($user_data, 'pickup_location.lat')  && data_get($user_data, 'pickup_location.lng')) {
+            // $zones []= Zone::whereContains('coordinates', new Point(data_get($user_data, 'pickup_location.lat'), data_get($user_data, 'pickup_location.lng'), POINT_SRID))
+            // ->selectRaw('zones.*, ABS(ST_Area(coordinates)) as area')->orderBy('area', 'asc')->first()?->id;
+
             $zones = Zone::whereContains('coordinates', new Point(data_get($user_data, 'pickup_location.lat'), data_get($user_data, 'pickup_location.lng'), POINT_SRID))->pluck('id')->toArray();
         }
 
@@ -505,7 +508,7 @@ class CartController extends Controller
 
         if (count($zones) > 0 &&  count($zone_ids) > 0 &&  empty(array_intersect($zone_ids, $zones)) == true) {
             $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->delete();
-            info('deleted');
+
         }
         $total_cart_price = 0;
         foreach ($carts as  $cart) {
@@ -539,17 +542,23 @@ class CartController extends Controller
             ? \Carbon\Carbon::parse($request->pickup_time)
             : ($user_data?->pickup_time ? \Carbon\Carbon::parse($user_data->pickup_time) : now());
 
-        return [
-            'carts' =>  $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))
-                ->with(['vehicle' => function ($query) use ($pickup_time) {
-                    $query->withCount([
-                        'vehicleIdentities as total_vehicle_count' => function ($query) use ($pickup_time) {
-                            $query->DynamicVehicleQuantity($pickup_time);
-                        },
-                    ]);
-                }, 'provider:id,name,address,tax', 'provider.discount'])
-                ->get(),
+            $carts=  $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))
+            ->with(['vehicle' => function ($query) use ($pickup_time) {
+                $query->withCount([
+                    'vehicleIdentities as total_vehicle_count' => function ($query) use ($pickup_time) {
+                        $query->DynamicVehicleQuantity($pickup_time);
+                    },
+                ]);
+            }, 'provider:id,name,address,tax,pickup_zone_id', 'provider.discount'])
+            ->get();
+            $carts->each(function ($cart) {
+                if (!empty($cart->provider->pickup_zone_id)) {
+                    $cart->provider->pickup_zone_id =  json_decode($cart->provider->pickup_zone_id, true);
+                }
+            });
 
+        return [
+            'carts' =>$carts,
             'user_data' => $this->setUserData($request, $user_id, $is_guest, $total_cart_price)
         ];
     }
