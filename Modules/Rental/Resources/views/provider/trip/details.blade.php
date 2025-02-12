@@ -1710,8 +1710,7 @@ active
                     }
                 },
                 error: function(xhr) {
-                    toastr.error('Failed to update calculations');
-                    console.error(xhr);
+                    toastr.error(xhr.responseJSON.message || 'Failed to update calculations');
                     $('#edit-trip').attr("disabled", false);
                 }
             });

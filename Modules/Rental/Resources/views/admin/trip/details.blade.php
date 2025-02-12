@@ -1073,7 +1073,7 @@
                     </div>
                     <div class="modal-footer border-0 flex-shrink-0 px-4">
                         <div class="btn--container justify-content-end">
-                            
+
                             <button type="reset" id="reset_btn"  class="btn btn--warning-light min-w-120px close-modal">{{ translate('messages.cancel') }}</button>
                             <button id="edit-trip" type="button"  class="btn btn--primary  min-w-120px">{{ translate('messages.update') }}</button>
                         </div>
@@ -1757,8 +1757,8 @@
                     }
                 },
                 error: function(xhr) {
-                    toastr.error('Failed to update calculations');
-                    console.error(xhr);
+                    toastr.error(xhr.responseJSON.message || 'Failed to update calculations');
+                    
                     $('#edit-trip').attr("disabled", false);
                 }
             });

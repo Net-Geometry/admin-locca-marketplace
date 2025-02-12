@@ -2,6 +2,7 @@
 
 namespace Modules\Rental\Http\Controllers\Api\Provider;
 
+use App\Models\Zone;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use Illuminate\Http\JsonResponse;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Modules\Rental\Traits\TripLogicTrait;
 use Modules\Rental\Entities\TripVehicleDetails;
 use Modules\Rental\Traits\RentalPushNotification;
+use MatanYadaev\EloquentSpatial\Objects\Point;
 
 class ProviderTripController extends Controller
 {
@@ -287,6 +289,24 @@ class ProviderTripController extends Controller
         $destinationLocation = $request->destination_location ? json_encode($request->destination_location) :json_encode( $trip->destination_location);
 
         $pickupLocation = $request->pickup_location  ? json_encode($request->pickup_location)  : json_encode($trip->pickup_location);
+
+        $zones = [];
+        if (data_get($pickupLocation, 'lat')  && data_get($pickupLocation, 'lng')) {
+            $zones = Zone::whereContains('coordinates', new Point(data_get($pickupLocation, 'lat'), data_get($pickupLocation, 'lng'), POINT_SRID))->pluck('id')->toArray();
+        }
+
+        if (!empty($trip?->provider?->pickup_zone_id)) {
+            $pickup_zone_id = is_string($trip->provider->pickup_zone_id)
+                ? json_decode($trip->provider->pickup_zone_id, true)
+                : (array) $trip->provider->pickup_zone_id;
+        } else {
+            $pickup_zone_id = [];
+        }
+
+        if (count($zones) > 0 &&  count($pickup_zone_id) > 0 &&  empty(array_intersect($pickup_zone_id, $zones)) == true) {
+            return response()->json(['success' => false,
+            'message' => translate('messages.Pickup_location_is_out_of_zone')], 400);
+        }
 
         $scheduleAt = $request->schedule_at ? \Carbon\Carbon::parse($request->schedule_at) : \Carbon\Carbon::parse($trip->schedule_at);
 
