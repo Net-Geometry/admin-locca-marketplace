@@ -309,8 +309,8 @@ class ConfigController extends Controller
                 'phone_verification_status' => (int)(isset($settings['phone_verification_status']) ? $settings['phone_verification_status'] : 0),
             ],
 
-            'vehicle_distance_min' => $vehicle_distance_min?? 0,
-            'vehicle_hourly_min' => $vehicle_hourly_min?? 0,
+            'vehicle_distance_min' =>(float) $vehicle_distance_min?? 0,
+            'vehicle_hourly_min' => (float) $vehicle_hourly_min?? 0,
         ]);
     }
 

@@ -50,7 +50,9 @@ class VehicleController extends Controller
                 });
             });
         })
-            ->with('provider:id,name,address,tax', 'provider.discount')->withcount('vehicleIdentities as total_vehicle_count')
+            ->with(['provider:id,name,address,tax', 'provider.discount' => function($query){
+            return $query->validate();
+        }])->withcount('vehicleIdentities as total_vehicle_count')
             ->orderBy('avg_rating', 'desc')
             ->orderBy('total_trip', 'desc')
             ->latest()
@@ -201,7 +203,9 @@ class VehicleController extends Controller
             ->withCount([
                 'vehicle_identity as provider_total_vehicle_count',
             ]);
-        },'brand:id,name,image', 'provider.discount'])
+        },'brand:id,name,image', 'provider.discount' => function($query){
+            return $query->validate();
+        }])
 
         ->first();
         if (!$vehicle) {
@@ -284,7 +288,9 @@ class VehicleController extends Controller
                     });
                 });
             })
-            ->with('provider:id,name,address,tax', 'provider.discount', 'vehicleIdentities.vehicle_trip_details');
+            ->with(['provider:id,name,address,tax',  'vehicleIdentities.vehicle_trip_details','provider.discount' => function($query){
+            return $query->validate();
+        }]);
         if ($request?->date) {
             $vehicles = $vehicles->withCount([
                 'vehicleIdentities as total_vehicle_count' => function ($query) use ($request) {

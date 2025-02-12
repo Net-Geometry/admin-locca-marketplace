@@ -40,7 +40,11 @@ class ProviderController extends Controller
                 'vehicles as brand_count' => function ($query) {
                     $query->select(DB::raw('COUNT(DISTINCT(brand_id))'));
                 },
-            ])->first();
+            ])
+            ->with(['discount'=>function($q){
+                return $q->validate();
+            }])
+            ->first();
         if (!$provider) {
             return response()->json(['error' => 'provider_not_found'], 404);
         }

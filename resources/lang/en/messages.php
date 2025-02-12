@@ -7448,4 +7448,5 @@ Smartly or Earn. ',
   'Pin the business location on the map to auto input longitude of that location' => 'Pin the business location on the map to auto input longitude of that location',
   'Car of Justice' => 'Car of Justice',
   'vehicle_already_exists' => 'Vehicle already exists',
+  'Illiana Sheppard' => 'Illiana Sheppard',
 );

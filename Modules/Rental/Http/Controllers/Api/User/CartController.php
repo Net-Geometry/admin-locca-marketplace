@@ -549,7 +549,9 @@ class CartController extends Controller
                         $query->DynamicVehicleQuantity($pickup_time);
                     },
                 ]);
-            }, 'provider:id,name,address,tax,pickup_zone_id', 'provider.discount'])
+            }, 'provider:id,name,address,tax,pickup_zone_id', 'provider.discount' => function($query){
+            return $query->validate();
+        }])
             ->get();
             $carts->each(function ($cart) {
                 if (!empty($cart->provider->pickup_zone_id)) {
