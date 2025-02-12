@@ -235,6 +235,38 @@ class VehicleController extends Controller
             $min_price = Cache::rememberForever($cache_key_min, function () use ($price_column) {
                 return $this->vehicle->where($price_column ,'>','0')->min($price_column);
             });
+        } else{
+            $cache_dis_key_max = "vehicle_dis_max_price_{$request?->provider_id}";
+            $cache_hour_key_max = "vehicle_hour_max_price_{$request?->provider_id}";
+            $cache_dis_key_min = "vehicle_dis_min_price_{$request?->provider_id}";
+            $cache_hour_key_min = "vehicle_hour_min_price_{$request?->provider_id}";
+
+            $max_dis_price = Cache::rememberForever($cache_dis_key_max, function () use ($request) {
+                return $this->vehicle->when($request->provider_id,function($query) use($request){
+                    $query->where('provider_id' , $request->provider_id);
+                })->max('distance_price');
+            });
+            $max_hour_price = Cache::rememberForever($cache_hour_key_max, function () use ($request) {
+                return $this->vehicle->when($request->provider_id,function($query) use($request){
+                    $query->where('provider_id' , $request->provider_id);
+                })->max('hourly_price');
+            });
+
+            $max_price = max($max_dis_price, $max_hour_price);
+
+            $min_dis_price = Cache::rememberForever($cache_dis_key_min, function () use ($request) {
+                return $this->vehicle->when($request->provider_id,function($query) use($request){
+                    $query->where('provider_id' , $request->provider_id);
+                })->where('distance_price' ,'>','0')->min('distance_price');
+            });
+            $min_hour_price = Cache::rememberForever($cache_hour_key_min, function () use ($request) {
+                return $this->vehicle->when($request->provider_id,function($query) use($request){
+                    $query->where('provider_id' , $request->provider_id);
+                })->where('hourly_price' ,'>','0')->min('hourly_price');
+            });
+
+            $min_price = min($min_dis_price,$min_hour_price);
+
         }
 
         $brand_ids = json_decode($request->brand_ids, true) ?? null;
