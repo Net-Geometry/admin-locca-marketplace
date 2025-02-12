@@ -304,8 +304,7 @@ class ProviderTripController extends Controller
         }
 
         if (count($zones) > 0 &&  count($pickup_zone_id) > 0 &&  empty(array_intersect($pickup_zone_id, $zones)) == true) {
-            return response()->json(['success' => false,
-            'message' => translate('messages.Pickup_location_is_out_of_zone')], 400);
+            return response()->json(['errors' => translate('Pickup_location_is_out_of_zone')], 403);
         }
 
         $scheduleAt = $request->schedule_at ? \Carbon\Carbon::parse($request->schedule_at) : \Carbon\Carbon::parse($trip->schedule_at);
