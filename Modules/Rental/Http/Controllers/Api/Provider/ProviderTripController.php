@@ -279,22 +279,29 @@ class ProviderTripController extends Controller
         $trip = $this->trips->where('provider_id', $request->vendor->stores[0]->id)->where('id', $request->trip_id)->with(['trip_details'])->first();
 
         if (!$trip) {
-            return response()->json(['errors' => translate('Trip_not_found')], 404);
+            $errors = [];
+            array_push($errors, ['code' => 'coordinates', 'message' => translate('messages.Trip_not_found')]);
+            return response()->json([
+                'errors' => $errors
+            ], 403);
         }
 
         if (in_array($trip->trip_status, ['completed', 'canceled'])) {
-            return response()->json(['errors' => translate('You_can_not_edit_this')], 403);
+            $errors = [];
+            array_push($errors, ['code' => 'coordinates', 'message' => translate('messages.You_can_not_edit_this')]);
+            return response()->json([
+                'errors' => $errors
+            ], 403);
         }
 
         $destinationLocation = $request->destination_location ? json_encode($request->destination_location) :json_encode( $trip->destination_location);
 
         $pickupLocation = $request->pickup_location  ? json_encode($request->pickup_location)  : json_encode($trip->pickup_location);
-
+        $pickup_zones=json_decode($pickupLocation, true);
         $zones = [];
-        if (data_get($pickupLocation, 'lat')  && data_get($pickupLocation, 'lng')) {
-            $zones = Zone::whereContains('coordinates', new Point(data_get($pickupLocation, 'lat'), data_get($pickupLocation, 'lng'), POINT_SRID))->pluck('id')->toArray();
+        if (data_get($pickup_zones, 'lat')  && data_get($pickup_zones, 'lng')) {
+            $zones = Zone::whereContains('coordinates', new Point(data_get($pickup_zones, 'lat'), data_get($pickup_zones, 'lng'), POINT_SRID))->pluck('id')->toArray();
         }
-
         if (!empty($trip?->provider?->pickup_zone_id)) {
             $pickup_zone_id = is_string($trip->provider->pickup_zone_id)
                 ? json_decode($trip->provider->pickup_zone_id, true)
@@ -304,7 +311,11 @@ class ProviderTripController extends Controller
         }
 
         if (count($zones) > 0 &&  count($pickup_zone_id) > 0 &&  empty(array_intersect($pickup_zone_id, $zones)) == true) {
-            return response()->json(['errors' => translate('Pickup_location_is_out_of_zone')], 403);
+            $errors = [];
+            array_push($errors, ['code' => 'coordinates', 'message' => translate('messages.Pickup_location_is_out_of_zone')]);
+            return response()->json([
+                'errors' => $errors
+            ], 403);
         }
 
         $scheduleAt = $request->schedule_at ? \Carbon\Carbon::parse($request->schedule_at) : \Carbon\Carbon::parse($trip->schedule_at);
