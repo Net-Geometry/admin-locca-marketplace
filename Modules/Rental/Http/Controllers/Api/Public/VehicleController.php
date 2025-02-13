@@ -372,6 +372,13 @@ class VehicleController extends Controller
                 return  $query->orderBy('distance_price', $request->sortby_price);
             } elseif ($request->trip_type == 'hourly') {
                 return  $query->orderBy('hourly_price', $request->sortby_price);
+            }elseif($request->trip_type == 'provider_wise'){
+                return $query->select('*')
+                    ->selectRaw('LEAST(
+                        CASE WHEN hourly_price IS NULL OR hourly_price = 0 THEN 999999999 ELSE hourly_price END,
+                        CASE WHEN distance_price IS NULL OR distance_price = 0 THEN 999999999 ELSE distance_price END
+                    ) as min_price')
+                    ->orderBy('min_price', $request->sortby_price);
             }
         });
         $vehicles = $vehicles->when($request->top_rated == 1, function ($query) {
