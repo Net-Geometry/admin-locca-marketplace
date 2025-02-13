@@ -318,7 +318,10 @@ class VehicleController extends Controller
                 $query->wherebetween('hourly_price', [$request->min_price, $request->max_price]);
             })
             ->when($request->trip_type == 'provider_wise'  && $request->min_price > 0 && $request->max_price > 0, function ($query) use ($request) {
-                $query->wherebetween('hourly_price', [$request->min_price, $request->max_price])->orWherebetween('distance_price', [$request->min_price, $request->max_price]);
+                $query->where(function($q) use ($request) {
+                    $q->whereBetween('hourly_price', [$request->min_price, $request->max_price])
+                      ->orWhereBetween('distance_price', [$request->min_price, $request->max_price]);
+                });
             })
             ->when($request->filled('name'), function ($query) use ($request) {
                 $keys = explode(' ', $request->input('name'));
