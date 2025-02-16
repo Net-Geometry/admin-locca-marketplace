@@ -14,7 +14,9 @@ $(document).on('ready', function () {
         }
         else
         {
-            $('#max_discount').removeAttr("readonly");
+            if($('#discount_type').val() == 'percent'){
+                $('#max_discount').removeAttr("readonly");
+            }
             $('#discount').attr('max', 100);
         }
     });
@@ -73,7 +75,7 @@ function coupon_type_change(coupon_type) {
 
     if ($('#discount_type').val() === 'amount') {
         $('#max_discount').val(0).attr("readonly", true);
-    } else {
+    } else if($('#discount_type').val() === 'percent') {
         $('#max_discount').removeAttr("readonly");
     }
 }
