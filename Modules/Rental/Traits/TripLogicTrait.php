@@ -354,14 +354,15 @@ trait TripLogicTrait
             $provider,
             $trip,
             $totalPrice,
-            $isUpdated
+            $isUpdated,
+            $discountOnTrip
         );
 
         $finalPricing = self::calculateFinalPricing(
             $trip,
             $totalPrice,
             $providerDiscount['isAdminDiscount'] == true  ? $providerDiscount['discount'] : $discountOnTrip,
-            $providerTax
+            $providerTax,
         );
 
         if ($isUpdated) {
@@ -569,7 +570,7 @@ trait TripLogicTrait
     }
 
 
-    public static function applyProviderDiscount($store, Trips $trip, float $totalPrice, $isUpdated): array
+    public static function applyProviderDiscount($store, Trips $trip, float $totalPrice, $isUpdated, $discountOnTrip): array
     {
         $providerDiscount = Helpers::get_store_discount($store);
         if (!$providerDiscount) {
@@ -593,13 +594,21 @@ trait TripLogicTrait
             ];
         }
 
-        if($isUpdated){
-            self::updateAdminDiscountAmount($trip, $totalPrice, $providerDiscount);
+
+        $discount = max($discountOnTrip,$adminDiscount);
+        if($adminDiscount > 0 &&  $discount == $adminDiscount )  {
+            if($isUpdated){
+                self::updateAdminDiscountAmount($trip, $totalPrice, $providerDiscount);
+            }
+            return [
+                'discount' => $adminDiscount,
+                'isAdminDiscount' => true
+            ];
         }
 
         return [
-            'discount' => $adminDiscount,
-            'isAdminDiscount' => true
+            'discount' => 0,
+            'isAdminDiscount' => false
         ];
     }
 
@@ -684,30 +693,34 @@ trait TripLogicTrait
     public static function updateAdminDiscountAmount($trip, $totalPrice, $providerDiscount)
     {
 
-        foreach ($trip->trip_details as $tripDetail) {
-            $itemDiscount = self::checkAdminDiscount(
-                price: $totalPrice,
-                discount: $providerDiscount['discount'],
-                max_discount: $providerDiscount['max_discount'],
-                min_purchase: $providerDiscount['min_purchase'],
-                vehicle_wise_price: $tripDetail->price
-            );
+        if($providerDiscount['discount'] >  0){
+            foreach ($trip->trip_details as $tripDetail) {
+                $itemDiscount = self::checkAdminDiscount(
+                    price: $totalPrice,
+                    discount: $providerDiscount['discount'],
+                    max_discount: $providerDiscount['max_discount'],
+                    min_purchase: $providerDiscount['min_purchase'],
+                    vehicle_wise_price: $tripDetail->price
+                );
 
-            $tripDetail->fill([
-                'discount_on_trip_by' => 'admin',
-                'discount_type' => 'percentage',
-                'discount_percentage' => $providerDiscount['discount'],
-                'discount_on_trip' => $itemDiscount,
+                $tripDetail->fill([
+                    'discount_on_trip_by' => 'admin',
+                    'discount_type' => 'percentage',
+                    'discount_percentage' => $providerDiscount['discount'],
+                    'discount_on_trip' => $itemDiscount,
 
-                'tax_amount' => round(
-                    Helpers::product_tax(
-                        $tripDetail->price - $itemDiscount,
-                        $tripDetail->tax_percentage,
-                        self::taxIncluded()
+                    'tax_amount' => round(
+                        Helpers::product_tax(
+                            $tripDetail->price - $itemDiscount,
+                            $tripDetail->tax_percentage,
+                            self::taxIncluded()
+                        ),
+                        config('round_up_to_digit')
                     ),
-                    config('round_up_to_digit')
-                ),
-            ])->save();
-        }
+                    ])->save();
+                }
+            }
+            return true;
     }
+
 }

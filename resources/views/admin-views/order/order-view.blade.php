@@ -293,7 +293,7 @@
                                             @php($item = is_array($item)?$item:['img'=>$item,'storage'=>'public'])
                                             <div>
                                                 <button class="btn w-100 px-0" data-toggle="modal"
-                                                        data-target="#imagemodal{{ $key }}"
+                                                        data-target="#prescriptionimagemodal{{ $key }}"
                                                         title="{{ translate('messages.order_attachment') }}">
                                                     <div class="gallary-card ml-auto">
                                                         <img  src="{{\App\CentralLogics\Helpers::get_full_url('order', $item['img'], $item['storage']??'public') }}"
@@ -302,7 +302,7 @@
                                                     </div>
                                                 </button>
                                             </div>
-                                            <div class="modal fade" id="imagemodal{{ $key }}" tabindex="-1"
+                                            <div class="modal fade" id="prescriptionimagemodal{{ $key }}" tabindex="-1"
                                                  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
@@ -314,7 +314,7 @@
                                                                     aria-hidden="true">&times;</span><span
                                                                     class="sr-only">{{ translate('messages.cancel') }}</span></button>
                                                         </div>
-                                                        <div class="modal-body">
+                                                        <div class="modal-body scroll-bar">
                                                             <img  src="{{\App\CentralLogics\Helpers::get_full_url('order', $item['img'], $item['storage']??'public') }}"
                                                                   class="initial--22 w-100">
                                                         </div>

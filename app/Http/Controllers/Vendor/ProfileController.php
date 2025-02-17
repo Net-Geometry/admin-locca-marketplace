@@ -45,6 +45,8 @@ class ProfileController extends Controller
         $seller->l_name = $request->l_name;
         $seller->phone = $request->phone;
         $seller->email = $request->email;
+
+        $seller->store()->update(['email' =>$request->email]);
         if ($request->image) {
             $seller->image = Helpers::update('vendor/', $seller->image, 'png', $request->file('image'));
         }

@@ -23,7 +23,7 @@
                             <span>{{translate('messages.discount_info')}}</span>
                         </h5>
                         <div class="text--info mb-3">
-                            {{translate('* When this discount is available, is applied on all the items in this stores.')}}
+                            {{translate('* When this discount is available, is applied on all the vehicles in this provider.')}}
                         </div>
                     </div>
                     <div class="btn--container justify-content-end">

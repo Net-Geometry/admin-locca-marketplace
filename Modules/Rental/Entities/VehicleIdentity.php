@@ -46,12 +46,12 @@ class VehicleIdentity extends Model
                             $query->whereNotExists(function ($subQuery) use ($pickup_time) {
                                 $subQuery->from('trip_vehicle_details')
                                     ->whereColumn('trip_vehicle_details.vehicle_identity_id', 'vehicle_identities.id')
-                                    ->where('estimated_trip_end_time', '>', $pickup_time)->where('is_completed',0);
+                                    ->wheredate('estimated_trip_end_time', $pickup_time)->where('estimated_trip_end_time', '>', $pickup_time)->where('is_completed',0);
                             });
                     });
             });
         }
-        
+
         return $query;
 
     }

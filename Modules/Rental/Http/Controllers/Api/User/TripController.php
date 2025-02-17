@@ -445,22 +445,23 @@ class TripController extends Controller
             $quantity += $cart->quantity;
         }
 
+        $discount = $discount_on_trip;
         $provider_discount = $this->helpers->get_store_discount($provider);
         if (isset($provider_discount)) {
-            $discount = $this->checkAdminDiscount(price: $price, discount: $provider_discount['discount'], max_discount: $provider_discount['max_discount'], min_purchase: $provider_discount['min_purchase']);
+            $admin_discount = $this->checkAdminDiscount(price: $price, discount: $provider_discount['discount'], max_discount: $provider_discount['max_discount'], min_purchase: $provider_discount['min_purchase']);
 
-            $discount_on_trip_by = 'admin';
+            $discount = max($discount_on_trip,$admin_discount);
 
-            foreach ($details_data as $key => $trip_data) {
-                $details_data[$key]['discount_on_trip_by'] = $discount_on_trip_by;
-                $details_data[$key]['discount_type'] = 'precentage';
-                $details_data[$key]['discount_percentage'] = $provider_discount['discount'];
-                $details_data[$key]['discount_on_trip'] =  $this->checkAdminDiscount(price: $price, discount: $provider_discount['discount'], max_discount: $provider_discount['max_discount'], min_purchase: $provider_discount['min_purchase'], vehicle_wise_price: $trip_data['price']);
-                $details_data[$key]['tax_amount'] = round($this->helpers->product_tax($trip_data['price'] - $trip_data['discount_on_trip'], config('round_up_to_digit')), $tax, $is_include);
+            if($admin_discount > 0 &&  $discount == $admin_discount )  {
+                $discount_on_trip_by = 'admin';
+                foreach ($details_data as $key => $trip_data) {
+                    $details_data[$key]['discount_on_trip_by'] = $discount_on_trip_by;
+                    $details_data[$key]['discount_type'] = 'precentage';
+                    $details_data[$key]['discount_percentage'] = $provider_discount['discount'];
+                    $details_data[$key]['discount_on_trip'] =  $this->checkAdminDiscount(price: $price, discount: $provider_discount['discount'], max_discount: $provider_discount['max_discount'], min_purchase: $provider_discount['min_purchase'], vehicle_wise_price: $trip_data['price']);
+                    $details_data[$key]['tax_amount'] = round($this->helpers->product_tax($trip_data['price'] - $trip_data['discount_on_trip'], config('round_up_to_digit')), $tax, $is_include);
+                }
             }
-        } else {
-            $discount = $discount_on_trip;
-            $discount_on_trip_by = 'vendor';
         }
 
         if (count($details_data) > 0) {
