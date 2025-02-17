@@ -488,8 +488,9 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             Route::get('/items', 'FlashSaleController@get_flash_sale_items');
         });
 
-        Route::get('coupon/list', 'CouponController@list');
+        Route::get('coupon/list/all', 'CouponController@list');
         Route::group(['prefix' => 'coupon', 'middleware' => 'auth:api'], function () {
+            Route::get('list', 'CouponController@list');
             Route::get('apply', 'CouponController@apply');
         });
         Route::get('cashback/list', 'CashBackController@list');

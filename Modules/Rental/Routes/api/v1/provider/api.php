@@ -109,8 +109,9 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
     });
 
     Route::group(['middleware' => 'module-check'], function () {
-        Route::get('coupon/list', [Coupon::class, 'list']);
+        Route::get('coupon/list/all', [Coupon::class, 'list']);
         Route::group(['prefix' => 'coupon', 'middleware' => 'auth:api'], function () {
+            Route::get('list', [Coupon::class, 'list']);
             Route::get('apply', [Coupon::class, 'apply']);
         });
         Route::group(['prefix' => 'banners'], function () {
