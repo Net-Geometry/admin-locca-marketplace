@@ -488,30 +488,25 @@ class CartController extends Controller
 
     private function updateCartPrice($request, $user_id, $is_guest, $user_data = null)
     {
+        $user_data =   $this->setUserData($request, $user_id, $is_guest, 0);
+        $zones = [];
+        if (data_get($user_data, 'pickup_location.lat')  && data_get($user_data, 'pickup_location.lng')) {
+            $zones = Zone::whereContains('coordinates', new Point(data_get($user_data, 'pickup_location.lat'), data_get($user_data, 'pickup_location.lng'), POINT_SRID))->pluck('id')->toArray();
+        }
+        $zone_ids = $request->header('zoneId');
+        $zone_ids =  json_decode($zone_ids, true) ?? [];
+
+        if (count($zones) > 0 &&  count($zone_ids) > 0 &&  empty(array_intersect($zone_ids, $zones)) == true) {
+            $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->delete();
+        }
         $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))
             ->with(['vehicle' => function ($query) {
                 $query->withCount('vehicleIdentities as total_vehicle_count');
             }, 'provider:id,name,address,tax', 'provider.discount'])
             ->get();
 
-        $user_data =   $this->setUserData($request, $user_id, $is_guest, 0);
-        $zones = [];
-        if (data_get($user_data, 'pickup_location.lat')  && data_get($user_data, 'pickup_location.lng')) {
-            // $zones []= Zone::whereContains('coordinates', new Point(data_get($user_data, 'pickup_location.lat'), data_get($user_data, 'pickup_location.lng'), POINT_SRID))
-            // ->selectRaw('zones.*, ABS(ST_Area(coordinates)) as area')->orderBy('area', 'asc')->first()?->id;
-
-            $zones = Zone::whereContains('coordinates', new Point(data_get($user_data, 'pickup_location.lat'), data_get($user_data, 'pickup_location.lng'), POINT_SRID))->pluck('id')->toArray();
-        }
-
-        $zone_ids = $request->header('zoneId');
-        $zone_ids =  json_decode($zone_ids, true) ?? [];
-
-        if (count($zones) > 0 &&  count($zone_ids) > 0 &&  empty(array_intersect($zone_ids, $zones)) == true) {
-            $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->delete();
-
-        }
         $total_cart_price = 0;
-        foreach ($carts as  $cart) {
+        foreach ($carts as $cart) {
             if ($cart->vehicle &&  $cart->vehicle->status == 1) {
                 $price = $this->getDiscount(price: ($request->rental_type ?? $user_data?->rental_type) == 'hourly' ? $cart->vehicle->hourly_price *   ($request->estimated_hours ?? $user_data?->estimated_hours) : $cart->vehicle?->distance_price *  ($request->distance ?? $user_data?->distance), discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
                 $cart->user_id = $user_id;

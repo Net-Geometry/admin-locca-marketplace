@@ -325,7 +325,7 @@ class CustomerController extends Controller
 
     public function review_reminder(Request $request)
     {
-        $order = Order::wherehas('OrderReference', function ($query) {
+        $order = Order::has('details')->wherehas('OrderReference', function ($query) {
             $query->where('is_reviewed', 0)->where('is_review_canceled', 0);
         })
             ->where('user_id', $request->user()->id)->where('order_status', 'delivered')->where('is_guest', 0)->latest()->select('id')->with('details:id,order_id,item_details')->first();

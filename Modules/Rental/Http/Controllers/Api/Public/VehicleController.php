@@ -382,7 +382,7 @@ class VehicleController extends Controller
             }
         });
         $vehicles = $vehicles->when($request->top_rated == 1, function ($query) {
-            $query->orderBy('total_trip', 'desc');
+            $query->orderBy('avg_rating', 'desc')->orderBy('total_trip', 'desc');
         });
 
         if (!in_array($request->sortby_price, ['asc', 'desc']) && $request->top_rated != 1) {
