@@ -340,7 +340,7 @@ class TripController extends Controller
             ],
             $store->open == false => [
                 'code' => 'schedule_at',
-                'message' => 'provider_is_closed_at_trip_time',
+                'message' => 'This provider isn\'t available at the selected time',
                 'status' => 403
             ],
             $request->scheduled == 1  && $schedule_at < now() => [
