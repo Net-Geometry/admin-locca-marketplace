@@ -493,8 +493,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             Route::get('list', 'CouponController@list');
             Route::get('apply', 'CouponController@apply');
         });
-        Route::get('cashback/list', 'CashBackController@list');
         Route::group(['prefix' => 'cashback', 'middleware' => 'auth:api'], function () {
+            Route::get('list', 'CashBackController@list');
             Route::get('getCashback', 'CashBackController@getCashback');
         });
 
