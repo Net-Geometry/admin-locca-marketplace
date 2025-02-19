@@ -10917,10 +10917,10 @@ body > .initial-38-1 {
     block-size: 100%;
     min-block-size: 8rem;
     outline: none;
-    /* visibility: hidden; */
+    visibility: hidden;
     cursor: pointer;
     border-radius: 10px;
-    opacity: 0;
+    /* opacity: 0; */
 }
 
 .inputDnD .form-control-file:before {

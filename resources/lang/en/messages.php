@@ -7449,4 +7449,5 @@ Smartly or Earn. ',
   'Car of Justice' => 'Car of Justice',
   'vehicle_already_exists' => 'Vehicle already exists',
   'Illiana Sheppard' => 'Illiana Sheppard',
+  'Must_be_a_Zip_file' => 'Must be a Zip file',
 );

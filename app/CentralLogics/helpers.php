@@ -834,7 +834,7 @@ class Helpers
             $data['is_recommended'] = false;
             $data['minimum_stock_for_warning'] =   (int) $data?->storeConfig?->minimum_stock_for_warning ?? 0;
             $data['halal_tag_status'] =   (bool) $data?->storeConfig?->halal_tag_status;
-            $extra_packaging_data = \App\Models\BusinessSetting::where('key', 'extra_packaging_data')->first()?->value ?? [];
+            $extra_packaging_data = \App\Models\BusinessSetting::where('key', 'extra_packaging_data')->first()?->value ?? '';
             $extra_packaging_data =json_decode($extra_packaging_data , true);
             $data['extra_packaging_status'] =   (bool) (!empty($extra_packaging_data) && data_get($extra_packaging_data ,$data?->module?->module_type))?$data?->storeConfig?->extra_packaging_status:false;
             $data['extra_packaging_amount'] =   (float) (!empty($extra_packaging_data) && (data_get($extra_packaging_data ,$data?->module?->module_type)) && ($data?->storeConfig?->extra_packaging_status == '1'))?$data?->storeConfig?->extra_packaging_amount:0;
@@ -3565,7 +3565,7 @@ class Helpers
             ->Running()
             ->where('min_purchase', '<=', $amount)
             ->where(function($query) use ($customer_id) {
-                $query->whereJsonContains('customer_id', [$customer_id])->orWhereJsonContains('customer_id', ['all']);
+                $query->whereJsonContains('customer_id', [ (string) $customer_id])->orWhereJsonContains('customer_id', ['all']);
             })
                 ->when(is_numeric($customer_id), function($q) use ($customer_id){
                 $q->where('same_user_limit', '>', function($query) use ($customer_id) {
@@ -3584,7 +3584,7 @@ class Helpers
             })
             ->Running()
             ->where(function($query)use($customer_id){
-                $query->whereJsonContains('customer_id', [$customer_id])->orWhereJsonContains('customer_id', ['all']);
+                $query->whereJsonContains('customer_id', [(string)$customer_id])->orWhereJsonContains('customer_id', ['all']);
             })
             ->where('min_purchase','<=',$amount )
             ->when(is_numeric($customer_id), function($q) use ($customer_id){
