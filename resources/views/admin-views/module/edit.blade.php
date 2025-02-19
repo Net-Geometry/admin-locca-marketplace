@@ -115,12 +115,21 @@
                                         <div class="card-body p-0">
                                             <div class="module-radio-group">
                                             @foreach (config('module.module_type') as $key)
+                                            @if($key != 'rental'  )
                                             <label class="form-check form--check">
                                                 <input class="form-check-input" disabled type="radio" name="module_type" value="{{$key}}" {{$key==$module->module_type?'checked':''}}>
                                                 <span class="form-check-label">
                                                     {{translate($key)}}
                                                 </span>
                                             </label>
+                                            @elseif($key == 'rental' && addon_published_status('Rental')  )
+                                            <label class="form-check form--check">
+                                                <input class="form-check-input" disabled type="radio" name="module_type" value="{{$key}}" {{$key==$module->module_type?'checked':''}}>
+                                                <span class="form-check-label">
+                                                    {{translate($key)}}
+                                                </span>
+                                            </label>
+                                            @endif
                                             @endforeach
                                             </div>
                                         </div>
