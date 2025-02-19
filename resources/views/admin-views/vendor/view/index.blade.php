@@ -157,11 +157,11 @@
                                 <h5 class="name">{{$store->vendor->f_name}} {{$store->vendor->l_name}}</h5>
                             </li>
                             <li>
-                                <i class="tio-call-talking nav-icon"></i>
+                                <i class="tio-email nav-icon"></i>
                                 <span class="pl-1"><a href="mailto:{{$store->vendor->email}}">{{$store->vendor->email}}</a> </span>
                             </li>
                             <li>
-                                <i class="tio-email nav-icon"></i>
+                                <i class="tio-call-talking nav-icon"></i>
                                 <span class="pl-1"> <a href="tel:{{$store->vendor->phone}}"> {{$store->vendor->phone}} </a></span>
                             </li>
                         </ul>
