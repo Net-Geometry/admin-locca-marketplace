@@ -90,7 +90,7 @@
                             <div class="form-group m-0 ">
                                     <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.provider')}}<span
                                             class="input-label-secondary"></span></label>
-                                    <select name="store_ids[]" class="js-data-example-ajax form-control"  title="Select Restaurant">
+                                    <select name="store_ids[]" data-url="{{ route('admin.store.get-providers') }}" class="js-data-example-ajax form-control"  title="Select Restaurant">
                                     @if($coupon->coupon_type == 'store_wise')
                                     @php($store=\App\Models\Store::find(json_decode($coupon->data)[0]))
                                         @if($store)
@@ -157,7 +157,7 @@
                         <div class="col-md-4 col-lg-3 col-sm-6">
                             <div class="form-group m-0">
                                 <label class="input-label" for="exampleFormControlInput1">{{translate('messages.min_trip_amount')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                <input type="number" id="min_purchase" name="min_purchase" step="0.01" value="{{$coupon['min_purchase']}}"
+                                <input type="number" data-error-text="{{translate("Discount amount cannot be greater than minimum purchase amount")}}" id="min_purchase" name="min_purchase" step="0.01" value="{{$coupon['min_purchase']}}"
                                        min="0" max="999999999999.99" class="form-control"
                                        placeholder="100">
                             </div>
@@ -206,94 +206,15 @@
         </div>
     </div>
 
+    <input type="hidden" id="current_module_id" value="{{ Config::get('module.current_module_id') }}" >
+    <input type="hidden" id="defaut_coupon_discount_type" value="{{ $coupon?->discount_type }}" >
+    <input type="hidden" id="defaut_coupon_type" value="{{ $coupon?->coupon_type }}" >
+    <input type="hidden" id="defaut_coupon_expire_date" value="{{ $coupon?->expire_date }}" >
+    <input type="hidden" id="defaut_coupon_start_date" value="{{ $coupon?->start_date }}" >
+
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/coupon-edit.js"></script>
-    <script>
-        "use strict";
-
-        $('#min_purchase').on('input', function() {
-            if ($('#discount_type').val() === 'amount') {
-                $('#discount').attr('max', $(this).val() || 0);
-                if (parseFloat($('#discount').val()) > parseFloat($(this).val())) {
-                    toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
-                    $(this).val($(this).data('previous-value'));
-                }
-            }
-            $(this).data('previous-value', $(this).val());
-        });
-
-        $('#discount').on('input', function() {
-            if ($('#discount_type').val() === 'amount') {
-                let minPurchase = parseFloat($('#min_purchase').val()) || 0;
-                let discountValue = parseFloat($(this).val()) || 0;
-
-                if (discountValue > minPurchase) {
-                    toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
-                    $(this).val($(this).data('previous-value'));
-                }
-            }
-            $(this).data('previous-value', $(this).val());
-        });
-
-        function validateDiscount() {
-            let discountType = $('#discount_type').val();
-            let discountInput = $('#discount');
-            let minPurchase = parseFloat($('#min_purchase').val()) || 0;
-            let discountValue = parseFloat(discountInput.val()) || 0;
-
-            if (discountType === 'amount' && discountValue > minPurchase) {
-                discountInput.val(discountValue);
-                toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
-            }
-        }
-
-        coupon_type_change('{{$coupon->coupon_type}}');
-
-        $(document).on('ready', function () {
-            let module_id = {{Config::get('module.current_module_id')}};
-            $('#date_from').attr('max','{{date("Y-m-d",strtotime($coupon["expire_date"]))}}');
-            $('#date_to').attr('min','{{date("Y-m-d",strtotime($coupon["start_date"]))}}');
-            @if($coupon['discount_type']=='amount')
-            $('#max_discount').attr("readonly","true");
-            $('#max_discount').val(0);
-            @endif
-
-
-            $('.js-data-example-ajax').select2({
-                ajax: {
-                    url: '{{url('/')}}/admin/store/get-providers',
-                    data: function (params) {
-                        return {
-                            q: params.term, // search term
-                            page: params.page,
-                            module_id: module_id
-                        };
-                    },
-                    processResults: function (data) {
-                        return {
-                        results: data
-                        };
-                    },
-                    __port: function (params, success, failure) {
-                        let $request = $.ajax(params);
-
-                        $request.then(success);
-                        $request.fail(failure);
-
-                        return $request;
-                    }
-                }
-            });
-            // INITIALIZATION OF FLATPICKR
-            // =======================================================
-            $('.js-flatpickr').each(function () {
-                $.HSCore.components.HSFlatpickr.init($(this));
-            });
-        });
-
-
-
-    </script>
+    <script src="{{asset('public/assets/admin/js/view-pages/coupon-edit.js')}}"></script>
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/coupon-edit.js')}}"></script>
 @endpush
