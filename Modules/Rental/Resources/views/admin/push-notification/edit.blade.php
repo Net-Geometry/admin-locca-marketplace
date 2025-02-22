@@ -70,7 +70,7 @@
                                 </label>
                                 <div class="text-center py-3 my-auto">
                                     <img class="img--vertical onerror-image" id="viewer"
-                                    src="{{ $notification['image_full_url'] }}"
+                                    src="{{ $notification['image_full_url'] }}" data-src="{{ $notification['image_full_url'] }}"
                                     data-onerror-image="{{asset('public/assets/admin/img/900x400/img1.jpg')}}" alt="image"/>
                                 </div>
                                 <div class="custom-file">
@@ -90,16 +90,9 @@
             <!-- End Table -->
         </div>
     </div>
-
+<input type="hidden" id="default_zone_id" value="{{ $notification['zone_id'] }}">
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/notification.js"></script>
-    <script>
-        "use strict";
-            $('#reset_btn').click(function(){
-                $('#zone').val("{{$notification->zone_id}}").trigger('change');
-                $('#viewer').attr('src', "{{ $notification['image_full_url'] }}");
-            })
-        </script>
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/push-notification-edit.js')}}"></script>
 @endpush

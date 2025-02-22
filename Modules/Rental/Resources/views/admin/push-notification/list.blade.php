@@ -71,7 +71,7 @@
                                             <small class="text-danger"> ( {{translate('messages.ratio')}} 900x300 )</small>
                                         </label>
                                         <div class="text-center py-3 my-auto">
-                                            <img class="img--vertical" id="viewer"
+                                            <img class="img--vertical" id="viewer" data-src="{{asset('public/assets/admin/img/900x400/img1.jpg')}}"
                                                 src="{{asset('public/assets/admin/img/900x400/img1.jpg')}}" alt="image"/>
                                         </div>
                                         <div class="custom-file">
@@ -246,14 +246,5 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/notification.js"></script>
-    <script>
-        "use strict";
-            $('#reset_btn').click(function(){
-                $('#zone').val('all').trigger('change');
-                $('#tergat').val('customer').trigger('change');
-                $('#viewer').attr('src','{{asset('public/assets/admin/img/900x400/img1.jpg')}}');
-                $('#customFileEg1').val(null);
-            })
-        </script>
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/push-notification-list.js')}}"></script>
 @endpush

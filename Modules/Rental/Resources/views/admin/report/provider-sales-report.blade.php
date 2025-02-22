@@ -63,7 +63,8 @@
                             </select>
                         </div>
                         <div class="col-md-4 col-sm-6">
-                            <select name="provider_id"
+                            <select name="provider_id" data-get-provider-url="{{route('admin.store.get-providers')}}"
+                                    data-zone-id="{{ isset($zone) ? $zone->id : '' }}"
                                     data-placeholder="{{ translate('messages.select_provider') }}"
                                     class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="provider_id">
                                 @if (isset($provider))
@@ -151,65 +152,14 @@
                 </span>
                     </h5>
                 </div>
+
+
                 <canvas id="updatingData" class="store-center-chart"
-                    data-hs-chartjs-options='{
-                    "type": "bar",
-                    "data": {
-                      "labels": [{{ implode(",",$label) }}],
-                      "datasets": [{
-                        "data": [{{ implode(",",$data) }}],
-                        "backgroundColor": "#82CFCF",
-                        "hoverBackgroundColor": "#82CFCF",
-                        "borderColor": "#82CFCF"
-                      }]
-                    },
-                    "options": {
-                      "scales": {
-                        "yAxes": [{
-                          "gridLines": {
-                            "color": "#e7eaf3",
-                            "drawBorder": false,
-                            "zeroLineColor": "#e7eaf3"
-                          },
-                          "ticks": {
-                            "beginAtZero": true,
-                            "stepSize": {{ceil((array_sum($data)/10000))*2000}},
-                            "fontSize": 12,
-                            "fontColor": "#97a4af",
-                            "fontFamily": "Open Sans, sans-serif",
-                            "padding": 5,
-                            "postfix": " {{ \App\CentralLogics\Helpers::currency_symbol() }}"
-                          }
-                        }],
-                        "xAxes": [{
-                          "gridLines": {
-                            "display": false,
-                            "drawBorder": false
-                          },
-                          "ticks": {
-                            "fontSize": 12,
-                            "fontColor": "#97a4af",
-                            "fontFamily": "Open Sans, sans-serif",
-                            "padding": 5
-                          },
-                          "categoryPercentage": 0.3,
-                          "maxBarThickness": "10"
-                        }]
-                      },
-                      "cornerRadius": 5,
-                      "tooltips": {
-                        "prefix": " ",
-                        "hasIndicator": true,
-                        "mode": "index",
-                        "intersect": false
-                      },
-                      "hover": {
-                        "mode": "nearest",
-                        "intersect": true
-                      }
-                    }
-                  }'>
+                    data-chart-labels='[{{ implode(",",$label) }}]'
+                    data-chart-data='[{{ implode(",",$data) }}]'
+                    data-chart-currency-symbol="{{ \App\CentralLogics\Helpers::currency_symbol() }}">
                 </canvas>
+
             </div>
             <div class="right-content">
                 <!-- Dognut Pie -->
@@ -356,48 +306,7 @@
     @push('script_2')
         <script src="{{ asset('public/assets/admin') }}/vendor/chart.js/dist/Chart.min.js"></script>
         <script src="{{ asset('public/assets/admin') }}/vendor/chart.js.extensions/chartjs-extensions.js"></script>
-        <script
-            src="{{ asset('public/assets/admin') }}/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js">
-        </script>
-        <script>
-            "use strict";
-            // Bar Charts
-            Chart.plugins.unregister(ChartDataLabels);
+        <script src="{{ asset('public/assets/admin') }}/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"> </script>
+        <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/provider-sales-report.js')}}"></script>
 
-            $('.js-chart').each(function() {
-                $.HSCore.components.HSChartJS.init($(this));
-            });
-
-            let updatingChart = $.HSCore.components.HSChartJS.init($('#updatingData'));
-
-            $('.js-data-example-ajax').select2({
-                ajax: {
-                    url: '{{ url('/') }}/admin/store/get-providers',
-                    data: function(params) {
-                        return {
-                            q: params.term, // search term
-                            // all:true,
-                            @if (isset($zone))
-                                zone_ids: [{{ $zone->id }}],
-                            @endif
-                            page: params.page
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data
-                        };
-                    },
-                    __port: function(params, success, failure) {
-                        let $request = $.ajax(params);
-
-                        $request.then(success);
-                        $request.fail(failure);
-
-                        return $request;
-                    }
-                }
-            });
-
-        </script>
     @endpush
