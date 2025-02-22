@@ -117,12 +117,5 @@
         $('#reset_btn').click(function(){
             $('#viewer').attr('src', "{{ $brand['image_full_url'] }}");
         })
-        $("#customFileEg1").change(function() {
-            readURL(this);
-            $('#viewer').show(1000)
-        });
-
-
-
     </script>
 @endpush

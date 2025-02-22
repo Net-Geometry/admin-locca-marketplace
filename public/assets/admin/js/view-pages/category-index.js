@@ -16,3 +16,14 @@ forms.forEach(function(form) {
         form.submit();
     });
 });
+
+$("#customFileEg1").change(function() {
+    readURL(this);
+    $('#viewer').show(1000)
+});
+$('.location-reload-to-brand').on('click', function() {
+    const url = $(this).data('url');
+    let nurl = new URL(url);
+    nurl.searchParams.delete('search');
+    location.href = nurl;
+});
