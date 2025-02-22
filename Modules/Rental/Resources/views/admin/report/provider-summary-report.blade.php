@@ -118,67 +118,15 @@
                     <i class="tio-info-outined"></i>
                 </span></h5>
             </div>
+
             <canvas id="updatingData" class="store-center-chart"
-                data-hs-chartjs-options='{
-            "type": "bar",
-            "data": {
-              "labels": [{{ implode(',', $label) }}],
-              "datasets": [{
-                "data": [{{ implode(',', $data) }}],
-                "backgroundColor": "#82CFCF",
-                "hoverBackgroundColor": "#82CFCF",
-                "borderColor": "#82CFCF"
-              }]
-            },
-            "options": {
-              "scales": {
-                "yAxes": [{
-                  "gridLines": {
-                    "color": "#e7eaf3",
-                    "drawBorder": false,
-                    "zeroLineColor": "#e7eaf3"
-                  },
-                  "ticks": {
-                    "beginAtZero": true,
-                    "stepSize": {{ceil((array_sum($data)/10000))*2000}},
-                    "fontSize": 12,
-                    "fontColor": "#97a4af",
-                    "fontFamily": "Open Sans, sans-serif",
-                    "padding": 5,
-                    "postfix": " {{ \App\CentralLogics\Helpers::currency_symbol() }}"
-                  }
-                }],
-                "xAxes": [{
-                  "gridLines": {
-                    "display": false,
-                    "drawBorder": false
-                  },
-                  "ticks": {
-                    "fontSize": 12,
-                    "fontColor": "#97a4af",
-                    "fontFamily": "Open Sans, sans-serif",
-                    "padding": 5
-                  },
-                  "categoryPercentage": 0.3,
-                  "maxBarThickness": "10"
-                }]
-              },
-              "cornerRadius": 5,
-              "tooltips": {
-                "prefix": " ",
-                "hasIndicator": true,
-                "mode": "index",
-                "intersect": false
-              },
-              "hover": {
-                "mode": "nearest",
-                "intersect": true
-              }
-            }
-          }'>
+                    data-chart-labels='[{{ implode(',', $label) }}]'
+                    data-chart-data='[{{ implode(',', $data) }}]'
+                    data-chart-currency-symbol="{{ \App\CentralLogics\Helpers::currency_symbol() }}">
             </canvas>
+
         </div>
-        <div class="right-content">
+         <div class="right-content">
             <!-- Dognut Pie -->
             <div class="card h-100 bg-white payment-statistics-shadow">
                 <div class="card-header border-0 ">
@@ -193,7 +141,6 @@
                         <div class="total--orders">
                             <h3>{{ \App\CentralLogics\Helpers::number_format_short($total_trip_amount) }}
                             </h3>
-                            {{-- <span>{{ translate('messages.trips') }}</span> --}}
                         </div>
                         <!-- Total Trips -->
                     </div>
@@ -343,69 +290,31 @@
 @endsection
 
 
-@push('script')
-@endpush
-
-
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/vendor/chart.js/dist/Chart.min.js"></script>
     <script src="{{asset('public/assets/admin')}}/vendor/chart.js.extensions/chartjs-extensions.js"></script>
     <script src="{{asset('public/assets/admin')}}/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
-
-
     <!-- Apex Charts -->
     <script src="{{asset('/public/assets/admin/js/apex-charts/apexcharts.js')}}"></script>
     <!-- Apex Charts -->
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/provider-summary-report.js')}}"></script>
 
     <!-- Dognut Pie Chart -->
     <script>
         "use strict";
-        let options = {
-            series: [{{ count($trip_payment_methods)>0?isset($trip_payment_methods[0])?$trip_payment_methods[0]->trip_count:0:0 }}, {{ count($trip_payment_methods)>0?isset($trip_payment_methods[1])?$trip_payment_methods[1]->trip_count:0:0 }}, {{ count($trip_payment_methods)>0?isset($trip_payment_methods[2])?$trip_payment_methods[2]->trip_count:0:0 }}],
-            chart: {
-                width: 320,
-                type: 'donut',
-            },
-            labels: ['{{ translate('Cash Payments') }} ({{ count($trip_payment_methods)>0?isset($trip_payment_methods[0])?$trip_payment_methods[0]->total_trip_amount:0:0 }})',
-                '{{ translate('Digital Payments') }} ({{ count($trip_payment_methods)>0?isset($trip_payment_methods[1])?$trip_payment_methods[1]->total_trip_amount:0:0 }})',
-                '{{ translate('Wallet') }} ({{ count($trip_payment_methods)>0?isset($trip_payment_methods[2])?$trip_payment_methods[2]->total_trip_amount:0:0 }})'
-            ],
-            dataLabels: {
-                enabled: false,
-                style: {
-                    colors: ['#ffffff', '#ffffff', '#107980']
-                }
-            },
-            responsive: [{
-                breakpoint: 1650,
-                options: {
-                    chart: {
-                        width: 260
-                    },
-                }
-            }],
-            colors: ['#107980', '#56B98F', '#111'],
-            fill: {
-                colors: ['#107980', '#56B98F', '#E5F5F1']
-            },
-            legend: {
-                show: false
-            },
-        };
+        window.chartData = {
+        series: @json([
+            $trip_payment_methods[0]->trip_count ?? 0,
+            $trip_payment_methods[1]->trip_count ?? 0,
+            $trip_payment_methods[2]->trip_count ?? 0
+        ]),
+        labels: @json([
+            __('Cash Payments') . ' (' . ($trip_payment_methods[0]->total_trip_amount ?? 0) . ')',
+            __('Digital Payments') . ' (' . ($trip_payment_methods[1]->total_trip_amount ?? 0) . ')',
+            __('Wallet') . ' (' . ($trip_payment_methods[2]->total_trip_amount ?? 0) . ')'
+        ])
+    };
 
-        let chart = new ApexCharts(document.querySelector("#dognut-pie"), options);
-        chart.render();
-    <!-- Dognut Pie Chart -->
-
-
-    // Bar Charts
-    Chart.plugins.unregister(ChartDataLabels);
-
-    $('.js-chart').each(function () {
-        $.HSCore.components.HSChartJS.init($(this));
-    });
-
-    let updatingChart = $.HSCore.components.HSChartJS.init($('#updatingData'));
 </script>
 
 

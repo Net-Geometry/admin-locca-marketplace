@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!canvas) return; // Exit if canvas is not found
 
+    // Retrieve dataset attributes
     const labels = JSON.parse(canvas.dataset.chartLabels);
     const data = JSON.parse(canvas.dataset.chartData);
     const currencySymbol = canvas.dataset.chartCurrencySymbol;
@@ -62,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
             cornerRadius: 5,
             tooltips: {
                 callbacks: {
-                    label: function (tooltipItem, chart) {
+                    label: function (tooltipItem) {
                         return tooltipItem.yLabel + " " + currencySymbol;
                     }
                 },
@@ -72,53 +73,69 @@ document.addEventListener("DOMContentLoaded", function () {
             hover: {
                 mode: "nearest",
                 intersect: true
-            }
+            },
+
         }
     });
 });
-Chart.plugins.unregister(ChartDataLabels);
 
-$('.js-chart').each(function() {
-    $.HSCore.components.HSChartJS.init($(this));
-});
 
-let updatingChart = $.HSCore.components.HSChartJS.init($('#updatingData'));
 
+   // Bar Charts
+   Chart.plugins.unregister(ChartDataLabels);
+
+   $('.js-chart').each(function () {
+       $.HSCore.components.HSChartJS.init($(this));
+   });
+
+   let updatingChart = $.HSCore.components.HSChartJS.init($('#updatingData'));
+
+
+   "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
-    const providerSelect = document.querySelector(".js-data-example-ajax");
+    if (!window.chartData) {
+        console.error("Chart data not found!");
+        return;
+    }
 
-    if (!providerSelect) return;
-
-    const url = providerSelect.dataset.getProviderUrl;
-    const zoneId = providerSelect.dataset.zoneId;
-
-    $(providerSelect).select2({
-        ajax: {
-            url: url,
-            data: function (params) {
-                let requestData = {
-                    q: params.term, // Search term
-                    page: params.page
-                };
-
-                if (zoneId) {
-                    requestData.zone_ids = [zoneId];
-                }
-
-                return requestData;
+    let options = {
+        series: window.chartData.series,
+        chart: {
+            width: 320,
+            type: "donut",
+        },
+        labels: window.chartData.labels,
+        dataLabels: {
+            enabled: false,
+            style: {
+                colors: ["#ffffff", "#ffffff", "#107980"],
             },
-            processResults: function (data) {
-                return {
-                    results: data
-                };
+        },
+        responsive: [
+            {
+                breakpoint: 1650,
+                options: {
+                    chart: {
+                        width: 260,
+                    },
+                },
             },
-            __port: function (params, success, failure) {
-                let $request = $.ajax(params);
-                $request.then(success);
-                $request.fail(failure);
-                return $request;
-            }
-        }
-    });
+        ],
+        colors: ["#107980", "#56B98F", "#111"],
+        fill: {
+            colors: ["#107980", "#56B98F", "#E5F5F1"],
+        },
+        legend: {
+            show: false,
+        },
+    };
+
+    let chartElement = document.querySelector("#dognut-pie");
+    if (chartElement) {
+        let chart = new ApexCharts(chartElement, options);
+        chart.render();
+    } else {
+        console.error("Chart element not found!");
+    }
 });
