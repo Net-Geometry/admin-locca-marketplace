@@ -200,7 +200,7 @@
 
                                 <div class="form-group col-sm-6 col-lg-4">
                                     <label class="input-label text-capitalize">{{translate('messages.minimum_order_amount')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Specify_the_minimum_order_amount_required_for_customers_when_ordering_from_this_store.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.self_delivery_hint')}}"></span></label>
-                                    <input type="number" name="minimum_order" step="0.01" min="0" max="100000" class="form-control" placeholder="100" value="{{$store->minimum_order>0?$store->minimum_order:''}}">
+                                    <input type="number" name="minimum_order" step="0.01" min="0" max="999999999" class="form-control" placeholder="100" value="{{$store->minimum_order>0?$store->minimum_order:''}}">
                                 </div>
                                 @if (config('module.'.$store->module->module_type)['order_place_to_schedule_interval'])
                                 <div class="form-group col-sm-6 col-lg-4">

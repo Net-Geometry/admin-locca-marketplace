@@ -753,7 +753,7 @@ class CampaignController extends Controller
         {
             $campaign = ItemCampaign::withoutGlobalScope('translate')->findOrFail($campaign);
             $temp = $campaign->category;
-            if($temp->position)
+            if($temp?->position)
             {
                 $sub_category = $temp;
                 $category = $temp->parent;

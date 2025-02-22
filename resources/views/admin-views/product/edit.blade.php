@@ -569,7 +569,7 @@
                                             data-original-title="{{ translate('messages.Required.')}}"> *
                                             </span></label>
                                         <input type="number" min="0" value="{{ $product['discount'] }}"
-                                            max="100000" name="discount" class="form-control"
+                                            max="999999999" name="discount" class="form-control"
                                             placeholder="{{ translate('messages.Ex:') }} 100">
                                     </div>
                                 </div>

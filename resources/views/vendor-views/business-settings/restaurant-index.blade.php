@@ -308,7 +308,7 @@
                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                         alt="{{ translate('messages.self_delivery_hint') }}"></span></label>
                             <input type="number" id="minimum_order" name="minimum_order" step="0.01" min="0"
-                                max="100000" class="form-control" placeholder="100"
+                                max="999999999" class="form-control" placeholder="100"
                                 value="{{ $store->minimum_order > 0 ? $store->minimum_order : '' }}">
                         </div>
                         @if (config('module.' . $store->module->module_type)['order_place_to_schedule_interval'])
@@ -373,7 +373,7 @@
                                         for="per_km_delivery_charge">{{ translate('messages.delivery_charge_per_km') }}
                                         ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
                                     <input type="number" id="per_km_delivery_charge" name="per_km_delivery_charge"
-                                        step="0.01" min="0" max="100000" class="form-control"
+                                        step="0.01" min="0" max="999999999" class="form-control"
                                         placeholder="100" value="{{ $store->per_km_shipping_charge ?? '0' }}">
                                 </div>
                             </div>

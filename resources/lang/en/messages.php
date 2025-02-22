@@ -7451,4 +7451,6 @@ Smartly or Earn. ',
   'Illiana Sheppard' => 'Illiana Sheppard',
   'Must_be_a_Zip_file' => 'Must be a Zip file',
   'rererere' => 'Rererere',
+  'Insert_Owner\'s_General_Information' => 'Insert Owner s General Information',
+  'Insert_Owner\'s_account_information' => 'Insert Owner s account information',
 );
