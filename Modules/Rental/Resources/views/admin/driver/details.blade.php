@@ -390,33 +390,7 @@
         </div>
         <!-- End Card -->
     </div>
-    <!--Driver delete Modal -->
-    <div class="modal fade" id="driverDeleteModal" tabindex="-1" role="dialog"
-        aria-labelledby="driverDeleteModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header p-2 pb-0 justify-content-end flex-shrink-0">
-                    <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body py-6 text-center">
-                    <div class="mb-20">
-                        <img width="80" class="aspect-ratio-1"
-                            src="{{ asset('public/assets/admin/img/modal/delete-icon.png') }}" alt="">
-                    </div>
-                    <h3 class="font-medium text--title">Confirm Driver Deletion</h3>
-                    <div class="fs-13">Are you sure you want to delete this Driver & remove it permanently?</div>
-                    <div class="btn--container justify-content-center mt-5">
-                        <button type="reset" id="reset_btn"
-                            class="btn btn--cancel min-w-120px">{{ translate('messages.not_now') }}</button>
-                        <button type="submit"
-                            class="btn btn--primary min-w-120px">{{ translate('messages.yes') }}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Modal -->
+
 @endsection
 
 

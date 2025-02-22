@@ -37,7 +37,7 @@ function validateDiscount() {
 coupon_type_change($('#defaut_coupon_type').val());
 
 $(document).on('ready', function () {
-    let module_id = $('#current_module_id').val();
+    var module_id = $('#current_module_id').val();
     var url = $('#store_id').attr('data-url');
     $('#date_from').attr('max', $('#defaut_coupon_expire_date').val());
     $('#date_to').attr('min', $('#defaut_coupon_start_date').val());
@@ -46,13 +46,13 @@ $(document).on('ready', function () {
         $('#max_discount').attr("readonly","true");
         $('#max_discount').val(0);
     }
-
+    coupon_type_change($('#defaut_banner_type').val());
     $('.js-data-example-ajax').select2({
         ajax: {
             url: url,
             data: function (params) {
                 return {
-                    q: params.term, 
+                    q: params.term,
                     page: params.page,
                     module_id: module_id
                 };

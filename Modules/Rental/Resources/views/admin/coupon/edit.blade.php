@@ -90,7 +90,7 @@
                             <div class="form-group m-0 ">
                                     <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.provider')}}<span
                                             class="input-label-secondary"></span></label>
-                                    <select name="store_ids[]" data-url="{{ route('admin.store.get-providers') }}" class="js-data-example-ajax form-control"  title="Select Restaurant">
+                                    <select name="store_ids[]" id="store_id" data-url="{{ route('admin.store.get-providers') }}" class="js-data-example-ajax form-control"  title="Select Restaurant">
                                     @if($coupon->coupon_type == 'store_wise')
                                     @php($store=\App\Models\Store::find(json_decode($coupon->data)[0]))
                                         @if($store)
