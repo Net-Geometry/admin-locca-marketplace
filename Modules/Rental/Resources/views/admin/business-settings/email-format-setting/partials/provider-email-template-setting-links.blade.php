@@ -70,12 +70,6 @@
                     {{translate('Subscription_Cancel')}}
                 </a>
             </li>
-            {{-- <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/rental-email-setup/provider/subscription-deadline') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.rental-email-setup', ['provider','subscription-deadline']) }}">
-                    {{translate('Subscription_Deadline_Warning')}}
-                </a>
-            </li> --}}
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/rental-email-setup/provider/subscription-plan_upadte') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.rental-email-setup', ['provider','subscription-plan_upadte']) }}">

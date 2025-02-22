@@ -6,16 +6,6 @@
                 <a class="nav-link {{ Request::is('admin/business-settings/rental-email-setup/user/new-order') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.rental-email-setup', ['user','new-order']) }}">{{translate('Trip_Booking')}}</a>
             </li>
-            {{-- <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/rental-email-setup/user/refund-order') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.rental-email-setup', ['user','refund-order']) }}">{{translate('messages.refund_order')}}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/rental-email-setup/user/refund-request-deny') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.rental-email-setup', ['user','refund-request-deny']) }}">
-                    {{translate('Refund_Request_Rejected')}}
-                </a>
-            </li> --}}
         </ul>
         <!-- End Nav -->
     </div>

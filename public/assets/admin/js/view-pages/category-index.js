@@ -27,3 +27,8 @@ $('.location-reload-to-brand').on('click', function() {
     nurl.searchParams.delete('search');
     location.href = nurl;
 });
+
+$('#reset_btn').click(function(){
+    $('#exampleFormControlSelect1').val(null).trigger('change');
+        $('#viewer').attr('src', $(this).data('image'));
+})

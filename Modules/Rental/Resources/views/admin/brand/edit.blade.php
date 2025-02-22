@@ -99,7 +99,7 @@
                         </div>
                     </div>
                     <div class="btn--container justify-content-end mt-3">
-                        <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
+                        <button type="reset" id="reset_btn" data-image="{{ $brand['image_full_url'] }}" class="btn btn--reset">{{translate('messages.reset')}}</button>
                         <button type="submit" class="btn btn--primary">{{translate('messages.update')}}</button>
                     </div>
                 </form>
@@ -112,10 +112,4 @@
 
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/category-index.js"></script>
-    <script>
-        "use strict";
-        $('#reset_btn').click(function(){
-            $('#viewer').attr('src', "{{ $brand['image_full_url'] }}");
-        })
-    </script>
 @endpush

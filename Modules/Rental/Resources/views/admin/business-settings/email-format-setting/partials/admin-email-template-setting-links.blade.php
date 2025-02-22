@@ -14,12 +14,6 @@
                     {{translate('Withdraw Request')}}
                 </a>
             </li>
-            {{-- <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/rental-email-setup/admin/refund-request') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.rental-email-setup', ['admin','refund-request']) }}">
-                    {{translate('Refund Request')}}
-                </a>
-            </li> --}}
         </ul>
         <!-- End Nav -->
     </div>
