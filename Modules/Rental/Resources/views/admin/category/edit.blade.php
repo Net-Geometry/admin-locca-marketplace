@@ -105,7 +105,7 @@
                         </div>
                     </div>
                     <div class="btn--container justify-content-end mt-3">
-                        <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
+                        <button type="reset" data-image="{{ $category['image_full_url'] }}" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
                         <button type="submit" class="btn btn--primary">{{translate('messages.update')}}</button>
                     </div>
                 </form>
@@ -118,18 +118,4 @@
 
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/category-index.js"></script>
-    <script>
-        "use strict";
-        $('#reset_btn').click(function(){
-            $('#module_id').val("{{ $category->module_id }}").trigger('change');
-            $('#viewer').attr('src', "{{ $category['image_full_url'] }}");
-        })
-        $("#customFileEg1").change(function() {
-            readURL(this);
-            $('#viewer').show(1000)
-        });
-
-
-
-    </script>
 @endpush

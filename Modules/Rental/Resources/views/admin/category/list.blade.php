@@ -94,7 +94,7 @@
                         </div>
                     </div>
                     <div class="btn--container justify-content-end mt-3">
-                        <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
+                        <button type="reset" id="reset_btn" data-image="{{asset('public/assets/admin/img/upload-img.png')}}" class="btn btn--reset">{{translate('messages.reset')}}</button>
                         <button type="submit" class="btn btn--primary">{{isset($category)?translate('messages.update'):translate('messages.add')}}</button>
                     </div>
 
@@ -228,23 +228,5 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/category-index.js"></script>
-    <script>
-    "use strict";
-        $('.location-reload-to-category').on('click', function() {
-            const url = $(this).data('url');
-            let nurl = new URL(url);
-            nurl.searchParams.delete('search');
-            location.href = nurl;
-        });
-
-        $("#customFileEg1").change(function() {
-            readURL(this);
-            $('#viewer').show(1000)
-        });
-        $('#reset_btn').click(function(){
-            $('#exampleFormControlSelect1').val(null).trigger('change');
-                $('#viewer').attr('src', "{{asset('public/assets/admin/img/upload-img.png')}}");
-        })
-    </script>
+    <script src="{{asset('public/assets/admin/js/view-pages/category-index.js')}}"></script>
 @endpush
