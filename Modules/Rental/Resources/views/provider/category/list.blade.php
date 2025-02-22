@@ -117,23 +117,5 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/category-index.js"></script>
-    <script>
-    "use strict";
-        $('.location-reload-to-category').on('click', function() {
-            const url = $(this).data('url');
-            let nurl = new URL(url);
-            nurl.searchParams.delete('search');
-            location.href = nurl;
-        });
 
-        $("#customFileEg1").change(function() {
-            readURL(this);
-            $('#viewer').show(1000)
-        });
-        $('#reset_btn').click(function(){
-            $('#exampleFormControlSelect1').val(null).trigger('change');
-                $('#viewer').attr('src', "{{asset('public/assets/admin/img/upload-img.png')}}");
-        })
-    </script>
 @endpush

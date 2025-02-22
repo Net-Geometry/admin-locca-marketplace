@@ -75,18 +75,6 @@
                             </label>
                         </div>
                     </div>
-                    {{-- <div class="col-lg-4 col-sm-6">
-                        <div class="">
-                            <label class="d-flex justify-content-between switch toggle-switch-sm text-dark" for="">
-                                <label class="input-label font-semibold mb-0">{{translate('messages.Extra_Service_Charge')}}</label>
-                                <input type="checkbox" class="toggle-switch-input" name="" id="" value="1" {{$store->gst_status?'checked':''}}>
-                                <span class="toggle-switch-label">
-                                    <span class="toggle-switch-indicator"></span>
-                                </span>
-                            </label>
-                            <input type="text" id="gst" name="gst" class="form-control" value="" placeholder="Ex: $10">
-                        </div>
-                    </div> --}}
                     <div class="col-lg-4 col-sm-6">
                         <div class="">
                             <label class="d-flex justify-content-between switch toggle-switch-sm text-dark" for="gst_status">

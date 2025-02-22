@@ -88,8 +88,7 @@
                                     {{ translate('messages.Trips') }}
                                 </span>
                             </a>
-                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                style="display:{{ Request::is('vendor-panel/trip*') ? 'block' : 'none' }}">
+                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub {{ Request::is('vendor-panel/trip*') ? '' : 'd-none' }}">
                                 <li class="nav-item {{ request()->status == 'all' ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('vendor.trip.list') }}?status=all"
                                         title="{{ translate('messages.all_trips') }}">
@@ -208,8 +207,7 @@
                                 <span
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate text-capitalize">{{ translate('Vehicle Setup') }}</span>
                             </a>
-                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                style="display:{{ Request::is('vendor-panel/vehicle/*') ? 'block' : 'none' }}">
+                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub {{ Request::is('vendor-panel/vehicle/*') ? '' : 'd-none' }}">
                                 <li
                                     class="nav-item {{ Request::is('vendor-panel/vehicle/create')  ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.vehicle.create') }}"
@@ -494,8 +492,7 @@
                                 <span
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.employees') }}</span>
                             </a>
-                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                style="display: {{ Request::is('vendor-panel/employee*') ? 'block' : 'none' }}">
+                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub {{ Request::is('vendor-panel/employee*') ? '' : 'd-none' }}">
                                 <li class="nav-item {{ Request::is('vendor-panel/employee/add-new') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('vendor.employee.add-new') }}"
                                         title="{{ translate('messages.add_new_Employee') }}">

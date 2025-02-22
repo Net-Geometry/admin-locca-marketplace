@@ -333,13 +333,5 @@
 @endsection
 
 @push('script_2')
-    <script>
-        "use strict";
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
 
-        });
-    </script>
 @endpush

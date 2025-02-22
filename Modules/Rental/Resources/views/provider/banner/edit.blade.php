@@ -119,7 +119,7 @@
                                                             {{ translate('or drag and drop') }}
                                                         </h6>
                                                     </div>
-                                                    <img class="upload-file-img" loading="lazy" style="display: none;" src="{{ $banner['image_full_url'] }}" alt="">
+                                                    <img class="upload-file-img d-none" loading="lazy" src="{{ $banner['image_full_url'] }}" alt="" data-banner-image="{{ $banner['image_full_url'] }}">
                                                 </label>
                                             </div>
 
@@ -144,60 +144,5 @@
 @endsection
 
 @push('script_2')
-    <script>
-        "use strict";
-
-        $(document).ready(function () {
-            $('.single_file_input').on('change', function (event) {
-                var file = event.target.files[0];
-                var $card = $(event.target).closest('.upload-file');
-                var $textbox = $card.find('.upload-file-textbox');
-                var $imgElement = $card.find('.upload-file-img');
-                var $removeBtn = $card.find('.remove-btn');
-
-                if (file) {
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        $textbox.hide();
-                        $imgElement.attr('src', e.target.result).show();
-                        $removeBtn.css('opacity', 1);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            $('.upload-file').each(function () {
-                var $card = $(this);
-                var $textbox = $card.find('.upload-file-textbox');
-                var $imgElement = $card.find('.upload-file-img');
-                var $removeBtn = $card.find('.remove-btn');
-                if ($imgElement.attr('src') && $imgElement.attr('src') !== window.location.href) {
-                    $textbox.hide();
-                    $imgElement.show();
-                }
-            });
-
-           $('.remove-btn').click(function () {
-                var $card = $(this).closest('.upload-file');
-                $card.find('.single_file_input').val('');
-                $card.find('.upload-file-img').attr('src', '{{ $banner['image_full_url'] }}');
-                $(this).css('opacity', 0);
-            });
-
-            $('#reset_btn').click(function () {
-                var $cards = $('.upload-file');
-                $cards.each(function () {
-                    $(this).find('.single_file_input').val('');
-                    $(this).find('.upload-file-img').attr('src', '{{ $banner['image_full_url'] }}');
-                    $(this).find('.remove-btn').css('opacity', 0);
-                });
-            });
-        });
-
-
-
-
-
-
-    </script>
+<script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/banner-edit.js') }}"></script>
 @endpush
