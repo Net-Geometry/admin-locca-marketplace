@@ -10,7 +10,7 @@ $(document).ready(function () {
             let reader = new FileReader();
             reader.onload = function (e) {
                 $textbox.hide();
-                $imgElement.attr('src', e.target.result).show();
+                $imgElement.attr('src', e.target.result).removeClass('d-none');
                 $removeBtn.css('opacity', 1);
             };
             reader.readAsDataURL(file);
@@ -18,7 +18,7 @@ $(document).ready(function () {
         }
         else {
             $textbox.show();
-            $imgElement.hide().attr('src', '');
+            $imgElement.addClass('d-none').attr('src', '');
             $removeBtn.css('opacity', 0);
         }
     });
@@ -26,7 +26,7 @@ $(document).ready(function () {
         let $card = $(this).closest('.upload-file');
         $card.find('.single_file_input').val('');
         $card.find('.upload-file-textbox').show();
-        $card.find('.upload-file-img').hide().attr('src', '');
+        $card.find('.upload-file-img').addClass('d-none').attr('src', '');
         $(this).css('opacity', 0);
     });
     $('#reset_btn').click(function () {
@@ -36,8 +36,37 @@ $(document).ready(function () {
         $cards.each(function () {
             $(this).find('.single_file_input').val('');
             $(this).find('.upload-file-textbox').show();
-            $(this).find('.upload-file-img').hide().attr('src', '');
+            $(this).find('.upload-file-img').addClass('d-none').attr('src', '');
             $(this).find('.remove-btn').css('opacity', 0);
         });
     });
 });
+
+    $(document).on('ready', function() {
+        var  module_id = $('#current_module_id').val();
+        var url = $('#store_id').attr('data-url');
+        console.log(url);
+        $('.js-data-example-ajax').select2({
+            ajax: {
+                url: url,
+                data: function(params) {
+                    return {
+                        q: params.term,
+                        page: params.page,
+                        module_id: module_id
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: data
+                    };
+                },
+                __port: function(params, success, failure) {
+                    var $request = $.ajax(params);
+                    $request.then(success);
+                    $request.fail(failure);
+                    return $request;
+                }
+            }
+        });
+    });

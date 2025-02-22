@@ -106,7 +106,7 @@
                                     <div class="form-group mb-0  {{$banner->type == 'store_wise'? '':'d-none' }}" id="store_wise">
                                         <label class="input-label"
                                             for="exampleFormControlSelect1">{{ translate('messages.provider') }}</label>
-                                        <select name="store_id" id="store_id" class="js-data-example-ajax form-control"
+                                        <select name="store_id" id="store_id" data-url="{{ route('admin.store.get-providers') }}" class="js-data-example-ajax form-control"
                                             title="{{ translate('messages.Select_Provider') }}">
                                             @if($banner->type=='store_wise')
                                         @php($store = \App\Models\Store::where('id', $banner->data)->first(['id','name']))
@@ -146,7 +146,7 @@
                                                             {{ translate('or drag and drop') }}
                                                         </h6>
                                                     </div>
-                                                    <img class="upload-file-img" loading="lazy" style="display: none;" src="{{ $banner['image_full_url'] }}" alt="">
+                                                    <img class="upload-file-img" loading="lazy"  src="{{ $banner['image_full_url'] }}" alt="">
                                                 </label>
                                             </div>
 
@@ -167,68 +167,15 @@
             </div>
         </div>
     </div>
+    <input type="hidden" id="current_module_id" value="{{ Config::get('module.current_module_id') }}" >
+    <input type="hidden" id="defaut_banner_type" value="{{ $banner?->type }}" >
+    <input type="hidden" id="defaut_image_url" value="{{ $banner?->image_full_url }}" >
+    <input type="hidden" id="default_store_id" value="{{ $store?->id ?? null }}" >
+    
 
 @endsection
 
 @push('script_2')
 
-<script src="{{ asset('Modules/Rental/public/assets/js/view-pages/banner-edit.js') }}"></script>
-
-    <script>
-        "use strict";
-        $(document).ready(function () {
-            $('.remove-btn').click(function () {
-                var $card = $(this).closest('.upload-file');
-                $card.find('.single_file_input').val('');
-                $card.find('.upload-file-img').attr('src', '{{ $banner['image_full_url'] }}');
-                $(this).css('opacity', 0);
-            });
-
-            $('#reset_btn').click(function () {
-                banner_type_change('{{$banner->type}}')
-                @isset($store)
-                $('#store_id').val('{{ $store?->id }}').trigger('change')
-                @endisset
-                $('#banner_type').val('{{ $banner?->type }}').trigger('change');
-                var $cards = $('.upload-file');
-                $cards.each(function () {
-                    $(this).find('.single_file_input').val('');
-                    $(this).find('.upload-file-img').attr('src', '{{ $banner['image_full_url'] }}');
-                    $(this).find('.remove-btn').css('opacity', 0);
-                });
-            });
-        });
-
-        var module_id = {{ Config::get('module.current_module_id') }};
-        $(document).on('ready', function() {
-            banner_type_change('{{$banner->type}}');
-
-            module_id = {{ Config::get('module.current_module_id') }};
-            $('.js-data-example-ajax').select2({
-                ajax: {
-                    url: '{{ url('/') }}/admin/store/get-providers',
-                    data: function(params) {
-                        return {
-                            q: params.term, // search term
-                            page: params.page,
-                            module_id: module_id
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data
-                        };
-                    },
-                    __port: function(params, success, failure) {
-                        var $request = $.ajax(params);
-                        $request.then(success);
-                        $request.fail(failure);
-                        return $request;
-                    }
-                }
-            });
-        });
-
-
-    </script>
+<script src="{{ asset('Modules/Rental/public/assets/js/admin/view-pages/banner-edit.js') }}"></script>
 @endpush

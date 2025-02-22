@@ -7,7 +7,7 @@
 
 @section('content')
     <div class="content container-fluid">
-        <!-- Page Header -->
+
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
@@ -18,7 +18,7 @@
                 </span>
             </h1>
         </div>
-        <!-- End Page Header -->
+
         <div class="row gx-2 gx-lg-3">
             <div class="col-sm-12 col-lg-12 mb-3 mb-lg-2">
                 <div class="card">
@@ -27,9 +27,6 @@
                             <h5 class="text-title mb-1">
                                 {{ translate('messages.Add_New_Banner') }}
                             </h5>
-                            {{-- <p class="fs-12 mb-0">
-                                {{ translate('messages.Provider_Logo_&_Covers') }}
-                            </p> --}}
                         </div>
                     </div>
                     <div class="card-body">
@@ -94,7 +91,7 @@
                                     <div class="form-group mb-0" id="store_wise">
                                         <label class="input-label"
                                             for="exampleFormControlSelect1">{{ translate('messages.provider') }}</label>
-                                        <select name="store_id" id="store_id" class="js-data-example-ajax form-control"
+                                        <select name="store_id" id="store_id"  data-url="{{ route('admin.store.get-providers') }}" class="js-data-example-ajax form-control"
                                             title="{{ translate('messages.Select_Provider') }}">
                                             <option disabled selected>{{ translate('messages.Select_Provider') }}</option>
                                         </select>
@@ -133,7 +130,7 @@
                                                             {{ translate('or drag and drop') }}
                                                         </h6>
                                                     </div>
-                                                    <img class="upload-file-img" loading="lazy" style="display: none;"
+                                                    <img class="upload-file-img d-none" loading="lazy"
                                                         alt="">
                                                 </label>
                                             </div>
@@ -160,7 +157,7 @@
                             <h5 class="card-title text--title flex-grow-1">{{ translate('messages.Banner_List') }}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$banners->count()}}</span></h5>
 
                             <form class="search-form m-0 flex-grow-1 max-w-353px">
-                                <!-- Search -->
+
                                 <div class="input-group input--group">
                                     <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"
                                         name="search" class="form-control"
@@ -170,13 +167,13 @@
                                             class="tio-search"></i></button>
 
                                 </div>
-                                <!-- End Search -->
+
                             </form>
                             @if (request()->get('search'))
                                 <button type="reset" class="btn btn--primary ml-2 location-reload-to-base"
                                     data-url="{{ url()->full() }}">{{ translate('messages.reset') }}</button>
                             @endif
-                            <!-- Unfold -->
+
                             <div class="hs-unfold m-0">
                                 <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle min-height-40 font-semibold"
                                     href="javascript:;"
@@ -208,10 +205,10 @@
 
                                 </div>
                             </div>
-                            <!-- End Unfold -->
+
                         </div>
                     </div>
-                    <!-- Table -->
+
                     <div class="table-responsive datatable-custom">
                         <table id="columnSearchDatatable"
                             class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
@@ -327,46 +324,13 @@
                     @endif
                 </div>
             </div>
-            <!-- End Table -->
+
         </div>
     </div>
-
+<input type="hidden" id="current_module_id" value="{{ Config::get('module.current_module_id') }}" >
 @endsection
 
 @push('script_2')
     <script src="{{ asset('public/assets/admin/js/view-pages/banner-index.js') }}"></script>
-    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/banner-list.js') }}"></script>
-    <script>
-        "use strict";
-
-        var module_id = {{ Config::get('module.current_module_id') }};
-
-        $(document).on('ready', function() {
-            module_id = {{ Config::get('module.current_module_id') }};
-            $('.js-data-example-ajax').select2({
-                ajax: {
-                    url: '{{ url('/') }}/admin/store/get-providers',
-                    data: function(params) {
-                        return {
-                            q: params.term, // search term
-                            page: params.page,
-                            module_id: module_id
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data
-                        };
-                    },
-                    __port: function(params, success, failure) {
-                        var $request = $.ajax(params);
-                        $request.then(success);
-                        $request.fail(failure);
-                        return $request;
-                    }
-                }
-            });
-        });
-
-    </script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/admin/view-pages/banner-list.js') }}"></script>
 @endpush
