@@ -42,7 +42,12 @@
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
-                            <select name="provider_id" data-url="{{ url()->full() }}" data-filter="provider_id"
+                            <select name="provider_id"
+                                 data-get-provider-url="{{route('admin.store.get-providers')}}"
+                                    data-zone-id="{{ isset($zone) ? $zone->id : '' }}"
+                                data-module-id="{{ request('module_id') ?? '' }}"
+
+                            data-url="{{ url()->full() }}" data-filter="provider_id"
                                 data-placeholder="{{ translate('messages.select_provider') }}"
                                 class="js-data-example-ajax form-control set-filter">
                                 @if (isset($provider))
@@ -368,41 +373,7 @@
     </script>
     <script src="{{ asset('public/assets/admin') }}/js/hs.chartjs-matrix.js"></script>
     <script src="{{ asset('public/assets/admin') }}/js/view-pages/admin-reports.js"></script>
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/transaction-report.js')}}"></script>
 
-    <script>
-        "use strict";
-        $(document).on('ready', function() {
-            $('.js-data-example-ajax').select2({
-                ajax: {
-                    url: '{{ url('/') }}/admin/store/get-providers',
-                    data: function(params) {
-                        return {
-                            q: params.term, // search term
-                            // all:true,
-                            @if (isset($zone))
-                                zone_ids: [{{ $zone->id }}],
-                            @endif
-                            @if (request('module_id'))
-                                module_id: {{ request('module_id') }},
-                            @endif
-                            page: params.page
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data
-                        };
-                    },
-                    __port: function(params, success, failure) {
-                        let $request = $.ajax(params);
 
-                        $request.then(success);
-                        $request.fail(failure);
-
-                        return $request;
-                    }
-                }
-            });
-        });
-    </script>
 @endpush

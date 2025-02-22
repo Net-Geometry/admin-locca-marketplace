@@ -40,6 +40,10 @@
                         <div class="col-sm-6 col-md-3">
                             <select name="provider_id"
                                 data-placeholder="{{ translate('messages.select_provider') }}"
+                                data-get-provider-url="{{route('admin.store.get-providers')}}"
+                                data-zone-id="{{ isset($zone) ? $zone->id : '' }}"
+                                data-module-id="{{ request('module_id') ?? '' }}"
+
                                 class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="provider_id">
                                 @if (isset($provider))
                                     <option value="{{ $provider->id }}" selected>{{ $provider->name }}</option>
@@ -50,6 +54,10 @@
                         </div>
                         <div class="col-sm-6 col-md-3">
                             <select name="customer_id"
+                                data-get-provider-url="{{route('admin.customer.select-list')}}"
+                                data-zone-id="{{ isset($zone) ? $zone->id : '' }}"
+                                data-module-id="{{ request('module_id') ?? '' }}"
+                                data-provider-id="{{ isset($provider) ? $provider->id : '' }}"
                                 data-placeholder="{{ translate('messages.select_customer') }}"
                                 class="js-data-example-ajax-2 form-control set-filter" data-url="{{ url()->full() }}" data-filter="customer_id">
                                 @if (isset($customer))
@@ -137,20 +145,6 @@
                             <img src="{{asset('/public/assets/admin/img/report/new/delivered.png')}}" alt="report/new" class="card-icon">
                             </a>
                         </div>
-{{--                        <div class="col-sm-6 col-md-6">--}}
-{{--                            <a class="__card-2 __bg-4" href="#">--}}
-{{--                            <h4 class="title">{{$total_failed_count}}</h4>--}}
-{{--                            <span class="subtitle">{{translate('messages.failed_trips')}}</span>--}}
-{{--                            <img src="{{asset('/public/assets/admin/img/report/new/failed.png')}}" alt="report/new" class="card-icon">--}}
-{{--                            </a>--}}
-{{--                        </div>--}}
-{{--                        <div class="col-sm-6 col-md-6">--}}
-{{--                            <a class="__card-2 __bg-5" href="#">--}}
-{{--                            <h4 class="title">{{$total_refunded_count}}</h4>--}}
-{{--                            <span class="subtitle">{{translate('messages.refunded_trips')}}</span>--}}
-{{--                            <img src="{{asset('/public/assets/admin/img/report/new/refunded.png')}}" alt="report/new" class="card-icon">--}}
-{{--                            </a>--}}
-{{--                        </div>--}}
                         <div class="col-sm-6 col-md-6">
                             <a class="__card-2 __bg-6" href="#">
                             <h4 class="title">{{$total_canceled_count}}</h4>
@@ -432,77 +426,7 @@
     </script>
     <script src="{{ asset('public/assets/admin') }}/js/hs.chartjs-matrix.js"></script>
     <script src="{{ asset('public/assets/admin') }}/js/view-pages/admin-reports.js"></script>
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/trip-report.js')}}"></script>
 
-    <script>
-        "use strict";
-        $(document).on('ready', function() {
-            $('.js-data-example-ajax').select2({
-                ajax: {
-                    url: '{{ url('/') }}/admin/store/get-providers',
-                    data: function(params) {
-                        return {
-                            q: params.term, // search term
-                            // all:true,
-                            @if (isset($zone))
-                                zone_ids: [{{ $zone->id }}],
-                            @endif
-                            @if (request('module_id'))
-                                module_id: {{ request('module_id') }},
-                            @endif
-                            page: params.page
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data
-                        };
-                    },
-                    __port: function(params, success, failure) {
-                        let $request = $.ajax(params);
-
-                        $request.then(success);
-                        $request.fail(failure);
-
-                        return $request;
-                    }
-                }
-            });
-
-            $('.js-data-example-ajax-2').select2({
-                ajax: {
-                    url: '{{ url('/') }}/admin/customer/select-list',
-                    data: function(params) {
-                        return {
-                            q: params.term, // search term
-                            // all:true,
-                            @if (isset($zone))
-                                zone_ids: [{{ $zone->id }}],
-                            @endif
-                            @if (request('module_id'))
-                                module_id: {{ request('module_id') }},
-                            @endif
-                            @if (request('provider_id'))
-                                store_id: {{ request('provider_id') }},
-                            @endif
-                            page: params.page
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data
-                        };
-                    },
-                    __port: function(params, success, failure) {
-                        let $request = $.ajax(params);
-
-                        $request.then(success);
-                        $request.fail(failure);
-
-                        return $request;
-                    }
-                }
-            });
-        });
-    </script>
 @endpush
 

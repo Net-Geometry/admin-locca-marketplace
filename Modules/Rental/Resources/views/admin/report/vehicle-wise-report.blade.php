@@ -48,7 +48,13 @@
                 </select>
                     </div>
                     <div class="col-sm-6 col-md-3">
-                        <select name="provider_id" data-placeholder="{{translate('messages.select_provider')}}" class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="provider_id" >
+                        <select name="provider_id" id="provider_id"
+
+                        data-get-provider-url="{{route('admin.store.get-providers')}}"
+                        data-zone-id="{{ isset($zone) ? $zone->id : '' }}"
+                        data-module-id="{{ request('module_id') ?? '' }}"
+
+                        data-placeholder="{{translate('messages.select_provider')}}" class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="provider_id" >
                             @if(isset($provider))
                             <option value="{{$provider->id}}" selected>{{$provider->name}}</option>
                             @else
@@ -57,7 +63,12 @@
                         </select>
                     </div>
                     <div class="col-sm-6 col-md-3">
-                        <select name="category_id" id="category_id"
+                        <select name="category_id"
+
+                        data-get-category-url="{{route('admin.rental.category.get-categories')}}"
+                        data-zone-id="{{ isset($zone) ? $zone->id : '' }}"
+                        data-module-id="{{ request('module_id') ?? '' }}"
+
                         class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="category_id"  id="category_id">
                         @if(isset($category))
                         <option value="{{$category->id}}" selected>{{$category->name}}</option>
@@ -149,24 +160,7 @@
 
             <!-- Table -->
             <div class="table-responsive datatable-custom" id="table-div">
-                <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap card-table"
-                    data-hs-datatables-options='{
-                        "columnDefs": [{
-                            "targets": [],
-                            "width": "5%",
-                            "orderable": false
-                        }],
-                        "order": [],
-                        "info": {
-                        "totalQty": "#datatableWithPaginationInfoTotalQty"
-                        },
-
-                        "entries": "#datatableEntries",
-
-                        "isResponsive": false,
-                        "isShowPaging": false,
-                        "paging":false
-                    }'>
+                <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap card-table">
                     <thead class="thead-light">
                     <tr>
                         <th>{{translate('sl')}}</th>
@@ -272,66 +266,9 @@
 @push('script_2')
 
     <script src="{{asset('public/assets/admin')}}/vendor/chart.js/dist/Chart.min.js"></script>
-    <script
-        src="{{asset('public/assets/admin')}}/vendor/chartjs-chart-matrix/dist/chartjs-chart-matrix.min.js"></script>
+    <script src="{{asset('public/assets/admin')}}/vendor/chartjs-chart-matrix/dist/chartjs-chart-matrix.min.js"></script>
     <script src="{{asset('public/assets/admin')}}/js/hs.chartjs-matrix.js"></script>
     <script src="{{ asset('public/assets/admin') }}/js/view-pages/admin-reports.js"></script>
-    <script>
-        "use strict";
-        $(document).on('ready', function () {
-            $('.js-data-example-ajax').select2({
-                ajax: {
-                    url: '{{url('/')}}/admin/store/get-providers',
-                    data: function (params) {
-                        return {
-                            q: params.term, // search term
-                            // all:true,
-                    @if(isset($zone))zone_ids: [{{$zone->id}}], @endif
-                    @if(request('module_id'))module_id: {{request('module_id')}}, @endif
-                            page: params.page
-                        };
-                    },
-                    processResults: function (data) {
-                        return {
-                        results: data
-                        };
-                    },
-                    __port: function (params, success, failure) {
-                        let $request = $.ajax(params);
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/vehicle-report.js')}}"></script>
 
-                        $request.then(success);
-                        $request.fail(failure);
-
-                        return $request;
-                    }
-                }
-            });
-
-            $('#category_id').select2({
-            ajax: {
-                url: '{{ url('/') }}/admin/rental/category/get-categories',
-                data: function(params) {
-                    return {
-                        q: params.term, // search term
-                        @if(request('module_id'))module_id: {{request('module_id')}}, @endif
-                            page: params.page
-                        };
-                },
-                processResults: function(data) {
-                    return {
-                        results: data
-                    };
-                },
-                __port: function(params, success, failure) {
-                    let $request = $.ajax(params);
-
-                    $request.then(success);
-                    $request.fail(failure);
-
-                    return $request;
-                }
-            }
-        });
-        });
-    </script>
 @endpush
