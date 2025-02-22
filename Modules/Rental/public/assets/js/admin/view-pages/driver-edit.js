@@ -97,7 +97,7 @@ $(document).ready(function () {
             var reader = new FileReader();
             reader.onload = function (e) {
                 $textbox.hide();
-                $imgElement.attr('src', e.target.result).show();
+                $imgElement.attr('src', e.target.result).removeClass('d-none');
                 $removeBtn.css('opacity', 1);
             };
             reader.readAsDataURL(file);
@@ -112,7 +112,7 @@ $(document).ready(function () {
 
          if ($imgElement.attr('src') && $imgElement.attr('src') !== window.location.href) {
             $textbox.hide();
-            $imgElement.show();
+            $imgElement.removeClass('d-none');
         }
     });
 

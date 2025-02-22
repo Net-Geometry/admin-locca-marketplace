@@ -99,7 +99,7 @@
                                                         {{ translate('or drag and drop') }}
                                                     </h6>
                                                 </div>
-                                                <img class="upload-file-img" height="180" width="180" loading="lazy" style="display: none;" src="" alt="">
+                                                <img class="upload-file-img d-none" height="180" width="180" loading="lazy" src="" alt="">
                                             </label>
                                         </div>
 
@@ -197,5 +197,5 @@
 @push('script_2')
     <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
     <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/driver-create.js')}}"></script>
- 
+
 @endpush

@@ -99,7 +99,7 @@
                                                         {{ translate('or drag and drop') }}
                                                     </h6>
                                                 </div>
-                                                <img class="upload-file-img" data-file-name="{{ $driver['image_full_url'] ?? '' }}" height="180" width="180" loading="lazy" style="display: none;" src="{{ $driver['image_full_url'] ?? '' }}" alt="">
+                                                <img class="upload-file-img d-none" data-file-name="{{ $driver['image_full_url'] ?? '' }}" height="180" width="180" loading="lazy"  src="{{ $driver['image_full_url'] ?? '' }}" alt="">
                                             </label>
                                         </div>
 

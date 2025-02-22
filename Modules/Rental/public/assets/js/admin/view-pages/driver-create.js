@@ -11,7 +11,7 @@ $(document).ready(function () {
             var reader = new FileReader();
             reader.onload = function (e) {
                 $textbox.hide();
-                $imgElement.attr('src', e.target.result).show();
+                $imgElement.attr('src', e.target.result).removeClass('d-none');
                 $removeBtn.css('opacity', 1);
             };
             reader.readAsDataURL(file);
@@ -22,7 +22,7 @@ $(document).ready(function () {
         var $card = $(this).closest('.upload-file');
         $card.find('.single_file_input').val('');
         $card.find('.upload-file-textbox').show();
-        $card.find('.upload-file-img').hide().attr('src', '');
+        $card.find('.upload-file-img').addClass('d-none').attr('src', '');
         $(this).css('opacity', 0);
     });
 
@@ -31,7 +31,7 @@ $(document).ready(function () {
         $cards.each(function () {
             $(this).find('.single_file_input').val('');
             $(this).find('.upload-file-textbox').show();
-            $(this).find('.upload-file-img').hide().attr('src', '');
+            $(this).find('.upload-file-img').addClass('d-none').attr('src', '');
             $(this).find('.remove-btn').css('opacity', 0);
         });
     });
