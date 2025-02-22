@@ -7453,4 +7453,6 @@ Smartly or Earn. ',
   'rererere' => 'Rererere',
   'Insert_Owner\'s_General_Information' => 'Insert Owner s General Information',
   'Insert_Owner\'s_account_information' => 'Insert Owner s account information',
+  'You can upload a maximum of 5mb files.' => 'You can upload a maximum of 5mb files.',
+  'You can upload a maximum of 5 files.' => 'You can upload a maximum of 5 files.',
 );

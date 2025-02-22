@@ -33,17 +33,6 @@
                 <form action="{{ route('vendor.report.set-date') }}" method="post">
                     @csrf
                     <div class="row g-3">
-{{--                        <div class="col-sm-6 col-md-3">--}}
-{{--                            <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">--}}
-{{--                                <option value="all">{{ translate('messages.All_Zones') }}</option>--}}
-{{--                                @foreach (\App\Models\Zone::orderBy('name')->get() as $z)--}}
-{{--                                    <option value="{{ $z['id'] }}"--}}
-{{--                                        {{ isset($zone) && $zone->id == $z['id'] ? 'selected' : '' }}>--}}
-{{--                                        {{ $z['name'] }}--}}
-{{--                                    </option>--}}
-{{--                                @endforeach--}}
-{{--                            </select>--}}
-{{--                        </div>--}}
                         <div class="col-sm-6 col-md-3">
                             <select class="form-control set-filter" data-url="{{ url()->full() }}" data-filter="filter" name="filter">
                                 <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
@@ -122,20 +111,6 @@
                             <img src="{{asset('/public/assets/admin/img/report/new/delivered.png')}}" alt="report/new" class="card-icon">
                             </a>
                         </div>
-{{--                        <div class="col-sm-6 col-md-6">--}}
-{{--                            <a class="__card-2 __bg-4" href="#">--}}
-{{--                            <h4 class="title">{{$total_failed_count}}</h4>--}}
-{{--                            <span class="subtitle">{{translate('messages.failed_trips')}}</span>--}}
-{{--                            <img src="{{asset('/public/assets/admin/img/report/new/failed.png')}}" alt="report/new" class="card-icon">--}}
-{{--                            </a>--}}
-{{--                        </div>--}}
-{{--                        <div class="col-sm-6 col-md-6">--}}
-{{--                            <a class="__card-2 __bg-5" href="#">--}}
-{{--                            <h4 class="title">{{$total_refunded_count}}</h4>--}}
-{{--                            <span class="subtitle">{{translate('messages.refunded_trips')}}</span>--}}
-{{--                            <img src="{{asset('/public/assets/admin/img/report/new/refunded.png')}}" alt="report/new" class="card-icon">--}}
-{{--                            </a>--}}
-{{--                        </div>--}}
                         <div class="col-sm-6 col-md-6">
                             <a class="__card-2 __bg-6" href="#">
                             <h4 class="title">{{$total_canceled_count}}</h4>
@@ -237,13 +212,6 @@
                                     <td class="table-column-pl-0">
                                         <a href="{{ route('vendor.trip.details', $trip->id) }}">{{ $trip->id }}</a>
                                     </td>
-{{--                                    <td  class="text-capitalize">--}}
-{{--                                        @if($trip->provider)--}}
-{{--                                            {{Str::limit($trip->provider->name,25,'...')}}--}}
-{{--                                        @else--}}
-{{--                                            <label class="badge badge-danger">{{ translate('messages.invalid') }}--}}
-{{--                                        @endif--}}
-{{--                                    </td>--}}
                                     <td>
                                         @if($trip->is_guest)
                                         @php($customer_details = $trip['user_info'])

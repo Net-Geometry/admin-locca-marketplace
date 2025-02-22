@@ -163,66 +163,12 @@
         </div>
     </div>
 
+    <input type="hidden" id="coupon-expire-date" value="{{ date('Y-m-d', strtotime($coupon['expire_date'])) }}">
+    <input type="hidden" id="coupon-start-date" value="{{ date('Y-m-d', strtotime($coupon['start_date'])) }}">
+    <input type="hidden" id="min-purchase-toast" value="{{ translate('messages.Discount amount cannot be greater than minimum purchase amount') }}">
 @endsection
 
 @push('script_2')
     <script src="{{asset('public/assets/admin/js/view-pages/vendor-coupon.js')}}"></script>
-    <script>
-        "use strict";
-        $(document).on('ready', function () {
-            $('#date_from').attr('max','{{date("Y-m-d",strtotime($coupon["expire_date"]))}}');
-            $('#date_to').attr('min','{{date("Y-m-d",strtotime($coupon["start_date"]))}}');
-        });
-        $('#discount_type').on('change', function() {
-            if ($(this).val() === 'amount') {
-                $('#discount').attr('max', $('#min_purchase').val() || 0);
-                validateDiscount();
-            } else {
-                $('#discount').attr('max', 100);
-            }
-        });
-
-        $('#min_purchase').on('input', function() {
-            if ($('#discount_type').val() === 'amount') {
-                $('#discount').attr('max', $(this).val() || 0);
-                if (parseFloat($('#discount').val()) > parseFloat($(this).val())) {
-                    toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
-                    $(this).val($(this).data('previous-value'));
-                }
-            }
-            $(this).data('previous-value', $(this).val());
-        });
-
-        $('#discount').on('input', function() {
-            if ($('#discount_type').val() === 'amount') {
-                let minPurchase = parseFloat($('#min_purchase').val()) || 0;
-                let discountValue = parseFloat($(this).val()) || 0;
-
-                if (discountValue > minPurchase) {
-                    toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
-                    $(this).val($(this).data('previous-value'));
-                }
-            }
-            $(this).data('previous-value', $(this).val());
-        });
-
-        function validateDiscount() {
-            let discountType = $('#discount_type').val();
-            let discountInput = $('#discount');
-            let minPurchase = parseFloat($('#min_purchase').val()) || 0;
-            let discountValue = parseFloat(discountInput.val()) || 0;
-
-            if (discountType === 'amount' && discountValue > minPurchase) {
-                discountInput.val(discountValue);
-                toastr.error('{{translate("Discount amount cannot be greater than minimum purchase amount")}}');
-            }
-        }
-
-        $(document).ready(function() {
-            $('#min_purchase').data('previous-value', $('#min_purchase').val());
-            $('#discount').data('previous-value', $('#discount').val());
-        });
-    </script>
-
-
+    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/coupon-edit.js') }}"></script>
 @endpush
