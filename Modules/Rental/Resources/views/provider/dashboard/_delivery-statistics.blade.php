@@ -41,21 +41,6 @@
         <!-- End Card -->
     </div>
 
-    {{-- <div class="col-lg-3 col-sm-6">
-        <!-- Card -->
-        <a class="resturant-card dashboard--card __dashboard-card card--bg-4" href="javascript:">
-            <h4 class="title">60</h4>
-            <span class="subtitle font-regular"> {{ translate('messages.Canceled_Trip') }}
-            </span>
-            <span class="subtitle font-regular">
-                Cancellation Rate <span class="text--danger font-bold">12%</span>
-            </span>
-            <img src="{{ asset('/public/assets/admin/img/dashboard/5.png') }}" alt="img"
-                class="resturant-icon top-50px">
-        </a>
-        <!-- End Card -->
-    </div> --}}
-
 
     <div class="col-12">
         <div class="row g-2">
@@ -112,35 +97,5 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </div>
