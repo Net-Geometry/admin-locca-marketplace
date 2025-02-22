@@ -137,3 +137,41 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Chart element not found!");
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const providerSelect = document.querySelector(".js-data-example-ajax");
+
+    if (!providerSelect) return;
+
+    const url = providerSelect.dataset.getProviderUrl;
+    const zoneId = providerSelect.dataset.zoneId;
+
+    $(providerSelect).select2({
+        ajax: {
+            url: url,
+            data: function (params) {
+                let requestData = {
+                    q: params.term, 
+                    page: params.page
+                };
+
+                if (zoneId) {
+                    requestData.zone_ids = [zoneId];
+                }
+
+                return requestData;
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            },
+            __port: function (params, success, failure) {
+                let $request = $.ajax(params);
+                $request.then(success);
+                $request.fail(failure);
+                return $request;
+            }
+        }
+    });
+});
