@@ -213,7 +213,7 @@
                                     <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
                                     <div class="fs-12 opacity-lg description-text">
                                         <span class="short-description">{{ Str::limit($vehicle?->getRawOriginal('description'), 2100) }}</span>
-                                        <span class="full-description" style="display: none;">{{$vehicle?->getRawOriginal('description')}}</span>
+                                        <span class="full-description display-none">{{$vehicle?->getRawOriginal('description')}}</span>
                                         <a href="#" class="text--info font-medium see-more">See more</a>
                                     </div>
                                 </div>
@@ -235,7 +235,7 @@
                                         <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
                                         <div class="fs-12 opacity-lg description-text">
                                             <span class="short-description">{{ Str::limit($translate[$lang]['description'] ?? '', 2100) }}</span>
-                                            <span class="full-description" style="display: none;">{{$translate[$lang]['description'] ?? ''}}</span>
+                                            <span class="full-description display-none">{{$translate[$lang]['description'] ?? ''}}</span>
                                             <a href="#" class="text--info font-medium see-more">See more</a>
                                         </div>
                                     </div>
@@ -392,21 +392,17 @@
             <div class="card-body">
                 <div class="d-flex gap-3 flex-wrap">
                     @foreach($vehicle['documentsFullUrl'] as $doc)
-                        <div class="pdf-single" data-pdf-url="{{ $doc }}"
-                             onclick="openPdf(this)">
+                        <div class="pdf-single" data-pdf-url="{{ $doc }}">
                             <div class="pdf-frame">
-                                <canvas class="pdf-preview" style="display: none;"></canvas>
-                                <img class="pdf-thumbnail" src="{{ $doc }}"
-                                     alt="File Thumbnail">
+                                <canvas class="pdf-preview display-none"></canvas>
+                                <img class="pdf-thumbnail" src="{{ $doc }}" alt="{{translate('File Thumbnail')}}">
                             </div>
                             <div class="overlay">
-                                <a href="javascript:void(0);" class="download-btn" onclick="downloadPdf(event, this)"
-                                   title="">
+                                <a href="javascript:void(0);" class="download-btn">
                                     <i class="tio-download-to"></i>
                                 </a>
                                 <div class="pdf-info d-flex gap-10px align-items-center">
-                                    <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34"
-                                         alt="Document Logo">
+                                    <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34" alt="{{translate('Document Logo')}}">
                                     <div class="fs-13 text--title d-flex flex-column">
                                         <span class="file-name"></span>
                                         <span class="opacity-50">{{translate('Click to view the file')}}</span>
@@ -445,14 +441,14 @@
                                href="{{ route('vendor.vehicle.review.export', ['vehicle_id' => request()->id, 'type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
-                                     alt="Image Description">
+                                     alt="{{translate('Image Description')}}">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                href="{{ route('vendor.vehicle.review.export', ['vehicle_id' => request()->id, 'type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
-                                     alt="Image Description">
+                                     alt="{{translate('Image Description')}}">
                                 .{{ translate('messages.csv') }}
                             </a>
 
@@ -497,7 +493,7 @@
                                     <div class="position-relative media align-items-center">
                                         <a class=" text-hover-primary absolute--link" href="{{route('vendor.vehicle.details',$review->vehicle_id)}}">
                                             <img class="avatar avatar-lg mr-3  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                                 src="{{ $review->vehicle->thumbnail_full_url }}" alt="{{$review?->vehicle?->name}} image">
+                                                 src="{{ $review->vehicle->thumbnail_full_url }}" alt="{{$review?->vehicle?->name}} {{translate('image')}}">
                                         </a>
                                         <div class="media-body">
                                             <h5 class="text-hover-primary important--link mb-0">{{Str::limit($review?->vehicle?->name,10)}}</h5>
@@ -515,7 +511,7 @@
                                     <div>
                                         <h5 class="d-block text-hover-primary mb-1">{{Str::limit($review->customer['f_name']." ".$review->customer['l_name'])}} <i
                                                 class="tio-verified text-primary" data-toggle="tooltip" data-placement="top"
-                                                title="Verified Customer"></i></h5>
+                                                title="{{translate('Verified Customer')}}"></i></h5>
                                         <span class="d-block font-size-sm text-body">{{Str::limit($review->customer->phone)}}</span>
                                     </div>
                                 @else
@@ -547,7 +543,7 @@
                             @if($store_review_reply == '1')
                                 <td>
                                     <div class="btn--container justify-content-center">
-                                        <a  class="btn btn-sm btn--primary {{ $review->reply ? 'btn-outline-primary' : ''}}" data-toggle="modal" data-target="#reply-{{$review->id}}" title="View Details">
+                                        <a  class="btn btn-sm btn--primary {{ $review->reply ? 'btn-outline-primary' : ''}}" data-toggle="modal" data-target="#reply-{{$review->id}}" title="{{translate('View Details')}}">
                                             {{ $review->reply ? translate('view_reply') : translate('give_reply')}}
                                         </a>
                                     </div>
@@ -566,7 +562,7 @@
                                                 <a class="absolute--link" href="{{route('vendor.vehicle.details',$review->vehicle_id)}}">
                                                 </a>
                                                 <img class="avatar avatar-lg mr-3  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                                     src="{{ $review?->vehicle?->thumbnail_full_url }}" alt="{{$review?->vehicle?->name}} image">
+                                                     src="{{ $review?->vehicle?->thumbnail_full_url }}" alt="{{$review?->vehicle?->name}} {{translate('image')}}">
                                                 <div>
                                                     <h5 class="text-hover-primary mb-0">{{ $review?->vehicle?->name }}</h5>
                                                     @if ($review?->vehicle?->avg_rating == 5)
@@ -674,7 +670,7 @@
                                                     <div>
                                                         <h5 class="d-block text-hover-primary mb-1">{{Str::limit($review?->customer?->fullName)}} <i
                                                                 class="tio-verified text-primary" data-toggle="tooltip" data-placement="top"
-                                                                title="Verified Customer"></i></h5>
+                                                                title="{{translate('Verified Customer')}}"></i></h5>
                                                         <span class="d-block font-size-sm text-body">{{$review->comment}}</span>
                                                     </div>
                                                 @else
@@ -720,11 +716,9 @@
     <!-- End Modal -->
 @endsection
 
-
-
 @push('script_2')
     <script src="{{ asset('/public/assets/admin/vendor/simplebar/dist/simplebar.min.js') }}"></script>
     <script src="{{ asset('/public/assets/admin/vendor/drift-zoom/dist/Drift.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/pdf.min.js') }}"></script>
     <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/vehicle-details.js') }}"></script>
 @endpush

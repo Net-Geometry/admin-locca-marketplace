@@ -1,5 +1,6 @@
 "use strict";
 $(document).ready(function () {
+
     $('.see-more').on('click', function (e) {
         e.preventDefault();
 
@@ -87,8 +88,7 @@ $(document).ready(function () {
 
     document.querySelectorAll(".pdf-single").forEach(renderFileThumbnail);
 
-    window.openPdf = function(element) {
-        const fileUrl = element.getAttribute("data-pdf-url");
+    window.openPdf = function(fileUrl) {
         window.open(fileUrl, "_blank");
     };
 
@@ -117,6 +117,17 @@ $(document).ready(function () {
     }
 
     imageZoom();
+
+
+    $(document).on('click', '.pdf-single', function() {
+        const pdfUrl = $(this).data('pdf-url');
+        openPdf(pdfUrl);
+    });
+
+    $(document).on('click', '.download-btn', function(event) {
+        event.stopPropagation();
+        downloadPdf(event, this);
+    });
 
 
     const themeDirection = $("html").attr("dir");

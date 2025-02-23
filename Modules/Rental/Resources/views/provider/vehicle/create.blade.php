@@ -566,8 +566,7 @@
 
 @push('script_2')
     <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/pdf.min.js') }}"></script>
     <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/vehicle-create.js') }}"></script>
     <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/multiple-upload.js') }}"></script>
 @endpush

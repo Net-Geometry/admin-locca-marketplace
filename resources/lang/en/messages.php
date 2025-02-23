@@ -7461,4 +7461,6 @@ Smartly or Earn. ',
   'You can upload a maximum of ' => 'You can upload a maximum of ',
   'files' => 'Files',
   ' files' => ' files',
+  'File Thumbnail' => 'File Thumbnail',
+  'Document Logo' => 'Document Logo',
 );
