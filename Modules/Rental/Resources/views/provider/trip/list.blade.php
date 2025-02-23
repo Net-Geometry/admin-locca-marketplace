@@ -3,11 +3,7 @@
 @section('title', translate('messages.all_trips'))
 
 @push('css_or_js')
-    <style>
-        [data-toggle="tooltip"] img {
-           width: 37px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{asset('Modules/Rental/public/assets/css/provider/trip-list.css')}}">
 @endpush
 
 @section('content')
@@ -318,7 +314,3 @@
         <!-- End Card -->
     </div>
 @endsection
-
-
-@push('script_2')
-@endpush

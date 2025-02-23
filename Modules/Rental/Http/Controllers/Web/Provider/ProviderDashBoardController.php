@@ -100,7 +100,13 @@ class ProviderDashBoardController extends Controller
 
         return response()->json([
             'view' => view('rental::provider.dashboard._sale-chart', compact('commission', 'label', 'grossEarning'))->render(),
-            'grossEarning' => $grossEarning
+            'grossEarning' => $grossEarning,
+            'commission' => array_map(function($val) {
+                    return number_format((float)$val, 2, '.', '');
+                }, array_values($commission)),
+            'labels' => array_map(function($val) {
+                return trim($val, '"');
+            }, $label),
         ], 200);
     }
 

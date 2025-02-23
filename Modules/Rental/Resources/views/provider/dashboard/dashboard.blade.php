@@ -73,6 +73,7 @@
                                     </span>
                                 </div>
                                 <select
+                                        id="commission_overview_stats_update"
                                     class="custom-select border-0 text-center w-auto ml-auto commission_overview_stats_update"
                                     data-route="{{ route('vendor.commissionOverview') }}"
                                     name="commission_overview">
@@ -114,7 +115,8 @@
             <!-- End Page Header -->
         @endif
         <div id="currency" data-currency="{{ \App\CentralLogics\Helpers::currency_symbol() }}"></div>
-        <div id="current-url" data-current-url="{{ url()->current() }}?"></div>
+        <div class="d-none" id="current_url" data-src-url="{{ url()->current() }} "> </div>
+
     </div>
 @endsection
 
@@ -123,49 +125,15 @@
 @endpush
 
 @push('script_2')
-    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/dashboard.js') }}"></script>
     <script>
         "use strict";
-        let options;
-        let chart;
-        let ApexChart;
-        options = {
-            series: [ {
-                name: 'Earning',
-                data: [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $commission)) }}]
-            }],
-            chart: {
-                height: 350,
-                type: 'area',
-                toolbar: {
-                    show: false
-                },
-                colors: ['#76ffcd', '#ff6d6d', '#005555'],
-            },
-            dataLabels: {
-                enabled: false,
-                colors: ['#76ffcd', '#ff6d6d', '#005555'],
-            },
-            stroke: {
-                curve: 'smooth',
-                width: 2,
-                colors: ['#76ffcd', '#ff6d6d', '#005555'],
-            },
-            fill: {
-                type: 'gradient',
-                colors: ['#76ffcd', '#ff6d6d', '#005555'],
-            },
-            xaxis: {
-                categories: [{!! implode(',', $label) !!}]
-            },
-            tooltip: {
-                x: {
-                    format: 'dd/MM/yy HH:mm'
-                },
-            },
-        };
 
-        ApexChart = new ApexCharts(document.querySelector("#grow-sale-chart"), options);
-        ApexChart.render();
+        document.addEventListener('DOMContentLoaded', function() {
+            const initialCommission = [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $commission)) }}];
+            const initialLabels = [{!! implode(",", $label) !!}];
+
+            initializeAreaChart(initialCommission, initialLabels);
+        });
     </script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/dashboard.js') }}"></script>
 @endpush

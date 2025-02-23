@@ -1,4 +1,54 @@
 "use strict";
+
+function initializeAreaChart(initialCommission, initialLabels) {
+
+    let ApexChart;
+
+    let options = {
+        series: [{
+            name: 'Earning',
+            data: initialCommission
+        }],
+        chart: {
+            height: 350,
+            type: 'area',
+            toolbar: {
+                show: false
+            },
+            colors: ['#76ffcd', '#ff6d6d', '#005555'],
+        },
+        dataLabels: {
+            enabled: false,
+            colors: ['#76ffcd', '#ff6d6d', '#005555'],
+        },
+        stroke: {
+            curve: 'smooth',
+            width: 2,
+            colors: ['#76ffcd', '#ff6d6d', '#005555'],
+        },
+        fill: {
+            type: 'gradient',
+            colors: ['#76ffcd', '#ff6d6d', '#005555'],
+        },
+        xaxis: {
+            categories: initialLabels
+        },
+        tooltip: {
+            x: {
+                format: 'dd/MM/yy HH:mm'
+            },
+        },
+    };
+
+    if (ApexChart) {
+        ApexChart.destroy();
+    }
+
+    ApexChart = new ApexCharts(document.querySelector("#grow-sale-chart"), options);
+    ApexChart.render();
+}
+
+
 $(document).ready(function () {
     $('.trip_stats_update').on('change', function () {
         let statistics_type = $('.trip_stats_update').val();
@@ -31,7 +81,7 @@ $(document).ready(function () {
 
     $('.commission_overview_stats_update').on('change', function () {
         let type = $(this).val();
-        let route = $(this).data('route');
+        let route = $('#commission_overview_stats_update').data('route');
 
         commission_overview_stats_update(type, route);
     });
@@ -55,6 +105,7 @@ $(document).ready(function () {
                 insert_param('commission_overview', type);
                 $('#commission-overview-board').html(data.view);
                 $('.gross-earning').text(formatCurrency(grossEarningTotal));
+                initializeAreaChart(data.commission , data.labels)
             },
             complete: function () {
                 $('#loading').hide()
@@ -67,8 +118,9 @@ $(document).ready(function () {
         return currency + value;
     }
 
+    const currentUrl = document.getElementById('current_url').dataset.srcUrl.trim();
+
     function insert_param(key, value) {
-        var currentUrl = $('#currency').data('current-url');
         key = encodeURIComponent(key);
         value = encodeURIComponent(value);
         let kvp = document.location.search.substr(1).split('&');
@@ -85,7 +137,9 @@ $(document).ready(function () {
         if (i >= kvp.length) {
             kvp[kvp.length] = [key, value].join('=');
         }
-        let params = kvp.join('&');
-        window.history.pushState('page2', 'Title', +currentUrl + params);
+
+        const params = kvp.join('&');
+        const newUrl = params ? `${currentUrl}?${params}` : currentUrl;
+        window.history.pushState('page2', 'Title', newUrl);
     }
 });

@@ -365,7 +365,7 @@ $(document).ready(function () {
 
     let currentFieldType;
     let quantityUpdate;
-    let update_data;
+    let upadet_data;
     let update_distance;
     let map, marker, searchBox;
 
@@ -492,7 +492,7 @@ $(document).ready(function () {
                 $('#distance-input').val(distance);
                 $('.distance-input').text(distance);
 
-                updateCalculations(quantityUpdate = false,update_data= false,update_distance =1);
+                updateCalculations(quantityUpdate = false,upadet_data= false,update_distance =1);
             } else {
 
                 toastr.error('Error calculating distance: ' + status);
@@ -542,7 +542,7 @@ $(document).ready(function () {
     }
 
     $('#edit-trip').on('click', function () {
-        updateCalculations(quantityUpdate = false,update_data= 1);
+        updateCalculations(quantityUpdate = false,upadet_data= 1);
         $('#edit-trip').attr("disabled", true);
     });
 
@@ -589,19 +589,19 @@ $(document).ready(function () {
 
         $this.closest('tr').find('.eta_amount').removeClass('d-none').addClass('mt-3');
         $this.closest('td').find('.eta_amount_mt').removeClass('d-none');
-        updateCalculations(quantityUpdate = false,update_data= false);
+        updateCalculations(quantityUpdate = false,upadet_data= false);
     });
 
     $('#pickup-input, #destination-input').on('change', function() {
-        updateCalculations(quantityUpdate = false,update_data= false);
+        updateCalculations(quantityUpdate = false,upadet_data= false);
     });
 
 
 
-    function updateCalculations(quantityUpdate = false,update_data= false, update_distance=false) {
+    function updateCalculations(quantityUpdate = false,upadet_data= false, update_distance=false) {
         const formData = new FormData($('#updateForm')[0]);
 
-        formData.append('update', update_data);
+        formData.append('update', upadet_data);
         formData.append('update_distance', update_distance);
 
         $('.quantity-input').each(function() {
