@@ -561,6 +561,14 @@
             </div>
         </form>
     </div>
+    <input type="hidden" id="file_size_error_text" value="{{ translate('file_size_too_big') }}">
+    <input type="hidden" id="file_type_error_text" value="{{ translate('please_only_input_png_or_jpg_type_file') }}">
+    <input type="hidden" id="max_file_upload_limit_error_text" value="{{ translate('maximum_file_upload_limit_is_') }}">
+    <div id="file-assets"
+        data-picture-icon="{{ asset('public/assets/admin/img/picture.svg') }}"
+        data-document-icon="{{ asset('public/assets/admin/img/document.svg') }}"
+        data-blank-thumbnail="{{ asset('public/assets/admin/img/blank2.png') }}">
+    </div>
 
 @endsection
 

@@ -5,23 +5,7 @@
 @push('css_or_js')
     <link rel="stylesheet" href="{{ asset('/public/assets/admin/vendor/simplebar/dist/simplebar.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/public/assets/admin/vendor/drift-zoom/dist/drift-basic.min.css') }}">
-
-    <style>
-        .description-text {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .full-description {
-            display: none;
-        }
-
-        .see-more {
-            color: #1a73e8;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('Modules/Rental/public/assets/css/admin/vehicle-details.css') }}">
 @endpush
 
 @section('content')
@@ -232,11 +216,11 @@
                                         <span class="short-description">
                                             {{ Str::limit($vehicle?->getRawOriginal('description'), 1500) }}
                                         </span>
-                                                                            <span class="full-description" style="display: none;">
+                                                                            <span class="full-description display-none" >
                                             {{$vehicle?->getRawOriginal('description')}}
                                         </span>
                                         <!-- By default, "See more" button is hidden -->
-                                        <a href="#" class="text--info font-medium see-more" style="display: none;">
+                                        <a href="#" class="text--info font-medium see-more display-none" >
                                             {{translate('See more')}}
                                         </a>
                                     </div>
@@ -261,11 +245,11 @@
                                                 <span class="short-description">
                                                     {{ Str::limit($vehicle?->getRawOriginal('description'), 2100) }}
                                                 </span>
-                                                <span class="full-description" style="display: none;">
+                                                <span class="full-description display-none" >
                                                     {{$vehicle?->getRawOriginal('description')}}
                                                 </span>
                                             <!-- By default, "See more" button is hidden -->
-                                            <a href="#" class="text--info font-medium see-more" style="display: none;">
+                                            <a href="#" class="text--info font-medium see-more display-none" >
                                                 {{translate('See more')}}
                                             </a>
                                         </div>
@@ -428,24 +412,20 @@
             <div class="card-body">
                 <div class="d-flex gap-3 flex-wrap">
                     @foreach($vehicle['documentsFullUrl'] as $doc)
-                    <div class="pdf-single" data-pdf-url="{{ $doc }}"
-                         onclick="openPdf(this)">
+                    <div class="pdf-single" data-pdf-url="{{ $doc }}">
                         <div class="pdf-frame">
-                            <canvas class="pdf-preview" style="display: none;"></canvas>
-                            <img class="pdf-thumbnail" src="{{ $doc }}"
-                                 alt="File Thumbnail">
+                            <canvas class="pdf-preview display-none" ></canvas>
+                            <img class="pdf-thumbnail" src="{{ $doc }}" alt="File Thumbnail">
                         </div>
                         <div class="overlay">
-                            <a href="javascript:void(0);" class="download-btn" onclick="downloadPdf(event, this)"
-                               title="">
+                            <a href="javascript:void(0);" class="download-btn" title="">
                                 <i class="tio-download-to"></i>
                             </a>
                             <div class="pdf-info d-flex gap-10px align-items-center">
-                                <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34"
-                                     alt="Document Logo">
+                                <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34" alt="Document Logo">
                                 <div class="fs-13 text--title d-flex flex-column">
                                     <span class="file-name"></span>
-                                    <span class="opacity-50">{{translate('Click to view the file')}}</span>
+                                    <span class="opacity-50">{{ translate('Click to view the file') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -453,6 +433,7 @@
                     @endforeach
                 </div>
             </div>
+
         </div>
         <div class="card">
             <!-- Header -->
@@ -587,33 +568,12 @@
             <!-- End Table -->
         </div>
     </div>
+    <div id="file-assets"
 
-    <!--Vehicle delete Modal -->
-    <div class="modal fade" id="vehicleDeleteModal" tabindex="-1" role="dialog"
-         aria-labelledby="vehicleDeleteModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header p-2 pb-0 justify-content-end flex-shrink-0">
-                    <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body py-6 text-center">
-                    <div class="mb-20">
-                        <img width="80" class="aspect-ratio-1" src="{{ asset('public/assets/admin/img/modal/delete-icon.png') }}" alt="">
-                    </div>
-                    <h3 class="font-medium text--title">Confirm Vehicle Deletion</h3>
-                    <div class="fs-13">Are you sure you want to delete this Vehicle & remove it permanently?</div>
-                    <div class="btn--container justify-content-center mt-5">
-                        <button type="reset" id="reset_btn"
-                                class="btn btn--cancel min-w-120px">{{ translate('messages.not_now') }}</button>
-                        <button type="submit"
-                                class="btn btn--primary min-w-120px">{{ translate('messages.yes') }}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        data-document-path="{{ asset('public/assets/admin/img/icons') }}"
+        data-default-thumbnail="{{ asset('public/assets/admin/img/blank2.png') }}">
     </div>
-    <!-- End Modal -->
+
 @endsection
 
 
@@ -621,267 +581,8 @@
 @push('script_2')
     <script src="{{ asset('/public/assets/admin/vendor/simplebar/dist/simplebar.min.js') }}"></script>
     <script src="{{ asset('/public/assets/admin/vendor/drift-zoom/dist/Drift.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            $('.description-text').each(function () {
-                const $descriptionText = $(this);
-                const $shortDescription = $descriptionText.find('.short-description');
-                const $fullDescription = $descriptionText.find('.full-description');
-                const $seeMore = $descriptionText.find('.see-more');
-
-                const fullDescriptionLength = $fullDescription.text().trim().length;
-
-                if (fullDescriptionLength > 1500) {
-                    $seeMore.show();
-                } else {
-                    $seeMore.hide();
-                }
-
-                $seeMore.on('click', function (e) {
-                    e.preventDefault();
-
-                    $shortDescription.toggle();
-                    $fullDescription.toggle();
-
-                    if ($fullDescription.is(':visible')) {
-                        $(this).text('See less');
-                    } else {
-                        $(this).text('See more');
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script>
-        // ----- document view from file
-        document.addEventListener("DOMContentLoaded", function() {
-
-            async function renderFileThumbnail(element) {
-                const fileUrl = element.getAttribute("data-pdf-url");
-                const canvas = element.querySelector(".pdf-preview");
-                const thumbnail = element.querySelector(".pdf-thumbnail");
-                const fileNameSpan = element.querySelector(".file-name");
-                const downloadButton = element.querySelector(".download-btn");
-
-                // Extract file name and extension
-                const fullFileName = fileUrl.split('/').pop();
-                const fileExtension = fullFileName.split('.').pop().toLowerCase();
-                const fileNameWithoutExtension = fullFileName.replace(/\.[^/.]+$/, '');
-
-                // Truncate file name if it's too long
-                const truncatedFileName =
-                    fileNameWithoutExtension.length > 20 ?
-                        `${fileNameWithoutExtension.substring(0, 17)}...` :
-                        fileNameWithoutExtension;
-                const displayedFileName = `${truncatedFileName}.${fileExtension}`;
-
-                // Set the file name in the UI
-                fileNameSpan.textContent = displayedFileName;
-                downloadButton.setAttribute("title", fullFileName);
-
-                // Handle PDF thumbnail generation
-                if (fileExtension === "pdf") {
-                    const ctx = canvas.getContext("2d");
-
-                    try {
-                        // Load the PDF using PDF.js
-                        const loadingTask = pdfjsLib.getDocument(fileUrl);
-                        const pdf = await loadingTask.promise;
-                        const page = await pdf.getPage(1);
-
-                        // Set scale and dimensions for the thumbnail
-                        const viewport = page.getViewport({
-                            scale: 0.5
-                        });
-                        canvas.width = viewport.width;
-                        canvas.height = viewport.height;
-
-                        // Render the first PDF page into the canvas
-                        await page.render({
-                            canvasContext: ctx,
-                            viewport
-                        }).promise;
-
-                        // Convert canvas to image URL and set as the thumbnail
-                        thumbnail.src = canvas.toDataURL();
-                    } catch (error) {
-                        console.error("Error rendering PDF thumbnail:", error);
-                        // Fallback to blank image if there's an error
-                        thumbnail.src = "{{ asset('public/assets/admin/img/blank2.png') }}";
-                    }
-                } else if (["jpg", "jpeg", "png", "gif", "bmp"].includes(fileExtension)) {
-                    // Handle image file types (JPG, PNG, GIF, etc.)
-                    thumbnail.src = fileUrl; // Set the image URL as the thumbnail
-                } else {
-                    // For non-PDF, non-image files (e.g., DOCX, XLSX, etc.)
-                    const fileIconPath = `{{ asset('public/assets/admin/img/icons') }}/${fileExtension}.png`;
-                    const fallbackIconPath =
-                        "{{ asset('public/assets/admin/img/blank2.png') }}"; // Fallback image
-
-                    // Check if a specific icon exists for the file type, otherwise use the fallback
-                    const iconExists = await checkFileIconExistence(fileIconPath);
-
-                    thumbnail.src = iconExists ? fileIconPath : fallbackIconPath;
-                }
-
-                // Show the thumbnail and hide the canvas
-                thumbnail.style.display = "block";
-                canvas.style.display = "none";
-            }
-
-            // Function to check if the icon exists
-            async function checkFileIconExistence(iconPath) {
-                return new Promise((resolve) => {
-                    const img = new Image();
-                    img.onload = () => resolve(true); // Icon exists
-                    img.onerror = () => resolve(false); // Icon doesn't exist
-                    img.src = iconPath;
-                });
-            }
-
-            // Iterate over all .pdf-single elements to render thumbnails
-            document.querySelectorAll(".pdf-single").forEach(renderFileThumbnail);
-
-            // Open the file in a new tab
-            window.openPdf = function(element) {
-                const fileUrl = element.getAttribute("data-pdf-url");
-                window.open(fileUrl, "_blank");
-            };
-
-            // Download the file on button click
-            window.downloadPdf = function(event, buttonElement) {
-                event.stopPropagation();
-
-                const fileUrl = buttonElement.closest(".pdf-single").getAttribute("data-pdf-url");
-                const link = document.createElement("a");
-                link.href = fileUrl;
-                link.download = fileUrl.split("/").pop();
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            };
-
-        });
-        // ----- document view from file ends
-    </script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/pdf.min.js') }}"></script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/admin/view-pages/vehicle-details.js') }}"></script>
 
 
-    <script>
-        function imageZoom() {
-            let elements = document.querySelectorAll(".cz-image-zoom");
-            for (let i = 0; i < elements.length; i++) {
-                new Drift(elements[i], {
-                    paneContainer: elements[i].parentElement.querySelector(
-                        ".cz-image-zoom-pane"
-                    ),
-                });
-            }
-        }
-
-        // Call it initially
-        imageZoom();
-
-
-        const themeDirection = $("html").attr("dir");
-
-        function renderOwlCarouselSilder() {
-            var sync1 = $("#sync1");
-            var sync2 = $("#sync2");
-            var thumbnailItemClass = ".owl-item";
-            var slides = sync1.owlCarousel({
-                startPosition: 12,
-                items: 1,
-                loop: false,
-                margin: 0,
-                mouseDrag: true,
-                touchDrag: true,
-                pullDrag: false,
-                scrollPerPage: true,
-                autoplayHoverPause: false,
-                nav: false,
-                dots: false,
-                rtl: themeDirection && themeDirection.toString() === "rtl",
-            })
-                .on("changed.owl.carousel", syncPosition);
-
-            function syncPosition(el) {
-                var owl_slider = $(this).data("owl.carousel");
-                var loop = owl_slider.options.loop;
-
-                var current = el.item.index;
-
-                var owl_thumbnail = sync2.data("owl.carousel");
-                var itemClass = "." + owl_thumbnail.options.itemClass;
-
-                var thumbnailCurrentItem = sync2
-                    .find(itemClass)
-                    .removeClass("synced")
-                    .eq(current);
-                thumbnailCurrentItem.addClass("synced");
-
-                if (!thumbnailCurrentItem.hasClass("active")) {
-                    var duration = 500;
-                    sync2.trigger("to.owl.carousel", [current, duration, true]);
-                }
-
-                // Re-initialize image zoom on the new slide
-                setTimeout(function() {
-                    imageZoom();
-                }, 500); // Wait for the carousel to complete the slide change
-            }
-
-            var thumbs = sync2.owlCarousel({
-                startPosition: 12,
-                items: 2,
-                loop: false,
-                margin: 10,
-                autoplay: false,
-                nav: true,
-                navText: ["", ""],
-                dots: false,
-                rtl: themeDirection && themeDirection.toString() === "rtl",
-                responsive: {
-                    576: {
-                        items: 3,
-                    },
-                    768: {
-                        items: 3,
-                    },
-                    992: {
-                        items: 3,
-                    },
-                    1200: {
-                        items: 3,
-                    },
-                    1400: {
-                        items: 3,
-                    },
-                },
-                onInitialized: function(e) {
-                    var thumbnailCurrentItem = $(e.target)
-                        .find(thumbnailItemClass)
-                        .eq(this._current);
-                    thumbnailCurrentItem.addClass("synced");
-                },
-            })
-                .on("click", thumbnailItemClass, function(e) {
-                    e.preventDefault();
-                    var duration = 500;
-                    var itemIndex = $(e.target).parents(thumbnailItemClass).index();
-                    sync1.trigger("to.owl.carousel", [itemIndex, duration, true]);
-                })
-                .on("changed.owl.carousel", function(el) {
-                    var number = el.item.index;
-                    var owl_slider = sync1.data("owl.carousel");
-                    owl_slider.to(number, 500, true);
-                });
-
-            sync1.owlCarousel();
-        }
-
-        renderOwlCarouselSilder();
-    </script>
 @endpush

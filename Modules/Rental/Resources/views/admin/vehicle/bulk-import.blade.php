@@ -151,10 +151,24 @@
 
                         </div>
                     </div>
+
                     <div class="btn--container justify-content-end mt-3">
-                        <button id="reset_btn" type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="button" class="btn btn--primary update_or_import">{{translate('messages.Upload')}}</button>
+                        <button id="reset_btn" type="reset"
+                                data-alert="{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}"
+                                class="btn btn--reset">{{translate('messages.reset')}}</button>
+                        <button type="button"
+                                class="btn btn--primary update_or_import"
+                                data-no="{{ translate('no') }}"
+                                data-yes="{{ translate('yes') }}"
+                                data-title="{{ translate('Are you sure?') }}"
+                                data-desc="{{ translate('You_want_to_') }}"
+                                data-text="{{ translate(' Data') }}">
+                                {{translate('messages.Upload')}}
+                        </button>
                     </div>
+
+
+
                 </div>
             </div>
         </form>
@@ -164,244 +178,5 @@
 @push('script_2')
     <script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
     <script src="{{asset('public/assets/admin')}}/js/view-pages/product-import.js"></script>
-<script>
-    "use strict";
-    $('.update_or_import').on("click", function () {
-    let upload_type = $('input[name="upload_type"]:checked').val();
-    myFunction(upload_type)
-});
-$('#reset_btn').click(function(){
-    $('#products_file').val('');
-    $('.filename').text('{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}');
-})
-    $(".action-upload-section-dot-area").on("change", function () {
-        if (this.files && this.files[0]) {
-            let reader = new FileReader();
-            reader.onload = () => {
-                let imgName = this.files[0].name;
-                $(this).closest(".uploadDnD").find('.filename').text(imgName);
-            };
-            reader.readAsDataURL(this.files[0]);
-        }
-    });
-
-    $(document).ready(function() {
-        @if($moduleType== 'food')
-            $('#food_variation_section').show();
-            $('#attribute_section').hide();
-        @else
-            $('#food_variation_section').hide();
-            $('#attribute_section').show();
-        @endif
-        $("#add_new_option_button").click(function(e) {
-            count++;
-            let add_option_view = `
-                <div class="card view_new_option mb-2" >
-                    <div class="card-header">
-                        <label for="" id=new_option_name_` + count + `> {{ translate('add_new') }}</label>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-2">
-                            <div class="col-lg-3 col-md-6">
-                                <label for="">{{ translate('name') }}</label>
-                                 <input required name=options[` + count +
-                `][name] class="form-control new_option_name" type="text" data-count="`+
-                count +`">
-                            </div>
-
-                            <div class="col-lg-3 col-md-6">
-                                <div class="form-group">
-                                    <label class="input-label text-capitalize d-flex alig-items-center"><span class="line--limit-1">{{ translate('messages.selcetion_type') }} </span>
-                                    </label>
-                                    <div class="resturant-type-group border">
-                                        <label class="form-check form--check mr-2 mr-md-4">
-                                                <input class="form-check-input show_min_max" data-count="`+count+`" type="radio" value="multi"
-                                                name="options[` + count + `][type]" id="type` + count +
-                `" checked
-                                                >
-                                                <span class="form-check-label">
-                                                    {{ translate('Multiple Selection') }}
-                </span>
-            </label>
-
-            <label class="form-check form--check mr-2 mr-md-4">
-                <input class="form-check-input hide_min_max" data-count="`+count+`" type="radio" value="single"
-                                                name="options[` + count + `][type]" id="type` + count +
-                `"
-                                                >
-                                                <span class="form-check-label">
-                                                    {{ translate('Single Selection') }}
-                </span>
-            </label>
-            </div>
-        </div>
-        </div>
-        <div class="col-12 col-lg-6">
-        <div class="row g-2">
-            <div class="col-sm-6 col-md-4">
-                <label for="">{{ translate('Min') }}</label>
-                                                <input id="min_max1_` + count + `" required  name="options[` + count + `][min]" class="form-control" type="number" min="1">
-                                    </div>
-                                    <div class="col-sm-6 col-md-4">
-                                        <label for="">{{ translate('Max') }}</label>
-                                        <input id="min_max2_` + count + `"   required name="options[` + count + `][max]" class="form-control" type="number" min="1">
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label class="d-md-block d-none">&nbsp;</label>
-                                            <div class="d-flex align-items-center justify-content-between pt-2">
-                                            <div class="form-check form--check">
-                                                <input class="form-check-input" id="options[` + count + `][required]" name="options[` +
-                count + `][required]" type="checkbox">
-                                                <label for="options[` + count + `][required]" class="m-0">{{ translate('Required') }}</label>
-                                            </div>
-                                            <div>
-                                                <button type="button" class="btn btn-outline-danger btn-sm delete_input_button"
-                                                    title="{{ translate('Delete') }}">
-                                                    <i class="tio-add-to-trash"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="option_price_` + count + `" >
-                            <div class="__bg-F8F9FC-card border rounded p-3 pb-0 mt-3">
-                                <div  id="option_price_view_` + count + `">
-                                    <div class="row g-3 add_new_view_row_class mb-3">
-                                        <div class="col-md-4 col-sm-6">
-                                            <label for="">{{ translate('Option_name') }}</label>
-                                            <input class="form-control" required type="text" name="options[` +
-                count +
-                `][values][0][label]" id="">
-                                        </div>
-                                        <div class="col-md-4 col-sm-6">
-                                            <label for="">{{ translate('Additional_price') }}</label>
-                                            <input class="form-control" required type="number" min="0" step="0.01" name="options[` +
-                count + `][values][0][optionPrice]" id="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="add_new_button_` + count +
-                `">
-                                   <button type="button" class="text-success bg-transparent border-0 p-0 add_new_row_button" data-count="`+
-                count +`" > <i class="tio-add-square"></i> {{ translate('Add_New_Option') }}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-
-            $("#add_new_option").append(add_option_view);
-        });
-    });
-
-    function add_new_row_button(data) {
-        count = data;
-        countRow = 1 + $('#option_price_view_' + data).children('.add_new_view_row_class').length;
-        let add_new_row_view = `
-        <div class="row add_new_view_row_class mb-3 position-relative pt-3 pt-sm-0">
-            <div class="col-md-4 col-sm-5">
-                    <label for="">{{ translate('Option_name') }}</label>
-                    <input class="form-control" required type="text" name="options[` + count + `][values][` +
-            countRow + `][label]" id="">
-                </div>
-                <div class="col-md-4 col-sm-5">
-                    <label for="">{{ translate('Additional_price') }}</label>
-                    <input class="form-control"  required type="number" min="0" step="0.01" name="options[` +
-            count +
-            `][values][` + countRow + `][optionPrice]" id="">
-                </div>
-                <div class="col-sm-2 max-sm-absolute">
-                    <label class="d-none d-sm-block">&nbsp;</label>
-                    <div class="mt-1">
-                        <button type="button" class="btn btn-danger btn-sm deleteRow"
-                            title="{{ translate('Delete') }}">
-                            <i class="tio-add-to-trash"></i>
-                        </button>
-                    </div>
-            </div>
-        </div>`;
-        $('#option_price_view_' + data).append(add_new_row_view);
-
-    }
-
-    $('#choice_attributes').on('change', function() {
-        $('#customer_choice_options').html(null);
-        $('#variant_combination').html(null);
-        $.each($("#choice_attributes option:selected"), function() {
-            if ($(this).val().length > 50) {
-                toastr.error(
-                    '{{ translate('validation.max.string', ['attribute' => translate('messages.variation'), 'max' => '50']) }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                return false;
-            }
-            add_more_customer_choice_option($(this).val(), $(this).text());
-        });
-    });
-
-    function add_more_customer_choice_option(i, name) {
-        let n = name;
-        $('#customer_choice_options').append(
-            '<div class="row gy-1"><div class="col-sm-3"><input type="hidden" name="choice_no[]" value="' + i +
-            '"><input type="text" class="form-control" name="choice[]" value="' + n +
-            '" placeholder="{{ translate('messages.choice_title') }}" readonly></div><div class="col-sm-9"><input type="text" class="form-control combination_update" name="choice_options_' +
-            i +
-            '[]" placeholder="{{ translate('messages.enter_choice_values') }}" data-role="tagsinput"></div></div>'
-        );
-        $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
-    }
-
-    function combination_update() {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $.ajax({
-            type: "POST",
-            url: "{{ route('admin.item.variant-combination') }}",
-            data: $('#item_form_2').serialize() + '&stock=' + true,
-            beforeSend: function() {
-                $('#loading').show();
-            },
-            success: function(data) {
-                $('#loading').hide();
-                $('#variant_combination').html(data.view);
-                if (data.length < 1) {
-                    $('input[name="current_stock"]').attr("readonly", false);
-                }
-            }
-        });
-    }
-
-    $(document).on('change', '.combination_update', function () {
-        combination_update();
-    });
-
-
-    function myFunction(data) {
-        Swal.fire({
-        title: '{{ translate('Are you sure?') }}' ,
-        text: "{{ translate('You_want_to_') }}" +data + " {{ translate('Data.') }}",
-        type: 'warning',
-        showCancelButton: true,
-        cancelButtonColor: 'default',
-        confirmButtonColor: '#FC6A57',
-        cancelButtonText: '{{translate('messages.no')}}',
-        confirmButtonText: '{{translate('messages.yes')}}',
-        reverseButtons: true
-        }).then((result) => {
-            if (result.value) {
-                $('#btn_value').val(data);
-                $("#import_form").submit();
-            }
-        })
-    }
-        </script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/vehicle-bulk-import.js') }}"></script>
 @endpush
