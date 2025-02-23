@@ -28,6 +28,7 @@ active
 
 @push('script')
     <script>
+        "use strict";
         function printDiv(divName) {
             window.open('{{route("admin.rental.trip.print-invoice",["id" => $trip->id])}}', '_blank');
         }

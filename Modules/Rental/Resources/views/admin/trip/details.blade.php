@@ -1099,18 +1099,12 @@
             </div>
         </div>
     </div>
-
+    <input type="hidden" id="currency_symbol" value="{{ \App\CentralLogics\Helpers::currency_symbol() }}">
 @endsection
 
 @push('script_2')
     <script src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=places&v=3.45.8"></script>
-    <script>
-        // INITIALIZATION OF SELECT2
-        // =======================================================
-        $('.js-select2-custom').each(function() {
-            var select2 = $.HSCore.components.HSSelect2.init($(this));
-        });
-    </script>
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/trip-details.js')}}"></script>
     <script>
         $(document).ready(function() {
 
@@ -1176,7 +1170,6 @@
                 providerLocationMap();
             });
 
-            // pickup destination map with route line starts
             function addPolylineToMap(map, pickupLocation, destinationLocation) {
                 const directionsService = new google.maps.DirectionsService();
                 const directionsRenderer = new google.maps.DirectionsRenderer({
@@ -1323,158 +1316,11 @@
                 addPolylineToMap(map, pickupLocation, destinationLocation);
             }
 
-            // $('#pickupDesModal').on('shown.bs.modal', function(event) {
                 initializeCustomRouteLocationMap();
-            // });
 
-            //select2 search placeholder add
             $('.select2-search__field').attr("placeholder", '<i class="tio-search"></i> Search Vendor');
-            //select2 search placeholder add ends
         })
-    </script>
 
-    <script>
-        $(document).ready(function () {
-            $('.assign-vehicle-btn').on('click', function () {
-                const detailsId = $(this).data('details_id');
-                const vehicleId = $(this).data('vehicle_id');
-                const tripId = $(this).data('trip_id');
-                const quantity = $(this).data('quantity');
-                const imgSrc = $(this).data('img');
-                const name = $(this).data('name');
-                const vendor = $(this).data('vendor');
-                const category = $(this).data('category');
-                const brand = $(this).data('brand');
-                const list = $(this).data('list');
-                const tripVehicleDetails = $(this).data('trip_vehicle_details');
-
-                $('#vehicleImage').attr('src', imgSrc);
-                $('#vehicleName').text(name);
-                $('#vehicleQuantity').text(quantity);
-                $('#vehicleVendor').text(vendor);
-                $('#vehicleCategory').text(category);
-                $('#vehicleBrand').text(brand);
-
-                const tableBody = $('#assignVehicleModal tbody');
-                tableBody.empty();
-
-                let preCheckedIds = [];
-                try {
-                    if (typeof tripVehicleDetails === 'string') {
-                        preCheckedIds = JSON.parse(tripVehicleDetails).map(item => item.vehicle_identity_id);
-                    } else {
-                        preCheckedIds = tripVehicleDetails.map(item => item.vehicle_identity_id);
-                    }
-                } catch (error) {
-                    console.error('Error parsing trip_vehicle_details:', error);
-                }
-
-                if (list && Array.isArray(list)) {
-                    list.forEach((item, index) => {
-                        const isChecked = preCheckedIds.includes(item.id) ? 'checked' : '';
-                        const row = `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${item.vin_number || 'N/A'}</td>
-                    <td>${item.license_plate_number || 'N/A'}</td>
-                    <td>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <input class="form-check-input single-select m-auto position-relative" type="checkbox" name="vehicle_identity_ids[]" value="${item.id || ''}" ${isChecked}>
-                            <input type="hidden" name="trip_id" value="${tripId}">
-                            <input type="hidden" name="vehicle_id" value="${vehicleId}">
-                            <input type="hidden" name="details_id" value="${detailsId}">
-                        </div>
-                    </td>
-                </tr>
-                `;
-                        tableBody.append(row);
-                    });
-                } else {
-                    tableBody.append('<tr><td colspan="4" class="text-center">No data available</td></tr>');
-                }
-
-                let checkedCount = $('.single-select:checked').length;
-
-                $('.single-select').on('change', function () {
-                    if ($(this).is(':checked')) {
-                        checkedCount++;
-                    } else {
-                        checkedCount--;
-                    }
-
-                    if (checkedCount > quantity) {
-                        $(this).prop('checked', false);
-                        checkedCount--;
-                        toastr.warning(`You can select up to ${quantity} vehicles only.`, '', {
-                            closeButton: true,
-                            progressBar: true
-                        });
-                    }
-                });
-            });
-
-            let selectedDrivers = {};
-
-            function initializeSelectedDrivers() {
-                $('.driver-select').each(function() {
-                    let vehicleId = $(this).attr('name').match(/\[(.*?)\]/)[1];
-                    let selectedDriverId = $(this).val();
-
-                    if (selectedDriverId) {
-                        selectedDrivers[vehicleId] = selectedDriverId;
-                    }
-                });
-
-                disableUsedDrivers();
-                updateUnassignedVehicleCount();
-            }
-
-            function disableUsedDrivers() {
-                $('.driver-select option').prop('disabled', false).css('color', '');
-
-                $('.driver-select').each(function() {
-                    let vehicleId = $(this).attr('name').match(/\[(.*?)\]/)[1];
-                    let selectedDriverId = selectedDrivers[vehicleId];
-
-                    if (selectedDriverId) {
-                        $('.driver-select').not(this).each(function() {
-                            $(this).find(`option[value="${selectedDriverId}"]`).prop('disabled', true).css('color', 'gray');
-                        });
-                    }
-                });
-            }
-
-            function updateUnassignedVehicleCount() {
-                let unassignedCount = 0;
-
-                $('.driver-select').each(function() {
-                    if (!$(this).val()) {
-                        unassignedCount++;
-                    }
-                });
-
-                $('#vehicle-assign-count').text(unassignedCount);
-            }
-
-            $('.assign-driver-modal').on('click', function() {
-                $('#assignDriverModal').modal('show');
-            });
-
-            $('.driver-select').on('change', function() {
-                let selectedDriverId = $(this).val();
-                let vehicleId = $(this).attr('name').match(/\[(.*?)\]/)[1];
-
-                if (selectedDriverId) {
-                    selectedDrivers[vehicleId] = selectedDriverId;
-                }
-
-                updateUnassignedVehicleCount();
-                disableUsedDrivers();
-            });
-
-            initializeSelectedDrivers();
-
-        });
 
     </script>
 
@@ -1539,7 +1385,8 @@
                     const place = autocomplete.getPlace();
 
                     if (!place.geometry) {
-                        alert('No details available for the selected location.');
+
+                        toastr.error('No details available for the selected location.');
                         return;
                     }
 
@@ -1564,7 +1411,7 @@
                             const address = results[0].formatted_address;
                             updateFields(address, latLng.lat(), latLng.lng());
                         } else {
-                            alert('Failed to fetch address: ' + status);
+                            toastr.error('Failed to fetch address: ' + status);
                         }
                     });
                 });
@@ -1607,7 +1454,9 @@
 
                         updateCalculations(quantityUpdate = false,upadet_data= false,update_distance =1);
                     } else {
-                        alert('Error calculating distance: ' + status);
+
+                        toastr.error('Error calculating distance: ' + status);
+
                     }
                 });
             }
@@ -1647,31 +1496,30 @@
             $('.tax_amount').text("{{ \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first()->value ?  '': '+' }}"+ formatCurrency(response.taxAmount));
             $('.ref_bonus_amount').text( '-'+ formatCurrency(response.refBonus));
             $('.additional_charge').text('+'+ formatCurrency(response.additionalCharge));
-            // $(`.fare-total[data-id="${id}"]`).val(originalValues[id].price);
         }
 
         function formatCurrency(value) {
-            return "{{ \App\CentralLogics\Helpers::currency_symbol() }}" + value;
+            return $("#currency_symbol").val() + value;
         }
 
-        $('#edit-trip').on('click', function () {
+            $('#edit-trip').on('click', function () {
 
-            updateCalculations(quantityUpdate = false,upadet_data= 1);
-            $('#edit-trip').attr("disabled", true);
-        });
-        let originalValues = {};
-        $('.quantity-input, .fare-total').each(function() {
-            const id = $(this).data('id');
-            originalValues[id] = {
-                quantity: $(this).data('max_original_quantity') || $(this).val(),
-                price: $(this).data('old-value') || $(this).val()
-            };
-        });
+                updateCalculations(quantityUpdate = false,upadet_data= 1);
+                $('#edit-trip').attr("disabled", true);
+            });
+            let originalValues = {};
+            $('.quantity-input, .fare-total').each(function() {
+                const id = $(this).data('id');
+                originalValues[id] = {
+                    quantity: $(this).data('max_original_quantity') || $(this).val(),
+                    price: $(this).data('old-value') || $(this).val()
+                };
+            });
 
 
         $(document).on('keydown', '.quantity-input, .fare-total', function(event) {
             if (event.key === '-' || event.keyCode === 189) {
-                event.preventDefault(); // Prevent the "-" key from being input
+                event.preventDefault();
             }
         });
 
@@ -1700,9 +1548,7 @@
             const vehicleId = $this.data('vehicle_id');
             const originalPrice = parseFloat($this.data('old-value'));
 
-            // const $fareOld = $this.closest('td').find('.fare-old-value');
-            // $fareOld.text(originalPrice.toFixed(2));
-            $this.closest('tr').find('.eta_amount').removeClass('d-none').addClass('mt-3');
+             $this.closest('tr').find('.eta_amount').removeClass('d-none').addClass('mt-3');
             $this.closest('td').find('.eta_amount_mt').removeClass('d-none');
             updateCalculations(quantityUpdate = false,upadet_data= false);
         });
@@ -1758,7 +1604,7 @@
                 },
                 error: function(xhr) {
                     toastr.error(xhr.responseJSON.message || 'Failed to update calculations');
-                    
+
                     $('#edit-trip').attr("disabled", false);
                 }
             });
@@ -1770,7 +1616,6 @@
             $(`.fare-total[data-id="${id}"]`).val(originalValues[id].price);
         });
         $('.eta_amount_mt').addClass('d-none');
-        // $('.fare-old-value').text('');
     });
 
     $('.close-modal').on('click', function() {

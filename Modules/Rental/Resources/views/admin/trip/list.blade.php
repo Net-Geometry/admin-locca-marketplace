@@ -3,11 +3,7 @@
 @section('title', translate('messages.all_trips'))
 
 @push('css_or_js')
-    <style>
-        [data-toggle="tooltip"] img {
-           width: 37px;
-        }
-    </style>
+<link rel="stylesheet" href="{{asset('Modules/Rental/public/assets/css/admin/trip-list.css')}}">
 @endpush
 
 @section('content')
@@ -375,7 +371,7 @@
                 <hr class="my-4">
                 <small class="text-cap mb-3">{{translate('messages.Provider')}}</small>
                 <div class="mb-2 initial--21">
-                    <select name="provider_ids[]" id="provider_ids" class="form-control js-select2-custom" multiple="multiple">
+                    <select name="provider_ids[]" id="provider_ids" data-get-provider-url="{{route('admin.store.get-providers')}}" class="form-control js-select2-custom" multiple="multiple">
                         @foreach(\App\Models\Store::WithModuleType('rental')->get(['id','name']) as $store)
                             <option value="{{$store->id}}"
                                     @if(isset($provider_ids) && in_array($store->id, $provider_ids))
@@ -441,7 +437,7 @@
                 <div class="card-footer sidebar-footer">
                     <div class="row gx-2">
                         <div class="col">
-                            <button type="reset" class="btn btn-block btn-white" id="reset">{{ translate('Clear all filters') }}</button>
+                            <button type="reset" data-url="{{route('admin.rental.trip.list',['status' => 'all'])}}" class="btn btn-block btn-white" id="reset">{{ translate('Clear all filters') }}</button>
                         </div>
                         <div class="col">
                             <button type="submit" class="btn btn-block btn-primary">{{ translate('messages.save') }}</button>
@@ -452,47 +448,12 @@
             </form>
         </div>
     </div>
+    <input type="hidden" id="get-default-filter-count" value="{{ $filterCount > 0 ? $filterCount : '' }}">
 @endsection
 
 
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/order-list.js"></script>
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/trip-list.js')}}"></script>
 
-    <script>
-        $(document).ready(function () {
-
-            @if($filterCount > 0)
-                $('#filter_count').html({{$filterCount}});
-            @endif
-
-            $('#zone_ids').on('change', function () {
-                $('#provider_ids').val(null).trigger('change');
-                $('#provider_ids').trigger('change');
-            });
-
-            $('#provider_ids').select2({
-                ajax: {
-                    url: '{{url('/')}}/admin/store/get-providers',
-                    data: function (params) {
-                        return {
-                            q: params.term,
-                            zone_ids: $('#zone_ids').val(),
-                            page: params.page
-                        };
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data
-                        };
-                    }
-                }
-            });
-
-            $('#reset').on('click', function(){
-                location.href = '{{url('/')}}/admin/rental/trip?status=all';
-            });
-
-        });
-
-    </script>
 @endpush

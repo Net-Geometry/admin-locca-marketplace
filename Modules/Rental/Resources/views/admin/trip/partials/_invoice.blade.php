@@ -2,7 +2,7 @@
     <div id="printableArea">
         <div>
             <div class="text-center">
-                <input type="button" class="btn btn-primary mt-3 non-printable" onclick="printDiv('printableArea')"
+                <input type="button" class="btn btn-primary mt-3 non-printable print-Div"
                        value="{{ translate('Proceed,_If_thermal_printer_is_ready.') }}" />
                 <a href="{{ url()->previous() }}"
                    class="btn btn-danger non-printable mt-3">{{ translate('messages.back') }}</a>
@@ -33,7 +33,7 @@
 
                 <div class="img-wrap">
                     <div class="top-info">
-                      
+
                         <img src="{{ asset('/public/assets/admin/img/line_icon.svg') }}" alt="" class="w-100">
                     </div>
                     <div class="order-info-id text-center">
@@ -163,3 +163,7 @@
         </div>
     </div>
 </div>
+
+@push('script_2')
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/invoice.js')}}"></script>
+@endpush
