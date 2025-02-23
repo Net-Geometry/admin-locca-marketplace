@@ -2,9 +2,7 @@
 
 @section('title',translate('Vehicles Bulk Export'))
 
-@push('css_or_js')
 
-@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -128,22 +126,5 @@
 @endsection
 
 @push('script_2')
-<script>
-    "use strict";
-    $(document).on('ready', function (){
-        $('.id_wise').hide();
-        $('.date_wise').hide();
-        $('#type').on('change', function()
-        {
-            $('.id_wise').hide();
-            $('.date_wise').hide();
-            $('.'+$(this).val()).show();
-        })
-        $('#reset-btn').on('click', function()
-        {
-            $('.id_wise').hide();
-            $('.date_wise').hide();
-        })
-    });
-</script>
+ <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/vehicle-bulk-export.js')}}"></script>
 @endpush

@@ -148,7 +148,7 @@
                                                         {{ translate('or drag and drop') }}
                                                     </h6>
                                                 </div>
-                                                <img class="upload-file-img ratio-2" width="300" height="150" loading="lazy" style="display: none;" src="" alt="">
+                                                <img class="upload-file-img d-none ratio-2" width="300" height="150" loading="lazy"  src="" alt="">
                                             </label>
                                         </div>
                                     </div>
@@ -172,9 +172,7 @@
                             </div>
                         </div>
                         <div class="card-body py-1">
-                            {{-- <div>
-                                <div class="row" id="multiImg"></div>
-                            </div> --}}
+                    
                             <div class="d-flex pt-20 pb-2 overflow-x-auto">
                                <div class="d-flex gap-3 flex-shrink-0" id="image_container">
                                    <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
@@ -376,6 +374,8 @@
                                            placeholder="Type your license plate number" value="" required>
                                 </div>
                                 <button type="button"
+                                     data-vin="{{ translate("messages.VIN Number") }}"
+                                        data-license="{{ translate("messages.License Plate Number") }}"
                                         class="btn plus-btn shadow-none text--primary p-0 fs-32 lh--1 text-left mt-md-4 add-btn">
                                     <i class="tio-add-circle-outlined"></i>
                                 </button>
@@ -530,436 +530,24 @@
         </form>
     </div>
 
+<input type="hidden" id="file_size_error_text" value="{{ translate('file_size_too_big') }}">
+<input type="hidden" id="file_type_error_text" value="{{ translate('please_only_input_png_or_jpg_type_file') }}">
+<input type="hidden" id="max_file_upload_limit_error_text" value="{{ translate('maximum_file_upload_limit_is_') }}">
+
+
+
+<div id="file-assets"
+    data-picture-icon="{{ asset('public/assets/admin/img/picture.svg') }}"
+    data-document-icon="{{ asset('public/assets/admin/img/document.svg') }}"
+    data-blank-thumbnail="{{ asset('public/assets/admin/img/blank2.png') }}">
+</div>
+
 @endsection
 
 @push('script_2')
     <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/pdf.min.js') }}"></script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/admin/view-pages/vehicle-create.js') }}"></script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/multiple-upload.js') }}"></script>
 
-    <script>
-        $(document).on('reset', 'form', function() {
-            $(this).find('select').each(function() {
-                var select = $(this);
-                select.val('').trigger('change'); // Reset Select2 dropdowns
-            });
-        });
-        // ---- single image upload starts
-        $(document).ready(function () {
-            // Handle file input change
-            $('.single_file_input').on('change', function (event) {
-                var file = event.target.files[0];
-                var $card = $(event.target).closest('.upload-file');
-                var $textbox = $card.find('.upload-file-textbox');
-                var $imgElement = $card.find('.upload-file-img');
-                var $removeBtn = $card.find('.remove-btn');
-
-                if (file) {
-                    var reader = new FileReader();
-                    reader.onload = function (e) {
-                        $textbox.hide();
-                        $imgElement.attr('src', e.target.result).show();
-                        $removeBtn.css('opacity', 1);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            // Handle remove button click
-            $('.remove-btn').click(function () {
-                var $card = $(this).closest('.upload-file');
-                $card.find('.single_file_input').val('');
-                $card.find('.upload-file-textbox').show();
-                $card.find('.upload-file-img').hide().attr('src', '');
-                $(this).css('opacity', 0);
-            });
-
-            // Handle reset button click
-            $('#reset_btn').click(function () {
-                var $cards = $('.upload-file');
-                $cards.each(function () {
-                    $(this).find('.single_file_input').val('');
-                    $(this).find('.upload-file-textbox').show();
-                    $(this).find('.upload-file-img').hide().attr('src', '');
-                    $(this).find('.remove-btn').css('opacity', 0);
-                });
-            });
-        });
-         // ---- single image upload ends
-    </script>
-
-    <script>
-        // ----- mutiple image upload
-        $(document).ready(function () {
-            const MAX_FILE_SIZE_MB = 1; // Maximum file size in MB
-            const MAX_FILES = 5;
-            const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-            const imageContainer = document.getElementById("image_container");
-            const imageUploadWrapper = document.getElementById("image_upload_wrapper");
-            const inputElement = document.querySelector('.multiple_image_input');
-            const fileSet = new Set(); // To keep track of files
-
-            inputElement.addEventListener('change', function (event) {
-                const files = Array.from(event.target.files);
-                const currentFiles = imageContainer.querySelectorAll(".image-single").length;
-
-                if (currentFiles + files.length > MAX_FILES) {
-                    toastr.error('{{ translate('You can upload a maximum of') }} ' + MAX_FILES +
-                        ' {{ translate('files.') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                    return;
-                }
-                files.forEach(file => {
-                    // Validate file type
-                    if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-                        toastr.error('{{ translate('please_only_input_png_or_jpg_type_file') }}', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                        return;
-                    }
-
-                    // Validate file size
-                    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-                        toastr.error('{{ translate('file_size_too_big') }}', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                        return;
-                    }
-
-                    // Add to the file set and create preview
-                    if (!fileSet.has(file.name)) {
-                        fileSet.add(file.name);
-
-                        const fileURL = URL.createObjectURL(file);
-                        const imageSingle = document.createElement("div");
-                        imageSingle.className = "image-single h-100 max-w-200px p-0";
-                        imageSingle.innerHTML = `
-                            <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '${file.name}')">
-                                <i class="tio-clear"></i>
-                            </a>
-                            <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="${fileURL}" alt="">
-                        `;
-                        imageContainer.appendChild(imageSingle);
-                    }
-                });
-
-                toggleUploadWrapper();
-            });
-
-            window.removeImage = function (event, element, fileName) {
-                event.stopPropagation();
-                const imageSingle = element.closest(".image-single");
-                imageSingle.remove();
-                fileSet.delete(fileName); // Remove the file from the set
-                toggleUploadWrapper();
-            };
-
-            function toggleUploadWrapper() {
-                const currentFiles = imageContainer.querySelectorAll(".image-single").length;
-                imageUploadWrapper.style.display = currentFiles >= 5 ? "none" : "block";
-            }
-           // Handle reset button click
-           $('#reset_btn').click(function () {
-                // Select and remove only the uploaded image elements
-                const uploadedImages = imageContainer.querySelectorAll(".image-single");
-                uploadedImages.forEach(image => image.remove());
-
-                // Clear the file set
-                fileSet.clear();
-
-                // Ensure the upload wrapper is visible
-                imageUploadWrapper.style.display = "block";
-            });
-
-        });
-        // ----- mutiple image upload ends
-
-        // ----- mutiple document upload
-        $(document).ready(function () {
-            const MAX_FILES = 5;
-            const pdfContainer = document.getElementById("pdf-container");
-            const documentUploadWrapper = document.getElementById("upload-wrapper");
-            const uploadedFiles = new Map(); // Store files with unique names as keys
-
-            // Handle file selection and upload
-            document.querySelector('.multiple_document_input').addEventListener('change', function (event) {
-                const files = Array.from(event.target.files);
-                const currentFiles = pdfContainer.querySelectorAll(".pdf-single").length;
-
-                if (currentFiles + files.length > MAX_FILES) {
-                    toastr.error(`You can upload a maximum of ${MAX_FILES} files.`, {
-                        CloseButton: true,
-                        ProgressBar: true,
-                    });
-                    return;
-                }
-
-                files.forEach((file) => {
-                    if (!uploadedFiles.has(file.name)) {
-                        uploadedFiles.set(file.name, file); // Store the file with its name as the key
-
-                        const fileURL = URL.createObjectURL(file);
-                        const fileName = file.name;
-                        const fileType = file.type;
-
-                        const pdfSingle = document.createElement("div");
-                        pdfSingle.className = "pdf-single";
-                        pdfSingle.setAttribute("data-file-name", fileName);
-                        pdfSingle.setAttribute("onclick", `window.open('${fileURL}', '_blank')`);
-
-                        const iconSrc = fileType.startsWith("image/") ?
-                            "{{ asset('public/assets/admin/img/picture.svg') }}" :
-                            "{{ asset('public/assets/admin/img/document.svg') }}";
-
-                        pdfSingle.innerHTML = `
-                            <div class="pdf-frame">
-                                <canvas class="pdf-preview" style="display: none;"></canvas>
-                                <img class="pdf-thumbnail" src="{{ asset('public/assets/admin/img/blank2.png') }}" alt="File Thumbnail">
-                            </div>
-                            <div class="overlay">
-                                <a href="javascript:void(0);" class="remove-btn" onclick="removeDocument(event, this)">
-                                    <i class="tio-clear"></i>
-                                </a>
-                                <div class="pdf-info d-flex gap-10px align-items-center">
-                                    <img src="${iconSrc}" width="34" alt="File Type Logo">
-                                    <div class="fs-13 text--title d-flex flex-column">
-                                        <span class="file-name">${fileName}</span>
-                                        <span class="opacity-50">Click to view the file</span>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-
-                        pdfContainer.appendChild(pdfSingle);
-
-                        // Log file details in the console
-                        console.log(`File added: ${fileName}, URL: ${fileURL}`);
-
-                        // Render the thumbnail (if applicable)
-                        renderFileThumbnail(pdfSingle, fileType);
-
-                        // Show success notification
-                        toastr.success("File added successfully.", {
-                            CloseButton: true,
-                            ProgressBar: true,
-                        });
-                    }
-                });
-
-                toggleUploadWrapper();
-
-                // Clear file input after upload
-                // event.target.value = "";
-
-            });
-
-            // Remove document handler
-            window.removeDocument = function (event, element) {
-                event.stopPropagation();
-                const pdfSingle = element.closest(".pdf-single");
-                const fileName = pdfSingle.getAttribute("data-file-name");
-
-                // Remove file from the Map
-                uploadedFiles.delete(fileName);
-
-                pdfSingle.remove();
-                toggleUploadWrapper();
-            };
-
-            // Toggle visibility of upload wrapper
-            function toggleUploadWrapper() {
-                const currentFiles = pdfContainer.querySelectorAll(".pdf-single").length;
-                documentUploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
-            }
-
-            // Render file thumbnail (image, PDF, or other file types)
-            async function renderFileThumbnail(element, fileType) {
-                const fileUrl = element.getAttribute("onclick").match(/'(.*?)'/)[1];
-                const canvas = element.querySelector(".pdf-preview");
-                const thumbnail = element.querySelector(".pdf-thumbnail");
-
-                try {
-                    if (fileType.startsWith("image/")) {
-                        thumbnail.src = fileUrl; // Directly use the image URL
-                    } else if (fileType === "application/pdf") {
-                        const ctx = canvas.getContext("2d");
-                        const loadingTask = pdfjsLib.getDocument(fileUrl);
-                        const pdf = await loadingTask.promise;
-                        const page = await pdf.getPage(1);
-
-                        const viewport = page.getViewport({ scale: 0.5 });
-                        canvas.width = viewport.width;
-                        canvas.height = viewport.height;
-
-                        await page.render({ canvasContext: ctx, viewport }).promise;
-                        thumbnail.src = canvas.toDataURL(); // Render PDF thumbnail
-                    } else {
-                        // Use a fallback thumbnail for unsupported file types
-                        thumbnail.src = "{{ asset('public/assets/admin/img/blank2.png') }}";
-                    }
-
-                    thumbnail.style.display = "block";
-                    canvas.style.display = "none";
-                } catch (error) {
-                    console.error("Error rendering file thumbnail:", error);
-                }
-            }
-
-            // Handle form submission
-            $('form').on('submit', function (e) {
-                // e.preventDefault();
-
-                const formData = new FormData(this);
-
-                // Append all files to FormData
-                uploadedFiles.forEach((file, fileName) => {
-                    formData.append('documents[]', file, fileName);
-                });
-
-                // Log form data to the console
-                console.log('Files submitted:');
-                uploadedFiles.forEach((file, fileName) => {
-                    console.log(`${fileName}:`, file);
-                });
-            });
-
-            // Reset button handler
-            $('#reset_btn').click(function () {
-                const uploadedDocuments = pdfContainer.querySelectorAll(".pdf-single");
-                uploadedDocuments.forEach((doc) => doc.remove());
-                uploadedFiles.clear();
-                documentUploadWrapper.style.display = "block";
-            });
-        });
-
-        // ----- mutiple document upload ends
-    </script>
-
-    <script>
-        "use strict";
-        toggleButton();
-
-        $('input[name="multiple_vehicles"]').change(function () {
-            toggleButton();
-            if (!$(this).is(':checked')) {
-                $('.equal-width').not('#input-container').remove();
-            }
-        });
-
-        function toggleButton() {
-            if ($('input[name="multiple_vehicles"]').is(':checked')) {
-                $('.add-btn').show();
-            } else {
-                $('.add-btn').hide();
-            }
-        }
-
-        $(document).on('click', '.add-btn', function() {
-            let newDiv = $('<div class="d-flex gap-20px flex-column flex-md-row equal-width">\
-                    <div class="form-group mb-0">\
-                        <label class="input-label" for="">{{ translate("messages.VIN Number") }}</label>\
-                        <input type="text" name="vehicle[vin_number][]" class="form-control" placeholder="Type your vin number" value="">\
-                    </div>\
-                    <div class="form-group mb-0">\
-                        <label class="input-label" for="">{{ translate("messages.License Plate Number") }}</label>\
-                        <input type="text" name="vehicle[license_plate_number][]" class="form-control" placeholder="Type your license plate number" value="">\
-                    </div>\
-                    <button type="button" class="btn remove-btn shadow-none text--danger p-0 fs-32 lh--1 text-left mt-md-4">\
-                        <i class="tio-clear-circle-outlined"></i>\
-                    </button>\
-                </div>');
-
-            newDiv.insertBefore('.equal-width:last');
-        });
-
-        $(document).on('click', '.remove-btn', function() {
-            $(this).closest('.equal-width').remove();
-        });
-
-        $(document).ready(function () {
-            const $tripHourly = $('input[name="trip_hourly"]');
-            const $tripDistance = $('input[name="trip_distance"]');
-            const $hourlyPrice = $('input[name="hourly_price"]');
-            const $distancePrice = $('input[name="distance_price"]');
-
-            function updateInputs() {
-                if (!$tripHourly.is(':checked')) {
-                    $hourlyPrice.prop('disabled', true).val('');
-                } else {
-                    $hourlyPrice.prop('disabled', false);
-                }
-
-                if (!$tripDistance.is(':checked')) {
-                    $distancePrice.prop('disabled', true).val('');
-                } else {
-                    $distancePrice.prop('disabled', false);
-                }
-
-                if (!$tripHourly.is(':checked') && !$tripDistance.is(':checked')) {
-                    $tripHourly.prop('checked', true);
-                    $hourlyPrice.prop('disabled', false);
-                }
-            }
-
-            $tripHourly.change(updateInputs);
-            $tripDistance.change(updateInputs);
-
-            updateInputs();
-        });
-
-        $(document).ready(function() {
-            $('#pickup_zones12').select2({
-                placeholder: "Type and press Enter",
-                tags: true,
-                tokenSeparators: [',', ' ', ';'],
-                createTag: function(params) {
-                    return {
-                        id: params.term,
-                        text: params.term
-                    };
-                },
-                insertTag: function (data, tag) {
-                    data.push(tag);
-                }
-            });
-        });
-
-        $(document).ready(function () {
-            function getApplicablePrice() {
-                let hourlyChecked = $('input[name="trip_hourly"]').is(':checked');
-                let distanceChecked = $('input[name="trip_distance"]').is(':checked');
-                let hourlyPrice = parseFloat($('input[name="hourly_price"]').val()) || 0;
-                let distancePrice = parseFloat($('input[name="distance_price"]').val()) || 0;
-
-                if (hourlyChecked && distanceChecked) {
-                    return Math.min(hourlyPrice, distancePrice);
-                } else if (hourlyChecked) {
-                    return hourlyPrice;
-                } else if (distanceChecked) {
-                    return distancePrice;
-                }
-                return 0;
-            }
-
-            $('#discount_input').on('input', function () {
-                let discountType = $('#discount_type').val();
-                let inputValue = parseFloat($(this).val());
-                let applicablePrice = getApplicablePrice();
-
-                if (discountType === 'percent' && inputValue >= 100) {
-                    $(this).val(99);
-                } else if (discountType === 'amount' && inputValue > applicablePrice) {
-                    $(this).val(applicablePrice);
-                }
-            });
-
-            $('input[name="trip_hourly"], input[name="trip_distance"], input[name="hourly_price"], input[name="distance_price"]').on('change input', function () {
-                $('#discount_input').trigger('input');
-            });
-        });
-    </script>
 @endpush
