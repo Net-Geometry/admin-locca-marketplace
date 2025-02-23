@@ -82,7 +82,7 @@ class DashboardController extends Controller
         $topCustomers = $data['top_customers'];
         $topProviders = $data['top_providers'];
         $label = $data['label'];
-
+        $grossEarning = collect($total_sell)->sum();
         if ($request->ajax()) {
             return response()->json([
                 'delivery_statistics' => view('rental::admin.partials.delivery-statistics', compact('pendingCount', 'confirmedCount', 'ongoingCount', 'completedCount', 'canceledCount', 'totalCount'))->render(),
@@ -90,7 +90,23 @@ class DashboardController extends Controller
                 'top_customers' => view('rental::admin.partials.top-customers', compact('topCustomers'))->render(),
                 'sale_chart' => view('rental::admin.partials.sale-chart', compact('total_sell', 'commission', 'total_subs','label'))->render(),
                 'by_trip_type' => view('rental::admin.partials.by-trip-type', compact('hourlyCount', 'distanceWiseCount', 'totalCount'))->render(),
-                'zoneName' => $zoneName
+                'zoneName' => $zoneName,
+                'hourlyCount' => $hourlyCount,
+                'distanceWiseCount' => $distanceWiseCount,
+                'totalCount' => $totalCount,
+                'total_sell' => array_map(function($val) {
+                    return number_format((float)$val, 2, '.', '');
+                }, array_values($total_sell)),
+                'commission' => array_map(function($val) {
+                    return number_format((float)$val, 2, '.', '');
+                }, array_values($commission)),
+                'total_subs' => array_map(function($val) {
+                    return number_format((float)$val, 2, '.', '');
+                }, array_values($total_subs)),
+            'labels' => array_map(function($val) {
+                    return trim($val, '"');
+                }, $label),
+                'grossEarning' => number_format((float)$grossEarning, 2, '.', '')
             ], 200);
         }
 
@@ -134,6 +150,9 @@ class DashboardController extends Controller
 
         return response()->json([
             'view' => view('rental::admin.partials.by-trip-type', compact('hourlyCount', 'distanceWiseCount', 'totalCount'))->render(),
+            'hourlyCount' => $hourlyCount,
+            'distanceWiseCount' => $distanceWiseCount,
+            'totalCount' => $totalCount
         ], 200);
     }
 
@@ -155,9 +174,20 @@ class DashboardController extends Controller
 
         return response()->json([
             'view' => view('rental::admin.partials.sale-chart', compact('total_sell', 'commission', 'total_subs', 'label', 'grossEarning'))->render(),
-            'grossEarning' => $grossEarning
-
-        ], 200);
+            'grossEarning' => $grossEarning,
+            'total_sell' => array_map(function($val) {
+                return number_format((float)$val, 2, '.', '');
+            }, array_values($total_sell)),
+            'commission' => array_map(function($val) {
+                return number_format((float)$val, 2, '.', '');
+            }, array_values($commission)),
+            'total_subs' => array_map(function($val) {
+                return number_format((float)$val, 2, '.', '');
+            }, array_values($total_subs)),
+           'labels' => array_map(function($val) {
+                return trim($val, '"');
+            }, $label)
+                ], 200);
     }
     public function dashboard_data($request)
     {

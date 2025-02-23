@@ -8,8 +8,7 @@
 show active
 @endsection
 
-@push('css_or_js')
-@endpush
+
 
 @section('content')
 @php($mod = \App\Models\Module::find(Config::get('module.current_module_id')))
@@ -25,8 +24,6 @@ show active
 
                                 {{translate($mod->module_name)}} {{translate('messages.Dashboard')}}
                             </h1>
-
-                                {{-- {{ translate('messages.Car_Rental_Module_Dashboard') }} --}}
                             <p class="page-header-text text-title fs-12 m-0">{{ translate('messages.Monitor_your') }}
                                 <strong class="font-bold"> {{translate($mod->module_name)}} {{ translate('messages.business') }}</strong>
                             </p>
@@ -34,7 +31,7 @@ show active
                     </div>
                 </div>
                 <div class="col-sm-auto min--280">
-                    <select name="zone_id" class="form-control js-select2-custom fetch_data_zone_wise" >
+                    <select data-src-url="{{ route('admin.rental.dashboard') }}" name="zone_id" class="form-control js-select2-custom  fetch_data_zone_wise" >
                         <option value="all">{{ translate('messages.All_Zones') }}</option>
                         @foreach(\App\Models\Zone::orderBy('name')->get(['name','id']) as $zone)
                             <option
@@ -91,7 +88,7 @@ show active
                                     {{ translate('Earnings') }} ({{ date('Y') }})
                                 </span>
                             </div>
-                            <select
+                            <select data-src-url="{{ route('admin.rental.dashboard-stats.commission_overview') }}" id="commission_overview_stats_update"
                                 class="custom-select border-0 text-center w-auto ml-auto commission_overview_stats_update"
                                 name="commission_overview">
                                 <option value="all">
@@ -123,7 +120,7 @@ show active
                         <h5 class="card-header-title">
                             {{ translate('Trips by Trip Type') }}
                         </h5>
-                        <select class="custom-select border-0 text-center w-auto user_overview_stats_update"
+                        <select data-src-url="{{ route('admin.rental.dashboard-stats.trip_by_trip_type') }}" id="trip_by_trip_type_stats_update" class="custom-select border-0 text-center w-auto user_overview_stats_update"
                                 name="trip_overview">
                             <option value="all">
                                 {{ translate('All Time') }}
@@ -188,6 +185,9 @@ show active
             </div>
         </div>
     </div>
+
+    <div class="d-none" id="current_url" data-src-url="{{ url()->current() }}"> </div>
+    <div class="d-none" id="current_currency" data-currency="{{ \App\CentralLogics\Helpers::currency_symbol() }}"></div>
 @endsection
 
 @push('script')
@@ -203,255 +203,22 @@ show active
 @push('script_2')
     <script>
         "use strict";
-        let options;
-        let chart;
-        let ApexChart;
 
-        // Static data for demonstration
         const hourlyCount = {{ $hourlyCount }};
-        const distancWiseCount = {{ $distanceWiseCount }};
+        const distanceWiseCount = {{ $distanceWiseCount }};
 
-        options = {
-            series: [hourlyCount, distancWiseCount],
-            chart: {
-                width: 320,
-                type: 'donut',
-            },
-            labels: ['Hourly Trip', 'Distance Wise Trip'],
-            dataLabels: {
-                enabled: false,
-                style: {
-                    colors: ['#005555', '#b9e0e0']
-                }
-            },
-            responsive: [{
-                breakpoint: 1650,
-                options: {
-                    chart: {
-                        width: 250
-                    },
-                }
-            }],
-            colors: ['#005555', '#111'],
-            fill: {
-                colors: ['#005555', '#b9e0e0']
-            },
-            legend: {
-                show: false
-            },
-        };
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDonutChart(hourlyCount, distanceWiseCount);
+            const initialTotalSell = [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $total_sell)) }}];
+            const initialCommission = [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $commission)) }}];
+            const initialTotalSubs = [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $total_subs)) }}];
+            const initialLabels = [{!! implode(",", $label) !!}];
 
-        chart = new ApexCharts(document.querySelector("#dognut-pie"), options);
-        chart.render();
-
-        options = {
-            series: [{
-                name: 'Gross Earning',
-                data: [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $total_sell)) }}]
-            }, {
-                name: 'Commission Earning',
-                data: [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $commission)) }}]
-            }, {
-                name: 'Subscription Earning',
-                data: [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $total_subs)) }}]
-            }]
-            ,
-            chart: {
-                height: 350,
-                type: 'area',
-                toolbar: {
-                    show: false
-                },
-                colors: ['#76ffcd','#ff6d6d', '#005555'],
-            },
-            dataLabels: {
-                enabled: false,
-                colors: ['#76ffcd','#ff6d6d', '#005555'],
-            },
-            stroke: {
-                curve: 'smooth',
-                width: 2,
-                colors: ['#76ffcd','#ff6d6d', '#005555'],
-            },
-            fill: {
-                type: 'gradient',
-                colors: ['#76ffcd','#ff6d6d', '#005555'],
-            },
-            xaxis: {
-                categories: [{!! implode(",",$label) !!}]
-            },
-            tooltip: {
-                x: {
-                    format: 'dd/MM/yy HH:mm'
-                },
-            },
-        };
-
-        ApexChart = new ApexCharts(document.querySelector("#grow-sale-chart"), options);
-        ApexChart.render();
-
-        // INITIALIZATION OF CHARTJS
-        // =======================================================
-        Chart.plugins.unregister(ChartDataLabels);
-
-        $('.js-chart').each(function() {
-            $.HSCore.components.HSChartJS.init($(this));
+            initializeAreaChart(initialTotalSell, initialCommission, initialTotalSubs, initialLabels);
         });
 
-        let updatingChart = $.HSCore.components.HSChartJS.init($('#updatingData'));
-
-
-        $('.fetch_data_zone_wise').on('change', function () {
-            let zone_id = $('.fetch_data_zone_wise').val();
-
-            fetch_data_zone_wise(zone_id);
-        });
-
-        function fetch_data_zone_wise(zone_id) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.get({
-                url: '{{ route('admin.rental.dashboard') }}',
-                data: {
-                    zone_id: zone_id
-                },
-                beforeSend: function() {
-                    $('#loading').show()
-                },
-                success: function(data) {
-                    $('#deliveryStatistics').html(data.delivery_statistics);
-                    $('#commission-overview-board').html(data.sale_chart)
-                    $('#topProviders').html(data.top_providers)
-                    $('#topCustomers').html(data.top_customers)
-                    $('#trip-overview-board').html(data.by_trip_type)
-                    $('#zoneName').html(data.zoneName);
-                },
-                complete: function() {
-                    $('#loading').hide()
-                }
-            });
-        }
-
-        $('.trip_stats_update').on('change', function () {
-            let zone_id = $('.fetch_data_zone_wise').val();
-            let statistics_type = $('.trip_stats_update').val();
-
-            trip_stats_update(zone_id, statistics_type);
-        });
-
-        function trip_stats_update(zone_id, statistics_type) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.get({
-                url: '{{ route('admin.rental.dashboard') }}',
-                data: {
-                    zone_id: zone_id,
-                    statistics_type: statistics_type
-                },
-                beforeSend: function() {
-                    $('#loading').show()
-                },
-                success: function(data) {
-                    $('#deliveryStatistics').html(data.delivery_statistics);
-                },
-                complete: function() {
-                    $('#loading').hide()
-                }
-            });
-        }
-
-        $('.user_overview_stats_update').on('change', function() {
-            let type = $(this).val();
-            let zone_id = $('.fetch_data_zone_wise').val();
-            user_overview_stats_update(type, zone_id);
-        });
-
-        function user_overview_stats_update(type, zone_id) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.get({
-                url: '{{ route('admin.rental.dashboard-stats.trip_by_trip_type') }}',
-                data: {
-                    trip_overview: type,
-                    zone_id: zone_id
-                },
-                beforeSend: function() {
-                    $('#loading').show()
-                },
-                success: function(data) {
-                    insert_param('trip_overview', type);
-                    $('#trip-overview-board').html(data.view)
-                },
-                complete: function() {
-                    $('#loading').hide()
-                }
-            });
-        }
-
-        $('.commission_overview_stats_update').on('change', function() {
-            let type = $(this).val();
-            let zone_id = $('.fetch_data_zone_wise').val();
-            commission_overview_stats_update(type, zone_id);
-        });
-
-        function commission_overview_stats_update(type, zone_id) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.get({
-                url: '{{ route('admin.rental.dashboard-stats.commission_overview') }}',
-                data: {
-                    commission_overview: type,
-                    zone_id: zone_id
-                },
-                beforeSend: function() {
-                    $('#loading').show()
-                },
-                success: function(data) {
-                    let grossEarningTotal = (data.grossEarning).toFixed(2)
-                    insert_param('commission_overview', type);
-                    $('#commission-overview-board').html(data.view);
-                    $('.gross-earning').text(formatCurrency(grossEarningTotal));
-                },
-                complete: function() {
-                    $('#loading').hide()
-                }
-            });
-        }
-        function formatCurrency(value) {
-            return "{{ \App\CentralLogics\Helpers::currency_symbol() }}" + value;
-        }
-
-        function insert_param(key, value) {
-            key = encodeURIComponent(key);
-            value = encodeURIComponent(value);
-            let kvp = document.location.search.substr(1).split('&');
-            let i = 0;
-
-            for (; i < kvp.length; i++) {
-                if (kvp[i].startsWith(key + '=')) {
-                    let pair = kvp[i].split('=');
-                    pair[1] = value;
-                    kvp[i] = pair.join('=');
-                    break;
-                }
-            }
-            if (i >= kvp.length) {
-                kvp[kvp.length] = [key, value].join('=');
-            }
-            let params = kvp.join('&');
-            window.history.pushState('page2', 'Title', '{{ url()->current() }}?' + params);
-        }
     </script>
+
+<script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/dashboard.js')}}"></script>
+
 @endpush

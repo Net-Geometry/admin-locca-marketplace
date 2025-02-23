@@ -2,9 +2,6 @@
 
 @section('title',translate('Review List'))
 
-@push('css_or_js')
-
-@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -19,7 +16,6 @@
                 </span>
             </h1>
         </div>
-        <!-- End Page Header -->
         <!-- Card -->
         <div class="card">
             <!-- Header -->
@@ -158,6 +154,9 @@
                                     <label class="toggle-switch toggle-switch-sm" for="reviewCheckbox{{$review->id}}">
                                         <input type="checkbox"
                                                data-id="status-{{ $review['id'] }}" data-message="{{ $review->status ? translate('messages.you_want_to_hide_this_review_for_customer') : translate('messages.you_want_to_show_this_review_for_customer') }}"
+                                               data-title="{{ translate('messages.are_you_sure_?') }}"
+                                               data-yes-text="{{ translate('messages.yes') }}"
+                                               data-no-text="{{ translate('messages.no') }}"
                                                class="toggle-switch-input status_form_alert" id="reviewCheckbox{{ $review->id }}"
                                             {{ $review->status ? 'checked' : '' }}>
                                         <span class="toggle-switch-label">
@@ -187,45 +186,12 @@
                         </div>
                     </div>
                 </div>
-                <!-- End Table -->
             </div>
         </div>
-        <!-- End Card -->
     </div>
 
 @endsection
 
 @push('script_2')
-    <script>
-        "use strict";
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-        });
-
-        $(".status_form_alert").on("click", function (e) {
-            const id = $(this).data('id');
-            const message = $(this).data('message');
-            e.preventDefault();
-            Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
-                text: message,
-                type: 'warning',
-                showCancelButton: true,
-                cancelButtonColor: 'default',
-                confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    $('#' + id).submit()
-                }
-            })
-        })
-
-
-    </script>
+<script src="{{ asset('Modules/Rental/public/assets/js/admin/view-pages/vehicle-review-list.js') }}"></script>
 @endpush
