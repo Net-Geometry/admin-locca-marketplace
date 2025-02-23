@@ -5,23 +5,7 @@
 @push('css_or_js')
     <link rel="stylesheet" href="{{ asset('/public/assets/admin/vendor/simplebar/dist/simplebar.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/public/assets/admin/vendor/drift-zoom/dist/drift-basic.min.css') }}">
-
-    <style>
-        .description-text {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .full-description {
-            display: none;
-        }
-
-        .see-more {
-            color: #1a73e8;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('Modules/Rental/public/assets/css/provider/vehicle.css') }}">
 @endpush
 
 @section('content')
@@ -229,7 +213,7 @@
                                     <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
                                     <div class="fs-12 opacity-lg description-text">
                                         <span class="short-description">{{ Str::limit($vehicle?->getRawOriginal('description'), 2100) }}</span>
-                                        <span class="full-description" style="display: none;">{{$vehicle?->getRawOriginal('description')}}</span>
+                                        <span class="full-description display-none">{{$vehicle?->getRawOriginal('description')}}</span>
                                         <a href="#" class="text--info font-medium see-more">See more</a>
                                     </div>
                                 </div>
@@ -251,7 +235,7 @@
                                         <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
                                         <div class="fs-12 opacity-lg description-text">
                                             <span class="short-description">{{ Str::limit($translate[$lang]['description'] ?? '', 2100) }}</span>
-                                            <span class="full-description" style="display: none;">{{$translate[$lang]['description'] ?? ''}}</span>
+                                            <span class="full-description display-none">{{$translate[$lang]['description'] ?? ''}}</span>
                                             <a href="#" class="text--info font-medium see-more">See more</a>
                                         </div>
                                     </div>
@@ -408,21 +392,17 @@
             <div class="card-body">
                 <div class="d-flex gap-3 flex-wrap">
                     @foreach($vehicle['documentsFullUrl'] as $doc)
-                        <div class="pdf-single" data-pdf-url="{{ $doc }}"
-                             onclick="openPdf(this)">
+                        <div class="pdf-single" data-pdf-url="{{ $doc }}">
                             <div class="pdf-frame">
-                                <canvas class="pdf-preview" style="display: none;"></canvas>
-                                <img class="pdf-thumbnail" src="{{ $doc }}"
-                                     alt="File Thumbnail">
+                                <canvas class="pdf-preview display-none"></canvas>
+                                <img class="pdf-thumbnail" src="{{ $doc }}" alt="{{translate('File Thumbnail')}}">
                             </div>
                             <div class="overlay">
-                                <a href="javascript:void(0);" class="download-btn" onclick="downloadPdf(event, this)"
-                                   title="">
+                                <a href="javascript:void(0);" class="download-btn">
                                     <i class="tio-download-to"></i>
                                 </a>
                                 <div class="pdf-info d-flex gap-10px align-items-center">
-                                    <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34"
-                                         alt="Document Logo">
+                                    <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34" alt="{{translate('Document Logo')}}">
                                     <div class="fs-13 text--title d-flex flex-column">
                                         <span class="file-name"></span>
                                         <span class="opacity-50">{{translate('Click to view the file')}}</span>
@@ -461,14 +441,14 @@
                                href="{{ route('vendor.vehicle.review.export', ['vehicle_id' => request()->id, 'type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
-                                     alt="Image Description">
+                                     alt="{{translate('Image Description')}}">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                href="{{ route('vendor.vehicle.review.export', ['vehicle_id' => request()->id, 'type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
-                                     alt="Image Description">
+                                     alt="{{translate('Image Description')}}">
                                 .{{ translate('messages.csv') }}
                             </a>
 
@@ -513,7 +493,7 @@
                                     <div class="position-relative media align-items-center">
                                         <a class=" text-hover-primary absolute--link" href="{{route('vendor.vehicle.details',$review->vehicle_id)}}">
                                             <img class="avatar avatar-lg mr-3  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                                 src="{{ $review->vehicle->thumbnail_full_url }}" alt="{{$review?->vehicle?->name}} image">
+                                                 src="{{ $review->vehicle->thumbnail_full_url }}" alt="{{$review?->vehicle?->name}} {{translate('image')}}">
                                         </a>
                                         <div class="media-body">
                                             <h5 class="text-hover-primary important--link mb-0">{{Str::limit($review?->vehicle?->name,10)}}</h5>
@@ -531,7 +511,7 @@
                                     <div>
                                         <h5 class="d-block text-hover-primary mb-1">{{Str::limit($review->customer['f_name']." ".$review->customer['l_name'])}} <i
                                                 class="tio-verified text-primary" data-toggle="tooltip" data-placement="top"
-                                                title="Verified Customer"></i></h5>
+                                                title="{{translate('Verified Customer')}}"></i></h5>
                                         <span class="d-block font-size-sm text-body">{{Str::limit($review->customer->phone)}}</span>
                                     </div>
                                 @else
@@ -563,7 +543,7 @@
                             @if($store_review_reply == '1')
                                 <td>
                                     <div class="btn--container justify-content-center">
-                                        <a  class="btn btn-sm btn--primary {{ $review->reply ? 'btn-outline-primary' : ''}}" data-toggle="modal" data-target="#reply-{{$review->id}}" title="View Details">
+                                        <a  class="btn btn-sm btn--primary {{ $review->reply ? 'btn-outline-primary' : ''}}" data-toggle="modal" data-target="#reply-{{$review->id}}" title="{{translate('View Details')}}">
                                             {{ $review->reply ? translate('view_reply') : translate('give_reply')}}
                                         </a>
                                     </div>
@@ -582,7 +562,7 @@
                                                 <a class="absolute--link" href="{{route('vendor.vehicle.details',$review->vehicle_id)}}">
                                                 </a>
                                                 <img class="avatar avatar-lg mr-3  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                                     src="{{ $review?->vehicle?->thumbnail_full_url }}" alt="{{$review?->vehicle?->name}} image">
+                                                     src="{{ $review?->vehicle?->thumbnail_full_url }}" alt="{{$review?->vehicle?->name}} {{translate('image')}}">
                                                 <div>
                                                     <h5 class="text-hover-primary mb-0">{{ $review?->vehicle?->name }}</h5>
                                                     @if ($review?->vehicle?->avg_rating == 5)
@@ -690,7 +670,7 @@
                                                     <div>
                                                         <h5 class="d-block text-hover-primary mb-1">{{Str::limit($review?->customer?->fullName)}} <i
                                                                 class="tio-verified text-primary" data-toggle="tooltip" data-placement="top"
-                                                                title="Verified Customer"></i></h5>
+                                                                title="{{translate('Verified Customer')}}"></i></h5>
                                                         <span class="d-block font-size-sm text-body">{{$review->comment}}</span>
                                                     </div>
                                                 @else
@@ -736,261 +716,9 @@
     <!-- End Modal -->
 @endsection
 
-
-
 @push('script_2')
     <script src="{{ asset('/public/assets/admin/vendor/simplebar/dist/simplebar.min.js') }}"></script>
     <script src="{{ asset('/public/assets/admin/vendor/drift-zoom/dist/Drift.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            $('.see-more').on('click', function (e) {
-                e.preventDefault();
-
-                const $descriptionText = $(this).closest('.description-text');
-                const $shortDescription = $descriptionText.find('.short-description');
-                const $fullDescription = $descriptionText.find('.full-description');
-
-                $shortDescription.toggle();
-                $fullDescription.toggle();
-
-                if ($fullDescription.is(':visible')) {
-                    $(this).text('See less');
-                } else {
-                    $(this).text('See more');
-                }
-            });
-        });
-
-    </script>
-
-    <script>
-        // ----- document view from file
-        document.addEventListener("DOMContentLoaded", function() {
-
-            async function renderFileThumbnail(element) {
-                const fileUrl = element.getAttribute("data-pdf-url");
-                const canvas = element.querySelector(".pdf-preview");
-                const thumbnail = element.querySelector(".pdf-thumbnail");
-                const fileNameSpan = element.querySelector(".file-name");
-                const downloadButton = element.querySelector(".download-btn");
-
-                // Extract file name and extension
-                const fullFileName = fileUrl.split('/').pop();
-                const fileExtension = fullFileName.split('.').pop().toLowerCase();
-                const fileNameWithoutExtension = fullFileName.replace(/\.[^/.]+$/, '');
-
-                // Truncate file name if it's too long
-                const truncatedFileName =
-                    fileNameWithoutExtension.length > 20 ?
-                        `${fileNameWithoutExtension.substring(0, 17)}...` :
-                        fileNameWithoutExtension;
-                const displayedFileName = `${truncatedFileName}.${fileExtension}`;
-
-                // Set the file name in the UI
-                fileNameSpan.textContent = displayedFileName;
-                downloadButton.setAttribute("title", fullFileName);
-
-                // Handle PDF thumbnail generation
-                if (fileExtension === "pdf") {
-                    const ctx = canvas.getContext("2d");
-
-                    try {
-                        // Load the PDF using PDF.js
-                        const loadingTask = pdfjsLib.getDocument(fileUrl);
-                        const pdf = await loadingTask.promise;
-                        const page = await pdf.getPage(1);
-
-                        // Set scale and dimensions for the thumbnail
-                        const viewport = page.getViewport({
-                            scale: 0.5
-                        });
-                        canvas.width = viewport.width;
-                        canvas.height = viewport.height;
-
-                        // Render the first PDF page into the canvas
-                        await page.render({
-                            canvasContext: ctx,
-                            viewport
-                        }).promise;
-
-                        // Convert canvas to image URL and set as the thumbnail
-                        thumbnail.src = canvas.toDataURL();
-                    } catch (error) {
-                        console.error("Error rendering PDF thumbnail:", error);
-                        // Fallback to blank image if there's an error
-                        thumbnail.src = "{{ asset('public/assets/admin/img/blank2.png') }}";
-                    }
-                } else if (["jpg", "jpeg", "png", "gif", "bmp"].includes(fileExtension)) {
-                    // Handle image file types (JPG, PNG, GIF, etc.)
-                    thumbnail.src = fileUrl; // Set the image URL as the thumbnail
-                } else {
-                    // For non-PDF, non-image files (e.g., DOCX, XLSX, etc.)
-                    const fileIconPath = `{{ asset('public/assets/admin/img/icons') }}/${fileExtension}.png`;
-                    const fallbackIconPath =
-                        "{{ asset('public/assets/admin/img/blank2.png') }}"; // Fallback image
-
-                    // Check if a specific icon exists for the file type, otherwise use the fallback
-                    const iconExists = await checkFileIconExistence(fileIconPath);
-
-                    thumbnail.src = iconExists ? fileIconPath : fallbackIconPath;
-                }
-
-                // Show the thumbnail and hide the canvas
-                thumbnail.style.display = "block";
-                canvas.style.display = "none";
-            }
-
-            // Function to check if the icon exists
-            async function checkFileIconExistence(iconPath) {
-                return new Promise((resolve) => {
-                    const img = new Image();
-                    img.onload = () => resolve(true); // Icon exists
-                    img.onerror = () => resolve(false); // Icon doesn't exist
-                    img.src = iconPath;
-                });
-            }
-
-            // Iterate over all .pdf-single elements to render thumbnails
-            document.querySelectorAll(".pdf-single").forEach(renderFileThumbnail);
-
-            // Open the file in a new tab
-            window.openPdf = function(element) {
-                const fileUrl = element.getAttribute("data-pdf-url");
-                window.open(fileUrl, "_blank");
-            };
-
-            // Download the file on button click
-            window.downloadPdf = function(event, buttonElement) {
-                event.stopPropagation();
-
-                const fileUrl = buttonElement.closest(".pdf-single").getAttribute("data-pdf-url");
-                const link = document.createElement("a");
-                link.href = fileUrl;
-                link.download = fileUrl.split("/").pop();
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            };
-
-        });
-        // ----- document view from file ends
-    </script>
-
-
-    <script>
-        function imageZoom() {
-            let elements = document.querySelectorAll(".cz-image-zoom");
-            for (let i = 0; i < elements.length; i++) {
-                new Drift(elements[i], {
-                    paneContainer: elements[i].parentElement.querySelector(
-                        ".cz-image-zoom-pane"
-                    ),
-                });
-            }
-        }
-
-        // Call it initially
-        imageZoom();
-
-
-        const themeDirection = $("html").attr("dir");
-
-        function renderOwlCarouselSilder() {
-            var sync1 = $("#sync1");
-            var sync2 = $("#sync2");
-            var thumbnailItemClass = ".owl-item";
-            var slides = sync1.owlCarousel({
-                startPosition: 12,
-                items: 1,
-                loop: false,
-                margin: 0,
-                mouseDrag: true,
-                touchDrag: true,
-                pullDrag: false,
-                scrollPerPage: true,
-                autoplayHoverPause: false,
-                nav: false,
-                dots: false,
-                rtl: themeDirection && themeDirection.toString() === "rtl",
-            })
-                .on("changed.owl.carousel", syncPosition);
-
-            function syncPosition(el) {
-                var owl_slider = $(this).data("owl.carousel");
-                var loop = owl_slider.options.loop;
-
-                var current = el.item.index;
-
-                var owl_thumbnail = sync2.data("owl.carousel");
-                var itemClass = "." + owl_thumbnail.options.itemClass;
-
-                var thumbnailCurrentItem = sync2
-                    .find(itemClass)
-                    .removeClass("synced")
-                    .eq(current);
-                thumbnailCurrentItem.addClass("synced");
-
-                if (!thumbnailCurrentItem.hasClass("active")) {
-                    var duration = 500;
-                    sync2.trigger("to.owl.carousel", [current, duration, true]);
-                }
-
-                // Re-initialize image zoom on the new slide
-                setTimeout(function() {
-                    imageZoom();
-                }, 500); // Wait for the carousel to complete the slide change
-            }
-
-            var thumbs = sync2.owlCarousel({
-                startPosition: 12,
-                items: 4,
-                loop: false,
-                margin: 10,
-                autoplay: false,
-                nav: false,
-                dots: false,
-                rtl: themeDirection && themeDirection.toString() === "rtl",
-                responsive: {
-                    576: {
-                        items: 4,
-                    },
-                    768: {
-                        items: 4,
-                    },
-                    992: {
-                        items: 4,
-                    },
-                    1200: {
-                        items: 5,
-                    },
-                    1400: {
-                        items: 5,
-                    },
-                },
-                onInitialized: function(e) {
-                    var thumbnailCurrentItem = $(e.target)
-                        .find(thumbnailItemClass)
-                        .eq(this._current);
-                    thumbnailCurrentItem.addClass("synced");
-                },
-            })
-                .on("click", thumbnailItemClass, function(e) {
-                    e.preventDefault();
-                    var duration = 500;
-                    var itemIndex = $(e.target).parents(thumbnailItemClass).index();
-                    sync1.trigger("to.owl.carousel", [itemIndex, duration, true]);
-                })
-                .on("changed.owl.carousel", function(el) {
-                    var number = el.item.index;
-                    var owl_slider = sync1.data("owl.carousel");
-                    owl_slider.to(number, 500, true);
-                });
-
-            sync1.owlCarousel();
-        }
-
-        renderOwlCarouselSilder();
-    </script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/pdf.min.js') }}"></script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/vehicle-details.js') }}"></script>
 @endpush

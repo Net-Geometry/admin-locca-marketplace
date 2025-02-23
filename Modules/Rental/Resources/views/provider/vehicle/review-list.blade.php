@@ -157,7 +157,11 @@
                                 <td>
                                     <label class="toggle-switch toggle-switch-sm" for="reviewCheckbox{{$review->id}}">
                                         <input type="checkbox"
-                                               data-id="status-{{ $review['id'] }}" data-message="{{ $review->status ? translate('messages.you_want_to_hide_this_review_for_customer') : translate('messages.you_want_to_show_this_review_for_customer') }}"
+                                               data-id="status-{{ $review['id'] }}"
+                                               data-message="{{ $review->status ? translate('messages.you_want_to_hide_this_review_for_customer') : translate('messages.you_want_to_show_this_review_for_customer') }}"
+                                               data-alert="{{ translate('are_you_sure') }}"
+                                               data-no="{{ translate('no') }}"
+                                               data-yes="{{ translate('yes') }}"
                                                class="toggle-switch-input status_form_alert" id="reviewCheckbox{{ $review->id }}"
                                             {{ $review->status ? 'checked' : '' }}>
                                         <span class="toggle-switch-label">
@@ -173,7 +177,7 @@
                     </table>
                     @if(count($vehicleReview) === 0)
                         <div class="empty--data">
-                            <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                            <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="{{translate('public')}}">
                             <h5>
                                 {{translate('no_data_found')}}
                             </h5>
@@ -196,36 +200,5 @@
 @endsection
 
 @push('script_2')
-    <script>
-        "use strict";
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-        });
-
-        $(".status_form_alert").on("click", function (e) {
-            const id = $(this).data('id');
-            const message = $(this).data('message');
-            e.preventDefault();
-            Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
-                text: message,
-                type: 'warning',
-                showCancelButton: true,
-                cancelButtonColor: 'default',
-                confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    $('#' + id).submit()
-                }
-            })
-        })
-
-
-    </script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/vehicle-review-list.js') }}"></script>
 @endpush
