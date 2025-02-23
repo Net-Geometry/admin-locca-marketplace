@@ -2,8 +2,6 @@
 
 @section('title', translate('messages.vehicle_list'))
 
-@push('css_or_js')
-@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -298,11 +296,5 @@
 
 
 @push('script_2')
-<script>
-    document.querySelectorAll("select.select-30 option").forEach((option) => {
-        if (option.text.length > 30) {
-            option.text = option.text.substring(0, 27) + "...";
-        }
-    });
-</script>
+<script src="{{ asset('Modules/Rental/public/assets/js/admin/view-pages/vehicle-list.js') }}"></script>
 @endpush
