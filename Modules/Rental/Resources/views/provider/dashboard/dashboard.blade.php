@@ -39,7 +39,7 @@
                             </div>
                         </div>
                         <div class="statistics--select">
-                            <select class="custom-select border-0 trip_stats_update" name="statistics_type">
+                            <select class="custom-select border-0 trip_stats_update" name="statistics_type" data-route="{{ route('vendor.deliveryStatistics') }}">
                                 <option value="all" {{ request()->statistics_type ? '' : 'selected' }}>
                                     {{ translate('messages.All_Time') }}
                                 </option>
@@ -74,6 +74,7 @@
                                 </div>
                                 <select
                                     class="custom-select border-0 text-center w-auto ml-auto commission_overview_stats_update"
+                                    data-route="{{ route('vendor.commissionOverview') }}"
                                     name="commission_overview">
                                     <option value="all">
                                         {{ translate('All Time') }}
@@ -98,8 +99,6 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
         @else
             <!-- Page Header -->
@@ -114,18 +113,17 @@
             </div>
             <!-- End Page Header -->
         @endif
-
+        <div id="currency" data-currency="{{ \App\CentralLogics\Helpers::currency_symbol() }}"></div>
+        <div id="current-url" data-current-url="{{ url()->current() }}?"></div>
     </div>
 @endsection
 
 @push('script')
-
-    <!-- Apex Charts -->
     <script src="{{ asset('/public/assets/admin/js/apex-charts/apexcharts.js') }}"></script>
-    <!-- Apex Charts -->
 @endpush
 
 @push('script_2')
+    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/dashboard.js') }}"></script>
     <script>
         "use strict";
         let options;
@@ -169,93 +167,5 @@
 
         ApexChart = new ApexCharts(document.querySelector("#grow-sale-chart"), options);
         ApexChart.render();
-
-
-
-        $('.trip_stats_update').on('change', function() {
-            let statistics_type = $('.trip_stats_update').val();
-            trip_stats_update( statistics_type);
-        });
-
-        function trip_stats_update(statistics_type) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.get({
-                url: '{{ route('vendor.deliveryStatistics') }}',
-                data: {
-                    statistics_type: statistics_type
-                },
-                beforeSend: function() {
-                    $('#loading').show()
-                },
-                success: function(data) {
-                    $('#deliveryStatistics').html(data.delivery_statistics);
-                },
-                complete: function() {
-                    $('#loading').hide()
-                }
-            });
-        }
-
-
-
-        $('.commission_overview_stats_update').on('change', function() {
-            let type = $(this).val();
-            commission_overview_stats_update(type);
-        });
-
-        function commission_overview_stats_update(type) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.get({
-                url: '{{ route('vendor.commissionOverview') }}',
-                data: {
-                    commission_overview: type,
-                },
-                beforeSend: function() {
-                    $('#loading').show()
-                },
-                success: function(data) {
-                    let grossEarningTotal = (data.grossEarning).toFixed(2)
-                    insert_param('commission_overview', type);
-                    $('#commission-overview-board').html(data.view);
-                    $('.gross-earning').text(formatCurrency(grossEarningTotal));
-                },
-                complete: function() {
-                    $('#loading').hide()
-                }
-            });
-        }
-
-        function formatCurrency(value) {
-            return "{{ \App\CentralLogics\Helpers::currency_symbol() }}" + value;
-        }
-
-        function insert_param(key, value) {
-            key = encodeURIComponent(key);
-            value = encodeURIComponent(value);
-            let kvp = document.location.search.substr(1).split('&');
-            let i = 0;
-
-            for (; i < kvp.length; i++) {
-                if (kvp[i].startsWith(key + '=')) {
-                    let pair = kvp[i].split('=');
-                    pair[1] = value;
-                    kvp[i] = pair.join('=');
-                    break;
-                }
-            }
-            if (i >= kvp.length) {
-                kvp[kvp.length] = [key, value].join('=');
-            }
-            let params = kvp.join('&');
-            window.history.pushState('page2', 'Title', '{{ url()->current() }}?' + params);
-        }
     </script>
 @endpush

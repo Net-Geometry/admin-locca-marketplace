@@ -7463,4 +7463,5 @@ Smartly or Earn. ',
   ' files' => ' files',
   'File Thumbnail' => 'File Thumbnail',
   'Document Logo' => 'Document Logo',
+  'img' => 'Img',
 );

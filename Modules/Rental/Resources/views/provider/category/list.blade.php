@@ -2,13 +2,8 @@
 
 @section('title',translate('messages.category list'))
 
-@push('css_or_js')
-
-@endpush
-
 @section('content')
     <div class="content container-fluid">
-
         <div class="card mt-3">
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
@@ -42,14 +37,14 @@
                             <a id="export-excel" class="dropdown-item" href="{{ route('vendor.vehicle_category.export', ['type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
-                                    alt="Image Description">
+                                    alt="{{translate('Image Description')}}">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{ route('vendor.vehicle_category.export', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
-                                    alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                    alt="{{translate('Image Description')}}">
+                                {{ translate('messages.csv') }}
                             </a>
 
                         </div>

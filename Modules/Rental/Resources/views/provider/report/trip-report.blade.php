@@ -2,9 +2,6 @@
 
 @section('title', translate('messages.trip_report'))
 
-@push('css_or_js')
-@endpush
-
 @section('content')
     @php
         $vendorData = \App\CentralLogics\Helpers::get_store_data();
@@ -374,86 +371,10 @@
     </div>
 @endsection
 
-@push('script')
-@endpush
-
 @push('script_2')
     <script src="{{ asset('public/assets/admin') }}/vendor/chart.js/dist/Chart.min.js"></script>
-    <script src="{{ asset('public/assets/admin') }}/vendor/chartjs-chart-matrix/dist/chartjs-chart-matrix.min.js">
-    </script>
+    <script src="{{ asset('public/assets/admin') }}/vendor/chartjs-chart-matrix/dist/chartjs-chart-matrix.min.js"></script>
     <script src="{{ asset('public/assets/admin') }}/js/hs.chartjs-matrix.js"></script>
     <script src="{{ asset('public/assets/admin') }}/js/view-pages/admin-reports.js"></script>
-
-    <script>
-        "use strict";
-        $(document).on('ready', function() {
-            $('.js-data-example-ajax').select2({
-                ajax: {
-                    url: '{{ url('/') }}/admin/store/get-providers',
-                    data: function(params) {
-                        return {
-                            q: params.term, // search term
-                            // all:true,
-                            @if (isset($zone))
-                                zone_ids: [{{ $zone->id }}],
-                            @endif
-                            @if (request('module_id'))
-                                module_id: {{ request('module_id') }},
-                            @endif
-                            page: params.page
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data
-                        };
-                    },
-                    __port: function(params, success, failure) {
-                        let $request = $.ajax(params);
-
-                        $request.then(success);
-                        $request.fail(failure);
-
-                        return $request;
-                    }
-                }
-            });
-
-            $('.js-data-example-ajax-2').select2({
-                ajax: {
-                    url: '{{ url('/') }}/admin/customer/select-list',
-                    data: function(params) {
-                        return {
-                            q: params.term, // search term
-                            // all:true,
-                            @if (isset($zone))
-                                zone_ids: [{{ $zone->id }}],
-                            @endif
-                            @if (request('module_id'))
-                                module_id: {{ request('module_id') }},
-                            @endif
-                            @if (request('provider_id'))
-                                store_id: {{ request('provider_id') }},
-                            @endif
-                            page: params.page
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data
-                        };
-                    },
-                    __port: function(params, success, failure) {
-                        let $request = $.ajax(params);
-
-                        $request.then(success);
-                        $request.fail(failure);
-
-                        return $request;
-                    }
-                }
-            });
-        });
-    </script>
 @endpush
 

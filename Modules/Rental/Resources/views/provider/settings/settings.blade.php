@@ -33,6 +33,11 @@
                                 <span class="pr-2">{{translate('messages.Provider_temporarily_closed_title')}}</span>
                                 <label class="switch toggle-switch-lg m-0">
                                     <input id="restaurant-open-status" type="checkbox" class="toggle-switch-input restaurant-open-status"
+                                           data-title="{{translate('messages.are_you_sure')}}"
+                                           data-text="{{$store->active ? translate('messages.you_want_to_temporarily_close_this_').($store->module->module_type == 'rental' ? translate('provider') : translate('store')) : translate('messages.you_want_to_open_this_').($store->module->module_type == 'rental' ? translate('provider') : translate('store')) }}"
+                                           data-route="{{route('vendor.business-settings.update-active-status')}}"
+                                           data-no="{{translate('messages.no')}}"
+                                           data-yes="{{translate('messages.yes')}}"
                                         {{$store->active ?'':'checked'}}>
                                     <span class="toggle-switch-label">
                                         <span class="toggle-switch-indicator"></span>
@@ -319,7 +324,7 @@
 
     <!-- Create schedule modal -->
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-title="{{ translate('messages.Create Schedule For ') }} ">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -329,7 +334,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="javascript:" method="post" id="add-schedule">
+                    <form method="POST" action="javascript:" method="post" id="add-schedule" data-route="{{route('vendor.business-settings.add-schedule')}}">
                         @csrf
                         <input type="hidden" name="day" id="day_id_input">
                         <div class=" ">
@@ -349,178 +354,16 @@
             </div>
         </div>
     </div>
+
+    <div id="button-title" data-title="{{translate('Want_to_delete_this_schedule?')}}"></div>
+    <div id="button-text" data-text="{{translate('If_you_select_Yes,_the_time_schedule_will_be_deleted.')}}"></div>
+    <div id="button-cancel" data-no="{{ translate('no') }}"></div>
+    <div id="button-accept" data-yes="{{ translate('yes') }}"></div>
+    <div id="button-success" data-success="{{translate('messages.Schedule removed successfully')}}"></div>
+    <div id="button-error" data-error="{{translate('messages.Schedule removed successfully')}}"></div>
+    <div id="button-added" data-error="{{translate('messages.Schedule added successfully')}}"></div>
 @endsection
 
 @push('script_2')
-    <script>
-        "use strict";
-
-        $(document).on('click', '.restaurant-open-status', function (event) {
-
-            event.preventDefault();
-                Swal.fire({
-                    title: '{{translate('messages.are_you_sure')}}',
-                    text: '{{$store->active ? translate('messages.you_want_to_temporarily_close_this_').($store->module->module_type == 'rental' ? translate('provider') : translate('store')) : translate('messages.you_want_to_open_this_').($store->module->module_type == 'rental' ? translate('provider') : translate('store')) }}',
-                    type: 'warning',
-                    showCancelButton: true,
-                    cancelButtonColor: 'default',
-                    confirmButtonColor: '#00868F',
-                    cancelButtonText: '{{translate('messages.no')}}',
-                    confirmButtonText: '{{translate('messages.yes')}}',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.value) {
-                        $.get({
-                            url: '{{route('vendor.business-settings.update-active-status')}}',
-                            contentType: false,
-                            processData: false,
-                            beforeSend: function () {
-                                $('#loading').show();
-                            },
-                            success: function (data) {
-                                toastr.success(data.message);
-                            },
-                            complete: function () {
-                                $('#loading').hide();
-                                location.reload();
-                            },
-                        });
-                    } else {
-                        event.checked = !event.checked;
-                    }
-                })
-
-        });
-
-        $(document).on('click', '.delete-schedule', function () {
-           let route=  $(this).data('url');
-            Swal.fire({
-                title: '{{translate('Want_to_delete_this_schedule?')}}',
-                text: '{{translate('If_you_select_Yes,_the_time_schedule_will_be_deleted.')}}',
-                type: 'warning',
-                showCancelButton: true,
-                cancelButtonColor: 'default',
-                confirmButtonColor: '#00868F',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    $.get({
-                        url: route,
-                        beforeSend: function () {
-                            $('#loading').show();
-                        },
-                        success: function (data) {
-                            if (data.errors) {
-                                for (let i = 0; i < data.errors.length; i++) {
-                                    toastr.error(data.errors[i].message, {
-                                        CloseButton: true,
-                                        ProgressBar: true
-                                    });
-                                }
-                            } else {
-                                $('#schedule').empty().html(data.view);
-                                toastr.success('{{translate('messages.Schedule removed successfully')}}', {
-                                    CloseButton: true,
-                                    ProgressBar: true
-                                });
-                            }
-                        },
-                        error: function() {
-                            toastr.error('{{translate('messages.Schedule not found')}}', {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
-                        },
-                        complete: function () {
-                            $('#loading').hide();
-                        },
-                    });
-                }
-            })
-        });
-
-
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                let reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-        $("#customFileEg1").change(function () {
-            readURL(this);
-        });
-
-        $(document).on('ready', function () {
-            $("#gst_status").on('change', function(){
-                if($("#gst_status").is(':checked')){
-                    $('#gst').removeAttr('readonly');
-                } else {
-                    $('#gst').attr('readonly', true);
-                }
-            });
-        });
-
-        $('#exampleModal').on('show.bs.modal', function (event) {
-            let button = $(event.relatedTarget);
-            let day_name = button.data('day');
-            let day_id = button.data('dayid');
-            let modal = $(this);
-            modal.find('.modal-title').text('{{translate('messages.Create Schedule For ')}} ' + day_name);
-            modal.find('.modal-body input[name=day]').val(day_id);
-        })
-
-        $('#add-schedule').on('submit', function (e) {
-            e.preventDefault();
-            let formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('vendor.business-settings.add-schedule')}}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    if (data.errors) {
-                        for (let i = 0; i < data.errors.length; i++) {
-                            toastr.error(data.errors[i].message, {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
-                        }
-                    } else {
-                        $('#schedule').empty().html(data.view);
-                        $('#exampleModal').modal('hide');
-                        toastr.success('{{translate('messages.Schedule added successfully')}}', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                    }
-                },
-                error: function(XMLHttpRequest) {
-                    toastr.error(XMLHttpRequest.responseText, {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        });
-
-    </script>
+    <script src="{{ asset('Modules/Rental/public/assets/js/view-pages/provider/setting.js') }}"></script>
 @endpush

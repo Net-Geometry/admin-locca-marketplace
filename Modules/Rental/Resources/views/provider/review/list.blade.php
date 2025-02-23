@@ -2,10 +2,6 @@
 
 @section('title',translate('messages.Review List'))
 
-@push('css_or_js')
-
-@endpush
-
 @section('content')
     <div class="content container-fluid">
         <!-- Page Heading -->
@@ -329,9 +325,4 @@
         </div>
         <!-- End Card -->
     </div>
-
 @endsection
-
-@push('script_2')
-
-@endpush

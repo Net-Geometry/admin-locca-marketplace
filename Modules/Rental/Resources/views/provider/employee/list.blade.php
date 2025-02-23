@@ -1,8 +1,6 @@
 @extends('layouts.vendor.app')
-@section('title',translate('messages.Create_Role'))
-@push('css_or_js')
 
-@endpush
+@section('title',translate('messages.Create_Role'))
 
 @section('content')
 <div class="content container-fluid">

@@ -2,8 +2,6 @@
 
 @section('title', translate('messages.Add New Driver'))
 
-
-
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
@@ -12,7 +10,7 @@
                 <div>
                     <h1 class="page-header-title text-break">
                         <span class="page-header-icon">
-                            <img src="{{ asset('public/assets/admin/img/car-logo.png') }}" alt="">
+                            <img src="{{ asset('public/assets/admin/img/car-logo.png') }}" alt="{{translate('image')}}">
                         </span>
                         <span>{{ translate('messages.Add New Driver') }}
                     </h1>
@@ -135,7 +133,7 @@
                                         <label class="input-label"
                                                for="">{{ translate('messages.Identity_Number') }}</label>
                                         <input type="text" id="" name="identity_number" class="form-control"
-                                               placeholder="Ex: 123654789512364" value=""
+                                               placeholder="{{translate('Ex: 123654789512364')}}" value=""
                                                required>
                                     </div>
                                 </div>
@@ -145,17 +143,11 @@
                                             {{ translate('Identity Image') }}
                                         </label>
                                         <p class="fs-12 mb-0">
-                                            JPG, JPEG, PNG Less Than 1MB
-                                            <strong class="font-semibold">(Ratio 2:1)</strong>
+                                            {{translate('JPG, JPEG, PNG Less Than 1MB')}}
+                                            <strong class="font-semibold">({{translate('Ratio 2:1')}})</strong>
                                         </p>
                                     </div>
                                     <div class="d-flex pt-20 pb-2 overflow-x-auto">
-                                        {{-- <div>
-                                            <div class="row" id="multiImg"></div>
-                                        </div> --}}
-                                        {{-- @php
-                                            $uploadedImages = json_decode($request->input('uploaded_images'), true);
-                                        @endphp --}}
                                        <div class="d-flex gap-3 flex-shrink-0" id="image_container">
                                            <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
                                                 id="image_upload_wrapper">

@@ -4,7 +4,7 @@
         <a class="resturant-card dashboard--card __dashboard-card card--bg-1" href="{{ route('vendor.trip.list', ['status'=>'confirmed']) }}">
             <h4 class="title">{{ $confirmedCount }}</h4>
             <span class="subtitle font-regular ">{{ translate('messages.confirmed') }}</span>
-            <img src="{{ asset('public/assets/admin/img/rental/1.png') }}" alt="img" class="resturant-icon top-50px">
+            <img src="{{ asset('public/assets/admin/img/rental/1.png') }}" alt="{{translate('img')}}" class="resturant-icon top-50px">
         </a>
         <!-- End Card -->
     </div>
@@ -14,7 +14,7 @@
         <a class="resturant-card dashboard--card __dashboard-card card--bg-2" href="{{ route('vendor.trip.list', ['status'=>'ongoing']) }}">
             <h4 class="title">{{ $ongoingCount }}</h4>
             <span class="subtitle font-regular ">{{ translate('messages.Ongoing_Trip') }}</span>
-            <img src="{{ asset('public/assets/admin/img/rental/2.png') }}" alt="img" class="resturant-icon top-50px">
+            <img src="{{ asset('public/assets/admin/img/rental/2.png') }}" alt="{{translate('img')}}" class="resturant-icon top-50px">
         </a>
         <!-- End Card -->
     </div>
@@ -25,7 +25,7 @@
             href="{{ route('vendor.trip.list', ['status'=>'completed']) }}">
             <h4 class="title">{{ $completedCount }}</h4>
             <span class="subtitle font-regular ">{{ translate('messages.completed') }}</span>
-            <img src="{{ asset('public/assets/admin/img/rental/3.png') }}" alt="img" class="resturant-icon top-50px">
+            <img src="{{ asset('public/assets/admin/img/rental/3.png') }}" alt="{{translate('img')}}" class="resturant-icon top-50px">
         </a>
         <!-- End Card -->
     </div>
@@ -36,7 +36,7 @@
             href="{{ route('vendor.trip.list',['status'=>'canceled'])  }}">
             <h4 class="title">{{ $canceledCount }}</h4>
             <span class="subtitle font-regular ">{{ translate('messages.canceled') }}</span>
-            <img src="{{ asset('public/assets/admin/img/rental/4.png') }}" alt="img" class="resturant-icon top-50px">
+            <img src="{{ asset('public/assets/admin/img/rental/4.png') }}" alt="{{translate('img')}}" class="resturant-icon top-50px">
         </a>
         <!-- End Card -->
     </div>

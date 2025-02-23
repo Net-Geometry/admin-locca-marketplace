@@ -2,9 +2,6 @@
 
 @section('title', translate('messages.Driver_Details'))
 
-@push('css_or_js')
-@endpush
-
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
@@ -373,11 +370,4 @@
         </div>
         <!-- End Card -->
     </div>
-    <!--Driver delete Modal -->
-
-    <!-- End Modal -->
 @endsection
-
-
-@push('script_2')
-@endpush

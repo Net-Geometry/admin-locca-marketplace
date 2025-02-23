@@ -2,9 +2,6 @@
 
 @section('title', translate('messages.driver'))
 
-@push('css_or_js')
-@endpush
-
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
@@ -189,8 +186,6 @@
                                     </td>
                                 </tr>
                             @endforeach
-
-
                             </tbody>
                         </table>
                     </div>
@@ -213,5 +208,4 @@
             <!-- End Table -->
         </div>
     </div>
-
 @endsection

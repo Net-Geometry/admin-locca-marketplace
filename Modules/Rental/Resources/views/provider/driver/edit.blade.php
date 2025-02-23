@@ -2,8 +2,6 @@
 
 @section('title', translate('messages.Update Driver'))
 
-
-
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
@@ -144,8 +142,8 @@
                                                 {{ translate('Identity Image') }}
                                             </label>
                                             <p class="fs-12 mb-0">
-                                                JPG, JPEG, PNG Less Than 1MB
-                                                <strong class="font-semibold">(Ratio 2:1)</strong>
+                                                {{translate('JPG, JPEG, PNG Less Than 1MB')}}
+                                                <strong class="font-semibold">({{translate('Ratio 2:1')}})</strong>
                                             </p>
                                         </div>
                                         <div class="d-flex pt-20 pb-2 overflow-x-auto">
@@ -174,7 +172,6 @@
                                                 @endforeach
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -191,8 +188,6 @@
                 </div>
             </div>
         </form>
-
-
     </div>
     <input type="hidden" id="file-type-toast" value="{{ translate('please_only_input_png_or_jpg_type_file') }}">
     <input type="hidden" id="file-size-toast" value="{{ translate('file_size_too_big') }}">
