@@ -5,23 +5,7 @@
 @push('css_or_js')
     <link rel="stylesheet" href="{{ asset('/public/assets/admin/vendor/simplebar/dist/simplebar.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/public/assets/admin/vendor/drift-zoom/dist/drift-basic.min.css') }}">
-
-    <style>
-        .description-text {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .full-description {
-            display: none;
-        }
-
-        .see-more {
-            color: #1a73e8;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('Modules/Rental/public/assets/css/admin/vehicle-details.css') }}">
 @endpush
 
 @section('content')
@@ -232,11 +216,11 @@
                                         <span class="short-description">
                                             {{ Str::limit($vehicle?->getRawOriginal('description'), 1500) }}
                                         </span>
-                                                                            <span class="full-description" style="display: none;">
+                                                                            <span class="full-description display-none" >
                                             {{$vehicle?->getRawOriginal('description')}}
                                         </span>
                                         <!-- By default, "See more" button is hidden -->
-                                        <a href="#" class="text--info font-medium see-more" style="display: none;">
+                                        <a href="#" class="text--info font-medium see-more display-none" >
                                             {{translate('See more')}}
                                         </a>
                                     </div>
@@ -261,11 +245,11 @@
                                                 <span class="short-description">
                                                     {{ Str::limit($vehicle?->getRawOriginal('description'), 2100) }}
                                                 </span>
-                                                <span class="full-description" style="display: none;">
+                                                <span class="full-description display-none" >
                                                     {{$vehicle?->getRawOriginal('description')}}
                                                 </span>
                                             <!-- By default, "See more" button is hidden -->
-                                            <a href="#" class="text--info font-medium see-more" style="display: none;">
+                                            <a href="#" class="text--info font-medium see-more display-none" >
                                                 {{translate('See more')}}
                                             </a>
                                         </div>
@@ -428,24 +412,20 @@
             <div class="card-body">
                 <div class="d-flex gap-3 flex-wrap">
                     @foreach($vehicle['documentsFullUrl'] as $doc)
-                    <div class="pdf-single" data-pdf-url="{{ $doc }}"
-                         onclick="openPdf(this)">
+                    <div class="pdf-single" data-pdf-url="{{ $doc }}">
                         <div class="pdf-frame">
-                            <canvas class="pdf-preview" style="display: none;"></canvas>
-                            <img class="pdf-thumbnail" src="{{ $doc }}"
-                                 alt="File Thumbnail">
+                            <canvas class="pdf-preview display-none" ></canvas>
+                            <img class="pdf-thumbnail" src="{{ $doc }}" alt="File Thumbnail">
                         </div>
                         <div class="overlay">
-                            <a href="javascript:void(0);" class="download-btn" onclick="downloadPdf(event, this)"
-                               title="">
+                            <a href="javascript:void(0);" class="download-btn" title="">
                                 <i class="tio-download-to"></i>
                             </a>
                             <div class="pdf-info d-flex gap-10px align-items-center">
-                                <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34"
-                                     alt="Document Logo">
+                                <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34" alt="Document Logo">
                                 <div class="fs-13 text--title d-flex flex-column">
                                     <span class="file-name"></span>
-                                    <span class="opacity-50">{{translate('Click to view the file')}}</span>
+                                    <span class="opacity-50">{{ translate('Click to view the file') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -453,6 +433,7 @@
                     @endforeach
                 </div>
             </div>
+
         </div>
         <div class="card">
             <!-- Header -->

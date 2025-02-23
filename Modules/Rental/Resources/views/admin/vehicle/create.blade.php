@@ -19,7 +19,6 @@
         </div>
         @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
         @php($language = $language->value ?? null)
-        <!-- End Page Header -->
 
         <form action="" method="post" enctype="multipart/form-data">
             @csrf
@@ -172,7 +171,7 @@
                             </div>
                         </div>
                         <div class="card-body py-1">
-                    
+
                             <div class="d-flex pt-20 pb-2 overflow-x-auto">
                                <div class="d-flex gap-3 flex-shrink-0" id="image_container">
                                    <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"

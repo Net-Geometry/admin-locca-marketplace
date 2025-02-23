@@ -103,22 +103,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.querySelectorAll(".pdf-single").forEach(renderFileThumbnail);
 
-    window.openPdf = function(element) {
-        const fileUrl = element.getAttribute("data-pdf-url");
+    $(document).on("click", ".pdf-single", function () {
+        const fileUrl = $(this).data("pdf-url");
         window.open(fileUrl, "_blank");
-    };
+    });
 
-    window.downloadPdf = function(event, buttonElement) {
-        event.stopPropagation();
+    $(document).on("click", ".download-btn", function (event) {
+        event.stopPropagation(); 
 
-        const fileUrl = buttonElement.closest(".pdf-single").getAttribute("data-pdf-url");
+        const fileUrl = $(this).closest(".pdf-single").data("pdf-url");
         const link = document.createElement("a");
         link.href = fileUrl;
         link.download = fileUrl.split("/").pop();
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-    };
+    });
 
 });
 
