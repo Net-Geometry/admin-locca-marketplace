@@ -47,6 +47,6 @@ class ProviderSubscriptionCancel extends Mailable
         $body = Helpers::text_variable_data_format( value:$data['body']??'',store_name:$store_name??'');
         $footer_text = Helpers::text_variable_data_format( value:$data['footer_text']??'',store_name:$store_name??'');
         $copyright_text = Helpers::text_variable_data_format( value:$data['copyright_text']??'',store_name:$store_name??'');
-        return $this->subject(translate('Subscription_Canceled'))->view('rental::email-templates.new-email-format-'.$template, ['company_name'=>$company_name,'data'=>$data,'title'=>$title,'body'=>$body,'footer_text'=>$footer_text,'copyright_text'=>$copyright_text,'url'=>$url]);
+        return $this->subject(translate('Subscription_Canceled'))->view('email-templates.rental.new-email-format-'.$template, ['company_name'=>$company_name,'data'=>$data,'title'=>$title,'body'=>$body,'footer_text'=>$footer_text,'copyright_text'=>$copyright_text,'url'=>$url]);
     }
 }

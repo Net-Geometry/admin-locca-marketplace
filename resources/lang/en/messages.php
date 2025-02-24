@@ -7464,4 +7464,8 @@ Smartly or Earn. ',
   'File Thumbnail' => 'File Thumbnail',
   'Document Logo' => 'Document Logo',
   'img' => 'Img',
+  '4B Kemal Ataturk Ave, Dhaka 1212, Bangladesh' => '4B Kemal Ataturk Ave, Dhaka 1212, Bangladesh',
+  'Dhanmondi 32 Road Bridge, Dhaka 1209, Bangladesh' => 'Dhanmondi 32 Road Bridge, Dhaka 1209, Bangladesh',
+  '$ 20.00 x 2 Hrs' => '$ 20.00 x 2 Hrs',
+  '$ 44.00 x 2 Hrs' => '$ 44.00 x 2 Hrs',
 );

@@ -42,6 +42,6 @@ class TripBooking extends Mailable
         $body = Helpers::text_variable_data_format( value:$data['body']??'',user_name:$user_name??'',store_name:$store_name??'',order_id:$trip_id??'');
         $footer_text = Helpers::text_variable_data_format( value:$data['footer_text']??'',user_name:$user_name??'',store_name:$store_name??'',order_id:$trip_id??'');
         $copyright_text = Helpers::text_variable_data_format( value:$data['copyright_text']??'',user_name:$user_name??'',store_name:$store_name??'',order_id:$trip_id??'');
-        return $this->subject(translate('Trip_Booked'))->view('rental::email-templates.new-email-format-'.$template, ['company_name'=>$company_name,'data'=>$data,'title'=>$title,'body'=>$body,'footer_text'=>$footer_text,'copyright_text'=>$copyright_text,'trip'=>$trip ,'url' => $url]);
+        return $this->subject(translate('Trip_Booked'))->view('email-templates.rental.new-email-format-'.$template, ['company_name'=>$company_name,'data'=>$data,'title'=>$title,'body'=>$body,'footer_text'=>$footer_text,'copyright_text'=>$copyright_text,'trip'=>$trip ,'url' => $url]);
     }
 }

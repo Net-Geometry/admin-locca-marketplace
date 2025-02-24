@@ -1709,7 +1709,7 @@ class ReportController extends Controller
         $BusinessData = BusinessSetting::whereIn('key', $BusinessData)->pluck('value', 'key');
         $logo = BusinessSetting::where('key', "logo")->first();
         // return view('rental::admin.trip-invoice', compact('trip', 'BusinessData', 'logo'));
-        $mpdf_view = View::make('rental::admin.trip-invoice', compact('trip', 'BusinessData', 'logo'));
+        $mpdf_view = View::make('email-templates.pdf-rental.trip-invoice', compact('trip', 'BusinessData', 'logo'));
         Helpers::gen_mpdf(view: $mpdf_view, file_prefix: 'TripInvoice', file_postfix: $id);
         return back();
     }

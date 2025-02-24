@@ -51,6 +51,6 @@ class ProviderWithdrawRequestMail extends Mailable
         $body = Helpers::text_variable_data_format( value:$data['body']??'',store_name:$store_name??'',transaction_id:$transaction_id??'');
         $footer_text = Helpers::text_variable_data_format( value:$data['footer_text']??'',store_name:$store_name??'',transaction_id:$transaction_id??'');
         $copyright_text = Helpers::text_variable_data_format( value:$data['copyright_text']??'',store_name:$store_name??'',transaction_id:$transaction_id??'');
-        return $this->subject(translate('Provider_Withdraw_Request'))->view('rental::email-templates.new-email-format-'.$template, ['company_name'=>$company_name,'data'=>$data,'title'=>$title,'body'=>$body,'footer_text'=>$footer_text,'copyright_text'=>$copyright_text,'wallet'=>$wallet,'transaction_id'=>$wallet->id,'time'=>$wallet->created_at,'amount'=>$wallet->amount]);
+        return $this->subject(translate('Provider_Withdraw_Request'))->view('email-templates.rental.new-email-format-'.$template, ['company_name'=>$company_name,'data'=>$data,'title'=>$title,'body'=>$body,'footer_text'=>$footer_text,'copyright_text'=>$copyright_text,'wallet'=>$wallet,'transaction_id'=>$wallet->id,'time'=>$wallet->created_at,'amount'=>$wallet->amount]);
     }
 }
