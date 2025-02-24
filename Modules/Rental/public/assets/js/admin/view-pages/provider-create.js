@@ -641,3 +641,4 @@ $('.delivery-time').on('click', function() {
             });
         };
         $(".multiple-select2").select2DynamicDisplay();
+

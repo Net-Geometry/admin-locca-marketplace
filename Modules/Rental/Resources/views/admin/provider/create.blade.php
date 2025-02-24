@@ -639,14 +639,13 @@
     @php($default_location = $default_location->value ? json_decode($default_location->value, true) : 0)
 
 <div class="d-none" id="data-set"
- data-admin-zone-id="{{auth('admin')->user()->zone_id}}"
+    data-admin-zone-id="{{auth('admin')->user()->zone_id}}"
 
- data-lat="{{ $default_location ? $default_location['lat'] : '23.757989' }}"
+    data-lat="{{ $default_location ? $default_location['lat'] : '23.757989' }}"
     data-lng="{{ $default_location ? $default_location['lng'] : '90.360587' }}"
-    data-logoImageViewer="{{ $default_location ? $default_location['lng'] : '90.360587' }}"
+    data-logoImageViewer="{{ asset('public/assets/admin/img/upload.png') }}"
 
     data-get-all-modules-url="{{ route('restaurant.get-all-modules') }}"
-
     data-password-valid="{{ translate('Password is valid') }}"
     data-password-invalid="{{ translate('Password format is invalid') }}"
     data-password-matched="{{ translate('Passwords Matched') }}"

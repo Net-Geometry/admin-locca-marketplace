@@ -69,8 +69,7 @@
                 </div>
             </div>
         </div>
-        <!-- Resturent Card Wrapper -->
-        <!-- Transaction Information -->
+
         <ul class="transaction--information text-uppercase">
             <li class="text--info">
                 <i class="tio-document-text-outlined"></i>
@@ -93,7 +92,6 @@
                 </div>
             </li>
         </ul>
-        <!-- Transaction Information -->
 
         <!-- Card -->
         <div class="card">
@@ -298,75 +296,16 @@
         <!-- End Card -->
     </div>
 
+
+    <div class="d-none" id="data-set"
+        data-translate-are-you-sure="{{ translate('Are_you_sure?') }}"
+        data-translate-no="{{ translate('no') }}"
+        data-translate-yes="{{ translate('yes') }}"
+    ></div>
+
+
 @endsection
 
 @push('script_2')
-    <script>
-        "use strict";
-        $('.status_change_alert').on('click', function (event) {
-            let url = $(this).data('url');
-            let message = $(this).data('message');
-            status_change_alert(url, message, event)
-        })
-
-        function status_change_alert(url, message, e) {
-            e.preventDefault();
-            Swal.fire({
-                title: '{{ translate('Are you sure?') }}' ,
-                text: message,
-                type: 'warning',
-                showCancelButton: true,
-                cancelButtonColor: 'default',
-                confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    location.href=url;
-                }
-            })
-        }
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-            $('#column1_search').on('keyup', function () {
-                datatable
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column2_search').on('keyup', function () {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column3_search').on('keyup', function () {
-                datatable
-                    .columns(3)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column4_search').on('keyup', function () {
-                datatable
-                    .columns(4)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                let select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
-    </script>
-
+<script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/provider-list.js')}}"></script>
 @endpush
