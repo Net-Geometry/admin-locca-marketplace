@@ -2,8 +2,6 @@
 
 @section('title', translate('messages.New Provider Request - Details'))
 
-@push('css_or_js')
-@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -23,10 +21,12 @@
                     <a href="{{ route('admin.rental.provider.edit-basic-setup', $store->id)}}" class="btn btn--primary-light float-right mb-0">
                         <i class="tio-edit"></i> {{ translate('messages.edit_provider') }}
                     </a>
+                    @if($store->vendor->status === null)
                     <a class="btn btn--warning-light font-weight-bold float-right mb-0" data-deny="cancel" data-toggle="modal"
                        data-target="#exampleModal--cancel"><i
                             class="tio-clear font-weight-bold pr-1"></i>
                         {{ translate('messages.reject') }}</a>
+                    @endif
                     <a class="btn btn--primary font-weight-bold float-right mr-2 mb-0" data-deny="approve" data-toggle="modal"
                        data-target="#exampleModal--approve"
                        href="javascript:"><i
@@ -343,16 +343,7 @@
     </div>
 @endsection
 
-@push('script')
-@endpush
 
 @push('script_2')
-    <script>
-        $('#add-your-note').on('input', function () {
-            const maxLength = 60;
-            const currentLength = $(this).val().length;
-
-            $('#char-count').text(`${currentLength}/${maxLength}`);
-        });
-    </script>
+ <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/new-provider-details.js')}}"></script>
 @endpush
