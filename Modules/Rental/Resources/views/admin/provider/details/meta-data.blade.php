@@ -188,25 +188,5 @@
 @endsection
 
 @push('script_2')
-<script>
-    function readURL(input, viewer) {
-        if (input.files && input.files[0]) {
-            let reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('#'+viewer).attr('src', e.target.result);
-            }
-
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    $("#customFileEg1").change(function () {
-        readURL(this, 'viewer');
-    });
-
-    $("#coverImageUpload").change(function () {
-        readURL(this, 'coverImageViewer');
-    });
-</script>
+<script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/provider-meta-data.js')}}"></script>
 @endpush
