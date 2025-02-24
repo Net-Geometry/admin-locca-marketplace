@@ -41,12 +41,12 @@
                                         {{ date('d M Y ' . config('timeformat'), strtotime($trip_transaction->trip['created_at'])) }}
                                     </p>
                                     @if ($trip_transaction->trip->provider)
-                                        <p class="fz-14" style="margin-top: 6px; margin-bottom:0px;">{{translate('provider')}} : {{$trip_transaction->trip->provider->name}}</p>
+                                        <p class="fz-14 custom-class-1" >{{translate('provider')}} : {{$trip_transaction->trip->provider->name}}</p>
                                         @else
-                                        <p class="fz-14" style="margin-top: 6px; margin-bottom:0px;">{{translate('messages.provider_not_found')}}</p>
+                                        <p class="fz-14 custom-class-1" >{{translate('messages.provider_not_found')}}</p>
                                     @endif
                                     @if (isset($trip_transaction->trip->customer) )
-                                        <p class="fz-14" style=" margin-top: 6px; margin-bottom:0px;">{{translate('customer')}} : {{$trip_transaction->trip->customer['f_name'] . ' ' . $trip_transaction->trip->customer['l_name']}}</p>
+                                        <p class="fz-14 custom-class-1">{{translate('customer')}} : {{$trip_transaction->trip->customer['f_name'] . ' ' . $trip_transaction->trip->customer['l_name']}}</p>
                                     @endif
                                 </div>
                                 </p>
@@ -80,9 +80,9 @@
         <table class="customers bs-0">
             <thead>
                 <tr>
-                    <th style="background-color: #107980 important">{{translate('SL')}}</th>
-                    <th style="background-color: #107980 important">{{translate('details')}}</th>
-                    <th style="background-color: #107980 important">{{translate('amount')}}</th>
+                    <th class="custom-class-background">{{translate('SL')}}</th>
+                    <th class="custom-class-background">{{translate('details')}}</th>
+                    <th class="custom-class-background">{{translate('amount')}}</th>
                 </tr>
             </thead>
             @php
@@ -134,8 +134,8 @@
         <table class="customers bs-0">
             <thead>
                 <tr>
-                    <th style="background-color: transparent !important; color: #333542">{{translate('additional_information')}}</th>
-                    <th style="background-color: transparent !important; color: #333542">{{translate('totals')}}</th>
+                    <th class="custom-class-background-transparent">{{translate('additional_information')}}</th>
+                    <th class="custom-class-background-transparent">{{translate('totals')}}</th>
                 </tr>
             </thead>
             <tbody>

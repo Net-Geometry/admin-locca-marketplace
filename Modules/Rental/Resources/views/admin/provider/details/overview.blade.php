@@ -5,22 +5,7 @@
 @push('css_or_js')
     <!-- Custom styles for this page -->
     <link href="{{asset('public/assets/admin/css/croppie.css')}}" rel="stylesheet">
-    <style>
-        .description-text {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .full-description {
-            display: none;
-        }
-
-        .see-more {
-            color: #1a73e8;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-    </style>
+    <link href="{{asset('Modules/Rental/public/assets/css/admin/provider-overview.css')}}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -50,7 +35,6 @@
                                     type="button" data-toggle="modal" data-target="#collect-cash"
                                     title="Collect Cash">{{ translate('messages.collect_cash_from_provider') }}
                             </button>
-                            {{-- <a class="btn text-white text-capitalize bg--title h--45px w-100" href="{{$store->vendor->status ? route('admin.transactions.account-transaction.index') : '#'}}" title="{{translate('messages.goto_account_transaction')}}">{{translate('messages.collect_cash_from_store')}}</a> --}}
                         </div>
                     </div>
                 </div>
@@ -67,7 +51,6 @@
                             </div>
                         </div>
 
-                        <!-- Earnings (Monthly) Card Example -->
                         <div class="col-sm-6">
                             <div class="resturant-card card--bg-3">
                                 <h4 class="title">{{\App\CentralLogics\Helpers::format_currency($wallet->total_withdrawn)}}</h4>
@@ -267,10 +250,10 @@
                                                             <div class="short-description">
                                                                 <span>: {{ Str::limit($store->getRawOriginal('address'), 500) }} </span>
                                                             </div>
-                                                            <div class="full-description" style="display: none;">
+                                                            <div class="full-description display-none" >
                                                                 <span>: {{ $store->getRawOriginal('address') }} </span>
                                                             </div>
-                                                            <a href="#" class="text--info font-medium see-more" style="display: none;">
+                                                            <a href="#" class="text--info font-medium see-more display-none" >
                                                                 {{ translate('See more') }}
                                                             </a>
                                                         </div>
@@ -307,10 +290,10 @@
                                                                     <div class="short-description">
                                                                         <span>: {{ isset($translate[$lang]['address']) ? Str::limit($translate[$lang]['address'], 500) : '' }}</span>
                                                                     </div>
-                                                                    <div class="full-description" style="display: none;">
+                                                                    <div class="full-description display-none" >
                                                                         <span>: {{ $translate[$lang]['address'] ?? '' }}</span>
                                                                     </div>
-                                                                    <a href="#" class="text--info font-medium see-more pl-1" style="display: none;">
+                                                                    <a href="#" class="text--info font-medium see-more pl-1 display-none" >
                                                                         {{ translate('See more') }}
                                                                     </a>
                                                                 </div>
@@ -321,7 +304,6 @@
                                             @endforeach
                                         @endif
                                         <div class="d-flex align-items-start">
-                                            {{-- <span class="label min-w150 min-w-sm-auto"></span> --}}
                                             <button
                                                 class="btn order--details-btn-sm btn--varify btn-outline-varify btn--sm font-regular d-flex align-items-center __gap-5px"
                                                 data-toggle="modal" data-target="#locationModal"><i
@@ -405,18 +387,23 @@
                 <div class="modal-body">
                     <div class="d-flex gap-4 mb-20">
                         <div>
-                            <span class="text-title font-medium"> {{ translate('messages.Business Zone') }}</span>
+                            <span class="text-title font-medium">{{ translate('messages.Business Zone') }}</span>
                             <div class="mt-10px">
-                                <button class="btn btn--primary font-medium zone-btn" id="businessZoneButton" data-zone="business" onclick="highlightZone('business')">
+                                <button class="btn btn--primary font-medium zone-btn business-zone-btn"
+                                        id="businessZoneButton"
+                                        data-zone="business">
                                     {{ $store?->zone?->name }}
                                 </button>
                             </div>
                         </div>
                         <div>
-                            <span class="text-title font-medium"> {{ translate('messages.Pickup Zone') }}</span>
+                            <span class="text-title font-medium">{{ translate('messages.Pickup Zone') }}</span>
                             <div class="d-flex flex-wrap gap-10px mt-10px">
                                 @foreach($store->getPickupZones() as $pickupZone)
-                                    <button class="btn btn--reset font-medium zone-btn" id="pickupZoneButton{{$pickupZone->id}}" data-zone="{{$pickupZone->id}}" onclick="highlightZone('pickup', {{$pickupZone->id}})">
+                                    <button class="btn btn--reset font-medium zone-btn pickup-zone-btn"
+                                            id="pickupZoneButton{{$pickupZone->id}}"
+                                            data-zone-id="{{$pickupZone->id}}"
+                                            data-zone-type="pickup">
                                         {{ $pickupZone->name ?? 'Unknown Zone' }}
                                     </button>
                                 @endforeach
@@ -447,7 +434,7 @@
                           id="add_transaction">
                         @csrf
                         <input type="hidden" name="type" value="store">
-                        <input type="hidden" name="store_id" value="{{ $store->id }}">
+                        <input type="hidden"  name="store_id" value="{{ $store->id }}">
                         <div class="form-group">
                             <label class="input-label">{{translate('messages.payment_method')}} <span
                                     class="input-label-secondary text-danger">*</span></label>
@@ -473,280 +460,35 @@
             </div>
         </div>
     </div>
+
+    <div class="d-none" id="data-set"
+        data-translate-are-you-sure="{{ translate('Are_you_sure?') }}"
+        data-translate-no="{{ translate('no') }}"
+        data-translate-yes="{{ translate('yes') }}"
+        data-store-transaction-url="{{ route('admin.transactions.account-transaction.store') }}"
+        data-translate-transaction-saved="{{ translate('messages.transaction_saved') }}"
+
+    ></div>
+
+    <div id="mapContainer"
+    data-business-coordinates='@json($coordinates ?? [])'
+    data-business-center='{
+        "lat": {{$store->latitude}},
+        "lng": {{$store->longitude}}
+    }'
+    data-marker-icon="{{ asset('public/assets/admin/img/zone-status-on.png') }}"
+    data-pickup-zones='@json($store->getPickupZones()->map(function($zone) {
+        return [
+            "id" => $zone->id,
+            "coordinates" => json_decode($zone->coordinates[0]->toJson(), true)["coordinates"]
+        ];
+    }))'
+></div>
 @endsection
 
 @push('script_2')
     <!-- Page level plugins -->
     <script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&callback=initMap&v=3.45.8"></script>
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/provider-overview.js')}}"></script>
 
-    <script>
-        let map;
-        let highlightedZone = null;
-        let polygons = {};
-        let markers = {};
-
-        function initMap() {
-            map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 12,
-                center: { lat: 23.8103, lng: 90.4125 },
-            });
-
-            const bounds = new google.maps.LatLngBounds();
-
-                <?php
-                $area = [];
-
-                if (!empty($store?->zone) && isset($store->zone['coordinates'][0])) {
-                    $area = json_decode($store->zone['coordinates'][0]->toJson(), true);
-                }
-                $coordinates = $area['coordinates'] ?? [];
-                ?>
-
-            const businessZoneCoords = [
-                    @if (!empty($coordinates))
-                    @foreach ($coordinates as $coords)
-                { lat: {{$coords[1]}}, lng: {{$coords[0]}} },
-                @endforeach
-                @endif
-            ];
-
-            const businessZonePolygon = new google.maps.Polygon({
-                paths: businessZoneCoords,
-                strokeColor: "#aaaaaa",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: "rgba(181, 181, 181, 0.45)",
-                fillOpacity: 0.35
-            });
-
-            polygons['business'] = businessZonePolygon;
-            businessZonePolygon.setMap(map);
-
-            const businessCenter = {
-                lat: {{$store->latitude}},
-                lng: {{$store->longitude}}
-            };
-
-            const marker = new google.maps.Marker({
-                position: businessCenter,
-                map: map,
-                icon: {
-                    url: "{{ asset('public/assets/admin/img/zone-status-on.png') }}",
-                    scaledSize: new google.maps.Size(30, 30)
-                }
-            });
-
-            @foreach($store->getPickupZones() as $pickupZone)
-                <?php
-                $pickupArea = json_decode($pickupZone->coordinates[0]->toJson(), true);
-                ?>
-
-            const pickupZoneCoords_{{$pickupZone->id}} = [
-                    @foreach($pickupArea['coordinates'] as $coords)
-                { lat: {{$coords[1]}}, lng: {{$coords[0]}} },
-                @endforeach
-            ];
-
-            const pickupZonePolygon_{{$pickupZone->id}} = new google.maps.Polygon({
-                paths: pickupZoneCoords_{{$pickupZone->id}},
-                strokeColor: "#aaaaaa",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: "rgba(181, 191, 181, 0.45)",
-                fillOpacity: 0.35
-            });
-
-            pickupZoneCoords_{{$pickupZone->id}}.forEach(coord => {
-                bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
-            });
-
-            polygons['pickup_{{$pickupZone->id}}'] = pickupZonePolygon_{{$pickupZone->id}};
-            pickupZonePolygon_{{$pickupZone->id}}.setMap(map);
-            @endforeach
-
-            map.fitBounds(bounds);
-        }
-
-        function highlightZone(type, id = null) {
-            if (highlightedZone) {
-                highlightedZone.setOptions({
-                    strokeColor: "#b4b2b273",
-                    fillColor: "rgba(172, 172, 172, 0.45)",
-                    fillOpacity: 0.35
-                });
-            }
-
-            if (type === 'business') {
-                highlightedZone = polygons['business'];
-                highlightPolygon(highlightedZone);
-            } else if (type === 'pickup') {
-                highlightedZone = polygons['pickup_' + id];
-                highlightPolygon(highlightedZone);
-            }
-
-            if (highlightedZone) {
-                const bounds = new google.maps.LatLngBounds();
-                highlightedZone.getPath().forEach(coord => bounds.extend(coord));
-                map.fitBounds(bounds);
-            }
-        }
-
-
-        function highlightPolygon(polygon) {
-            polygon.setOptions({
-                strokeColor: "#818181",
-                fillColor: "rgba(172, 172, 172, 0.45)",
-                fillOpacity: 0.5
-            });
-        }
-
-        function getPolygonCenter(polygon) {
-            const path = polygon.getPath();
-            let latSum = 0, lngSum = 0;
-            let numCoords = path.getLength();
-            path.forEach(function (latLng) {
-                latSum += latLng.lat();
-                lngSum += latLng.lng();
-            });
-            return { lat: latSum / numCoords, lng: lngSum / numCoords };
-        }
-
-        initMap();
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('.description-text').each(function () {
-                const $descriptionText = $(this);
-                const $shortDescription = $descriptionText.find('.short-description');
-                const $fullDescription = $descriptionText.find('.full-description');
-                const $seeMore = $descriptionText.find('.see-more');
-
-                const fullDescriptionLength = $fullDescription.text().trim().length;
-
-                if (fullDescriptionLength > 500) {
-                    $seeMore.show();
-                } else {
-                    $seeMore.hide();
-                }
-
-                $seeMore.on('click', function (e) {
-                    console.log($shortDescription)
-                    console.log($fullDescription)
-                    e.preventDefault();
-
-                    $shortDescription.toggle();
-                    $fullDescription.toggle();
-
-                    if ($fullDescription.is(':visible')) {
-                        $(this).text('See less');
-                    } else {
-                        $(this).text('See more');
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script>
-        "use strict";
-        // Call the dataTables jQuery plugin
-        $(document).ready(function () {
-            $('#dataTable').DataTable();
-        });
-
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-            $('#column1_search').on('keyup', function () {
-                datatable
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column2_search').on('keyup', function () {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column3_search').on('change', function () {
-                datatable
-                    .columns(3)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column4_search').on('keyup', function () {
-                datatable
-                    .columns(4)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                let select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
-
-        function request_alert(url, message) {
-            Swal.fire({
-                title: '{{translate('messages.are_you_sure')}}',
-                text: message,
-                type: 'warning',
-                showCancelButton: true,
-                cancelButtonColor: 'default',
-                confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    location.href = url;
-                }
-            })
-        }
-
-        $('#add_transaction').on('submit', function (e) {
-            e.preventDefault();
-            let formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.transactions.account-transaction.store')}}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    if (data.errors) {
-                        for (let i = 0; i < data.errors.length; i++) {
-                            toastr.error(data.errors[i].message, {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
-                        }
-                    } else {
-                        toastr.success('{{translate('messages.transaction_saved')}}', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                        setTimeout(function () {
-                            location.href = '{{route('admin.store.view', $store->id)}}';
-                        }, 2000);
-                    }
-                }
-            });
-        });
-    </script>
 @endpush

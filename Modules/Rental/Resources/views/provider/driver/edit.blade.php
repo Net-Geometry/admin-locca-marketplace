@@ -164,7 +164,7 @@
                                                 <!-- Existing Images dynamically loaded here -->
                                                 @foreach($driver['identity_image_full_url'] as $img)
                                                     <div class="image-single h-100 max-w-200px p-0" data-existing="true" data-url="{{ $img }}">
-                                                        <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '{{ $img }}')">
+                                                        <a href="javascript:void(0);" class="remove-btn" data-file-name="{{ $img }}">
                                                             <i class="tio-clear"></i>
                                                         </a>
                                                         <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="{{ $img }}" alt="">

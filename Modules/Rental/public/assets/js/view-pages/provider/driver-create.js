@@ -110,7 +110,7 @@ $(document).ready(function () {
                 const imageSingle = document.createElement("div");
                 imageSingle.className = "image-single h-100 max-w-200px p-0";
                 imageSingle.innerHTML = `
-                    <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '${file.name}')">
+                     <a href="javascript:void(0);" class="remove-btn" data-file-name="${file.name}">
                         <i class="tio-clear"></i>
                     </a>
                     <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="${fileURL}" alt="">
@@ -122,13 +122,20 @@ $(document).ready(function () {
         toggleUploadWrapper();
     });
 
-    window.removeImage = function (event, element, fileName) {
-        event.stopPropagation();
-        const imageSingle = element.closest(".image-single");
-        imageSingle.remove();
-        fileSet.delete(fileName); // Remove the file from the set
-        toggleUploadWrapper();
-    };
+
+    document.addEventListener("click", function (event) {
+        const button = event.target.closest(".remove-btn");
+        if (button) {
+            event.stopPropagation();
+            const imageSingle = button.closest(".image-single");
+            if (imageSingle) {
+                const fileName = button.dataset.fileName;
+                imageSingle.remove();
+                fileSet.delete(fileName);
+                toggleUploadWrapper();
+            }
+        }
+    });
 
     function toggleUploadWrapper() {
         const currentFiles = imageContainer.querySelectorAll(".image-single").length;

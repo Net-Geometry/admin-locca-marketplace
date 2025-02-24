@@ -5,7 +5,7 @@
 @push('css_or_js')
     <!-- Custom styles for this page -->
     <link href="{{asset('public/assets/admin/css/croppie.css')}}" rel="stylesheet">
-
+    <link href="{{asset('Modules/Rental/public/assets/css/admin/provider-conversation.css')}}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -37,7 +37,7 @@
                                 </div>
                                 <input type="hidden" id="vendor_id" value="{{ $store->id }}">
                                 <!-- Body -->
-                                <div class="card-body p-0" style="overflow-y: scroll;height: 600px" id="vendor-conversation-list">
+                                <div class="card-body p-0 conversation-list-scroll" id="vendor-conversation-list">
                                     <div class="border-bottom"></div>
                                     @include('admin-views.vendor.view.partials._conversation_list')
                                 </div>
@@ -69,5 +69,5 @@
 @endsection
 
 @push('script_2')
-<script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/provider-conversation.js')}}"></script>
+<script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/provi-conversation.js')}}"></script>
 @endpush
