@@ -303,11 +303,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="btn--container justify-content-end mt-4">
-                                <button type="reset" id="reset-btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                                <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
-                            </div>
                         @endif
+                        <div class="btn--container justify-content-end mt-4">
+                            <button type="reset" id="reset-btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
+                            <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                        </div>
                     </form>
                 </div>
             </div>
