@@ -2,10 +2,6 @@
 
 @section('title',translate('Provider Bulk Import'))
 
-@push('css_or_js')
-
-@endpush
-
 @section('content')
     <div class="content container-fluid">
         <div class="page-header">
@@ -147,7 +143,7 @@
                                     <div>
                                         <img src="{{asset('/public/assets/admin/img/bulk-import-3.png')}}" alt="">
                                     </div>
-                                    <div class="filename">{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}</div>
+                                    <div data-text="{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}" class="filename">{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}</div>
                                 </div>
                                 <input type="file" name="products_file" class="form-control-file text--primary font-weight-bold action-upload-section-dot-area" id="products_file">
                             </div>
@@ -157,7 +153,7 @@
                 </div>
                 <div class="btn--container justify-content-end mt-3">
                     <button id="reset_btn" type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                    <button type="button" class="btn btn--primary update_or_import">{{translate('messages.Upload')}}</button>
+                    <button type="button" data-massage="{{ translate('You_want_to_') }}" data-title="{{ translate('Are you sure?') }}" data-yes="{{ translate('messages.Yes') }}" data-no="{{ translate('messages.No') }}" class="btn btn--primary update_or_import">{{translate('messages.Upload')}}</button>
                 </div>
             </div>
         </div>
@@ -169,51 +165,5 @@
 @endsection
 
 @push('script_2')
-    <script>
-        $('#reset_btn').click(function(){
-            $('#bulk__import').val(null);
-        })
-
-        $('#reset_btn').click(function(){
-        $('#products_file').val('');
-        $('.filename').text('{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}');
-        })
-
-
-    $(document).on("click", ".update_or_import", function(e){
-    e.preventDefault();
-    let upload_type = $('input[name="upload_type"]:checked').val();
-    myFunction(upload_type)
-});
-
-$(".action-upload-section-dot-area").on("change", function () {
-        if (this.files && this.files[0]) {
-            let reader = new FileReader();
-            reader.onload = () => {
-                let imgName = this.files[0].name;
-                $(this).closest(".uploadDnD").find('.filename').text(imgName);
-            };
-            reader.readAsDataURL(this.files[0]);
-        }
-    });
-
-    function myFunction(data) {
-        Swal.fire({
-        title: '{{ translate('Are you sure?') }}' ,
-        text: "{{ translate('You_want_to_') }}" +data,
-        type: 'warning',
-        showCancelButton: true,
-        cancelButtonColor: 'default',
-        confirmButtonColor: '#FC6A57',
-        cancelButtonText: '{{translate('messages.no')}}',
-        confirmButtonText: '{{translate('messages.yes')}}',
-        reverseButtons: true
-        }).then((result) => {
-            if (result.value) {
-                $('#btn_value').val(data);
-                $("#import_form").submit();
-            }
-        })
-    }
-        </script>
+<script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/provider-bulk-import.js')}}"></script>
 @endpush

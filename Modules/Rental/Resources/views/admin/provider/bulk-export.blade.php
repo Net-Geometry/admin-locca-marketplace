@@ -2,10 +2,6 @@
 
 @section('title',translate('messages.provider_bulk_export'))
 
-@push('css_or_js')
-
-@endpush
-
 @section('content')
     <div class="content container-fluid">
         <div class="page-header">
@@ -127,24 +123,5 @@
 @endsection
 
 @push('script_2')
-<script>
-    "use strict";
-    $(document).on('ready', function (){
-        $('#date_from').attr('max',(new Date()).toISOString().split('T')[0]);
-        $('#date_to').attr('max',(new Date()).toISOString().split('T')[0]);
-        $('.id_wise').hide();
-        $('.date_wise').hide();
-        $('#type').on('change', function()
-        {
-            $('.id_wise').hide();
-            $('.date_wise').hide();
-            $('.'+$(this).val()).show();
-        })
-        $('#reset-btn').on('click', function()
-        {
-            $('.id_wise').hide();
-            $('.date_wise').hide();
-        })
-    });
-</script>
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/provider-bulk-export.js')}}"></script>
 @endpush
