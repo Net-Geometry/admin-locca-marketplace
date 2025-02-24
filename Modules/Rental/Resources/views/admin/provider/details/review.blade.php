@@ -358,69 +358,11 @@
         </div>
     </div>
 </div>
+<div id="title" data-title="{{ translate('Are_you_sure?') }}"></div>
+<div id="buttonCancel" data-no="{{ translate('no') }}"></div>
+<div id="buttonApprove" data-yes="{{ translate('yes') }}"></div>
 @endsection
 
 @push('script_2')
-    <!-- Page level plugins -->
-    <script>
-        "use strict";
-        // Call the dataTables jQuery plugin
-        $(document).ready(function () {
-            $('#dataTable').DataTable();
-
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                let select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
-
-        // $('#search-form').on('submit', function () {
-        //     let formData = new FormData(this);
-        //     $.ajaxSetup({
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         }
-        //     });
-        //     $.post({
-        //         url: '{{route('admin.item.search')}}',
-        //         data: formData,
-        //         cache: false,
-        //         contentType: false,
-        //         processData: false,
-        //         beforeSend: function () {
-        //             $('#loading').show();
-        //         },
-        //         success: function (data) {
-        //             $('#set-rows').html(data.view);
-        //             $('.page-area').hide();
-        //         },
-        //         complete: function () {
-        //             $('#loading').hide();
-        //         },
-        //     });
-        // });
-
-        $(".status_form_alert").on("click", function (e) {
-            const id = $(this).data('id');
-            const message = $(this).data('message');
-            e.preventDefault();
-            Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
-                text: message,
-                type: 'warning',
-                showCancelButton: true,
-                cancelButtonColor: 'default',
-                confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    $('#' + id).submit()
-                }
-            })
-        })
-    </script>
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/provider-review.js')}}"></script>
 @endpush

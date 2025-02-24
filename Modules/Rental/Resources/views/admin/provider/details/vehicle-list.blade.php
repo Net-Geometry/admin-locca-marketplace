@@ -106,15 +106,15 @@
                                href="{{ route('admin.rental.provider.vehicle.export', ['provider_id'=>request()->id,'type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
-                                     alt="Image Description">
+                                     alt="{{translate('Image Description')}}">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                href="{{ route('admin.rental.provider.vehicle.export', ['provider_id'=>request()->id,'type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
-                                     alt="Image Description">
-                                .{{ translate('messages.csv') }}
+                                     alt="{{translate('Image Description')}}">
+                                {{ translate('messages.csv') }}
                             </a>
 
                         </div>
@@ -176,8 +176,7 @@
                             </td>
                             <td>
                                 <div class="text--title font-medium">
-                                    1
-{{--                                    {{count($vehicle->tripDetails->trips)}}--}}
+                                    {{count($vehicle->tripDetails)}}
                                 </div>
                             </td>
                             <td>
@@ -250,7 +249,7 @@
             </div>
             @if(count($vehicles) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="{{translate('public')}}">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>
@@ -261,7 +260,3 @@
         <!-- End Card -->
     </div>
 @endsection
-
-
-@push('script_2')
-@endpush

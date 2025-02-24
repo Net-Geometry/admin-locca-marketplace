@@ -3,13 +3,8 @@
 @section('title',$store->name."'s ".translate('messages.orders'))
 
 @push('css_or_js')
-    <!-- Custom styles for this page -->
     <link href="{{asset('public/assets/admin/css/croppie.css')}}" rel="stylesheet">
-    <style>
-        [data-toggle="tooltip"] img {
-           width: 37px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{asset('Modules/Rental/public/assets/css/provider/trip-list.css')}}">
 @endpush
 
 @section('content')
@@ -85,7 +80,7 @@
                 </div>
 
                 <div class="search--button-wrapper justify-content-end gap-20px">
-                    <form action="" method="get" class="search-form flex-grow-1 max-w-450px">
+                    <form action="" method="get" class="search-form flex-grow-1 max-w-450px" data-route="{{route('admin.order.store-search')}}">
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"
@@ -119,14 +114,14 @@
                                href="{{ route('admin.rental.trip.export', ['provider_id'=>request()->id,'type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
-                                     alt="Image Description">
+                                     alt="{{translate('Image Description')}}">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                href="{{ route('admin.rental.trip.export', ['provider_id'=>request()->id,'type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
-                                     alt="Image Description">
+                                     alt="{{translate('Image Description')}}">
                                 .{{ translate('messages.csv') }}
                             </a>
 
@@ -362,7 +357,7 @@
             </div>
             @if(count($trips) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="{{translate('public')}}">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>
@@ -376,87 +371,5 @@
 @endsection
 
 @push('script_2')
-    <!-- Page level plugins -->
-    <script>
-        "use strict";
-        // Call the dataTables jQuery plugin
-        $(document).ready(function () {
-            $('#dataTable').DataTable();
-
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-            $('#column1_search').on('keyup', function () {
-                datatable
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column2_search').on('keyup', function () {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column3_search').on('change', function () {
-                datatable
-                    .columns(3)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column4_search').on('keyup', function () {
-                datatable
-                    .columns(4)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                let select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-
-            $('#search-form').on('submit', function () {
-            let formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.order.store-search')}}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    $('#set-rows').html(data.view);
-                    $('.page-area').hide();
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        });
-        });
-
-        $(".filter-on-click").on("click", function () {
-    const type = $(this).data('type');
-    const url = $(this).data('url');
-    const filter_by = $(this).data('filter');
-    let nurl = new URL(url);
-    nurl.searchParams.delete('page');
-    nurl.searchParams.set(filter_by, type);
-    location.href = nurl;
-});
-    </script>
+    <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/provider-trip.js')}}"></script>
 @endpush
