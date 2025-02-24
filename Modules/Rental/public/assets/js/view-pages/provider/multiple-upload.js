@@ -124,7 +124,7 @@ $(document).ready(function () {
                 const pdfSingle = $(`
                     <div class="pdf-single" data-file-name="${fileName}" data-file-url="${fileURL}">
                         <div class="pdf-frame">
-                            <canvas class="pdf-preview" style="display: none;"></canvas>
+                            <canvas class="pdf-preview display-none"></canvas>
                             <img class="pdf-thumbnail" src="${blankThumbnail}" alt="File Thumbnail">
                         </div>
                         <div class="overlay">

@@ -250,10 +250,10 @@
                                                             <div class="short-description">
                                                                 <span>: {{ Str::limit($store->getRawOriginal('address'), 500) }} </span>
                                                             </div>
-                                                            <div class="full-description" style="display: none;">
+                                                            <div class="full-description display-none" >
                                                                 <span>: {{ $store->getRawOriginal('address') }} </span>
                                                             </div>
-                                                            <a href="#" class="text--info font-medium see-more" style="display: none;">
+                                                            <a href="#" class="text--info font-medium see-more display-none" >
                                                                 {{ translate('See more') }}
                                                             </a>
                                                         </div>
@@ -290,10 +290,10 @@
                                                                     <div class="short-description">
                                                                         <span>: {{ isset($translate[$lang]['address']) ? Str::limit($translate[$lang]['address'], 500) : '' }}</span>
                                                                     </div>
-                                                                    <div class="full-description" style="display: none;">
+                                                                    <div class="full-description display-none" >
                                                                         <span>: {{ $translate[$lang]['address'] ?? '' }}</span>
                                                                     </div>
-                                                                    <a href="#" class="text--info font-medium see-more pl-1" style="display: none;">
+                                                                    <a href="#" class="text--info font-medium see-more pl-1 display-none" >
                                                                         {{ translate('See more') }}
                                                                     </a>
                                                                 </div>

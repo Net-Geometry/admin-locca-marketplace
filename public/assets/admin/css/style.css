@@ -15087,3 +15087,6 @@ ul.address-info .label {
 .select2-container--default .form-control.select2-selection--multiple {
     height: 45px;
 }
+.display-none{
+    display: none;
+}
