@@ -103,7 +103,7 @@
         </button>
       </div>
       <div class="modal-body pb-4 pt-4">
-        <form action="{{route('admin.store.discount',[$store['id']])}}" method="post" id="discount-form">
+        <form id="discount-form" method="POST">
             @csrf
             <div class="row gx-2">
                 <div class="col-md-4 col-6">
@@ -166,63 +166,13 @@
     </div>
   </div>
 </div>
+
+
+<div class="d-none" id="data-set"
+     data-discount-url="{{ route('admin.store.discount',$store->id) }}">
+</div>
 @endsection
 
 @push('script_2')
-    <script>
-        "use strict";
-        $(document).on('ready', function () {
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                let select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-            $('#date_from').attr('min',(new Date()).toISOString().split('T')[0]);
-            $('#date_to').attr('min',(new Date()).toISOString().split('T')[0]);
-
-            $("#date_from").on("change", function () {
-                $('#date_to').attr('min',$(this).val());
-            });
-
-            $("#date_to").on("change", function () {
-                $('#date_from').attr('max',$(this).val());
-            });
-        });
-
-        $('#discount-form').on('submit', function (e) {
-            e.preventDefault();
-            let formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.store.discount',[$store['id']])}}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    if (data.errors) {
-                        for (let i = 0; i < data.errors.length; i++) {
-                            toastr.error(data.errors[i].message, {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
-                        }
-                    } else {
-                        toastr.success(data.message, {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-
-                        setTimeout(function () {
-                            location.reload();
-                        }, 2000);
-                    }
-                }
-            });
-        });
-    </script>
+<script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/provider-discount.js')}}"></script>
 @endpush
