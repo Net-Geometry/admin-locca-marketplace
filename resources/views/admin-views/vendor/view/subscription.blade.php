@@ -281,11 +281,11 @@
                                 <div class="inner-div">
                                     <div class="text-center">
                                         <h3 class="title">{{ translate('Commission Base') }}</h3>
-                                        <h2 class="price">{{ $admin_commission }}%</h2>
+                                        <h2 class="price">{{  $store->comission > 0 ?  $store->comission :  $admin_commission }}%</h2>
                                     </div>
                                     <div class="py-5 mt-4">
                                         <div class="info-text text-center">
-                                            {{ translate('Store will pay') }} {{ $admin_commission }}% {{ translate('commission to') }} {{ $business_name }} {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
+                                            {{ translate('Store will pay') }} {{  $store->comission > 0 ?  $store->comission :  $admin_commission }}% {{ translate('commission to') }} {{ $business_name }} {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
                                         </div>
                                     </div>
                                     <div class="text-center">
