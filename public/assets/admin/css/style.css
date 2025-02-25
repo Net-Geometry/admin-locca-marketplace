@@ -107,6 +107,10 @@
     cursor: pointer;
 }
 
+.z-2 {
+    z-index: 2;
+}
+
 .floating-menu {
     border-radius: 100px;
     z-index: 999;
