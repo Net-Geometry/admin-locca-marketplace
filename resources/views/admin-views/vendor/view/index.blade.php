@@ -113,11 +113,11 @@
                             </li>
 
                             <li>
-                                <i class="tio-call-talking nav-icon"></i>
+                                <i class="tio-email nav-icon"></i>
                                 <span>{{translate('messages.email')}}</span> <span>:</span> &nbsp; <a href="mailto:{{$store->email}}"><span>{{$store->email}}</span></a>
                             </li>
                             <li>
-                                <i class="tio-email nav-icon"></i>
+                                <i class="tio-call-talking  nav-icon"></i>
                                 <span>{{translate('messages.phone')}}</span> <span>:</span> &nbsp; <a href="tel:{{$store->phone}}"><span>{{$store->phone}}</span></a>
                             </li>
                             <li>
