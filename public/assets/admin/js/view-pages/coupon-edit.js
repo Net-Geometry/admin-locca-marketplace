@@ -92,3 +92,14 @@ $('#select_customer').on('change', function () {
         $('.select_customer_option').prop('disabled', false);
     }
     });
+    function validateDiscount() {
+        let discountType = $('#discount_type').val();
+        let discountInput = $('#discount');
+        let minPurchase = parseFloat($('#min_purchase').val()) || 0;
+        let discountValue = parseFloat(discountInput.val()) || 0;
+
+        if (discountType === 'amount' && discountValue > minPurchase) {
+            discountInput.val(discountValue);
+            toastr.error($('#min-purchase-toast').val());
+        }
+    }
