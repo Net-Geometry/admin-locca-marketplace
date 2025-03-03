@@ -2826,6 +2826,49 @@ class ReportController extends Controller
         return view('admin-views.report.low-stock-report', compact('zone', 'store', 'items'));
     }
 
+
+    public function stock_report(Request $request)
+    {
+        $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
+        $store_id = $request->query('store_id', 'all');
+        $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
+        $store = is_numeric($store_id) ? Store::findOrFail($store_id) : null;
+        $stock_modules = array_keys(array_filter(config('module'), function ($var) {
+            if (isset($var['stock']) && $var['stock']) return $var;
+        }));
+        $key = isset($request['search']) ? explode(' ', $request['search']) : [];
+
+        $items = Item::withoutGlobalScope(StoreScope::class)
+        ->with(['store', 'store.zone'])->whereHas('store.module', function ($query) use ($stock_modules) {
+            $query->where('module_type', Config::get('module.current_module_type'));
+        })
+            ->when($request->query('module_id', null), function ($query) use ($request) {
+                return $query->module($request->query('module_id'));
+            })
+            ->when(isset($zone), function ($query) use ($zone) {
+                return $query->whereIn('store_id', $zone->stores->pluck('id'));
+            })
+            ->when(isset($store), function ($query) use ($store) {
+                return $query->where('store_id', $store->id);
+            })
+            ->when(count($key), function ($query) use ($key) {
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('name', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->whereHas('store.StoreConfig', function ($query) {
+                $query->whereColumn('items.stock', '<=', 'store_configs.minimum_stock_for_warning')->orwhere('items.stock', 0);
+            })
+            ->orderBy('stock')
+            ->paginate(config('default_pagination'))->withQueryString();
+
+        return view('admin-views.report.stock-report', compact('zone', 'store', 'items'));
+    }
+
+
+    
     public function low_stock_wise_export(Request $request)
     {
         $key = explode(' ', $request['search']);
