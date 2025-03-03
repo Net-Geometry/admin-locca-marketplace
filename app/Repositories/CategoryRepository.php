@@ -92,8 +92,9 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function getExportList(Request $request): Collection
     {
+        $position=$request->position ?? 0;
         $key = explode(' ', $request['search']);
-        return $this->category->with('module')->where(['position' => 0])->module(Config::get('module.current_module_id'))
+        return $this->category->with('module')->where(['position' => $position])->module(Config::get('module.current_module_id'))
             ->when(isset($key), function ($q) use ($key) {
                 $q->where(function ($q) use ($key) {
                     foreach ($key as $value) {
