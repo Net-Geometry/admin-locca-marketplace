@@ -225,14 +225,16 @@ class OrderController extends Controller
             return $query->withoutGlobalScope(StoreScope::class);
         }])->where(['id' => $id])->first();
         if (isset($order)) {
+            if($order->order_type == 'parcel'){
+                return to_route('admin.parcel.order.details', $id);
+            }
             if (isset($order->store)) {
                 $deliveryMen = DeliveryMan::where('zone_id', $order->store->zone_id)
                 ->where(function($query)use($order){
                             $query->where('vehicle_id',$order->dm_vehicle_id)->orWhereNull('vehicle_id');
                     })->available()->active()->get();
-            } else {
-                // $deliveryMen = isset($order->zone_id) ? DeliveryMan::where('zone_id', $order->zone_id)->zonewise()->available()->active()->get() : [];
-
+            }
+            else {
                 if($order->store !== null){
                     $deliveryMen = isset($order->zone_id) ? DeliveryMan::where('zone_id', $order->store->zone_id)->where(function($query)use($order){
                             $query->where('vehicle_id',$order->dm_vehicle_id)->orWhereNull('vehicle_id');
@@ -243,7 +245,6 @@ class OrderController extends Controller
                 }
             }
             $category = $request->query('category_id', 0);
-            // $sub_category = $request->query('sub_category', 0);
             $categories = Category::active()->get();
             $keyword = $request->query('keyword', false);
             $key = explode(' ', $keyword);
