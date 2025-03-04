@@ -197,7 +197,7 @@ class BannerController extends Controller
         $banner = $this->banner;
         $banner->title = $request->title[array_search('default', $request->lang)];
         $banner->type = $request->banner_type;
-        $banner->zone_id = $request->zone_id ?? $request->banner_type == 'store_wise' ? Store::whereKey($request->store_id)->first(['zone_id'])->zone_id : 1;
+        $banner->zone_id = $request->zone_id ?? $request->banner_type == 'store_wise' ? Store::whereKey($request->store_id)->first(['zone_id'])->zone_id : 0;
         $banner->image = $this->upload('banner/', 'png', $request->file('image'));
         $banner->data = ($request->banner_type == 'store_wise') ? $request->store_id : (($request->banner_type == 'item_wise') ? $request->item_id : '');
         $banner->module_id = Config::get('module.current_module_id');
@@ -215,7 +215,7 @@ class BannerController extends Controller
         }
         $banner->title = $request->title[array_search('default', $request->lang)];
         $banner->type = $request->banner_type;
-        $banner->zone_id = $request->zone_id ?? $request->banner_type == 'store_wise' ? Store::whereKey($request->store_id)->first(['zone_id'])->zone_id : 1;
+        $banner->zone_id = $request->zone_id ?? $request->banner_type == 'store_wise' ? Store::whereKey($request->store_id)->first(['zone_id'])->zone_id : 0;
         $banner->data = ($request->banner_type == 'store_wise') ? $request->store_id : (($request->banner_type == 'item_wise') ? $request->item_id : '');
         $banner->module_id = Config::get('module.current_module_id');
         $banner->default_link = $request->default_link;

@@ -54,7 +54,7 @@ class BannerController extends Controller
             return  Banner::active()->Where('data',$store_id)->wherehas('module', function ($query) {
                 $query->where('module_type', 'rental');
             })
-               ->whereIn('zone_id', json_decode($zone_id, true))
+            ->whereIn('zone_id', json_decode($zone_id, true))
                 ->whereHas('module', function ($query) {
                     $query->active();
                 })
@@ -94,7 +94,13 @@ class BannerController extends Controller
             })
                 ->when($featured, function ($query) {
                     $query->featured();
-                })->whereIn('zone_id', json_decode($zone_id, true))
+                })
+                ->where(function($query) use($zone_id){
+                    $query->where(function($query) use($zone_id){
+                        $query->where('type','store_wise')
+                        ->whereIn('zone_id', json_decode($zone_id, true));
+                    })->orWhere('type', 'default');
+                })
                 ->whereHas('module', function ($query) {
                     $query->active();
                 })
