@@ -4267,6 +4267,11 @@ class Helpers
             return [];
         }
 
+        $digital_payment=\App\CentralLogics\Helpers::get_business_settings('digital_payment');
+        if($digital_payment && $digital_payment['status']==0){
+            return [];
+        }
+        
         $published_status = 0;
         $payment_published_status = config('get_payment_publish_status');
         if (isset($payment_published_status[0]['is_published'])) {

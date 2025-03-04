@@ -134,7 +134,7 @@ class SubscriptionController extends Controller
         'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount') ?? 0;
 
         $balance = BusinessSetting::where('key', 'wallet_status')->first()?->value == 1 ? StoreWallet::where('vendor_id',$store->vendor_id)->first()?->balance ?? 0 : 0;
-        $payment_methods = Helpers::getDefaultPaymentMethods();
+        $payment_methods = Helpers::getActivePaymentGateways();
         $disable_item_count=null;
         if(data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count') > 0 && ( !$store_subscription || $package->id != $store_subscription->package_id)){
             $disable_item_count=data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count');

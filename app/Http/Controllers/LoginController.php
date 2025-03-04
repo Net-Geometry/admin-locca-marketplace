@@ -203,7 +203,7 @@ class LoginController extends Controller
                         'package_id' => $vendor?->stores[0]?->package_id,
                         'store_id' => $vendor?->stores[0]?->id,
                         'free_trial_settings' => $free_trial_settings,
-                        'payment_methods' => Helpers::getDefaultPaymentMethods(),
+                        'payment_methods' => Helpers::getActivePaymentGateways(),
                     ]);
                 }
 

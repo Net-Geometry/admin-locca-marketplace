@@ -207,7 +207,7 @@ class VendorController extends Controller
                 'package_id'=> $request->package_id,
                 'store_id' => $store->id,
                 'free_trial_settings'=>$free_trial_settings,
-                'payment_methods' => Helpers::getDefaultPaymentMethods(),
+                'payment_methods' => Helpers::getActivePaymentGateways(),
 
                 ]);
             }
@@ -295,7 +295,7 @@ class VendorController extends Controller
             'package_id'=> $request->package_id,
             'store_id' => $request->store_id,
             'free_trial_settings'=>$free_trial_settings,
-            'payment_methods' => Helpers::getDefaultPaymentMethods(),
+            'payment_methods' => Helpers::getActivePaymentGateways(),
 
             ]);
         }
