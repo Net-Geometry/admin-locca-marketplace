@@ -434,6 +434,10 @@ class CustomerAuthController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
         $ref_by= null ;
+        $name = $request->name;
+        $nameParts = explode(' ', $name, 2);
+        $firstName = $nameParts[0];
+        $lastName = $nameParts[1] ?? '';
         //Save point to refeer
         if ($request->ref_code) {
             $ref_status = BusinessSetting::where('key', 'ref_earning_status')->first()->value;
@@ -452,7 +456,7 @@ class CustomerAuthController extends Controller
 
 
             $notification_data = [
-                'title' => translate('messages.Your_referral_code_is_used_by') . ' ' . $request->f_name . ' ' . $request->l_name,
+                'title' => translate('messages.Your_referral_code_is_used_by') . ' ' . $firstName . ' ' . $lastName,
                 'description' => translate('Be prepare to receive when they complete there first purchase'),
                 'order_id' => 1,
                 'image' => '',
@@ -472,11 +476,6 @@ class CustomerAuthController extends Controller
 
             $ref_by = $referar_user->id;
         }
-
-        $name = $request->name;
-        $nameParts = explode(' ', $name, 2);
-        $firstName = $nameParts[0];
-        $lastName = $nameParts[1] ?? '';
 
         $user = User::create([
             'f_name' => $firstName,
@@ -1139,6 +1138,10 @@ class CustomerAuthController extends Controller
         }
 
         $ref_by= null ;
+        $name = $request->name;
+        $nameParts = explode(' ', $name, 2);
+        $firstName = $nameParts[0];
+        $lastName = $nameParts[1] ?? '';
         //Save point to refeer
         if ($request->ref_code) {
             $ref_status = BusinessSetting::where('key', 'ref_earning_status')->first()->value;
@@ -1157,7 +1160,7 @@ class CustomerAuthController extends Controller
 
 
             $notification_data = [
-                'title' => translate('messages.Your_referral_code_is_used_by') . ' ' . $request->f_name . ' ' . $request->l_name,
+                'title' => translate('messages.Your_referral_code_is_used_by') . ' ' . $firstName . ' ' . $lastName,
                 'description' => translate('Be prepare to receive when they complete there first purchase'),
                 'order_id' => 1,
                 'image' => '',
@@ -1177,11 +1180,6 @@ class CustomerAuthController extends Controller
 
             $ref_by = $referar_user->id;
         }
-
-        $name = $request->name;
-        $nameParts = explode(' ', $name, 2);
-        $firstName = $nameParts[0];
-        $lastName = $nameParts[1] ?? '';
 
         if($request->login_type == 'otp' || $request->login_type == 'manual'){
             $user = User::where(['phone' => $request->phone])->first();
