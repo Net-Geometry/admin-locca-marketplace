@@ -156,13 +156,19 @@
                                 <td>
                                     <div class="btn--container justify-content-center">
                                         <a class="btn action-btn btn--primary btn-outline-primary"
-                                            href="{{route('admin.brand.edit',[$brand['id']])}}" title="{{translate('messages.edit_brand')}}"><i class="tio-edit"></i>
-                                        </a>
-                                        <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="brand-{{$brand['id']}}" data-message="{{ translate('messages.Want to delete this brand') }}"  title="{{translate('messages.delete_brand')}}"><i class="tio-delete-outlined"></i>
-                                        </a>
-                                        <form action="{{route('admin.brand.delete',[$brand['id']])}}" method="post" id="brand-{{$brand['id']}}">
-                                            @csrf @method('delete')
-                                        </form>
+                                        href="{{route('admin.brand.edit',[$brand['id']])}}" title="{{translate('messages.edit_brand')}}"><i class="tio-edit"></i>
+                                    </a>
+                                    <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="brand-{{$brand['id']}}" data-message="{{ translate('messages.Want to delete this brand') }}"  title="{{translate('messages.delete_brand')}}"><i class="tio-delete-outlined"></i>
+                                    </a>
+                                    <form action="{{route('admin.brand.delete',[$brand['id']])}}" method="post" id="brand-{{$brand['id']}}">
+                                        @csrf @method('delete')
+                                    </form>
+                                    @if ($brand->module_id == null)
+
+                                    <button class="btn action-btn btn--primary btn-outline-primary set_brand_id" type="button" data-brand_id="{{ $brand['id'] }}" data-toggle="modal" data-target="#module-change-modal"
+                                         title="{{translate('messages.update_module')}}"><i class="tio-apps"></i>
+                                    </button>
+                                    @endif
                                     </div>
                                 </td>
                             </tr>
@@ -187,12 +193,123 @@
             @endif
         </div>
     </div>
+
+
+    <div class="modal fade" id="module-change-modal">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="text-center">{{ translate('Update_Module') }}</h3>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true" class="tio-clear"></span>
+                    </button>
+                </div>
+                <div class="modal-body pb-5 pt-0">
+                    <div class="max-349 mx-auto mb-20">
+                        <div>
+                            <div class="text-center">
+                                <h5 class="modal-title"> </h5>
+                            </div>
+
+                        </div>
+                        <div class="btn--container justify-content-center">
+                            <button type="button" class="btn btn-outline-info min-w-120" data-toggle="modal" data-target="#Keep_only_this_module_confirmation" data-dismiss="modal" >{{translate('Keep_only_this_module')}}</button>
+                            <button type="button" class="btn btn-outline-warning min-w-120" data-toggle="modal"  data-target="#make_a_new_brand_confirmation"  data-dismiss="modal">
+                                {{translate("Make it a new Brand")}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="Keep_only_this_module_confirmation">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="text-center">{{ translate('Module_Confirmation') }}</h3>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true" class="tio-clear"></span>
+                    </button>
+                </div>
+
+                <form action="{{ route('admin.brand.moduleUpadte') }}" method="post">
+                    @csrf
+                <div class="modal-body pb-5 pt-0">
+                    <div class="max-349 mx-auto mb-20">
+
+                        <input type="text" hidden name="brand_id"  class="brand_id">
+                        <input type="text" hidden name="type" value="only_this_module" >
+                        <div>
+                            <div class="text-center">
+                                <h5 class="modal-title"> {{ translate('messages.Are you sure ?') }} </h5>
+                                <h5 class="modal-title"> {{ translate('You_want_to_keep_it_only_for_this_module') }} </h5>
+                            </div>
+
+                        </div>
+                        <div class="btn--container justify-content-center">
+                            <button type="submit" class="btn btn-outline-warning min-w-120" >{{translate('Yes')}}</button>
+                            <button  type="reset" class="btn btn-outline-secondary min-w-120" data-dismiss="modal">
+                                {{translate("Cancel")}}
+                            </button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="make_a_new_brand_confirmation">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="text-center">{{ translate('New_brand_confirmation') }}</h3>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true" class="tio-clear"></span>
+                    </button>
+                </div>
+                <div class="modal-body pb-5 pt-0">
+                    <form action="{{ route('admin.brand.moduleUpadte') }}" method="post">
+                        @csrf
+                        <input type="text" hidden name="type" value="copy_this_brand" >
+                        <input type="text" hidden name="brand_id"  class="brand_id">
+                        <div class="max-349 mx-auto mb-20">
+                            <div>
+                            <div class="text-center">
+                                <h5 class="modal-title"> {{ translate('messages.Are you sure ?') }} </h5>
+                                <h5 class="modal-title"> {{ translate('You_want_to_make_a_new_brand') }} </h5>
+                            </div>
+
+                        </div>
+                        <div class="btn--container justify-content-center">
+                            <button type="submit" class="btn btn-outline-warning min-w-120" >{{translate('Yes')}}</button>
+                            <button  type="reset" class="btn btn-outline-secondary min-w-120" data-dismiss="modal">
+                                {{translate("Cancel")}}
+                            </button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/brand-index.js"></script>
     <script>
         "use strict";
+        $('.set_brand_id').click(function(){
+            var brand_id = $(this).data('brand_id');
+            $('.brand_id').each(function(){
+                $(this).val(brand_id);
+            });
+        });
+
         $('#reset_btn').click(function(){
             $('#viewer').attr('src', "{{asset('public/assets/admin/img/upload-img.png')}}");
         })

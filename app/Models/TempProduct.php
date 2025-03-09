@@ -100,6 +100,10 @@ class TempProduct extends Model
     {
         return $this->hasOne(PharmacyItemDetails::class, 'temp_product_id');
     }
+    public function ecommerce_item_details()
+    {
+        return $this->hasOne(EcommerceItemDetails::class, 'temp_product_id');
+    }
 
     public function scopeType($query, $type)
     {
