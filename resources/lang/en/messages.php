@@ -7479,4 +7479,5 @@ Smartly or Earn. ',
   'You_want_to_make_a_new_brand' => 'You want to make a new brand',
   'New_brand_created_successfully' => 'New brand created successfully',
   'sp 3' => 'Sp 3',
+  'Shop 2' => 'Shop 2',
 );

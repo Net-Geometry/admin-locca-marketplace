@@ -105,16 +105,15 @@ class BrandController extends BaseController
         if($request->type == 'copy_this_brand'){
             $oldBrand =$this->brandRepo->getFirstWhere(['id'=> $request->brand_id]);
                     $mergedItems = $this->getMergedItems($brandId);
-                    $module_id= null;
+                    $newBrand= null;
                     foreach($mergedItems as $item){
-                        if($item['module_id'] != $module_id){
-                            $module_id = $item['module_id'];
-                            $newBrand= $this->createNewBrand($oldBrand ,$module_id);
+                        if($item['module_id'] !== ($newBrand?->module_id ?? null)){
+                            $newBrand= $this->createNewBrand($oldBrand ,$item['module_id']);
                         }
 
                         if($newBrand){
                             EcommerceItemDetails::where(function($query) use($item){
-                                $query->whereIn('item_id',$item['id'])->orWhereIn('temp_product_id',$item['id']);
+                                $query->where('item_id',$item['id'])->orWhere('temp_product_id',$item['id']);
                             })->update(['brand_id'=> $newBrand->id]);
                         }
                     }
@@ -139,6 +138,11 @@ class BrandController extends BaseController
 
 
     private function createNewBrand($oldBrand ,$module_id){
+
+        $BrandCheck =$this->brandRepo->getFirstWhere(['module_id'=> $module_id,'name'=>$oldBrand->name]);
+        if($BrandCheck){
+            return $BrandCheck;
+        }
 
         $brand = new Brand ();
         $brand->name=$oldBrand->name;

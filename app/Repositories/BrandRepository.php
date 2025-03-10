@@ -97,6 +97,8 @@ class BrandRepository implements BrandRepositoryInterface
 
     public function getDropdownList(Request $request, int|string $dataLimit = DEFAULT_DATA_LIMIT): Collection
     {
-        return $this->brand->where('module_id',  Config::get('module.current_module_id'))->where('name', 'like', '%'.$request->q.'%')->limit($dataLimit)->get();
+        return $this->brand->active()->where(function($query){
+            $query->whereNull('module_id')->orWhere('module_id',  Config::get('module.current_module_id'));
+        })->where('name', 'like', '%'.$request->q.'%')->limit($dataLimit)->get();
     }
 }
