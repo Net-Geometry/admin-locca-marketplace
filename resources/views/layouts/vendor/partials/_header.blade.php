@@ -19,6 +19,15 @@
                 <!-- Navbar -->
                 <ul class="navbar-nav align-items-center flex-row">
                     <li class="nav-item max-sm-m-0">
+                        <button type="button" id="modalOpener"
+                                class="title-color bg--secondary border-0 rounded align-items-center py-2 px-2 px-md-3 d-flex gap-1"
+                                data-toggle="modal" data-target="#staticBackdrop">
+                            <i class="tio-search"></i>
+                            <span class="d-none d-md-block">{{translate('Search')}}</span>
+                            <span class="bg-card text-muted border rounded-3 p-1 fs-12 fw-bold lh-1 ms-1 ctrlplusk d-none d-md-block">Ctrl+K</span>
+                        </button>
+                    </li>
+                    <li class="nav-item max-sm-m-0">
                         <div class="hs-unfold">
                             <div>
                                 @php($local = session()->has('vendor_local')?session('vendor_local'):null)
@@ -133,6 +142,31 @@
             <!-- End Secondary Content -->
         </div>
     </header>
+</div>
+<div class="modal fade removeSlideDown" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered max-w-520">
+        <div class="modal-content modal-content__search border-0">
+            <div class="d-flex flex-column gap-3 rounded-20 bg-card py-2 px-3">
+                <div class="d-flex gap-2 align-items-center position-relative">
+                    <form class="flex-grow-1" id="searchForm" action="{{ route('vendor.search.routing') }}">
+                        @csrf
+                        <div class="d-flex align-items-center global-search-container">
+                            <input class="form-control flex-grow-1 rounded-10 search-input" id="searchInput" name="search" type="search" placeholder="Search" aria-label="Search" autofocus>
+                        </div>
+                    </form>
+                    <div class="position-absolute right-0 pr-2">
+                        <button class="border-0 rounded px-2 py-1" type="button" data-dismiss="modal">{{ translate('Esc') }}</button>
+                    </div>
+                </div>
+
+                <div class="min-h-350">
+                    <div class="search-result" id="searchResults">
+                        <div class="text-center text-muted py-5">{{translate('It appears that you have not yet searched.')}}.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div id="headerFluid" class="d-none"></div>
 <div id="headerDouble" class="d-none"></div>

@@ -7,6 +7,11 @@ use App\Http\Controllers\Vendor\SubscriptionController;
 Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
 
     Route::group(['middleware' => ['vendor']], function () {
+
+        Route::post('search-routing', 'SearchRoutingController@index')->name('search.routing');
+        Route::get('recent-search', 'SearchRoutingController@recentSearch')->name('recent.search');
+        Route::post('store-clicked-route', 'SearchRoutingController@storeClickedRoute')->name('store.clicked.route');
+
         Route::get('lang/{locale}', 'LanguageController@lang')->name('lang');
         Route::get('/', 'DashboardController@dashboard')->name('dashboard');
         Route::get('/get-store-data', 'DashboardController@store_data')->name('get-store-data');

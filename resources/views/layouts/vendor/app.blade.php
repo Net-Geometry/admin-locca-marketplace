@@ -215,6 +215,7 @@
 
 <!-- ========== END SECONDARY CONTENTS ========== -->
 <script src="{{asset('public/assets/admin')}}/js/custom.js"></script>
+<script src="{{asset('public/assets/admin/js/keyword-highlighted.js')}}"></script>
 <script src="{{asset('public/assets/admin')}}/js/firebase.min.js"></script>
 <!-- JS Implementing Plugins -->
 
@@ -539,6 +540,149 @@
             $(document).on('keyup', 'input[type="tel"]', function () {
                 $(this).val(keepNumbersAndPlus($(this).val()));
                 });
+
+    //search option
+    $(document).ready(function () {
+        $('#searchForm input[name="search"]').keyup(function () {
+            var searchKeyword = $(this).val().trim();
+
+            if (searchKeyword.length >= 1) {
+                $.ajax({
+                    type: 'POST',
+                    url: $('#searchForm').attr('action'),
+                    data: {search: searchKeyword, _token: $('input[name="_token"]').val()},
+                    success: function (response) {
+                        if (response.length === 0) {
+                            $('#searchResults').html('<div class="fs-16 fw-500 mb-2">' + @json(translate('Search Result')) + '</div>' +
+                                '<div class="search-list h-300 d-flex flex-column gap-2 justify-content-center align-items-center fs-16">' +
+                                '<img width="30" src="' + @json(asset('/public/assets/admin/img/no-search-found.png')) + '" alt="">' + ' ' +
+                                @json(translate('No result found')) +
+                                    '</div>');
+
+                        } else {
+                            var resultHtml = '';
+                            response.forEach(function (route) {
+                                var fullRouteWithKeyword = route.fullRoute + '?keyword=' + encodeURIComponent(searchKeyword);
+                                resultHtml += '<a href="' + fullRouteWithKeyword + '" class="search-list-item d-flex flex-column" data-route-name="' + route.routeName + '" data-route-uri="' + route.URI + '" data-route-full-url="' + route.fullRoute + '" aria-current="true">';
+                                resultHtml += '<h5>' + route.routeName + '</h5>';
+                                resultHtml += '<p class="text-muted fs-12 mb-0">' + route.URI + '</p>';
+                                resultHtml += '</a>';
+                            });
+                            $('#searchResults').html('<div class="fs-16 fw-500 mb-2">' + @json(translate('Search Result')) + '</div>' + '<div class="search-list d-flex flex-column">' + resultHtml + '</div>');
+
+                            $('.search-list-item').click(function () {
+                                var routeName = $(this).data('route-name');
+                                var routeUri = $(this).data('route-uri');
+                                var routeFullUrl = $(this).data('route-full-url');
+
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ route('vendor.store.clicked.route') }}',
+                                    data: {
+                                        routeName: routeName,
+                                        routeUri: routeUri,
+                                        routeFullUrl: routeFullUrl,
+                                        searchKeyword: searchKeyword,
+                                        _token: $('input[name="_token"]').val()
+                                    },
+                                    success: function (response) {
+                                        console.log(response.message);
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error(xhr.responseText);
+                                    }
+                                });
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            } else {
+                $('#searchResults').html('<div class="text-center text-muted py-5">{{translate('Write a minimum of one characters.')}}.</div>');
+            }
+        });
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.key === 'k') {
+            event.preventDefault();
+            document.getElementById('modalOpener').click();
+        }
+    });
+
+    $(document).ready(function () {
+        $("#staticBackdrop").on("shown.bs.modal", function () {
+            $(this).find("#searchForm input[type=search]").val('');
+            $('#searchResults').html('<div class="text-center text-muted py-5">{{translate('Loading recent searches')}}...</div>');
+            $(this).find("#searchForm input[type=search]").focus();
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('vendor.recent.search') }}',
+                success: function (response) {
+                    if (response.length === 0) {
+                        $('#searchResults').html('<div class="text-center text-muted py-5">{{translate('It appears that you have not yet searched.')}}.</div>');
+                    } else {
+                        var resultHtml = '';
+                        response.forEach(function (route) {
+                            resultHtml += '<a href="' + route.route_full_url + '" class="search-list-item d-flex flex-column" data-route-name="' + route.route_name + '" data-route-uri="' + route.route_uri + '" data-route-full-url="' + route.route_full_url + '" aria-current="true">';
+                            resultHtml += '<h5>' + route.route_name + '</h5>';
+                            resultHtml += '<p class="text-muted fs-12  mb-0">' + route.route_uri + '</p>';
+                            resultHtml += '</a>';
+                        });
+                        $('#searchResults').html('<div class="recent-search fs-16 fw-500 animate">' +
+                            @json(translate('Recent Search')) + '<div class="search-list d-flex flex-column mt-2">' + resultHtml + '</div></div>');
+
+                        $('.search-list-item').click(function () {
+                            var routeName = $(this).data('route-name');
+                            var routeUri = $(this).data('route-uri');
+                            var routeFullUrl = $(this).data('route-full-url');
+                            var searchKeyword = $('input[type=search]').val().trim();
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{ route('vendor.store.clicked.route') }}',
+                                data: {
+                                    routeName: routeName,
+                                    routeUri: routeUri,
+                                    routeFullUrl: routeFullUrl,
+                                    searchKeyword: searchKeyword,
+                                    _token: $('input[name="_token"]').val()
+                                },
+                                success: function (response) {
+                                    console.log(response.message);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error(xhr.responseText);
+                                }
+                            });
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    $('#searchResults').html('<div class="text-center text-muted py-5">{{translate('Error loading recent searches')}}.</div>');
+                }
+            });
+        });
+    });
+
+    $("#staticBackdrop").on("hidden.bs.modal", function () {
+        $('#searchResults').empty();
+    });
+
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('search', function() {
+        if (!this.value.trim()) {
+            $('#searchResults').html('<div class="text-center text-muted py-5"></div>');
+        }
+    });
+
+    $('#searchForm').submit(function (event) {
+        event.preventDefault();
+    });
 
 
 </script>

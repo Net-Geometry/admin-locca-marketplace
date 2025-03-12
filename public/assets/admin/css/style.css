@@ -15094,3 +15094,45 @@ ul.address-info .label {
 .display-none{
     display: none;
 }
+
+.search-list-item {
+    padding: 1rem;
+    background-color: transparent;
+    /* border-radius: 10px; */
+    transition: all 0.3s ease;
+}
+
+.search-list-item:not(:last-child) {
+    border-bottom: 1px solid #e9e9ea;
+}
+
+.search-list-item:hover {
+    background-color: #f0f2f7;
+}
+
+.search-list {
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    background-color: #f9fafc;
+    border-radius: 0.3125rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+.min-h-350 {
+    min-height: 350px;
+}
+
+.ctrlplusk {
+    letter-spacing: -0.3px;
+}
+
+.modal.fade.removeSlideDown .modal-dialog {
+    transition: none;
+    transform: none;
+}
+
+.highlighted-keyword {
+    background-color: yellow;
+    font-weight: bold;
+}
