@@ -217,6 +217,16 @@ class UpdateController extends Controller
                 'test_values' => json_encode($liveValues),
             ]);
         }
+        // version 3.1
+        $free_delivery_over_status= BusinessSetting::where('key','free_delivery_over_status')->first();
+        $free_delivery_over= BusinessSetting::where('key','free_delivery_over')->first()?->value;
+        if($free_delivery_over_status?->value == 1 && $free_delivery_over > 0){
+            $free_delivery_over_status->key = 'admin_free_delivery_status';
+            $free_delivery_over_status->save();
+            Helpers::businessUpdateOrInsert(['key' => 'admin_free_delivery_option'], [
+                'value' => 'free_delivery_by_order_amount'
+            ]);
+        }
 
         $data = DataSetting::where('type', 'login_admin')->pluck('value')->first();
         return redirect('/login/'.$data);

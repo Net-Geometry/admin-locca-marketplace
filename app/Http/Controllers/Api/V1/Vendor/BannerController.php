@@ -23,7 +23,7 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required',
+
             'image' => 'required|mimes:webp,jpg,jpeg,png,bmp,tiff|max:2048',
         ]);
 
@@ -66,7 +66,6 @@ class BannerController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'id' => 'required',
-            'title' => 'required',
             'image' => 'max:2048',
         ]);
 

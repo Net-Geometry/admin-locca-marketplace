@@ -420,9 +420,7 @@
                                                             accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                             <i class="tio-edit"></i>
                                                     </div>
-                                                    {{-- <button class="btn action-btn btn-outline-danger">
-                                                        <i class="tio-delete-outlined"></i>
-                                                    </button> --}}
+                                                    
                                                 </div>
                                             </label>
                                         </div>
@@ -1113,20 +1111,17 @@
                                             <div class="form-group mb-0">
                                                 <label class="input-label text-capitalize d-flex alig-items-center add_text_mute {{ $admin_free_delivery_status?->value ? '' : 'text-muted' }} "><span
                                                     class="line--limit-1">{{ translate('Choose Free Delivery Option') }}
-                                                {{-- <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Set_the_method(s)_that_customers_can_pay_the_remainder_after_partial_payment.') }}" alt="">
-                                                    <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
-                                                </span> --}}
                                                 </span>
                                             </label>
                                                 <div class="resturant-type-group border bg-white">
                                                     <label class="form-check form--check">
-                                                        <input class="form-check-input radio-trigger" type="radio"  {{ $admin_free_delivery_status?->value ? '' : 'disabled' }}  value="free_delivery_to_all_store" name="admin_free_delivery_option" {{ $admin_free_delivery_option?->value == 'free_delivery_to_all_store' ? 'checked' : '' }}>
+                                                        <input class="form-check-input radio-trigger" type="radio"   {{ $admin_free_delivery_status?->value ? '' : 'disabled' }}  value="free_delivery_to_all_store" name="admin_free_delivery_option" {{ $admin_free_delivery_option?->value == 'free_delivery_to_all_store' ? 'checked' : '' }}>
                                                         <span class="form-check-label">
                                                             {{translate('Set free delivery for all store')}}
                                                         </span>
                                                     </label>
                                                     <label class="form-check form--check">
-                                                        <input class="form-check-input radio-trigger" type="radio" {{ $admin_free_delivery_status?->value ? '' : 'disabled' }}  value="free_delivery_by_order_amount" name="admin_free_delivery_option" {{ $admin_free_delivery_option?->value == 'free_delivery_by_order_amount' ? 'checked' : '' }}>
+                                                        <input class="form-check-input radio-trigger  {{ $admin_free_delivery_option?->value == null ? 'radio-disable-bg' : '' }}"   type="radio" {{ $admin_free_delivery_status?->value ? '' : 'disabled' }}  value="free_delivery_by_order_amount" name="admin_free_delivery_option" {{ $admin_free_delivery_option?->value == 'free_delivery_by_order_amount' || $admin_free_delivery_option?->value == null ? 'checked' : '' }}>
                                                         <span class="form-check-label">
                                                             {{translate('Set Specific Criteria')}}
                                                         </span>
@@ -1137,7 +1132,7 @@
 
 
 
-                                        <div id="show_free_delivery_over" class="col-sm-6 col-lg-6 {{ $admin_free_delivery_option?->value !== 'free_delivery_by_order_amount' ? 'd-none' : '' }}">
+                                        <div id="show_free_delivery_over" class="col-sm-6 col-lg-6 {{ $admin_free_delivery_option?->value == 'free_delivery_by_order_amount' ||  $admin_free_delivery_option?->value  == null ? '' : 'd-none' }}">
                                             <div class="form-group mb-0">
                                                 <label class="form-label d-flex justify-content-between text-capitalize mb-1 add_text_mute {{ $admin_free_delivery_status?->value ? '' : 'text-muted' }} "
                                                     for="">
@@ -1161,7 +1156,7 @@
                                                     >
                                             </div>
                                         </div>
-                                        <div id="show_text_for_all_store_free_delivery" class="col-sm-6 col-lg-6 {{ $admin_free_delivery_option?->value == 'free_delivery_to_all_store' ? '' : ' d-none' }}">
+                                        <div id="show_text_for_all_store_free_delivery" class="col-sm-6 col-lg-6 {{ $admin_free_delivery_option?->value == 'free_delivery_to_all_store'  ? '' : ' d-none' }}">
                                             <div class="alert fs-13 alert-primary-light text-dark mb-0  mt-md-0 add_text_mute text-muted" role="alert">
                                                 <img src="{{ asset('/public/assets/admin/img/lnfo_light.png') }}" alt="">
                                                 {{translate('Free delivery is active for all stores. Cost bearer for the free delivery is')}} <strong>{{ translate('Admin') }}</strong>

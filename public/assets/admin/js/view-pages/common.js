@@ -484,10 +484,13 @@ $(document).on("click", ".confirm-Toggle", function () {
 
             document.querySelectorAll('input[name="admin_free_delivery_option"]').forEach(input => {
                 input.removeAttribute('disabled');
+                input.classList.remove('radio-disable-bg');
             });
         } else {
             document.querySelectorAll('input[name="admin_free_delivery_option"]').forEach(input => {
-                // input.checked = false;
+                if (input.checked) {
+                    input.classList.add('radio-disable-bg');
+                }
                 input.setAttribute('disabled', true);
             });
                 $('.add_text_mute').addClass('text-muted').removeClass('text-dark');
