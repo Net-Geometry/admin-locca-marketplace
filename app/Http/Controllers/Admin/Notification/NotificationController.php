@@ -53,7 +53,7 @@ class NotificationController extends BaseController
     {
         $notification = $this->notificationRepo->add(data: $this->notificationService->getAddData(request: $request));
         $topic = $this->notificationService->getTopic(request: $request);
-        $notification->image = $notification->toArray()['image_full_url'];
+        $notification->image = $notification->image ? $notification->toArray()['image_full_url'] :'';
 
         try {
             $this->sendPushNotificationToTopic($notification, $topic, 'push_notification');
@@ -78,7 +78,7 @@ class NotificationController extends BaseController
 
         $topic = $this->notificationService->getTopic(request: $request);
         $notification = $this->notificationRepo->getFirstWhere(params: ['id' => $id]);
-        $notification->image = $notification->toArray()['image_full_url'];
+        $notification->image = $notification->image ? $notification->toArray()['image_full_url'] :'';
 
         try {
             $this->sendPushNotificationToTopic($notification, $topic, 'push_notification');
