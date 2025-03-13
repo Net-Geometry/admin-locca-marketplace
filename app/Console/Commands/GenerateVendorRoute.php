@@ -55,16 +55,49 @@ class GenerateVendorRoute extends Command
                 $hasParameters = preg_match('/\{(.*?)\}/', $uri);
                 if (!$hasParameters) {
                     $actualRouteName = $route->getName();
-                    $routeName = ucwords(str_replace(['.', '_','-'], ' ', Str::afterLast($actualRouteName, '.')));
+                    $routeNameParts = explode('.', $actualRouteName);
+                    if (count($routeNameParts) >= 2) {
+                        $lastPart = $routeNameParts[count($routeNameParts) - 1];
+                        $secondLastPart = $routeNameParts[count($routeNameParts) - 2];
+
+                        if (strtolower($lastPart) === 'index') {
+                            $lastPart = 'List';
+                        }
+
+                        $lastPartWords = explode(' ', str_replace(['_', '-'], ' ', $lastPart));
+                        $secondLastPartWords = explode(' ', str_replace(['_', '-'], ' ', $secondLastPart));
+                        $allWords = array_merge($secondLastPartWords, $lastPartWords);
+                        $uniqueWords = [];
+
+                        foreach ($allWords as $word) {
+                            $lowerWord = strtolower($word);
+                            if (empty($uniqueWords) || strtolower(end($uniqueWords)) !== $lowerWord) {
+                                $uniqueWords[] = $word;
+                            }
+                        }
+
+                        if (count($uniqueWords) > 1 && strtolower($uniqueWords[0]) === strtolower(end($uniqueWords))) {
+                            array_shift($uniqueWords);
+                        }
+
+                        $uniqueWords = array_filter($uniqueWords, function ($word) {
+                            return strtolower($word) !== 'rental';
+                        });
+
+                        $routeName = ucwords(implode(' ', $uniqueWords));
+                    } else {
+                        $routeName = ucwords(str_replace(['.', '_', '-'], ' ', Str::afterLast($actualRouteName, '.')));
+                    }
+
                     $bladePath = $this->getBladePathFromController($route);
                     $keywords = $this->getTextDataFromBladeFile($bladePath);
-                    $keywords = ucwords(str_replace(['.', '_' ,'-'] ,' ', $keywords));
-                    if($bladePath){
+                    $keywords = ucwords(str_replace(['.', '_', '-'], ' ', $keywords));
+                    if ($bladePath) {
                         $formattedRoutes[] = [
                             'routeName' => $routeName,
                             'URI' => $uri,
                             'keywords' => $keywords,
-                            'bladePath' =>  $bladePath,
+                            'bladePath' => $bladePath,
                             'isModified' => false
                         ];
                     }

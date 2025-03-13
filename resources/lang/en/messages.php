@@ -7476,4 +7476,5 @@ Smartly or Earn. ',
   'Loading recent searches' => 'Loading recent searches',
   'Recent Search' => 'Recent Search',
   'Error loading recent searches' => 'Error loading recent searches',
+  'Ex: 123654789512364' => 'Ex: 123654789512364',
 );
