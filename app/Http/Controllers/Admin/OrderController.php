@@ -1683,9 +1683,9 @@ class OrderController extends Controller
                 }
 
             elseif($request->verify == 'switched_to_cod'){
-                $order->offline_payments()->update([
-                    'status'=> 'verified'
-                ]);
+
+                $order->offline_payments()->delete();
+
                 if($order->payment_method == 'partial_payment'){
                     $order->payments()->where('payment_status','unpaid')->update([
                         'payment_method'=> 'cash_on_delivery',
@@ -1698,6 +1698,7 @@ class OrderController extends Controller
 
                 Helpers::send_order_notification($order);
                 $order->payment_method = 'cash_on_delivery';
+                $order->save();
 
                 if($order->is_guest == 0){
                     $this->sent_mail_on_offline_payment(status:'COD', name:$order?->customer?->f_name .' '.$order?->customer?->l_name, email:  $order?->customer?->email ,order_id: $order->id);
