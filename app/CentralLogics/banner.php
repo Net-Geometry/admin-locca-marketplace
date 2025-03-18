@@ -28,11 +28,22 @@ class BannerLogic
                 })
                     ->module(config('module.current_module_data')['id'])
                     ->when(!config('module.current_module_data')['all_zone_service'], function($query) use ($zone_id){
-                        $query->whereIn('zone_id', json_decode($zone_id, true));
+                        $query->where(function($query) use($zone_id){
+                            $query->where(function($query) use($zone_id){
+                                $query->where('type','store_wise')
+                                ->whereIn('zone_id', json_decode($zone_id, true));
+                            })->orWhere('type', 'default');
+                        });
+
                     });
             }
 
-            return $banners->whereIn('zone_id', json_decode($zone_id, true))
+            return $banners->where(function($query) use($zone_id){
+                $query->where(function($query) use($zone_id){
+                    $query->where('type','store_wise')
+                    ->whereIn('zone_id', json_decode($zone_id, true));
+                })->orWhere('type', 'default');
+            })
                 ->whereHas('module', function($query){
                     $query->active();
                 })

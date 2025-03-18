@@ -99,7 +99,7 @@
         <div class="card mt-2">
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{translate('messages.Brands')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$brands->total()}}</span></h5>
+                    <h5 class="card-title">{{translate('messages.All_Brand_List')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$brands->total()}}</span></h5>
                     <form  class="search-form">
                         <!-- Search -->
                         <div class="input-group input--group">
@@ -124,7 +124,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th class="border-0">{{translate('sl')}}</th>
-                                <th class="border-0 w--1">{{translate('messages.Brand_Name')}}</th>
+                                <th class="border-0 w--1">{{translate('messages.Brand_Info')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.Total_Products')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.status')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.action')}}</th>
@@ -135,11 +135,22 @@
                         @foreach($brands as $key=>$brand)
                             <tr>
                                 <td>{{$key+$brands->firstItem()}}</td>
+
+
                                 <td>
-                                    <span class="d-block font-size-sm text-body">
-                                        {{Str::limit($brand['name'],20,'...')}}
-                                    </span>
+                                    <div class="media align-items-center">
+                                        <img class="avatar avatar-lg mr-3 onerror-image"
+                                        src="{{$brand['image_full_url'] ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"  alt="{{$brand->name}} image">
+                                        <div  class="media-body">
+                                            <h5   class="text-hover-primary mb-0">{{Str::limit($brand['name'],20,'...')}}
+                                                @if($brand->module_id == null)
+                                                    <span class="ml-2 badge badge-soft-success">{{translate('messages.All_module')}}</span>
+                                                @endif
+                                            </h5>
+                                        </div>
+                                    </div>
                                 </td>
+
                                 <td class="text-center">
                                     <span class="d-block font-size-sm text-body">
                                         {{ $brand->items->count()}}
@@ -155,14 +166,21 @@
                                 </td>
                                 <td>
                                     <div class="btn--container justify-content-center">
+                                        @if ($brand->module_id == null)
+                                        <button  title="{{translate('Module_Assign')}}" class="btn action-btn btn--primary btn-outline-primary  withdraw-info-show" type="button" data-brand_id="{{ $brand['id'] }}"
+                                        data-image_src="{{ $brand['image_full_url'] }}"
+                                        data-name="{{ $brand['name'] }}"
+                                            ><i class="tio-apps"></i>
+                                        </button>
+                                        @endif
                                         <a class="btn action-btn btn--primary btn-outline-primary"
-                                            href="{{route('admin.brand.edit',[$brand['id']])}}" title="{{translate('messages.edit_brand')}}"><i class="tio-edit"></i>
-                                        </a>
-                                        <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="brand-{{$brand['id']}}" data-message="{{ translate('messages.Want to delete this brand') }}"  title="{{translate('messages.delete_brand')}}"><i class="tio-delete-outlined"></i>
-                                        </a>
-                                        <form action="{{route('admin.brand.delete',[$brand['id']])}}" method="post" id="brand-{{$brand['id']}}">
-                                            @csrf @method('delete')
-                                        </form>
+                                        href="{{route('admin.brand.edit',[$brand['id']])}}" title="{{translate('messages.edit_brand')}}"><i class="tio-edit"></i>
+                                    </a>
+                                    <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="brand-{{$brand['id']}}" data-message="{{ translate('messages.Want to delete this brand') }}"  title="{{translate('messages.delete_brand')}}"><i class="tio-delete-outlined"></i>
+                                    </a>
+                                    <form action="{{route('admin.brand.delete',[$brand['id']])}}" method="post" id="brand-{{$brand['id']}}">
+                                        @csrf @method('delete')
+                                    </form>
                                     </div>
                                 </td>
                             </tr>
@@ -187,12 +205,129 @@
             @endif
         </div>
     </div>
+
+
+    <div class="modal fade" id="module-change-modal">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="text-center">{{ translate('Update_Module') }}</h3>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true" class="tio-clear"></span>
+                    </button>
+                </div>
+                <div class="modal-body pb-5 pt-0">
+                    <div class="max-349 mx-auto mb-20">
+                        <div>
+                            <div class="text-center">
+                                <h5 class="modal-title"> </h5>
+                            </div>
+
+                        </div>
+                        <div class="btn--container justify-content-center">
+                            <button type="button" class="btn btn-outline-info min-w-120" data-toggle="modal" data-target="#Keep_only_this_module_confirmation" data-dismiss="modal" >{{translate('Keep_only_this_module')}}</button>
+                            <button type="button" class="btn btn-outline-warning min-w-120" data-toggle="modal"  data-target="#make_a_new_brand_confirmation"  data-dismiss="modal">
+                                {{translate("Make it a new Brand")}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="withdraw-info-sidebar-wrap">
+        <div class="withdraw-info-sidebar-overlay"></div>
+        <div class="withdraw-info-sidebar">
+            <div class="d-flex p-3 justify-content-between">
+                <h3 class="mb-3">{{translate('Module Assign')}}</h3>
+                <span class="circle bg-light withdraw-info-hide cursor-pointer">
+                    <i class="tio-clear"></i>
+                </span>
+            </div>
+
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="d-flex justify-content-center mb-3">
+                            <img src="brand-logo.png" id="brand_img_src" alt="Brand Logo" width="90">
+                            <h5 id="brand_name"  class="mt-2 ml-2"></h5>
+                        </div>
+                            <div class="alert fs-13 alert-primary-light text-dark mb-0  mt-md-0 add_text_mute text-muted mt-2"  role="alert">
+                                <img src="{{ asset('/public/assets/admin/img/lnfo_light.png') }}" alt="">
+                                {{translate('Currently, this brand is active in all modules of the')}} <strong>{{ Config::get('module.current_module_name') }}</strong> {{ translate('Module_Type') }}
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+            <form action="{{ route('admin.brand.moduleUpadte') }}" method="post">
+                @csrf
+                <input type="text" hidden  name="brand_id"  id="brand_id">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title mb-0 font-medium">{{translate('Assign Brand')}}</h4>
+                        <small class="card-text">{{ translate('Select your preferred assign option for this brand') }}</small>
+
+                        <div class=" mt-4 mb-3">
+
+                            <div class="radio-card selected mb-2" data-value="module-only">
+                                <input type="radio" name="type" value="only_this_module" checked>
+                                    <strong>{{ translate('Use this Brand only for this module’s product') }}</strong>
+                                    <br>
+                                    <small class="text-muted mt-1 mb-0">
+                                    {{ translate(' This brand will only use for') }} <strong>{{ Config::get('module.current_module_name') }}</strong> {{ translate('Module and will be removed from other module’s product.') }}
+                                    </small>
+                            </div>
+
+                                <div class="radio-card mt-2"  data-value="all-modules">
+                                    <input type="radio" name="type" value="copy_this_brand">
+                                    <strong>{{ translate('Create the same brand for other modules also') }}</strong>
+                                    <br>
+                                    <small class="text-muted mt-1 mb-0">
+                                        {{ translate('This brand will be created automatically for every module. And the products in each module will automatically be assigned to that brand.') }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex justify-content-center gap-3">
+                        <button  type="reset" class="btn btn-outline-secondary min-w-120 withdraw-info-hide">
+                            {{translate("Cancel")}}
+                            <button type="submit" class="btn btn-outline-primary min-w-120" >{{translate('Transfer')}}</button>
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+
+
+        </div>
+
 @endsection
 
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/brand-index.js"></script>
     <script>
         "use strict";
+        $('.withdraw-info-hide, .withdraw-info-sidebar-overlay').on('click', function () {
+            $('.withdraw-info-sidebar, .withdraw-info-sidebar-overlay').removeClass('show');
+        });
+
+        $(document).on('click', '.withdraw-info-show', function () {
+            $('#brand_img_src').attr('src', $(this).data('image_src'));
+            $('#brand_name').text($(this).data('name'));
+            $('#brand_id').val($(this).data('brand_id'));
+            $('.withdraw-info-sidebar, .withdraw-info-sidebar-overlay').addClass('show');
+            });
+        $(document).on('submit', '.withdraw_status_form', function (event) {
+    $(this).find('button[type="submit"]').attr('disabled', true);
+});
+
         $('#reset_btn').click(function(){
             $('#viewer').attr('src', "{{asset('public/assets/admin/img/upload-img.png')}}");
         })

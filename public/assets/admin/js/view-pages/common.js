@@ -259,13 +259,13 @@ $(document).on("click", ".confirm-Toggle", function () {
     }
     $("#toggle-modal").modal("hide");
 
-    if (toggle_id === "free_delivery_over_status") {
-        if ($("#free_delivery_over_status").is(":checked")) {
-            $("#free_delivery_over").removeAttr("readonly");
-        } else {
-            $("#free_delivery_over").attr("readonly", true).val(null);
-        }
-    }
+    // if (toggle_id === "admin_free_delivery_status") {
+    //     if ($("#admin_free_delivery_status").is(":checked")) {
+    //         $("#free_delivery_over").removeAttr("readonly");
+    //     } else {
+    //         $("#free_delivery_over").attr("readonly", true).val(null);
+    //     }
+    // }
     if (toggle_id === "product_gallery") {
         if ($("#product_gallery").is(":checked")) {
             $(".access_all_products").removeClass("d-none");
@@ -477,6 +477,27 @@ $(document).on("click", ".confirm-Toggle", function () {
             $("#order_cancelation_rate_warning_limit").attr("readonly", true).removeAttr("required");
         }
     }
+
+    if (toggle_id === "admin_free_delivery_status") {
+        if ($("#admin_free_delivery_status").is(":checked")) {
+            $('.add_text_mute').removeClass('text-muted').addClass('text-dark');
+
+            document.querySelectorAll('input[name="admin_free_delivery_option"]').forEach(input => {
+                input.removeAttribute('disabled');
+                input.classList.remove('radio-disable-bg');
+            });
+        } else {
+            document.querySelectorAll('input[name="admin_free_delivery_option"]').forEach(input => {
+                if (input.checked) {
+                    input.classList.add('radio-disable-bg');
+                }
+                input.setAttribute('disabled', true);
+            });
+                $('.add_text_mute').addClass('text-muted').removeClass('text-dark');
+        }
+    }
+
+
 });
 
 $(document).on("click", ".location-reload-to-base", function () {

@@ -25,6 +25,9 @@ class BrandController extends Controller
             $module_id= $request->header('moduleId');
 
             $brands = Brand::Active()
+            ->where(function($query) use($module_id){
+                $query->whereNull('module_id')->orWhere('module_id',  $module_id);
+            })
             ->withCount(['items' => function($query) use($zone_id, $module_id) {
                 $query->whereHas('item.store', function($q) use($zone_id, $module_id) {
                     $q->whereIn('zone_id', json_decode($zone_id, true))

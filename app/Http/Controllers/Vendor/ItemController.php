@@ -44,7 +44,9 @@ class ItemController extends Controller
         }
         $categories = Category::where(['position' => 0])->module(Helpers::get_store_data()->module_id)->get();
         $conditions = CommonCondition::get(['id','name']);
-        $brands = Brand::all();
+        $brands = Brand::active()->where(function($query){
+            $query->where('module_id' , Helpers::get_store_data()->module_id)->orWhere('module_id' , null);
+        })->get();
         $module_data = config('module.'. Helpers::get_store_data()->module->module_type);
         return view('vendor-views.product.index', compact('categories','module_data','conditions','brands'));
     }
@@ -446,7 +448,9 @@ class ItemController extends Controller
         $categories = Category::where(['parent_id' => 0])->module(Helpers::get_store_data()->module_id)->get();
         $module_data = config('module.'. Helpers::get_store_data()->module->module_type);
         $conditions = CommonCondition::get(['id','name']);
-        $brands = Brand::all();
+        $brands = Brand::active()->where(function($query){
+            $query->where('module_id' , Helpers::get_store_data()->module_id)->orWhere('module_id' , null);
+        })->get();
         return view('vendor-views.product.edit', compact('product', 'product_category', 'categories','module_data', 'temp_product','conditions','brands'));
     }
 

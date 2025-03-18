@@ -33,6 +33,7 @@ class CurrentModule
         if ($module) {
             Config::set('module.current_module_id', $module->id);
             Config::set('module.current_module_type', $module->module_type);
+            Config::set('module.current_module_name', $module->module_name);
         }else{
             Config::set('module.current_module_id', null);
             Config::set('module.current_module_type', 'settings');

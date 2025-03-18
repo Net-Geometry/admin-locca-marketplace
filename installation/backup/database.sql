@@ -568,7 +568,7 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (117, 'partial_payment_status', NULL, NULL, NULL),
 (118, 'partial_payment_method', 'both', NULL, NULL),
 (119, 'order_notification_type', 'manual', NULL, NULL),
-(120, 'free_delivery_over_status', NULL, NULL, NULL),
+(120, 'admin_free_delivery_status', NULL, NULL, NULL),
 (121, 'additional_charge_status', NULL, NULL, NULL),
 (122, 'additional_charge_name', 'Additional Charge', NULL, NULL),
 (123, 'additional_charge', NULL, NULL, NULL),

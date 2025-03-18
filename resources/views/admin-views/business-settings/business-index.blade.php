@@ -420,9 +420,7 @@
                                                             accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                             <i class="tio-edit"></i>
                                                     </div>
-                                                    {{-- <button class="btn action-btn btn-outline-danger">
-                                                        <i class="tio-delete-outlined"></i>
-                                                    </button> --}}
+                                                    
                                                 </div>
                                             </label>
                                         </div>
@@ -989,47 +987,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-lg-4">
-                                    @php($free_delivery_over = \App\Models\BusinessSetting::where('key', 'free_delivery_over')->first())
-                                    @php($free_delivery_over_status = \App\Models\BusinessSetting::where('key', 'free_delivery_over_status')->first())
-                                    <div class="form-group mb-0">
-                                        <label class="form-label d-flex justify-content-between text-capitalize mb-1"
-                                            for="free_delivery_over_status">
-                                            <span class="line--limit-1">{{ translate('messages.free_delivery_over') }}
-                                                ({{ \App\CentralLogics\Helpers::currency_symbol() }}) <small
-                                                class="text-danger"><span class="form-label-secondary"
-                                                    data-toggle="tooltip" data-placement="right"
-                                                    data-original-title="{{ translate('messages.Set_a_minimum_order_value_for_automated_free_delivery._If_the_minimum_amount_is_exceeded,_the_Delivery_Fee_is_deducted_from_Admin’s_commission_and_added_to_Admin’s_expense.') }}"><img
-                                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                        alt="{{ translate('messages.free_over_delivery_message') }}"></span>
-                                                *</small></span>
-                                            <span class="toggle-switch toggle-switch-sm pr-sm-3">
-                                                <input type="checkbox"
-                                                       data-id="free_delivery_over_status"
-                                                       data-type="toggle"
-                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/free-delivery-on.png') }}"
-                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/free-delivery-off.png') }}"
-                                                       data-title-on="<strong>{{ translate('messages.Want_to_enable_Free_Delivery_on_Minimum_Orders?') }}</strong>"
-                                                       data-title-off="<strong>{{ translate('messages.Want_to_disable_Free_Delivery_on_Minimum_Order?') }}</strong>"
-                                                       data-text-on="<p>{{ translate('messages.If_you_enable_this,_customers_can_get_FREE_Delivery_by_fulfilling_the_minimum_order_requirement.') }}</p>"
-                                                       data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_FREE_Delivery_option_will_be_hidden_from_the_Customer_App_or_Website.') }}</p>"
-                                                       class="status toggle-switch-input dynamic-checkbox-toggle"
 
-                                                    name="free_delivery_over_status" id="free_delivery_over_status"
-                                                    value="1"
-                                                    {{ isset($free_delivery_over_status->value) ? 'checked' : '' }}>
-                                                <span class="toggle-switch-label text mb-0"><span
-                                                        class="toggle-switch-indicator"></span></span>
-                                            </span>
-                                        </label>
-
-                                        <input type="number"  name="free_delivery_over" class="form-control"
-                                            id="free_delivery_over"  placeholder="{{ translate('messages.Ex:_10') }}"
-                                            value="{{ $free_delivery_over ? $free_delivery_over->value : 0 }}"
-                                            min="0" step=".01" required
-                                            {{ isset($free_delivery_over_status->value) ? '' : 'readonly' }}>
-                                    </div>
-                                </div>
                                 <div class="col-sm-6 col-lg-4">
                                     @php($guest_checkout_status = \App\Models\BusinessSetting::where('key', 'guest_checkout_status')->first())
                                     @php($guest_checkout_status = $guest_checkout_status ? $guest_checkout_status->value : 0)
@@ -1110,9 +1068,105 @@
                                 </div>
 
 
-
+                                {{-- free_delivery_over_status --}}
 
                             </div>
+                            <div class="__bg-F8F9FC-card p-0 mt-4">
+                                @php($admin_free_delivery_status = \App\Models\BusinessSetting::where('key', 'admin_free_delivery_status')->first())
+
+                                <div class="border-bottom d-flex justify-content-between p-3">
+                                    <h4 class="card-title m-0 text--title">{{translate('Free Delivery Option')}}</h4>
+                                    <label class="form-label d-flex justify-content-between text-capitalize mb-1"
+                                            for="admin_free_delivery_status">
+
+                                        <span class="toggle-switch toggle-switch-sm pr-sm-3">
+                                            <input type="checkbox"
+                                                    data-id="admin_free_delivery_status"
+                                                    data-type="toggle"
+                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/free-delivery-on.png') }}"
+                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/free-delivery-off.png') }}"
+                                                    data-title-on="<strong>{{ translate('messages.Want_to_enable_Free_Delivery_Option?') }}</strong>"
+                                                    data-title-off="<strong>{{ translate('messages.Want_to_disable_Free_Delivery_Optionr?') }}</strong>"
+
+                                                    class="status toggle-switch-input dynamic-checkbox-toggle"
+
+                                                name="admin_free_delivery_status" id="admin_free_delivery_status"
+                                                value="1"
+                                                {{ $admin_free_delivery_status?->value ? 'checked' : '' }}>
+                                            <span class="toggle-switch-label text mb-0"><span
+                                                    class="toggle-switch-indicator"></span></span>
+                                        </span>
+                                    </label>
+                                </div>
+
+
+                                <div class="card-body">
+                                    <div class="row g-3 align-items-end">
+                                        <div class="col-sm-6 col-lg-6">
+
+
+                                            @php($free_delivery_over = \App\Models\BusinessSetting::where('key', 'free_delivery_over')->first())
+                                            @php($admin_free_delivery_option = \App\Models\BusinessSetting::where('key', 'admin_free_delivery_option')->first())
+
+                                            <div class="form-group mb-0">
+                                                <label class="input-label text-capitalize d-flex alig-items-center add_text_mute {{ $admin_free_delivery_status?->value ? '' : 'text-muted' }} "><span
+                                                    class="line--limit-1">{{ translate('Choose Free Delivery Option') }}
+                                                </span>
+                                            </label>
+                                                <div class="resturant-type-group border bg-white">
+                                                    <label class="form-check form--check">
+                                                        <input class="form-check-input radio-trigger" type="radio"   {{ $admin_free_delivery_status?->value ? '' : 'disabled' }}  value="free_delivery_to_all_store" name="admin_free_delivery_option" {{ $admin_free_delivery_option?->value == 'free_delivery_to_all_store' ? 'checked' : '' }}>
+                                                        <span class="form-check-label">
+                                                            {{translate('Set free delivery for all store')}}
+                                                        </span>
+                                                    </label>
+                                                    <label class="form-check form--check">
+                                                        <input class="form-check-input radio-trigger  {{ $admin_free_delivery_option?->value == null ? 'radio-disable-bg' : '' }}"   type="radio" {{ $admin_free_delivery_status?->value ? '' : 'disabled' }}  value="free_delivery_by_order_amount" name="admin_free_delivery_option" {{ $admin_free_delivery_option?->value == 'free_delivery_by_order_amount' || $admin_free_delivery_option?->value == null ? 'checked' : '' }}>
+                                                        <span class="form-check-label">
+                                                            {{translate('Set Specific Criteria')}}
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div id="show_free_delivery_over" class="col-sm-6 col-lg-6 {{ $admin_free_delivery_option?->value == 'free_delivery_by_order_amount' ||  $admin_free_delivery_option?->value  == null ? '' : 'd-none' }}">
+                                            <div class="form-group mb-0">
+                                                <label class="form-label d-flex justify-content-between text-capitalize mb-1 add_text_mute {{ $admin_free_delivery_status?->value ? '' : 'text-muted' }} "
+                                                    for="">
+                                                    <span class="line--limit-1">{{ translate('messages.free_delivery_over') }}
+                                                        ({{ \App\CentralLogics\Helpers::currency_symbol() }}) <small
+                                                        class="text-danger"><span class="form-label-secondary"
+                                                            data-toggle="tooltip" data-placement="right"
+                                                            data-original-title="{{ translate('messages.Set_a_minimum_order_value_for_automated_free_delivery._If_the_minimum_amount_is_exceeded,_the_Delivery_Fee_is_deducted_from_Admin’s_commission_and_added_to_Admin’s_expense.') }}"><img
+                                                                src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                                alt="{{ translate('messages.free_over_delivery_message') }}"></span>
+                                                        *</small></span>
+
+                                                </label>
+
+                                                <input type="number"  name="free_delivery_over" class="form-control"
+                                                    id="free_delivery_over"  placeholder="{{ translate('messages.Ex:_10') }}"
+                                                    value="{{ $free_delivery_over ? $free_delivery_over->value : 0 }}"
+                                                    min="0" step=".01"
+                                                    {{ $admin_free_delivery_option?->value == 'free_delivery_by_order_amount' ? 'required' : 'readonly' }}
+
+                                                    >
+                                            </div>
+                                        </div>
+                                        <div id="show_text_for_all_store_free_delivery" class="col-sm-6 col-lg-6 {{ $admin_free_delivery_option?->value == 'free_delivery_to_all_store'  ? '' : ' d-none' }}">
+                                            <div class="alert fs-13 alert-primary-light text-dark mb-0  mt-md-0 add_text_mute text-muted" role="alert">
+                                                <img src="{{ asset('/public/assets/admin/img/lnfo_light.png') }}" alt="">
+                                                {{translate('Free delivery is active for all stores. Cost bearer for the free delivery is')}} <strong>{{ translate('Admin') }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                             <div class="__bg-F8F9FC-card p-0 mt-4">
                                 <div class="border-bottom p-3">
                                     <h4 class="card-title m-0 text--title">{{translate('Additional Charge')}}</h4>
@@ -1441,13 +1495,116 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="confirmation_modal_free_delivery_by_order_amount" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class=" modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pb-5 pt-0">
+                    <div class="max-349 mx-auto mb-20">
+                        <div>
+                            <div class="text-center">
+                            <img src="{{asset('/public/assets/admin/img/subscription-plan/package-status-disable.png')}}" class="mb-20">
 
+                                <h5 class="modal-title"></h5>
+                            </div>
+                            <div class="text-center" >
+                                <h3 > {{ translate('Do You Want Active “Set Specific Criteria”?') }}</h3>
+                                <div > <p>{{ translate('Are you sure to active “Set Specific Criteria”? If you active this delivery charge will not added to order when customer order more then your “Free Delivery Over” amount.') }}</h3></p></div>
+                            </div>
+
+
+
+                            <div class="btn--container justify-content-center">
+                                <button data-dismiss="modal"  class="btn btn-soft-secondary min-w-120" >{{translate("Cancel")}}</button>
+                                <button data-dismiss="modal"   type="button"  id="confirmBtn_free_delivery_by_order_amount" class="btn btn--primary min-w-120">{{translate('Yes')}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="confirmation_modal_free_delivery_to_all_store" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog-centered modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pb-5 pt-0">
+                    <div class="max-349 mx-auto mb-20">
+                        <div>
+                            <div class="text-center">
+                            <img src="{{asset('/public/assets/admin/img/subscription-plan/package-status-disable.png')}}" class="mb-20">
+
+                                <h5 class="modal-title"></h5>
+                            </div>
+                            <div class="text-center" >
+                                <h3 > {{ translate('Do You Want Active “Free Delivery for All Stores”?') }}</h3>
+                                <div > <p>{{ translate('Are you sure to active “Free delivery order for all Stores”? If you active this no delivery charge will added to order and the cost will be added to you.') }}</h3></p></div>
+                            </div>
+                            <div class="btn--container justify-content-center">
+                                <button data-dismiss="modal"  class="btn btn-soft-secondary min-w-120" >{{translate("Cancel")}}</button>
+                                <button data-dismiss="modal"   type="button"  id="confirmBtn_free_delivery_to_all_store" class="btn btn--primary min-w-120">{{translate('Yes')}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('script_2')
 
 <script>
       "use strict";
+
+      $(document).ready(function () {
+    let selectedRadio = null;
+
+    $(".radio-trigger").on("click", function (event) {
+        event.preventDefault();
+        selectedRadio = this;
+        let selectedValue = $(this).val();
+        if( selectedValue === 'free_delivery_to_all_store'){
+            $("#confirmation_modal_free_delivery_to_all_store").modal("show");
+        } else{
+            $("#confirmation_modal_free_delivery_by_order_amount").modal("show");
+        }
+    });
+
+    $("#confirmBtn_free_delivery_to_all_store").on("click", function () {
+        if (selectedRadio) {
+            selectedRadio.checked = true;
+            $('#show_free_delivery_over').addClass('d-none');
+            $('#show_text_for_all_store_free_delivery').removeClass('d-none');
+            $("#free_delivery_over").val(null).removeAttr("required").attr("readonly", true);
+        }
+        $("#confirmation_modal_free_delivery_to_all_store").modal("hide");
+
+    });
+
+    $("#confirmBtn_free_delivery_by_order_amount").on("click", function () {
+        if (selectedRadio) {
+            selectedRadio.checked = true;
+            $('#show_free_delivery_over').removeClass('d-none');
+            $('#show_text_for_all_store_free_delivery').addClass('d-none');
+            $("#free_delivery_over").val(null).removeAttr("readonly").attr("required", true);
+
+        }
+        $("#confirmation_modal_free_delivery_by_order_amount").modal("hide");
+
+    });
+});
+
       $(document).ready(function() {
     let selectedCurrency = "{{ $currency_code ? $currency_code->value : 'USD' }}";
     let currencyConfirmed = false;

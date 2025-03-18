@@ -899,9 +899,18 @@ class OrderController extends Controller
                 ], 406);
             }
 
-            $free_delivery_over = BusinessSetting::where('key', 'free_delivery_over')->first()->value;
-            if (isset($free_delivery_over)) {
-                if ($free_delivery_over <= $product_price + $total_addon_price - $coupon_discount_amount - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount) {
+
+            $businessSettings = BusinessSetting::whereIn('key', [ 'free_delivery_over', 'admin_free_delivery_status', 'admin_free_delivery_option'])->pluck('value', 'key');
+
+            $free_delivery_over = (float) ($businessSettings['free_delivery_over'] ?? 0);
+            $admin_free_delivery_status = (int) ($businessSettings['admin_free_delivery_status'] ?? 0);
+            $admin_free_delivery_option = $businessSettings['admin_free_delivery_option'] ?? null;
+
+
+            if ($admin_free_delivery_status === 1) {
+                $eligibleAmount = $product_price + $total_addon_price - $coupon_discount_amount - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount;
+
+                if ($admin_free_delivery_option === 'free_delivery_to_all_store' || ($admin_free_delivery_option === 'free_delivery_by_order_amount' && $free_delivery_over > 0  && $eligibleAmount >= $free_delivery_over)) {
                     $order->delivery_charge = 0;
                     $free_delivery_by = 'admin';
                 }

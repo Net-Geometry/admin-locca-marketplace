@@ -153,6 +153,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post(Brand::UPDATE[URI].'/{id}', [BrandController::class, 'update'])->name('update');
             Route::delete(Brand::DELETE[URI].'/{id}', [BrandController::class, 'delete'])->name('delete');
             Route::get(Brand::STATUS[URI].'/{id}/{status}', [BrandController::class,'updateStatus'])->name('status');
+            Route::post('module-upadte', [BrandController::class,'moduleUpadte'])->name('moduleUpadte');
         });
 
 

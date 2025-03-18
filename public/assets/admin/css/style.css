@@ -15136,3 +15136,15 @@ ul.address-info .label {
     background-color: yellow;
     font-weight: bold;
 }
+.alert-primary-light {
+    color: var(--theameColor);
+    background-color: #edf7ff;
+    border-color: #edf7ff;
+}
+.alert-primary-light {
+    background-color: rgba(0, 154, 241, 0.1);
+    border-color: rgba(0, 154, 241, 0);
+}
+.radio-disable-bg {
+    background-color: #14b19f53 !important;
+}
