@@ -45,6 +45,11 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
     Route::get(Zone::GET_ALL_ZONE_COORDINATES[URI].'/{id?}', [ZoneController::class, 'getAllZoneCoordinates'])->name('zone.zoneCoordinates');
 
     Route::group(['middleware' => ['admin', 'current-module']], function () {
+
+        Route::post('search-routing', 'SearchRoutingController@index')->name('search.routing');
+        Route::get('recent-search', 'SearchRoutingController@recentSearch')->name('recent.search');
+        Route::post('store-clicked-route', 'SearchRoutingController@storeClickedRoute')->name('store.clicked.route');
+
         Route::get('store/get-store-ratings', [VendorController::class,'get_store_ratings'])->name('store.get-store-ratings');
         Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
             Route::get(Category::NAME_LIST[URI], [CategoryController::class, 'getNameList'])->name('get-all');

@@ -174,15 +174,12 @@ class ConfigController extends Controller
         }
         return response()->json([
             'business_name' => $settings['business_name'],
-            // 'business_open_time' => $settings['business_open_time'],
-            // 'business_close_time' => $settings['business_close_time'],
             'logo' => $settings['logo'],
             'logo_full_url' => Helpers::get_full_url('business', $settings['logo'], $data['logo_storage'] ?? 'public'),
             'address' => $settings['address'],
             'phone' => $settings['phone'],
             'email' => $settings['email_address'],
-            // 'store_location_coverage' => Branch::where(['id'=>1])->first(['longitude','latitude','coverage']),
-            // 'minimum_order_value' => (float)$settings['minimum_order_value'],
+
             'country' => $settings['country'],
             'default_location' => ['lat' => $default_location ? $default_location['lat'] : '23.757989', 'lng' => $default_location ? $default_location['lng'] : '90.360587'],
             'currency_symbol' => $currency_symbol,
@@ -230,8 +227,7 @@ class ConfigController extends Controller
             'module' => $module,
             'parcel_per_km_shipping_charge' => (float)$settings['parcel_per_km_shipping_charge'],
             'parcel_minimum_shipping_charge' => (float)$settings['parcel_minimum_shipping_charge'],
-//            'landing_page_settings'=> isset($settings['web_app_landing_page_settings'])?json_decode($settings['web_app_landing_page_settings'], true):null,
-//            'landing_page_settings_full_url'=> $data['web_app_landing_page_settings_storage']??'public',
+
             'social_media' => SocialMedia::active()->get()->toArray(),
             'footer_text' => isset($settings['footer_text']) ? $settings['footer_text'] : '',
             'cookies_text' => isset($settings['cookies_text']) ? $settings['cookies_text'] : '',
@@ -306,6 +302,8 @@ class ConfigController extends Controller
             'vehicle_distance_min' =>(float) $vehicle_distance_min?? 0,
             'vehicle_hourly_min' => (float) $vehicle_hourly_min?? 0,
             'admin_free_delivery' =>$admin_free_delivery,
+            'is_sms_active' =>  (boolean)  Setting::whereJsonContains('live_values->status','1')->where('settings_type', 'sms_config')->exists(),
+            'is_mail_active' =>  (boolean)config('mail.status'),
         ]);
     }
 

@@ -876,7 +876,7 @@ class StoreLogic
         ];
     }
 
-    public static function get_top_offer_near_me($zone_id, $limit = 50, $offset = 1, $type = 'all',$longitude=0,$latitude=0)
+    public static function get_top_offer_near_me($zone_id, $limit = 50, $offset = 1, $type = 'all',$longitude=0,$latitude=0 , $name = null ,$sort = null, $halal = null)
     {
 
         $top_offer_near_me_stores_default_status = BusinessSetting::where('key', 'top_offer_near_me_stores_default_status')->first()?->value ?? 1;
@@ -900,51 +900,74 @@ class StoreLogic
                     $query->whereIn('zone_id', json_decode($zone_id, true));
                 }
             })
-            ->type($type)->Active();
+            ->type($type)->Active()->Halal($halal);
+            if($name){
+                $key = explode(' ', $name);
+                $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('name', 'like', "%{$value}%");
+                    }
+                    $relationships = [
+                        'translations' => 'value',
+                        // 'items.nutritions' => 'nutrition',
+                        // 'items.allergies' => 'allergy',
+                        // 'items.generic' => 'generic_name',
+                        // 'items.ecommerce_item_details.brand' => 'name',
+                        // 'items.pharmacy_item_details.common_condition' => 'name'
+                    ];
+                    return  $q->applyRelationShipSearch(relationships:$relationships ,searchParameter:$key);
+                }) ->orderByRaw("CASE WHEN name = ? THEN 1 WHEN name LIKE ? THEN 2 ELSE 3 END, LENGTH(name) ASC, name ASC ", [$name, "%{$name}%"]);
+            }
 
-            if($top_offer_near_me_stores_default_status== 1){
-                $query= $query->orderByDesc('open')->orderby('distance');
-            }else{
+            if($sort)
+            {
+                $query->orderBy('name',$sort);
 
-                if($top_offer_near_me_stores_sort_by_temp_closed == 'remove'){
-                    $query = $query->where('active', '>', 0);
-                }elseif($top_offer_near_me_stores_sort_by_temp_closed == 'last'){
-                    $query = $query->orderByDesc('active');
-                }
+            } else{
+                if($top_offer_near_me_stores_default_status== 1){
+                    $query= $query->orderByDesc('open')->orderby('distance');
+                }else{
 
-                if($top_offer_near_me_stores_sort_by_unavailable == 'remove'){
-                    $query = $query->having('open', '>', 0);
-                }elseif($top_offer_near_me_stores_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('open', 'desc');
-                }
+                    if($top_offer_near_me_stores_sort_by_temp_closed == 'remove'){
+                        $query = $query->where('active', '>', 0);
+                    }elseif($top_offer_near_me_stores_sort_by_temp_closed == 'last'){
+                        $query = $query->orderByDesc('active');
+                    }
 
-                if($top_offer_near_me_stores_sort_by_general == 'rating') {
-                    $query = $query->selectSub(function ($query) {
-                        $query->selectRaw('AVG(reviews.rating)')
-                            ->from('reviews')
-                            ->join('items', 'items.id', '=', 'reviews.item_id')
-                            ->whereColumn('items.store_id', 'stores.id')
-                            ->groupBy('items.store_id');
-                    }, 'avg_rat')->orderBy('avg_rat', 'desc');
-                }elseif($top_offer_near_me_stores_sort_by_general == 'review_count') {
-                    $query = $query->orderByDesc('reviews_count');
-                }elseif($top_offer_near_me_stores_sort_by_general == 'asc_discount') {
+                    if($top_offer_near_me_stores_sort_by_unavailable == 'remove'){
+                        $query = $query->having('open', '>', 0);
+                    }elseif($top_offer_near_me_stores_sort_by_unavailable == 'last'){
+                        $query = $query->orderBy('open', 'desc');
+                    }
+
+                    if($top_offer_near_me_stores_sort_by_general == 'rating') {
+                        $query = $query->selectSub(function ($query) {
+                            $query->selectRaw('AVG(reviews.rating)')
+                                ->from('reviews')
+                                ->join('items', 'items.id', '=', 'reviews.item_id')
+                                ->whereColumn('items.store_id', 'stores.id')
+                                ->groupBy('items.store_id');
+                        }, 'avg_rat')->orderBy('avg_rat', 'desc');
+                    }elseif($top_offer_near_me_stores_sort_by_general == 'review_count') {
+                        $query = $query->orderByDesc('reviews_count');
+                    }elseif($top_offer_near_me_stores_sort_by_general == 'asc_discount') {
 
 
-                    $query = $query->selectSub(function ($query) {
-                        $query->selectRaw('MAX(discounts.discount)')
-                            ->from('discounts')
-                            ->whereColumn('discounts.store_id', 'stores.id');
-                    }, 'discount')
-                    ->orderBy('discount', 'asc');
+                        $query = $query->selectSub(function ($query) {
+                            $query->selectRaw('MAX(discounts.discount)')
+                                ->from('discounts')
+                                ->whereColumn('discounts.store_id', 'stores.id');
+                        }, 'discount')
+                        ->orderBy('discount', 'asc');
 
-                }elseif($top_offer_near_me_stores_sort_by_general == 'desc_discount') {
-                    $query = $query->selectSub(function ($query) {
-                        $query->selectRaw('MAX(discounts.discount)')
-                            ->from('discounts')
-                            ->whereColumn('discounts.store_id', 'stores.id');
-                    }, 'discount')
-                    ->orderBy('discount', 'desc');
+                    }elseif($top_offer_near_me_stores_sort_by_general == 'desc_discount') {
+                        $query = $query->selectSub(function ($query) {
+                            $query->selectRaw('MAX(discounts.discount)')
+                                ->from('discounts')
+                                ->whereColumn('discounts.store_id', 'stores.id');
+                        }, 'discount')
+                        ->orderBy('discount', 'desc');
+                    }
                 }
             }
 

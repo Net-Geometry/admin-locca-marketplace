@@ -752,6 +752,17 @@ class Store extends Model
         return $query;
 
     }
+    public function scopeHalal($query, $type): mixed
+    {
+        if($type == 1)
+        {
+            return $query->whereHas('storeConfig' ,function($query){
+                $query->where('halal_tag_status', 1);
+            });
+        }
+        return $query;
+
+    }
 
     /**
      * @param $name

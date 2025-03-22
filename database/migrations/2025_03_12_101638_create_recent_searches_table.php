@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('recent_searches', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreignId('user_id')->nullable();
+            $table->foreignId('module_id')->nullable();
             $table->string('user_type')->nullable();
             $table->string('route_name')->nullable();
             $table->string('route_uri')->nullable();

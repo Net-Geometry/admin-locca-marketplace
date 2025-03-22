@@ -334,7 +334,9 @@ class StoreController extends Controller
         $zone_id= $request->header('zoneId');
         $longitude= $request->header('longitude');
         $latitude= $request->header('latitude');
-        $stores = StoreLogic::get_top_offer_near_me($zone_id, $request['limit'], $request['offset'], $type,$longitude,$latitude);
+
+        $stores = StoreLogic::get_top_offer_near_me(zone_id:$zone_id, limit:$request['limit'], offset: $request['offset'], type: $type, longitude:$longitude,latitude: $latitude,
+                    name:$request->name, sort: $request->sort_by ,halal: $request->halal);
         $stores['stores'] = Helpers::store_data_formatting($stores['stores'], true);
 
 
