@@ -152,9 +152,8 @@ class OrderController extends Controller
                     Mail::to($request->contact_person_email)->send(new \App\Mail\CustomerRegistration($request->contact_person_name));
                 }
             }
-            catch(\Exception $ex)
-            {
-                info($ex->getMessage());
+            catch (\Exception $exception) {
+                info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             }
             if($request->guest_id  && isset($user->id)){
 
@@ -1063,7 +1062,7 @@ class OrderController extends Controller
                         Mail::to($request->user->email)->send(new PlaceOrder($order->id));
                     }
                     if ($order->order_status == 'pending' && config('order_delivery_verification') == 1 && $order_verification_mail_status == '1' && $request->user && Helpers::getNotificationStatusData('customer','customer_delivery_verification','mail_status')) {
-                        Mail::to($request->user->email)->send(new OrderVerificationMail($order->otp,$request->user->f_name));
+                        Mail::to($request->user->email)->send(new OrderVerificationMail($order->otp,$request->user?->f_name));
                     }
                     if ($order->is_guest == 1 && $order->order_status == 'pending' && config('mail.status') && $order_mail_status == '1' && isset($request->contact_person_email) && Helpers::getNotificationStatusData('customer','customer_order_notification','mail_status')) {
                         Mail::to($request->contact_person_email)->send(new PlaceOrder($order->id));
@@ -1072,8 +1071,8 @@ class OrderController extends Controller
                         Mail::to($request->contact_person_email)->send(new OrderVerificationMail($order->otp,$request->contact_person_name));
                     }
                 }
-            } catch (\Exception $ex) {
-                info($ex->getMessage());
+            } catch (\Exception $exception) {
+                info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             }
             return response()->json([
                 'message' => translate('messages.order_placed_successfully'),
@@ -1083,9 +1082,10 @@ class OrderController extends Controller
                 'created_at' => $order->created_at,
                 'user_id' => (int) $order->user_id,
             ], 200);
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
+            info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             DB::rollBack();
-            return response()->json([$e], 403);
+            return response()->json([$exception], 403);
         }
 
         return response()->json([
@@ -1517,8 +1517,8 @@ class OrderController extends Controller
                 if ($order->order_status == 'pending' && config('mail.status') && $mail_status == '1' && $request->user && Helpers::getNotificationStatusData('customer','customer_order_notification','mail_status')) {
                     Mail::to($request->user->email)->send(new PlaceOrder($order->id));
                 }
-            } catch (\Exception $ex) {
-                info($ex->getMessage());
+            } catch (\Exception $exception) {
+                info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             }
             //PlaceOrderMail end
             return response()->json([
@@ -1530,9 +1530,10 @@ class OrderController extends Controller
                 'created_at' => $order->created_at,
                 'user_id' => (int) $order->user_id,
             ], 200);
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
+            info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             DB::rollBack();
-            return response()->json([$e], 403);
+            return response()->json([$exception->getMessage()], 403);
         }
 
         return response()->json([
@@ -1800,8 +1801,8 @@ class OrderController extends Controller
                 if (config('mail.status') && $admin['email'] && $mail_status == '1' && Helpers::getNotificationStatusData('admin','order_refund_request','mail_status')) {
                     Mail::to($admin['email'])->send(new RefundRequest($order->id));
                 }
-            } catch (\Exception $ex) {
-                info($ex->getMessage());
+            } catch (\Exception $exception) {
+                info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             }
             return response()->json(['message' => translate('messages.refund_request_placed_successfully')], 200);
         }
@@ -1866,8 +1867,8 @@ class OrderController extends Controller
                 }
 
 
-            } catch (\Exception $e) {
-                info($e->getMessage());
+            } catch (\Exception $exception) {
+                info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             }
             return response()->json(['message' => translate('messages.payment_method_updated_successfully')], 200);
         }
@@ -1999,10 +2000,10 @@ class OrderController extends Controller
                 'payment' => 'success'
             ], 200);
 
-        } catch (\Exception $e) {
-            info($e->getMessage());
+        } catch (\Exception $exception) {
+            info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             DB::rollBack();
-            return response()->json([ 'payment' => $e->getMessage()], 403);
+            return response()->json([ 'payment' => $exception->getMessage()], 403);
         }
     }
 
