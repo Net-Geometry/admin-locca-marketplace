@@ -244,6 +244,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             Route::put('update', 'BannerController@update');
             Route::get('status', 'BannerController@status');
             Route::delete('delete', 'BannerController@delete');
+            Route::get('edit/{id}', 'BannerController@edit');
         });
         //category
         Route::group(['prefix' => 'categories'], function () {

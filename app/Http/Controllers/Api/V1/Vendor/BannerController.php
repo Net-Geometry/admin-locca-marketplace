@@ -61,6 +61,15 @@ class BannerController extends Controller
         return response()->json(['message' => translate('messages.banner_added_successfully')], 200);
     }
 
+    public function edit($id)
+    {
+        $banner = Banner::withoutGlobalScope('translate')->with('translations')->find($id);
+
+        if ($banner) {
+            return response()->json($banner, 200);
+        }
+        return response()->json(['message' => translate('messages.banner_not_found.')], 400);
+    }
 
     public function update(Request $request)
     {
