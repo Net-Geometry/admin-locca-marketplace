@@ -1,0 +1,779 @@
+[
+    {
+        "routeName": "Admin Settings",
+        "URI": "admin/settings",
+        "keywords": "Profile Settings Settings Dashboard Nav Menu Basic Information Password Full Name Display Name Your First Name Your Last Name Phone Optional Email Enter New Email Address Want To Update Admin Info Save Change Your Password New Password Must Contain At Least One Number And One Uppercase And Lowercase Letter And Symbol And At Least Or More Characters Confirm Password Want To Update Admin Password",
+        "bladePath": "admin-views/settings",
+        "isModified": false
+    },
+    {
+        "routeName": "Admin Dashboard",
+        "URI": "admin",
+        "keywords": "Error Warning Message Dashboard Support",
+        "bladePath": "errors/404",
+        "isModified": false
+    },
+    {
+        "routeName": "Category List",
+        "URI": "admin/parcel/category",
+        "keywords": "Parcel Category Default Name New Item Short Description Module Select Module Image Ratio Choose File Per Km Shipping Charge Minimum Shipping Charge Reset Add Parcel Category Parcel Category List SL Id Status Orders Count Action Edit Category Want To Delete This Category Delete Category No Data Found",
+        "bladePath": "admin-views/parcel/category/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Parcel Settings",
+        "URI": "admin/parcel/settings",
+        "keywords": "Parcel Settings Per Km Shipping Charge Minimum Shipping Charge Deliveryman Commission Reset Submit Add A Delivery Instruction Default Instruction Write The Short Description Within Characters Ex Parcel Contains Document Add Now Delivery Instruction List SL Status Action Edit Want To Delete This Instruction Delete Instruction Update Default Close Save Changes No Data Found",
+        "bladePath": "admin-views/parcel/settings",
+        "isModified": false
+    },
+    {
+        "routeName": "Item Add New",
+        "URI": "admin/item/add-new",
+        "keywords": "Add New Item Add Info From Gallery See How It Works! Default Name Default Required New Item Short Description Item Image Ratio Item Thumbnail Store & Category Info Store Select Store Please Select Store Category Select Category Sub Category Category Required Warning Select Sub Category Suitable For Select Condition Brand Select Brand Unit Item Type Non Veg Veg Nutrition Specify The Necessary Keywords Relating To Energy Values For The Item Type Your Content And Press Enter Allegren Ingredients Specify The Ingredients Of The Item Which Can Make A Reaction As An Allergen Maximum Purchase Quantity Limit If This Limit Is Exceeded Customers Can Not Buy The Item In A Single Purchase Ex Is Organic Is Basic Medicine Is Prescription Required Generic Name Specify The Medicine`s Active Ingredient That Makes It Work Is It Halal Addon Store Required Warning Time Schedule Available Time Starts Available Time Ends Price Information Price Total Stock Discount Type Admin Shares The Same Percentage/amount On Discount As He Takes Commissions From Stores Percent Amount Discount Food Variations Add New Variation No Variation Added Attribute Tags Search Tags Reset Submit Delete Selcetion Type Multiple Selection Single Selection Min Max Option Name Additional Price Add New Option Select A Module Variation Choice Title Enter Choice Values Product Added Successfully Please Only Input Png Or Jpg Type File File Size Too Big",
+        "bladePath": "admin-views/product/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Item List",
+        "URI": "admin/item/list",
+        "keywords": "Item List Item List Search Data Select Store Please Select Store All Stores All Zones Select Category All Category Select Sub Category No Subcategory All Sub Category Select Condition All Conditions Ex Search Item By Name Search Here Reset Export Download Options Excel Csv Low Stock List New Product Request Sl Name Category Quantity Store Price Status Action Category Deleted Store Deleted! Edit Item Want To Delete This Item Delete Item No Data Found Cancel Update Stock",
+        "bladePath": "admin-views/product/list",
+        "isModified": false
+    },
+    {
+        "routeName": "Item Reviews",
+        "URI": "admin/item/reviews",
+        "keywords": "Review List Item Reviews Review List Ex Search Item Name Customer Name Rating Search Here Reset Export Download Options Excel Csv Sl Review Id Item Customer Review Date Store Reply Action Order ID Food Deleted! Customer Not Found Not Replied Yet You Want To Hide This Review For Customer You Want To Show This Review For Customer No Data Found Are You Sure No Yes",
+        "bladePath": "admin-views/product/reviews-list",
+        "isModified": false
+    },
+    {
+        "routeName": "Item Approval List",
+        "URI": "admin/item/new/item/list",
+        "keywords": "New Item Requests Search Data Select Store Please Select Store All Stores All Zones Select Category All Category Select Sub Category No Subcategory All Sub Category All Types Pending Rejected Custom Date Start Date End Date Filter Ex Search Item Name Search Here Reset Export Download Options Excel Csv Sl Name Category Store Price Status Action Category Deleted Store Deleted! View Approve You Want To Approve This Product Deny You Want To Deny This Product Edit Item Want To Delete This Item Delete Item No Data Found Are You Sure No Yes Are You Sure Cancel Submit Enter A Reason",
+        "bladePath": "admin-views/product/approv_list",
+        "isModified": false
+    },
+    {
+        "routeName": "Item Product Gallery",
+        "URI": "admin/item/product-gallery",
+        "keywords": "Product Gallery Select Store Please Select Store All Stores Select Category All Category Ex Search Name Search Here Search No Data Found",
+        "bladePath": "admin-views/product/product_gallery",
+        "isModified": false
+    },
+    {
+        "routeName": "Item Bulk Import",
+        "URI": "admin/item/bulk-import",
+        "keywords": "Item Bulk Import Items Bulk Import Step Download Excel File Instruction Download The Format File And Fill It With Proper Data You Can Download The Example File To Understand How The Data Must Be Filled Have To Upload Excel File Match Spread Sheet Data According To Instruction Fill Up The Data According To The Format And Validations You Can Get Store Id Module Id And Unit Id From Their List Please Input The Right Ids For Ecommerce Item Avaliable Time Start And End Will Be And If You Want To Create A Product With Variation Just Create Variations From The Generate Variation Section Below And Click Generate Value Copy The Value And Paste The The Spread Sheet File Column Name Variation In The Selected Product Row Validate Data And Complete Import In The Excel File Upload Section First Select The Upload Option Upload Your File In Xls Xlsx Format Finally Click The Upload Button You Can Upload Your Product Images In Product Folder From Gallery And Copy Image`s Path Image File Name Must Be In Character Download Spreadsheet Template With Current Data Without Any Data Select Data Upload Type Upload New Data Update Existing Data Import Items File Must Be Excel Files Using Our Excel Template Above Reset Upload Food Variations Generator Add New Variation Generate Value Reset Generate Variation Attention! You Must Generate Variations From This Generator If You Want To Add Variations To Your Products You Must Copy From The Specific Filed And Past It To The Specific Column At Your Excel Sheet Otherwise You Might Get Error If You Swap Or Entered Invalid Data And If You Want To Make It Empty Then You Have To Enter An Empty Array [ ] Attribute Generate Value Generated Varient This Field Is For Geenrated Variation Copy Them & Paste Into Excel Sheet Generated Choice Option Choice Option Is Required If You Are Using Product Variation Generated Attributes Field Attributes Is Required If You Are Using Product Variation Add New Name Selcetion Type Multiple Selection Single Selection Min Max Required Delete Option Name Additional Price Add New Option Variation Choice Title Enter Choice Values Are You Sure You Want To Data No Yes",
+        "bladePath": "admin-views/product/bulk-import",
+        "isModified": false
+    },
+    {
+        "routeName": "Promotional Banner Add New",
+        "URI": "admin/promotional-banner/add-new",
+        "keywords": "",
+        "bladePath": "admin-views/other-banners/{$module_type}-index",
+        "isModified": false
+    },
+    {
+        "routeName": "Promotional Banner Add Video",
+        "URI": "admin/promotional-banner/add-video",
+        "keywords": "Banner Other Promotional Content Setup Default Video / Image Section Title Write The Title Within Characters Ex Enter Section Title Upload Content YouTube Video URL Go To YouTube Click Share Option Then Get A Popup Of Share Select Embed & Get A Embed Video Then Copy The Generated Code For The Embedded Link Video Image Important! Warning! Are You Sure You Want To Remove This Image Image Size Min X Px Image Format Jpg Png Jpeg | Maximum Size MB Upload Video Browse File\" Video Size Max MB Video Format MP Video Enter YouTube Video URL Reset Save Video / Image Content Content Title Ex Enter Title Sub Title Ex Enter Subtitle",
+        "bladePath": "admin-views/other-banners/parcel-video",
+        "isModified": false
+    },
+    {
+        "routeName": "Promotional Banner Add Why Choose",
+        "URI": "admin/promotional-banner/add-why-choose",
+        "keywords": "Banner Other Promotional Content Setup Default Title Write The Title Within Characters Title Here Short Description Write The Short Description Within Characters Short Description Here Image ( ) Reset Submit Sl Image Status Action Want To Enable This Feature Want To Disable If Yes It Will Be Available On This Module If Yes It Will Be Hidden From This Module Want To Delete This Feature If Yes It Will Be Removed From This List And This Module Delete Criteria No Data Found",
+        "bladePath": "admin-views/other-banners/parcel-why-choose",
+        "isModified": false
+    },
+    {
+        "routeName": "Flash Sale Add New",
+        "URI": "admin/flash-sale/add-new",
+        "keywords": "Flash Sales Flash Sale Setup Default Title Ex New Flash Sale Discount Bearer Define The Cost Amount You Want To Bear For This Flash Sale The Total Bear Amount Should Be Admin Ex Store Owner Validity Start Date End Date Reset Submit Flash Sale List Ex Flash Sale Title Sl Duration Active Products Publish Action Want To Publish This Flash Sale Want To Hide This Flash Sale If You Publish This Flash Sale Customers Can See All Stores & Products Available Under This Flash Sale From The Customer App & Website Other Flash Sales Will Be Turned Off If You Hide This Flash Sale Customers Will NOT See All Stores & Products Available Under This Flash Sale From The Customer App & Website Add Product Add New Product Edit Want To Delete This Flash Sale Delete No Data Found",
+        "bladePath": "admin-views/flash-sale/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Store Add",
+        "URI": "admin/store/add",
+        "keywords": "Add Store Name Add New Store Default Name Store Name Address Default Store Store Logo & Covers Logo  Store Cover Store Information Vat/tax Estimated Delivery Time ( Min & Maximum Time) Minimum Time Ex Maximum Time Minutes Hours Days Done Zone Select Zone For Map Select Zone Latitude Store Lat Lng Warning Longitude Search Your Location Here Search Here Owner Information First Name Last Name Phone Account Information Email Password Must Contain At Least One Number And One Uppercase And Lowercase Letter And Symbol And At Least Or More Characters Confirm Password Reset Submit Please Only Input Png Or Jpg Type File File Size Too Big",
+        "bladePath": "admin-views/vendor/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Store List",
+        "URI": "admin/store/list",
+        "keywords": "Store List Stores Total Stores Active Stores Inactive Stores Newly Joined Stores Total Transactions Commission Earned Total Store Withdraws Stores List All Zones Ex Search Store Name Search Reset Export Download Options Excel Csv Sl Store Information Owner Information Zone Featured Status Action Id Zone Deleted You Want To Change This Store Status Denied Pending View Edit Store You Want To Remove This Store Delete Store No Data Found Are You Sure No Yes",
+        "bladePath": "admin-views/vendor/list",
+        "isModified": false
+    },
+    {
+        "routeName": "Store Pending Requests",
+        "URI": "admin/store/pending-requests",
+        "keywords": "New Joining Requests All Zones Pending Stores Denied Stores Stores List Ex Search Store Name Search Sl Store Information Module Owner Information Zone Status Action Id Zone Deleted You Want To Change This Store Status Denied Pending Approve You Want To Approve This Application Deny You Want To Deny This Application No Data Found Are You Sure No Yes Are You Sure",
+        "bladePath": "admin-views/vendor/pending_requests",
+        "isModified": false
+    },
+    {
+        "routeName": "Store Deny Requests",
+        "URI": "admin/store/deny-requests",
+        "keywords": "Denied Stores All Zones Pending Stores Stores List Ex Search Store Name Search Sl Store Information Module Owner Information Zone Status Action Id Zone Deleted Denied Pending Approve You Want To Approve This Application No Data Found Are You Sure No Yes Are You Sure",
+        "bladePath": "admin-views/vendor/deny_requests",
+        "isModified": false
+    },
+    {
+        "routeName": "Recommended Store",
+        "URI": "admin/store/recommended-store",
+        "keywords": "Recommended Stores Stores Search Stores Reset Submit Recommended Stores List Want To Shuffle The Store List Want To Disable Shuffle Store List If Enabled Store Recommended Section Will Be Shuffled \u2019 If Disabled Store Recommended Section Will Not Be Shuffled Shuffle Store When Page Reload Ex Store Name Sl Store Name Ratings Total Products Total Orders Status Action Id Want To Remove The Store From The List Delete No Data Found",
+        "bladePath": "admin-views/vendor/recommended_store_list",
+        "isModified": false
+    },
+    {
+        "routeName": "Store Bulk Import",
+        "URI": "admin/store/bulk-import",
+        "keywords": "Store Bulk Import Stores Bulk Import Step Download Excel File Instruction Download The Format File And Fill It With Proper Data You Can Download The Example File To Understand How The Data Must Be Filled Have To Upload Excel File Match Spread Sheet Data According To Instruction Fill Up The Data According To The Format Make Sure The Phone Numbers And Email Addresses Are Unique You Can Get Module Id And Zone Id From Their List Please Input The Right Ids For Delivery Time The Format Is \"from To Type\" For Example \" Min\" Also You Can Use Days Or Hours As Type Please Be Carefull About This Format Or Leave This Field Empty Latitude Must Be A Number Between To And Longitude Must A Number Between To Otherwise It Will Create Server Error Validate Data And Complete Import In The Excel File Upload Section First Select The Upload Option Upload Your File In Xls Xlsx Format Finally Click The Upload Button After Uploading Stores You Need To Edit Them And Set Stores`s Logo And Cover `s Path You Can Upload Your Store Images In Store Folder From Gallery And Copy Image`s Path Default Password For Store Is Download Spreadsheet Template Template With Existing Data Template Without Data Select Data Upload Type Upload New Data Update Existing Data Import Stores File Must Be Excel Files Using Our Excel Template Above Reset Upload Are You Sure You Want To No Yes",
+        "bladePath": "admin-views/vendor/bulk-import",
+        "isModified": false
+    },
+    {
+        "routeName": "Store Withdraw List",
+        "URI": "admin/store/withdraw_list",
+        "keywords": "Withdraw Request Transaction Overview Hello Here You Can Manage Your Transactions",
+        "bladePath": "admin-views/wallet/withdraw-dashboard",
+        "isModified": false
+    },
+    {
+        "routeName": "Refund Settings",
+        "URI": "admin/refund/settings",
+        "keywords": "Refund Settings Refund Settings Refund Request Mode *By Turning ON Refund Mode Customers Can Sent Refund Requests Add A Refund Reason Add Now Refund Reason List SL Reason Status Action Edit Category Update Close Save Changes Want To Delete This Refund Reason Delete Are You Sure No Yes",
+        "bladePath": "admin-views/refund/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Business Settings React Setup",
+        "URI": "admin/business-settings/react-setup",
+        "keywords": "React Site Setup React Site Setup React License Code React Domain Save",
+        "bladePath": "admin-views/business-settings/react-setup",
+        "isModified": false
+    },
+    {
+        "routeName": "Business Settings App Settings",
+        "URI": "admin/business-settings/app-settings",
+        "keywords": "App Settings See How It Works! User App Version Control For Android Minimum User App Version Android The Minimum User App Version Required For The App Functionality App Minimum Version Download URL For User App Users Will Download The Latest User App Version Using This URL App Url For IOS Ios Reset Submit Store App Version Control Minimum Store App Version For Store The Minimum Store App Version Required For The App Functionality Download URL For Store App For Store Users Will Download The Latest Store App Using This URL Download Url Minimum Store App Version Download URL For Store App Users Will Download The Latest Store App Version Using This URL Deliveryman App Version Control Minimum Deliveryman App Version The Minimum Deliveryman App Version Required For The App Functionality Download URL For Deliveryman App Users Will Download The Latest Deliveryman App Version Using This URL",
+        "bladePath": "admin-views/business-settings/app-settings",
+        "isModified": false
+    },
+    {
+        "routeName": "Login Settings List",
+        "URI": "admin/business-settings/login-settings/login-setup",
+        "keywords": "Login Page Setup Login Setup Customer Login Panel Login Page Url Setup Login Option The Option You Select Customer Will Have The To Option To Login Manual Login By Enabling Manual Login Customers Will Get The Option To Create An Account And Log In Using The Necessary Credentials & Password In The App & Website OTP Login With OTP Login Customers Can Log In Using Their Phone Number While New Customers Can Create Accounts Instantly Social Media Login With Social Login Customers Can Log In Using Social Media Credentials While New Customers Can Create Accounts Instantly Social Media Login Setup Connect Rd Party Login System From Here Choose Social Media Google Enabling Google Login Customers Can Log In To The Site Using Their Existing Gmail Credentials Facebook Enabling Facebook Login Customers Can Log In To The Site Using Their Existing Facebook Credentials Apple Enabling Apple Login Customers Can Log In To The Site Using Their Existing Apple Login Credentials Only For Apple Devices Verification The Option You Select From Below Will Need To Verify By Customer From Customer App/website Email Verification If Email Verification Is On Customers Must Verify Their Email Address With An OTP To Complete The Signup Process Phone Number Verification If Phone Number Verification Is On Customers Must Verify Their Phone Number With An OTP To Complete The Signup Process Reset Submit Important Alert ! At Least One Login Method Must Remain Active For The Customer; Otherwise They Will Be Unable To Log In To The System Okay Set Up SMS Configuration First It Looks Like Your SMS Configuration Is Not Set Up Yet To Enable The OTP System Please Set Up The SMS Configuration First Go To SMS Configuration If You Are Activating Only Social Login As The Login Method You Must Enable At Least One Option Between Google And Facebook For Android Users If You Are Activating Social Login As The Login Method You Must Enable At Least One Option Between Google Facebook & Apple Set Up Google Configuration First It Looks Like Your Google Login Configuration Is Not Set Up Yet To Enable The Google Login Option Please Set Up The Google Configuration First Go To Google Configuration Set Up Facebook Configuration First It Looks Like Your Facebook Login Configuration Is Not Set Up Yet To Enable The Facebook Login Option Please Set Up The Facebook Configuration First Go To Facebook Configuration Set Up Apple Configuration First It Looks Like Your Apple Login Configuration Is Not Set Up Yet To Enable The Apple Login Option Please Set Up The Apple Configuration First Go To Apple Configuration It Looks Like Your SMS Configuration Is Not Set Up Yet To Enable The Phone Verification Please Set Up The SMS Configuration First Set Up Email Configuration First It Looks Like Your Email Configuration Is Not Set Up Yet To Enable The Email Verification Please Set Up The SMS Configuration First Go To Mail Configuration",
+        "bladePath": "admin-views/login-setup/login_page",
+        "isModified": false
+    },
+    {
+        "routeName": "Business Settings Login Url Page",
+        "URI": "admin/business-settings/login-url-setup",
+        "keywords": "Login Page Setup Login Setup Customer Login Panel Login Page Url Admin Login Page Admin Login Url Add Dynamic Url To Secure Admin Login Access Admin Login Url Submit Admin Employee Login Page Admin Employee Login Url Add Dynamic Url To Secure Admin Employee Login Access Store Login Page Store Login Url Add Dynamic Url To Secure Store Login Access Store Employee Login Page Store Employee Login Url Add Dynamic Url To Secure Store Employee Login Access",
+        "bladePath": "admin-views/login-setup/login_setup",
+        "isModified": false
+    },
+    {
+        "routeName": "Business Settings Fcm Config",
+        "URI": "admin/business-settings/fcm-config",
+        "keywords": "FCM Settings Firebase Push Notification Setup Push Notification Firebase Configuration Where To Get This Information Server Key Ex AAAAaBcDeFgHiJkLmNoPqRsTuVwXyZ Service File Content Select And Copy All The Service File Content And Add Here Api Key Ex AbcdefghijklmnopqrstuvwxYZ FCM Project ID Ex My Awesome App Auth Domain Ex My Awesome App Firebase Com Storage Bucket Ex My Awesome App Apps Com Messaging Sender Id Ex App Id Measurement Id Ex F Reset Submit Go To Firebase Console Open Your Web Browser And Go To The Firebase Console (https //console Firebase Google Com/) Navigate To Project Settings In The Left Hand Menu Click On The \"Settings\" Gear Icon And Then Select \"Project Settings\" From The Dropdown In The Project Settings Page Click On The \"Cloud Messaging\" Tab From The Top Menu Obtain All The Information Asked! In The Firebase Project Settings Page Click On The \"General\" Tab From The Top Menu Under The \"Your Apps\" Section Click On The \"Web\" App For Which You Want To Configure FCM Then Obtain API Key FCM Project ID Auth Domain Storage Bucket Messaging Sender ID Note Please Make Sure To Use The Obtained Information Securely And In Accordance With Firebase And FCM Documentation Terms Of Service And Any Applicable Laws And Regulations Got It",
+        "bladePath": "admin-views/business-settings/fcm-config",
+        "isModified": false
+    },
+    {
+        "routeName": "Business Settings Currency Add",
+        "URI": "admin/business-settings/currency-add",
+        "keywords": "",
+        "bladePath": "admin-views/business-settings/currency-index",
+        "isModified": false
+    },
+    {
+        "routeName": "Business Settings Terms And Conditions",
+        "URI": "admin/business-settings/pages/business-page/terms-and-conditions",
+        "keywords": "Terms And Condition Default Submit",
+        "bladePath": "admin-views/business-settings/terms-and-conditions",
+        "isModified": false
+    },
+    {
+        "routeName": "Business Settings Privacy Policy",
+        "URI": "admin/business-settings/pages/business-page/privacy-policy",
+        "keywords": "Privacy Policy Default Submit",
+        "bladePath": "admin-views/business-settings/privacy-policy",
+        "isModified": false
+    },
+    {
+        "routeName": "Business Settings About Us",
+        "URI": "admin/business-settings/pages/business-page/about-us",
+        "keywords": "About Us Default About Title Default About Us Description Submit",
+        "bladePath": "admin-views/business-settings/about-us",
+        "isModified": false
+    },
+    {
+        "routeName": "Business Settings Refund",
+        "URI": "admin/business-settings/pages/business-page/refund",
+        "keywords": "Refund Policy Refund Policy On Status Default Submit Status Updated!",
+        "bladePath": "admin-views/business-settings/refund_policy",
+        "isModified": false
+    },
+    {
+        "routeName": "Business Settings Cancelation",
+        "URI": "admin/business-settings/pages/business-page/cancelation",
+        "keywords": "Cancellation Policy Cancellation Policy On Status Default Submit Status Updated!",
+        "bladePath": "admin-views/business-settings/cancelation_policy",
+        "isModified": false
+    },
+    {
+        "routeName": "Business Settings Shipping Policy",
+        "URI": "admin/business-settings/pages/business-page/shipping-policy",
+        "keywords": "Shipping Policy Shipping Policy On Status Default Submit Status Updated!",
+        "bladePath": "admin-views/business-settings/shipping_policy",
+        "isModified": false
+    },
+    {
+        "routeName": "Social Media List",
+        "URI": "admin/business-settings/pages/social-media",
+        "keywords": "Social Media Name Select Instagram Facebook Twitter LinkedIn Pinterest Social Media Link Reset Save Update Sl Link Status Action Social Media Required Social Media Exist Social Media Inserted Social Media Updated Are U Sure Want To Delete Social Media Deleted Status Updated",
+        "bladePath": "admin-views/business-settings/social-media",
+        "isModified": false
+    },
+    {
+        "routeName": "External System Drivemond Configuration",
+        "URI": "admin/business-settings/external-system/drivemond-configuration",
+        "keywords": "Ride Sharing Setup And Integration Connect Drivemond System With Ammart How The Setting Works Activation Mode Enable The Switch To Activate The Purchased Software Drivemond Ride Sharing In The AmMart System You Must Input The Correct Information To Make Sure The Functionality Works Properly Ride Sharing System Base URL Ex Https //drivemond Com Ride Sharing System Token Enter Drivemond Token System Token Generate System Self Token Reset Save Information How Does It Works Ride Sharing System Base URL Insertion Ride Sharing System Token Input Go To \u201c Business Management Section \u2192 Ecommerce Setup & Integration\u201d System Token Generate Note Follow The Same Steps On Drivemond To Successfully Connect AmMart With Drivemond",
+        "bladePath": "admin-views/external-configuration/external-index",
+        "isModified": false
+    },
+    {
+        "routeName": "Third Party Sms Module",
+        "URI": "admin/business-settings/third-party/sms-module",
+        "keywords": "System Module Setup Sms Gateway Setup Your Current Sms Settings Are Disabled Because You Have Enabled Sms Gateway Addon To Visit Your Currently Active Sms Gateway Settings Please Follow The Link Settings Active Inactive Optional Your Security Pin Is Update Note OK",
+        "bladePath": "admin-views/business-settings/sms-index",
+        "isModified": false
+    },
+    {
+        "routeName": "Third Party Payment Method",
+        "URI": "admin/business-settings/third-party/payment-method",
+        "keywords": "Payment Method Payment Gateway Setup Note Without Configuring This Section Functionality Will Not Work Properly Thus The Whole System Will Not Work As It Planned Cash On Delivery If Enabled Customers Will Be Able To Select COD As A Payment Method During Checkout By Turning ON Cash On Delivery Option By Turning OFF Cash On Delivery Option Customers Will Not Be Able To Select COD As A Payment Method During Checkout Please Review Your Settings And Enable COD If You Wish To Offer This Payment Option To Customers Customers Will Be Able To Select COD As A Payment Method During Checkout Digital Payment If Enabled Customers Will Be Able To Select Digital Payment As A Payment Method During Checkout By Turning ON Digital Payment Option By Turning OFF Digital Payment Option Customers Will Not Be Able To Select Digital Payment As A Payment Method During Checkout Please Review Your Settings And Enable Digital Payment If You Wish To Offer This Payment Option To Customers Customers Will Be Able To Select Digital Payment As A Payment Method During Checkout Offline Payment If Enabled Customers Will Be Able To Select Offline Payment As A Payment Method During Checkout By Turning ON Offline Payment Option By Turning OFF Offline Payment Option Customers Will Not Be Able To Select Offline Payment As A Payment Method During Checkout Please Review Your Settings And Enable Offline Payment If You Wish To Offer This Payment Option To Customers Customers Will Be Able To Select Offline Payment As A Payment Method During Checkout Your Current Payment Settings Are Disabled Because You Have Enabled Payment Gateway Addon To Visit Your Currently Active Payment Gateway Settings Please Follow The Link Settings Does Not Support Your Current Currency Thus Users Cannot Use This Digital Payment Options As Payment In The Websites And Apps Currently There Is No Digital Payment Method Is Set Up That Supports Thus Users Cannot View Digital Payment Options In Their Websites And Apps You Must Activate At Least One Digital Payment Method That Supports Otherwise All Users Will Be Unable To Pay Via Digital Payments On Off Live Test Callback Url Payment Gateway Title Logo Save Are You Sure Want To Turn Off As The Digital Payment Method You Must Active At Least One Digital Payment Method That Support Otherwise Customers Cannot Pay Via Digital Payments From The App And Websites And Also Restaurants Cannot Pay You Digitally View Currency Settings OK",
+        "bladePath": "admin-views/business-settings/payment-index",
+        "isModified": false
+    },
+    {
+        "routeName": "Third Party Config Setup",
+        "URI": "admin/business-settings/third-party/config-setup",
+        "keywords": "Third Party Apis Google Map API Setup Note Without Configuring This Section Map Functionality Will Not Work Properly Thus The Whole System Will Not Work As It Planned Map Api Hint Map Api Hint Map Api Key Client Server Reset Save",
+        "bladePath": "admin-views/business-settings/config",
+        "isModified": false
+    },
+    {
+        "routeName": "Third Party Mail Config",
+        "URI": "admin/business-settings/third-party/mail-config",
+        "keywords": "Mail Config Smtp Mail Setup Mail Config Send Test Mail How It Works Turn OFF Turn ON NOTE Currently Your FireBase OTP System Is Active Users Won\u2019t Get Any OTP Related Mails Important! Warning! Enabling Mail Configuration Services Will Allow The System To Send Emails Please Ensure That You Have Correctly Configured The SMTP Settings To Avoid Potential Issues With Email Delivery Disabling Mail Configuration Services Will Prevent The System From Sending Emails Please Only Turn Off This Service If You Intend To Temporarily Suspend Email Sending Note That This May Affect System Functionality That Relies On Email Communication *By Turning OFF Mail Configuration All Your Mailing Services Will Be Off Mailer Name Ex Host Ex Mail Am One Driver Ex Smtp Port Username Email Id Encryption Password Ex + Characters Reset Save Congratulations! Your SMTP Mail Has Been Setup Successfully! Send A Test Mail To Your Email Find SMTP Server Details Contact Your Email Service Provider Or IT Administrator To Obtain The SMTP Server Details Such As Hostname Port Username And Password Configure SMTP Settings Go To The SMTP Mail Setup Page In The Admin Panel Enter The Obtained SMTP Server Details Including The Hostname Port Username And Password Choose The Appropriate Encryption Method (e G SSL TLS) If Required Save The Settings Test SMTP Connection Click On The \"Send Test Mail\" Button To Verify The SMTP Connection If Successful You Will See A Confirmation Message Indicating That The Connection Is Working Fine If Not Double Check Your SMTP Settings And Try Again Enable Mail Configuration If The SMTP Connection Test Is Successful You Can Now Enable The Mail Configuration Services By Toggling The Switch To \"ON \" This Will Allow The System To Send Emails Using The Configured SMTP Settings Got It Configuration Updated Successfully",
+        "bladePath": "admin-views/business-settings/mail-index",
+        "isModified": false
+    },
+    {
+        "routeName": "Third Party Test",
+        "URI": "admin/business-settings/third-party/test-mail",
+        "keywords": "Mail Config Smtp Mail Setup Mail Config Send Test Mail How It Works Email Mail Ex Send Mail Find SMTP Server Details Contact Your Email Service Provider Or IT Administrator To Obtain The SMTP Server Details Such As Hostname Port Username And Password Configure SMTP Settings Go To The SMTP Mail Setup Page In The Admin Panel Enter The Obtained SMTP Server Details Including The Hostname Port Username And Password Choose The Appropriate Encryption Method (e G SSL TLS) If Required Save The Settings Test SMTP Connection Click On The \"Send Test Mail\" Button To Verify The SMTP Connection If Successful You Will See A Confirmation Message Indicating That The Connection Is Working Fine If Not Double Check Your SMTP Settings And Try Again Enable Mail Configuration If The SMTP Connection Test Is Successful You Can Now Enable The Mail Configuration Services By Toggling The Switch To \"ON \" This Will Allow The System To Send Emails Using The Configured SMTP Settings Got It Update Option Is Disabled For Demo! Are You Sure A Test Mail Will Be Sent To Your Email Yes Email Configuration Error Email Configured Perfectly! Email Status Is Not Active Invalid Email Address",
+        "bladePath": "admin-views/business-settings/send-mail-index",
+        "isModified": false
+    },
+    {
+        "routeName": "Social Login View",
+        "URI": "admin/business-settings/third-party/social-login/view",
+        "keywords": "Social Login Setup Login Turned ON Login Turned OFF Login Is Now Enabled Customers Will Be Able To Sign Up Or Log In Using Their Social Media Accounts Login Is Now Disabled Customers Will Not Be Able To Sign Up Or Log In Using Their Social Media Accounts Please Note That This May Affect User Experience And Registration/login Process Credential Setup Callback Uri Client Id Client Secret Reset Save Client Id For Web Client Id For App Team Id Key Id Redirect Url For Flutter Web Redirect Url For React Web Service File (Already Exists) Google Api Setup Instructions Go To The Credentials Page Click Here Create Credentials Auth Client Id Select The Web Application Type Name Your Auth Client Add Uri From Authorized Redirect Uris Provide The From Below And Click Created Copy And Past In The Input Field Below And Got It Facebook Api Set Instruction Goto The Facebook Developer Page Click Here Goto Get Started From Navbar From Register Tab Press Continue If Needed Provide Primary Email And Press Confirm Email In About Section Select Other And Press Complete Registration Create App Select An App Type And Press Next Complete The Details Form And Press Form Facebook Login Press Set Up Select Web Provide Site Url Base Url Of The Site Now Go To Setting Left Sidebar Make Sure To Check Client Auth Login Must On Valid Auth Redirect Uris Save Changes From Left Sidebar Basic Fill The Form And Press Now Copy Apple Api Set Instruction Go To Apple Developer Page Here In Top Left Corner You Can See The Team ID [Apple Developer Account Name Team ID] Click Plus Icon > Select App IDs > Click On Continue Put A Description And Also Identifier (identifier That Used For App) And This Is The Client ID Click Continue And Download The File In Device Named AuthKey ID P (Store It Safely And It Is Used For Push Notification) Again Click Plus Icon > Select Service IDs > Click On Continue Push A Description And Also Identifier And Continue Download The File In Device Named AuthKey KeyID P [This Is The Service Key ID File And Also After AuthKey That Is The Key ID] Twitter Api Set Up Instructions Instruction Will Be Available Very Soon Close Copied To The Clipboard",
+        "bladePath": "admin-views/business-settings/social-login/view",
+        "isModified": false
+    },
+    {
+        "routeName": "Third Party Recaptcha Index",
+        "URI": "admin/business-settings/third-party/recaptcha",
+        "keywords": "ReCaptcha Setup ReCaptcha Credentials Setup Google Recaptcha Information Credential Setup Information V Version Is Available Now Must Setup For ReCAPTCHA V You Must Setup For V Version Otherwise The Default ReCAPTCHA Will Be Displayed Automatically ReCAPTCHA Status Turn OFF ReCAPTCHA Status Turn ON Important! Warning! ReCAPTCHA Is Now Enabled For Added Security Users May Be Prompted To Complete A ReCAPTCHA Challenge To Verify Their Human Identity And Protect Against Spam And Malicious Activity Disabling ReCAPTCHA May Leave Your Website Vulnerable To Spam And Malicious Activity And Suspects That A User May Be A Bot It Is Highly Recommended To Keep ReCAPTCHA Enabled To Ensure The Security And Integrity Of Your Website Site Key Secret Key Reset Save Go To The Credentials Page Click Here Add A Label (Ex Test Label) Select ReCAPTCHA V As ReCAPTCHA Type Add Domain (For Ex Demo Amtech Com) Check In Accept The ReCAPTCHA Terms Of Service Press Submit Copy Site Key And Secret Paste In The Input Filed Below And Save",
+        "bladePath": "admin-views/business-settings/recaptcha-index",
+        "isModified": false
+    },
+    {
+        "routeName": "Third Party Firebase Otp Index",
+        "URI": "admin/business-settings/third-party/firebase-otp",
+        "keywords": "Firebase OTP Verification How It Works Firebase OTP Verification Status If This Field Is Active Customers Get The OTP Through Firebase Firebase Otp Verification Want To Enable Firebase OTP Verification Want To Disable Firebase OTP Verification With Firebase OTP Enabled Verification Codes Will Be Sent Through Firebase Enable Firebase OTP Means Users Will Not Receive Verification Codes Through Email Or SMS Although Those Methods Are Activated If You Disable Firebase OTP Users Will No Longer Receive Verification Codes Via Firebase You Must Activate Email Or SMS Verification As An Alternative Web API Key Enter The Maximum Cash Amount Stores Can Hold If This Number Exceeds Stores Will Be Suspended And Not Receive Any Orders Dm Cancel Order Hint Reset Save Information Instructions For Configuring OTP In The Firebase You Must Create A Firebase Project First If You Haven\u2019t Created Any Project For Your Application Yet Please Create A Project First Now Go The And Follow The Instructions Below Go To Your Firebase Project Navigate To The Build Menu From The Left Sidebar And Select Authentication Get Started The Project And Go To The Sign In Method Tab From The Sign In Providers Section Select The Phone Option Ensure To Enable The Method Phone And Press Save",
+        "bladePath": "admin-views/business-settings/firebase-otp-index",
+        "isModified": false
+    },
+    {
+        "routeName": "Third Party Storage Connection Index",
+        "URI": "admin/business-settings/third-party/storage-connection",
+        "keywords": "Storage Connection Storage Connection Credentials Setup Storage Connection Settings Local Storage If Enabled System Will Store All Files And Images To Local Storage By Turning ON Local Storage Option By Turning OFF Local Storage Option System Will Store All Files And Images To Local Storage System Will Not Store All Files And Images To Local Storage Rd Party Storage If Enabled System Will Store All Files And Images To Rd Party Storage By Turning ON Rd Party Storage Option By Turning OFF Rd Party Storage Option System Will Store All Files And Images To Rd Party Storage System Will Not Store All Files And Images To Rd Party Storage S Credential The Access Key ID Is A Publicly Accessible Identifier Used To Authenticate Requests To S Learn More Key Secret Region Bucket Url End Point Reset Save",
+        "bladePath": "admin-views/business-settings/storage-connection-index",
+        "isModified": false
+    },
+    {
+        "routeName": "Business Settings Offline",
+        "URI": "admin/business-settings/offline-payment",
+        "keywords": "Offline Payment Method Offline Payment Method Setup All Active Inactive Search By Name Search Add New Method SL Payment Method Name Payment Info Required Info From Customer Status Action Want To Enable This Offline Payment Method Want To Disable This Offline Payment Method It Will Be Available On The User Views It Will Be Hidden From The User Views Want To Delete This Offline Payment Method No Data Found",
+        "bladePath": "admin-views/business-settings/offline-payment/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Offline New",
+        "URI": "admin/business-settings/offline-payment/new",
+        "keywords": "Add Offline Payment Method Add Offline Payment Method Section View Payment Information Add New Field Payment Method Name Ex Bkash Required Information From Customer Payment Note Ex ABC Company Reset Submit Offline Payment This View Is From The User App This Is How Customer Will See In The App Pay On This Account Amount Payment Info Input Field Name Ex Payment By Placeholder Enter Name Is Required Reached Maximum Ok Title Bank Name Data ABC Bank",
+        "bladePath": "admin-views/business-settings/offline-payment/new",
+        "isModified": false
+    },
+    {
+        "routeName": "Business Settings Db Index",
+        "URI": "admin/business-settings/db-index",
+        "keywords": "DB Clean Clean Database Note This Page Contains Sensitive Information Make Sure Before Changing Reset Clear Are You Sure Sensitive Data! Make Sure Before Changing No Yes Cancelled",
+        "bladePath": "admin-views/business-settings/db-index",
+        "isModified": false
+    },
+    {
+        "routeName": "Language List",
+        "URI": "admin/business-settings/language",
+        "keywords": "Language Business Setup Language List Add New Language SL Code Status Default Status Action New Language Direction Close Add LTR RTL Update Are You Sure To Delete This You Will Not Be Able To Revert This Yes Delete It Default Language Can Not Be Updated! To Update Change The Default Language First! Update Option Is Disabled For Demo! Status Updated Successfully",
+        "bladePath": "admin-views/business-settings/language/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Order Cancel Reasons List",
+        "URI": "admin/business-settings/order-cancel-reasons",
+        "keywords": "Order Cancellation Reasons Add An Order Cancellation Reason Select User Type Admin Store Customer Deliveryman Add Reason Order Cancellation Reason List SL Reason Type Status Action Edit Want To Delete This Order Cancellation Reason Delete Order Cancellation Reason Update Close Save Changes",
+        "bladePath": "admin-views/order/cancelation-reason",
+        "isModified": false
+    },
+    {
+        "routeName": "System Addon List",
+        "URI": "admin/business-settings/system-addon",
+        "keywords": "System Addons How The Setting Works After Purchasing The Payment & SMS Module/Rental Module From Codecanyon You Will Find A File Download Option Download The File It Will Be Downloaded As Zip Format Filename Zip Extract The File And You Will Get Another File Name Filename Zip Upload The File Here And Your Addon Uploading Is Complete ! Then Active The Addon And Setup All The Options You Are Good To Go ! Got It Upload Addon Instructions Please Make Sure Your Server Php Value Is Grater Or Equal To MB Current Value Is Upload Are You Sure You Want To Delete The Once You Delete You Will Lost The This Cancel Delete Are You Sure No Yes Codecanyon Username Purchase Code Activate",
+        "bladePath": "admin-views/system/addon/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Wallet Add Fund",
+        "URI": "admin/customer/wallet/add-fund",
+        "keywords": "Add Fund Customer Required Select Customer By Name Or Phone Ex Reference Optional Reset Submit Are You Sure You Want To Add Fund To To Wallet No Add To Fund",
+        "bladePath": "admin-views/customer/wallet/add_fund",
+        "isModified": false
+    },
+    {
+        "routeName": "Wallet Report",
+        "URI": "admin/customer/wallet/report",
+        "keywords": "Customer Wallet Report Filter Options Add Fund Type Select Transaction Type All Transactions Add Fund By Admin Add Fund By Customer Refund Order Customer Loyalty Point Order Place CashBack Referrer Customer Select Customer Duration All Time This Year Previous Year This Month This Week Custom Start Date End Date Reset Filter Debit Credit Balance Fund Statistics Total Fund Added By Admin Order Refund Loyalty Point Order Place Transactions Ex Search By Customer Name Search Export Download Options Excel Csv Sl Transaction Id Customer Info Bonus Transaction Type Reference Admin Bonus Created At Not Found N/A No Data Found Admin Add Fund",
+        "bladePath": "admin-views/customer/wallet/report",
+        "isModified": false
+    },
+    {
+        "routeName": "Customer Subscribed",
+        "URI": "admin/customer/subscribed",
+        "keywords": "Subscribed Emails Subscriber List Subscription Date Select Subscription Date Range Sort By Select Mail Sorting Order Sort By Oldest Sort By Newest Choose First Ex Filter Mail List Ex Search Email Search Reset Export Download Options Excel Csv Sl Email Created At No Data Found",
+        "bladePath": "admin-views/customer/subscribed-emails",
+        "isModified": false
+    },
+    {
+        "routeName": "Loyalty Point Report",
+        "URI": "admin/customer/loyalty-point/report",
+        "keywords": "Customer Loyalty Point Report Filter Options Add Fund Type Select Transaction Type All Type Point To Wallet Order Place Customer Select Customer Duration All Time This Year Previous Year This Month This Week Custom Start Date End Date Reset Filter Points Earned Points Converted Current Points In Wallet Transactions Export Download Options Excel Csv SL Transaction ID Customer Info Points Earned Points Converted Current Points In Wallet Transaction Type Reference Created At Not Found No Data Found",
+        "bladePath": "admin-views/customer/loyalty-point/report",
+        "isModified": false
+    },
+    {
+        "routeName": "Customer Settings",
+        "URI": "admin/customer/settings",
+        "keywords": "Customer Settings Customer Wallet Customer Loyalty Point Customer Referrer Earning Wallet Settings Refund To Wallet Refund To Wallet Hint Show Hide Food Menu Customer Loyalty Point Settings Item Purchase Point Item Purchase Point Hint Minimum Point To Transfer Customer Referrer Settings Reset Submit Are You Sure You Want To Add Fund To To Wallet No Send Fund Added Successfully",
+        "bladePath": "admin-views/customer/settings",
+        "isModified": false
+    },
+    {
+        "routeName": "Pos List",
+        "URI": "admin/pos",
+        "keywords": "POS Orders Product Section Select Store Select Category All Categories Search By Product Name Search Here Reset No Products On Pos Search Billing Section Select Customer Add New Customer Wallet Delivery Information Home Delivery Print Invoice Proceed If Thermal Printer Is Ready Back Add New Customer First Name Last Name Email Ex Ex@example Com Phone With Country Code Submit Customer Not Selected Out Of Coverage Product Already Added In Cart Product Has Been Updated In Cart Product Has Been Added In Cart Cart Item Has Been Removed From Cart Sorry The Minimum Value Was Reached",
+        "bladePath": "admin-views/pos/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Reviews List",
+        "URI": "admin/reviews/list",
+        "keywords": "",
+        "bladePath": "admin-views/reviews/list",
+        "isModified": false
+    },
+    {
+        "routeName": "Report Order",
+        "URI": "admin/report/order",
+        "keywords": "",
+        "bladePath": "admin-views/report/order-index",
+        "isModified": false
+    },
+    {
+        "routeName": "Transaction Report",
+        "URI": "admin/report/transaction-report",
+        "keywords": "Transaction Report Transection Report Search Data Select Modules All Modules All Zones Select Store All Stores All Time This Year Previous Year This Month This Week Custom Start Date End Date Filter Completed Transaction When The Order Is Successfully Delivered Full Order Amount Goes To This Section Refunded Transaction If The Order Is Successfully Refunded The Full Order Amount Goes To This Section Without The Delivery Fee And Delivery Tips Admin Earning Deducting The Admin Discount From The Admin Earning Amount And Goes To This Section Store Earning Adding Store Earning Amount With Vat/tax Amount Deliveryman Earning Deducting The Admin Commission On The Delivery Fee The Delivery Fee & Tips Amount Goes To Earning Section Order Transactions Search By Order ID Export Download Options Excel Csv Sl Order Id Store Customer Name Total Item Amount Item Discount Coupon Discount Referral Discount Discounted Amount Vat/tax Delivery Charge Order Amount Admin Discount Store Discount Admin Commission Additional Charge Extra Packaging Amount Commision On Delivery Charge Admin Net Income Store Net Income Amount Received By Payment Method Payment Status Action Parcel Order Invalid Customer Data Admin Delivery Man Freelance Restaurant Refunded Completed No Data Found",
+        "bladePath": "admin-views/report/day-wise-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Item Wise Report",
+        "URI": "admin/report/item-wise-report",
+        "keywords": "Item Report Search Data Select Modules All Modules All Zones Select Store All Stores All Categories All Time This Year Previous Year This Month This Week Custom Start Date End Date Filter Item Report Table Ex Search Item Name Search Here Reset Export Download Options Excel Csv Sl Name Module Store Stock Sell Count Price Total Amount Sold Total Discount Given Average Sale Value Average Ratings Store Deleted N/A No Data Found",
+        "bladePath": "admin-views/report/item-wise-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Report Order Transaction",
+        "URI": "admin/report/order-transactions",
+        "keywords": "",
+        "bladePath": "admin-views/report/order-transactions",
+        "isModified": false
+    },
+    {
+        "routeName": "Stock Report",
+        "URI": "admin/report/stock-report",
+        "keywords": "Low Stock List Ex Search Name Search Here All Zones Select Store All Stores Export Download Options Excel Csv Sl Name Store Zone Current Stock Action Store Deleted Not Found Edit Quantity No Data Found Cancel Update Stock",
+        "bladePath": "admin-views/report/stock-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Order Report",
+        "URI": "admin/report/order-report",
+        "keywords": "Order Report Search Data Select Modules All Modules All Zones Select Store All Stores Select Customer All Customers All Time This Year Previous Year This Month This Week Custom Start Date End Date Filter Total Orders In Progress Orders Including Accepted And Processing Orders On The Way Delivered Orders Failed Orders Refunded Orders Canceled Orders Total Orders Search By Order ID Export Download Options Excel Csv Sl Order Id Store Customer Name Total Item Amount Item Discount Coupon Discount Referral Discount Discounted Amount Tax Delivery Charge Additional Charge Extra Packaging Amount Order Amount Amount Received By Payment Method Order Status Action Invalid Invalid Customer Data Paid Unpaid Not Received Yet Pending Confirmed Processing Out For Delivery Delivered Payment Failed Handover Canceled Accepted Refund Request Canceled No Data Found",
+        "bladePath": "admin-views/report/order-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Store Summary Report",
+        "URI": "admin/report/store-wise-report",
+        "keywords": "Store Report Monitor Store\u2019s Business Analytics & Reports Summary Report Sales Report Order Report All Time This Year Previous Year This Month This Week Registered Stores Total Orders Canceled Incomplete Completed New Items Average Order Value Average Value Of Completed Orders Completed Payment Statistics Orders Cash Payments Digital Payments Wallet Total Stores Ex Search Store Name Search Export Download Options Excel Csv SL Store Total Order Total Delivered Order Total Amount Completion Rate Ongoing Rate Cancelation Rate Refund Request Action No Data Found",
+        "bladePath": "admin-views/report/store-summary-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Store Sales Report",
+        "URI": "admin/report/store-wise-sales-report",
+        "keywords": "Store Report Monitor Store\u2019s Business Analytics & Reports Summary Report Sales Report Order Report Filter Data All Zones Select Store All Stores All Time This Year Previous Year This Month This Week Custom Show Data Gross Sale Total Tax Total Commission Total Orders Average Order Value Average Value Of Completed Orders Total Store Earnings Total Sales Search By Product Search Export Download Options Excel Csv SL Product QTY Sold Discount Given Action No Data Found",
+        "bladePath": "admin-views/report/store-sales-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Store Order Report",
+        "URI": "admin/report/store-wise-order-report",
+        "keywords": "Store Report Store Wise Report Monitor Store\u2019s Business Analytics & Reports Summary Report Sales Report Order Report Filter Data All Zones Select Store All Stores All Time This Year Previous Year This Month This Week Custom Show Data Total Order Total Order Amount Canceled Incomplete Completed Total Discount Given Coupon Discount Product Discount Total Orders Average Order Value Average Value Of All Type Of Orders Order Statistics Orders Total Canceled Total Ongoing Total Delivered View All Orders Total Sales Search By ID Search Export Download Options Excel Csv SL Order ID Order Date Customer Info Total Amount Discount Tax Delivery Charge Additional Charge Action Invalid Customer Data Paid Unpaid No Data Found",
+        "bladePath": "admin-views/report/store-order-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Expense Report",
+        "URI": "admin/report/expense-report",
+        "keywords": "Expense Report This Report Will Show All The Orders In Which The Admin Discount Has Been Used The Admin Discount Are Free Delivery Over Store Discount Coupon Discount & Item Discounts(partial According To Order Commission) Filter Data Select Modules All Modules All Zones Select Vendor All Vendors Select Customer All Customers All Type Add Fund Bonus Free Delivery Coupon Discount Discount On Product Flash Sale Discount CashBack Referral Discount All Time This Year Previous Year This Month This Week Custom Start Date End Date Filter Expense Lists Search By Order ID Reset Export Download Options Excel Csv Sl Order Id Trip Id Date & Time Expense Type Customer Name Expense Amount Other Expenses Invalid Customer Data No Data Found",
+        "bladePath": "admin-views/report/expense-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Customer List",
+        "URI": "admin/customer/list",
+        "keywords": "Customer List Customers Order Date Select Order Date Range Customer Joining Date Select Customer Joining Date Range Customer Status Select Status All Customers Active Customers Inactive Customers Sort By Select Customer Sorting Order Sort By Order Count Sort By Order Amount Sort By Oldest Sort By Newest Choose First Ex Filter Customer List Ex Name Email Or Phone Reset Export Download Options Excel Csv Sl Name Contact Information Total Order Total Order Amount Joining Date Active Inactive Actions Incomplete Profile You Want To Block This Customer You Want To Unblock This Customer View Customer No Data Found Are You Sure No Yes",
+        "bladePath": "admin-views/customer/list",
+        "isModified": false
+    },
+    {
+        "routeName": "Social Login View",
+        "URI": "admin/social-login/view",
+        "keywords": "Social Login Setup Login Turned ON Login Turned OFF Login Is Now Enabled Customers Will Be Able To Sign Up Or Log In Using Their Social Media Accounts Login Is Now Disabled Customers Will Not Be Able To Sign Up Or Log In Using Their Social Media Accounts Please Note That This May Affect User Experience And Registration/login Process Credential Setup Callback Uri Client Id Client Secret Reset Save Client Id For Web Client Id For App Team Id Key Id Redirect Url For Flutter Web Redirect Url For React Web Service File (Already Exists) Google Api Setup Instructions Go To The Credentials Page Click Here Create Credentials Auth Client Id Select The Web Application Type Name Your Auth Client Add Uri From Authorized Redirect Uris Provide The From Below And Click Created Copy And Past In The Input Field Below And Got It Facebook Api Set Instruction Goto The Facebook Developer Page Click Here Goto Get Started From Navbar From Register Tab Press Continue If Needed Provide Primary Email And Press Confirm Email In About Section Select Other And Press Complete Registration Create App Select An App Type And Press Next Complete The Details Form And Press Form Facebook Login Press Set Up Select Web Provide Site Url Base Url Of The Site Now Go To Setting Left Sidebar Make Sure To Check Client Auth Login Must On Valid Auth Redirect Uris Save Changes From Left Sidebar Basic Fill The Form And Press Now Copy Apple Api Set Instruction Go To Apple Developer Page Here In Top Left Corner You Can See The Team ID [Apple Developer Account Name Team ID] Click Plus Icon > Select App IDs > Click On Continue Put A Description And Also Identifier (identifier That Used For App) And This Is The Client ID Click Continue And Download The File In Device Named AuthKey ID P (Store It Safely And It Is Used For Push Notification) Again Click Plus Icon > Select Service IDs > Click On Continue Push A Description And Also Identifier And Continue Download The File In Device Named AuthKey KeyID P [This Is The Service Key ID File And Also After AuthKey That Is The Key ID] Twitter Api Set Up Instructions Instruction Will Be Available Very Soon Close Copied To The Clipboard",
+        "bladePath": "admin-views/business-settings/social-login/view",
+        "isModified": false
+    },
+    {
+        "routeName": "Dispatch Dashboard",
+        "URI": "admin/dispatch",
+        "keywords": "",
+        "bladePath": "admin-views/dashboard-{$module_type}",
+        "isModified": false
+    },
+    {
+        "routeName": "Users Dashboard",
+        "URI": "admin/users",
+        "keywords": "",
+        "bladePath": "admin-views/dashboard-{$module_type}",
+        "isModified": false
+    },
+    {
+        "routeName": "Wallet Add Fund",
+        "URI": "admin/users/customer/wallet/add-fund",
+        "keywords": "Add Fund Customer Required Select Customer By Name Or Phone Ex Reference Optional Reset Submit Are You Sure You Want To Add Fund To To Wallet No Add To Fund",
+        "bladePath": "admin-views/customer/wallet/add_fund",
+        "isModified": false
+    },
+    {
+        "routeName": "Wallet Report",
+        "URI": "admin/users/customer/wallet/report",
+        "keywords": "Customer Wallet Report Filter Options Add Fund Type Select Transaction Type All Transactions Add Fund By Admin Add Fund By Customer Refund Order Customer Loyalty Point Order Place CashBack Referrer Customer Select Customer Duration All Time This Year Previous Year This Month This Week Custom Start Date End Date Reset Filter Debit Credit Balance Fund Statistics Total Fund Added By Admin Order Refund Loyalty Point Order Place Transactions Ex Search By Customer Name Search Export Download Options Excel Csv Sl Transaction Id Customer Info Bonus Transaction Type Reference Admin Bonus Created At Not Found N/A No Data Found Admin Add Fund",
+        "bladePath": "admin-views/customer/wallet/report",
+        "isModified": false
+    },
+    {
+        "routeName": "Customer Subscribed",
+        "URI": "admin/users/customer/subscribed",
+        "keywords": "Subscribed Emails Subscriber List Subscription Date Select Subscription Date Range Sort By Select Mail Sorting Order Sort By Oldest Sort By Newest Choose First Ex Filter Mail List Ex Search Email Search Reset Export Download Options Excel Csv Sl Email Created At No Data Found",
+        "bladePath": "admin-views/customer/subscribed-emails",
+        "isModified": false
+    },
+    {
+        "routeName": "Loyalty Point Report",
+        "URI": "admin/users/customer/loyalty-point/report",
+        "keywords": "Customer Loyalty Point Report Filter Options Add Fund Type Select Transaction Type All Type Point To Wallet Order Place Customer Select Customer Duration All Time This Year Previous Year This Month This Week Custom Start Date End Date Reset Filter Points Earned Points Converted Current Points In Wallet Transactions Export Download Options Excel Csv SL Transaction ID Customer Info Points Earned Points Converted Current Points In Wallet Transaction Type Reference Created At Not Found No Data Found",
+        "bladePath": "admin-views/customer/loyalty-point/report",
+        "isModified": false
+    },
+    {
+        "routeName": "Customer Settings",
+        "URI": "admin/users/customer/settings",
+        "keywords": "Customer Settings Customer Wallet Customer Loyalty Point Customer Referrer Earning Wallet Settings Refund To Wallet Refund To Wallet Hint Show Hide Food Menu Customer Loyalty Point Settings Item Purchase Point Item Purchase Point Hint Minimum Point To Transfer Customer Referrer Settings Reset Submit Are You Sure You Want To Add Fund To To Wallet No Send Fund Added Successfully",
+        "bladePath": "admin-views/customer/settings",
+        "isModified": false
+    },
+    {
+        "routeName": "Customer List",
+        "URI": "admin/users/customer/list",
+        "keywords": "Customer List Customers Order Date Select Order Date Range Customer Joining Date Select Customer Joining Date Range Customer Status Select Status All Customers Active Customers Inactive Customers Sort By Select Customer Sorting Order Sort By Order Count Sort By Order Amount Sort By Oldest Sort By Newest Choose First Ex Filter Customer List Ex Name Email Or Phone Reset Export Download Options Excel Csv Sl Name Contact Information Total Order Total Order Amount Joining Date Active Inactive Actions Incomplete Profile You Want To Block This Customer You Want To Unblock This Customer View Customer No Data Found Are You Sure No Yes",
+        "bladePath": "admin-views/customer/list",
+        "isModified": false
+    },
+    {
+        "routeName": "Contact List",
+        "URI": "admin/users/contact/contact-list",
+        "keywords": "Contact Messages All Message Lists Message Lists Ex Search By Name Email Or Subject Search Reset Export Download Options Excel Csv Sl Name Email Subject Seen/Unseen Action Seen Not Seen Yet Edit Want To Delete This Message Delete No Data Found",
+        "bladePath": "admin-views/contacts/list",
+        "isModified": false
+    },
+    {
+        "routeName": "Transactions Dashboard",
+        "URI": "admin/transactions",
+        "keywords": "",
+        "bladePath": "admin-views/dashboard-{$module_type}",
+        "isModified": false
+    },
+    {
+        "routeName": "Report Order",
+        "URI": "admin/transactions/report/order",
+        "keywords": "",
+        "bladePath": "admin-views/report/order-index",
+        "isModified": false
+    },
+    {
+        "routeName": "Day Wise Report",
+        "URI": "admin/transactions/report/day-wise-report",
+        "keywords": "Transaction Report Transection Report Search Data Select Modules All Modules All Zones Select Store All Stores All Time This Year Previous Year This Month This Week Custom Start Date End Date Filter Completed Transaction When The Order Is Successfully Delivered Full Order Amount Goes To This Section Refunded Transaction If The Order Is Successfully Refunded The Full Order Amount Goes To This Section Without The Delivery Fee And Delivery Tips Admin Earning Deducting The Admin Discount From The Admin Earning Amount And Goes To This Section Store Earning Adding Store Earning Amount With Vat/tax Amount Deliveryman Earning Deducting The Admin Commission On The Delivery Fee The Delivery Fee & Tips Amount Goes To Earning Section Order Transactions Search By Order ID Export Download Options Excel Csv Sl Order Id Store Customer Name Total Item Amount Item Discount Coupon Discount Referral Discount Discounted Amount Vat/tax Delivery Charge Order Amount Admin Discount Store Discount Admin Commission Additional Charge Extra Packaging Amount Commision On Delivery Charge Admin Net Income Store Net Income Amount Received By Payment Method Payment Status Action Parcel Order Invalid Customer Data Admin Delivery Man Freelance Restaurant Refunded Completed No Data Found",
+        "bladePath": "admin-views/report/day-wise-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Item Wise Report",
+        "URI": "admin/transactions/report/item-wise-report",
+        "keywords": "Item Report Search Data Select Modules All Modules All Zones Select Store All Stores All Categories All Time This Year Previous Year This Month This Week Custom Start Date End Date Filter Item Report Table Ex Search Item Name Search Here Reset Export Download Options Excel Csv Sl Name Module Store Stock Sell Count Price Total Amount Sold Total Discount Given Average Sale Value Average Ratings Store Deleted N/A No Data Found",
+        "bladePath": "admin-views/report/item-wise-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Report Order Transaction",
+        "URI": "admin/transactions/report/order-transactions",
+        "keywords": "",
+        "bladePath": "admin-views/report/order-transactions",
+        "isModified": false
+    },
+    {
+        "routeName": "Stock Report",
+        "URI": "admin/transactions/report/stock-report",
+        "keywords": "Low Stock List Ex Search Name Search Here All Zones Select Store All Stores Export Download Options Excel Csv Sl Name Store Zone Current Stock Action Store Deleted Not Found Edit Quantity No Data Found Cancel Update Stock",
+        "bladePath": "admin-views/report/stock-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Order Report",
+        "URI": "admin/transactions/report/order-report",
+        "keywords": "Order Report Search Data Select Modules All Modules All Zones Select Store All Stores Select Customer All Customers All Time This Year Previous Year This Month This Week Custom Start Date End Date Filter Total Orders In Progress Orders Including Accepted And Processing Orders On The Way Delivered Orders Failed Orders Refunded Orders Canceled Orders Total Orders Search By Order ID Export Download Options Excel Csv Sl Order Id Store Customer Name Total Item Amount Item Discount Coupon Discount Referral Discount Discounted Amount Tax Delivery Charge Additional Charge Extra Packaging Amount Order Amount Amount Received By Payment Method Order Status Action Invalid Invalid Customer Data Paid Unpaid Not Received Yet Pending Confirmed Processing Out For Delivery Delivered Payment Failed Handover Canceled Accepted Refund Request Canceled No Data Found",
+        "bladePath": "admin-views/report/order-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Store Summary Report",
+        "URI": "admin/transactions/report/store-wise-report",
+        "keywords": "Store Report Monitor Store\u2019s Business Analytics & Reports Summary Report Sales Report Order Report All Time This Year Previous Year This Month This Week Registered Stores Total Orders Canceled Incomplete Completed New Items Average Order Value Average Value Of Completed Orders Completed Payment Statistics Orders Cash Payments Digital Payments Wallet Total Stores Ex Search Store Name Search Export Download Options Excel Csv SL Store Total Order Total Delivered Order Total Amount Completion Rate Ongoing Rate Cancelation Rate Refund Request Action No Data Found",
+        "bladePath": "admin-views/report/store-summary-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Store Sales Report",
+        "URI": "admin/transactions/report/store-wise-sales-report",
+        "keywords": "Store Report Monitor Store\u2019s Business Analytics & Reports Summary Report Sales Report Order Report Filter Data All Zones Select Store All Stores All Time This Year Previous Year This Month This Week Custom Show Data Gross Sale Total Tax Total Commission Total Orders Average Order Value Average Value Of Completed Orders Total Store Earnings Total Sales Search By Product Search Export Download Options Excel Csv SL Product QTY Sold Discount Given Action No Data Found",
+        "bladePath": "admin-views/report/store-sales-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Store Order Report",
+        "URI": "admin/transactions/report/store-wise-order-report",
+        "keywords": "Store Report Store Wise Report Monitor Store\u2019s Business Analytics & Reports Summary Report Sales Report Order Report Filter Data All Zones Select Store All Stores All Time This Year Previous Year This Month This Week Custom Show Data Total Order Total Order Amount Canceled Incomplete Completed Total Discount Given Coupon Discount Product Discount Total Orders Average Order Value Average Value Of All Type Of Orders Order Statistics Orders Total Canceled Total Ongoing Total Delivered View All Orders Total Sales Search By ID Search Export Download Options Excel Csv SL Order ID Order Date Customer Info Total Amount Discount Tax Delivery Charge Additional Charge Action Invalid Customer Data Paid Unpaid No Data Found",
+        "bladePath": "admin-views/report/store-order-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Expense Report",
+        "URI": "admin/transactions/report/expense-report",
+        "keywords": "Expense Report This Report Will Show All The Orders In Which The Admin Discount Has Been Used The Admin Discount Are Free Delivery Over Store Discount Coupon Discount & Item Discounts(partial According To Order Commission) Filter Data Select Modules All Modules All Zones Select Vendor All Vendors Select Customer All Customers All Type Add Fund Bonus Free Delivery Coupon Discount Discount On Product Flash Sale Discount CashBack Referral Discount All Time This Year Previous Year This Month This Week Custom Start Date End Date Filter Expense Lists Search By Order ID Reset Export Download Options Excel Csv Sl Order Id Trip Id Date & Time Expense Type Customer Name Expense Amount Other Expenses Invalid Customer Data No Data Found",
+        "bladePath": "admin-views/report/expense-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Low Stock Report",
+        "URI": "admin/transactions/report/low-stock-report",
+        "keywords": "Stock Update Stock Update Ex Search Name Search Here Reset All Zones Select Store All Stores Export Download Options Excel Csv SL Name Store Zone Current Stock Action Store Deleted Not Found Edit Quantity No Data Found Cancel Update Stock",
+        "bladePath": "admin-views/report/low-stock-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Account Transaction List",
+        "URI": "admin/transactions/account-transaction/list",
+        "keywords": "Account Transaction Collect Cash Transaction Collect From Deliveryman Store Select Store Select Deliveryman Payment Method Ex Card Reference Amount Ex Reset Collect Cash Transaction History Ex Referance Name Search Here Export Download Options Excel Csv SL Type Received At Action Not Found DeliveryMan Info Store Info Address Not Found No Data Found Account Transaction Information Method Request Time Name Phone Address Cash In Hand Total Earning Transaction Saved",
+        "bladePath": "admin-views/account/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Provide Deliveryman Earnings List",
+        "URI": "admin/transactions/provide-deliveryman-earnings",
+        "keywords": "Deliverymen Earning Provide Provide Deliverymen Earning Deliveryman Select Deliveryman Amount Ex Method Ex Cash Reference Ex Collect Cash Reset Save Deliverymen Earning Provide Table Ex Search Delivery Man Search Here Export Download Options Excel Csv Sl Name Received At Deliveryman Deleted Wallet Adjusted Wallet Adjusted Partially No Data Found Transaction Saved Cash In Hand Earning Balance",
+        "bladePath": "admin-views/deliveryman-earning-provide/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Store Withdraw List",
+        "URI": "admin/transactions/store/withdraw_list",
+        "keywords": "Withdraw Request Transaction Overview Hello Here You Can Manage Your Transactions",
+        "bladePath": "admin-views/wallet/withdraw-dashboard",
+        "isModified": false
+    },
+    {
+        "routeName": "Withdraw Method List",
+        "URI": "admin/transactions/withdraw-method/list",
+        "keywords": "Disbursement Method List Withdraw Method List Ex Search Store Name Search Here Reset Add New Method SL Method Name Method Fields Active Status Default Method Action Name Type Placeholder Required Optional See All Delete Want To Delete This Item No Data Found Default Method Updated Successfully Default Method Updated Failed Status Updated Successfully",
+        "bladePath": "admin-views/withdraw-method/withdraw-methods-list",
+        "isModified": false
+    },
+    {
+        "routeName": "Withdraw Method Create",
+        "URI": "admin/transactions/withdraw-method/create",
+        "keywords": "Withdrawal Methods Method Name Default Method Ex Bank Input Field Type Text Number Date Email Phone Field Name Ex Account Name Placeholder Text Ex John Is Required Add Fields Reset Submit Reached Maximum Ok",
+        "bladePath": "admin-views/withdraw-method/withdraw-methods-create",
+        "isModified": false
+    },
+    {
+        "routeName": "Store Disbursement List",
+        "URI": "admin/transactions/store-disbursement/list",
+        "keywords": "Disbursement Store Disbursement All Pending Processing Completed Partially Completed Canceled Completed Created At Total Amount View Details No Data Found",
+        "bladePath": "admin-views/store-disbursement/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Dm Disbursement List",
+        "URI": "admin/transactions/dm-disbursement/list",
+        "keywords": "Disbursement Deliveryman Disbursement All Pending Processing Completed Partially Completed Canceled Completed Created At Total Amount View Details No Data Found",
+        "bladePath": "admin-views/dm-disbursement/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Advertisement List",
+        "URI": "admin/advertisement",
+        "keywords": "Advertisement List Create An Advertisement For Your Targeted Audience As None Has Been Created Yet Create Ads By Creating Advertisement You Can Showcase Your Items Or Store To A Wider Audience Through Targeted Ad Campaigns Ads List New Advertisement Search By Ads ID Or Store Name Search Here All Ads Running Paused Approved Expired Sl Ads ID Ads Title Store Info Ads Type Duration Status Priority Action Expired Expired & Denied Ads Has No Priority N/A View Ads Edit & Resubmit Ads Edit Ads Are You Sure You Want To Resume The Request This Ad Will Be Run Again And Will Show In The User App & Websites Resume Ads Are You Sure You Want To Pause The Request This Ad Will Be Pause And Not Show In The User App & Websites Pause Ads Copy Ads You Can\u2019t Delete The Ad This Advertisement Is Currently Running To Delete This Ad From The List Please Resume The Ad First Once The Status Is Updated You Can Proceed With Deletion Confirm Ad Deletion Deleting This Ad Will Remove It Permanently Are You Sure You Want To Proceed Delete Ads No Data Found Are You Sure You Want To Priority Of This Advertisement Yes",
+        "bladePath": "admin-views/advertisement/list",
+        "isModified": false
+    },
+    {
+        "routeName": "Advertisement Create",
+        "URI": "admin/advertisement/create",
+        "keywords": "Create Advertisement Default Advertisement Title Default Exclusive Offer Short Description Get Discount Select Store Select Store Select Priority Priority N/A Advertisement Type Video Promotion Store Promotion Validity Select Date Upload Related Files Upload Your Video  Maximum MB Supports MP WEBM MKV Show Review Ratings Review Rating Profile Image Ratio Supports PNG JPG JPEG WEBP Upload Cover Advertisement Preview Your Browser Does Not Support The Video Tag Title Description + Reset Submit",
+        "bladePath": "admin-views/advertisement/create",
+        "isModified": false
+    },
+    {
+        "routeName": "Advertisement RequestList",
+        "URI": "admin/advertisement/requests",
+        "keywords": "Advertisement Requests New Request Update Request Denied Requests Advertisement Search By Ads ID Or Store Name Search Here Sl Ads ID Ads Title Store Info Ads Type Duration Action View Ads Edit & Resubmit Ads Edit Ads Approve Are You Sure You Want To Deny The Request You Will Lost The Store Ads Request Cancel Cancel Ads Delete Ads No Data Found This Advertisement Is Already Expired After Approval This Advertisement Will Automatically Show In The Expired List As The Duration Is Already Over Only Approve Are You Sure After Approval This Advertisement Will Show In The User App & Websites",
+        "bladePath": "admin-views/advertisement/request-list",
+        "isModified": false
+    },
+    {
+        "routeName": "Subscriptionackage List",
+        "URI": "admin/business-settings/subscription/subscriptionackage",
+        "keywords": "Subscription Subscription Package List All Module Rental Module Overview See Overview Of All The Packages Earnings All This Year This Month This Week Search By Name Export Download Options Excel Csv Add Subcription Package Sl Package Name Pricing Duration Current Subscriber Status Actions Days Do You Want To Active This Package No Data Found Create Subscription Plan Add New Subscription Packages To The List So That Providers Get More Options To Join The Business For The Growth And Success Add New Subscription Packages To The List So That Stores Get More Options To Join The Business For The Growth And Success Are You Sure You Want To Off The Status You Are About To Deactivate A Subscription Package You Have The Option To Either Switch All Providers Plans Or Allow Providers To Make Changes Please Choose An Option Below To Proceed Providers Will Be Subscribed Untill Their Package Expires You Are About To Deactivate A Subscription Package You Have The Option To Either Switch All Stores Plans Or Allow Stores To Make Changes Please Choose An Option Below To Proceed Stores Will Be Subscribed Untill Their Package Expires Switch Plan Are You Sure You Want To ON The Status This Package Will Be Available For The Providers This Package Will Be Available For The Stores Close Switch Existing Business Plan Select Business Plan Select A Package Commission Base Switch & Turn Of The Status",
+        "bladePath": "admin-views/subscription/package/index",
+        "isModified": false
+    },
+    {
+        "routeName": "Subscriptionackage Create",
+        "URI": "admin/business-settings/subscription/subscriptionackage/create",
+        "keywords": "Subscription Subscription Package Rental Module Create Subscriptions Packages For Subscription Business Model Package Information Give Subscriptions Package Information How It Works Default Package Name Default Package Price Ex Package Validity Days Package Info EX Value For Money Package Available Features Select All Mark The Feature You Want To Give In This Package Pos System Self Delivery Mobile App Review Chat Set Limit Set Maximum Trips & Vehicle Limit For This Package Set Maximum Order & Product Limit For This Package Maximum Trip Limit Maximum Order Limit Unlimited Use Limit Maximum Vehicle Limit Maximum Item Limit Reset Submit Subscription Packages Here You Can View All The Data Placements In A Package Card In The Subscription UI In The User App And Website Okay",
+        "bladePath": "admin-views/subscription/package/create",
+        "isModified": false
+    },
+    {
+        "routeName": "Subscriptionackage Settings",
+        "URI": "admin/business-settings/subscription/settings",
+        "keywords": "Subscription Subscription Settings Offer Free Trial You Can Offer Vendors A Free Trial To Experience The System Overall Status Are You Sure To Enable The Free Trial Option Are You Sure To Disable The Free Trial Option If Enabled The Store Can Experience The Services At No Cost For A Limited Time If Disabled The Store Can\u2019t Get The Experience Without Any Business Plan Free Trial Period Day Month Year Submit Show Deadline Warning Select The Number Of Days Before The Warning Will Be Shown With A Countdown To The End Of All Packages Select Days Type Message Your Subscription Ending Soon Return Money Restriction Setup The Amount After Which If Any Store Change / Migrate The Subscription Plan You Won\u2019t Return Any Money Back Select Subscription Usage Time No Yes",
+        "bladePath": "admin-views/subscription/settings/setting",
+        "isModified": false
+    },
+    {
+        "routeName": "Subscriptionackage SubscriberList",
+        "URI": "admin/business-settings/subscription/subscriber-list",
+        "keywords": "Subscriber List Subscribed Store List All Zones Total Subscribed User Active Subscriptions Expired Subscription Expiring Soon Total Transactions Total Earning EARNED THIS MONTH Store List All Active Expired Cancaled Free Trial Ex Search By Name & Package Name Export Download Options Excel Csv Sl Store Info Current Package Name Package Price Exp Date Total Subscription Used Is Trial Is Cancel Status Action Package Not Found! Yes No Approval Pending Canceled Expired Active No Data Found",
+        "bladePath": "admin-views/subscription/subscriber/list",
+        "isModified": false
+    },
+    {
+        "routeName": "Transaction Report",
+        "URI": "admin/transactions/rental/report/transaction-report",
+        "keywords": "",
+        "bladePath": "rental::admin/report/transaction-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Trip Report",
+        "URI": "admin/transactions/rental/report/trip-report",
+        "keywords": "",
+        "bladePath": "rental::admin/report/trip-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Vehicle Wise Report",
+        "URI": "admin/transactions/rental/report/vehicle-report",
+        "keywords": "",
+        "bladePath": "rental::admin/report/vehicle-wise-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Provider Summary Report",
+        "URI": "admin/transactions/rental/report/provider-wise-report",
+        "keywords": "",
+        "bladePath": "rental::admin/report/provider-summary-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Provider Sales Report",
+        "URI": "admin/transactions/rental/report/provider-wise-sales-report",
+        "keywords": "",
+        "bladePath": "rental::admin/report/provider-sales-report",
+        "isModified": false
+    },
+    {
+        "routeName": "Provider Trip Report",
+        "URI": "admin/transactions/rental/report/provider-wise-trip-report",
+        "keywords": "",
+        "bladePath": "rental::admin/report/provider-trip-report",
+        "isModified": false
+    }
+]

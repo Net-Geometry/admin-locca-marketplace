@@ -30,7 +30,9 @@ class BrandController extends Controller
             })
             ->withCount(['items' => function($query) use($zone_id, $module_id) {
                 $query->whereHas('item.store', function($q) use($zone_id, $module_id) {
-                    $q->whereIn('zone_id', json_decode($zone_id, true))
+                    $q->when(isset($zone_id) ,function ($query) use($zone_id){
+                        $query->whereIn('zone_id', json_decode($zone_id, true));
+                    })
                     ->where('module_id', $module_id);
                 });
             }])

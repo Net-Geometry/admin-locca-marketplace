@@ -8,7 +8,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
     Route::group(['middleware' => ['admin', 'current-module']], function () {
         Route::get('/test', function () {
         });
-        // Route::get('drivemond-panel', 'DriveMondController@drivemondExternalLogin')->name('drivemond-panel');
         Route::get('get-all-stores', 'VendorController@get_all_stores')->name('get_all_stores');
         Route::get('lang/{locale}', 'LanguageController@lang')->name('lang');
         Route::get('settings', 'SystemController@settings')->name('settings');
@@ -617,8 +616,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
             Route::get('/', 'DashboardController@user_dashboard')->name('dashboard');
-            Route::get('disbursement-export/{id}/{type}', 'DeliveryManController@disbursement_export')->name('disbursement-export');
-            Route::get('export', 'DeliveryManController@export')->name('export');
+            // Route::get('disbursement-export/{id}/{type}', 'DeliveryManController@disbursement_export')->name('disbursement-export');
+            // Route::get('export', 'DeliveryManController@export')->name('export');
 
             // Subscribed customer Routes
             Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
