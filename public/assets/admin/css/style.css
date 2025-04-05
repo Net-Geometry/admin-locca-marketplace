@@ -11673,8 +11673,8 @@ body > .initial-38-1 {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
+    line-clamp: var(--line-count);
     -webkit-line-clamp: var(--line-count);
-    /* max-height: 3.6em; */
 }
 
 .break-all {
@@ -11761,11 +11761,12 @@ body > .initial-38-1 {
 }
 
 .withdraw-info-sidebar {
+    --width: 400px;
     position: fixed;
     right: 0;
     top: 0;
     bottom: 0;
-    width: 400px;
+    width: var(--width);
     max-width: 100%;
     background: #fff;
     z-index: 999;
@@ -15136,12 +15137,9 @@ ul.address-info .label {
     background-color: yellow;
     font-weight: bold;
 }
+
 .alert-primary-light {
     color: var(--theameColor);
-    background-color: #edf7ff;
-    border-color: #edf7ff;
-}
-.alert-primary-light {
     background-color: rgba(0, 154, 241, 0.1);
     border-color: rgba(0, 154, 241, 0);
 }

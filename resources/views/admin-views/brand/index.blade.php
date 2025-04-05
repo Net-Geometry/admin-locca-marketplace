@@ -19,6 +19,7 @@
                 </span>
             </h1>
         </div>
+
         <!-- End Page Header -->
         <div class="card">
             <div class="card-body">
@@ -96,6 +97,7 @@
                 </form>
             </div>
         </div>
+
         <div class="card mt-2">
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
@@ -236,76 +238,75 @@
         </div>
     </div>
 
-
-
+    {{-- Offcanvas --}}
     <div class="withdraw-info-sidebar-wrap">
         <div class="withdraw-info-sidebar-overlay"></div>
-        <div class="withdraw-info-sidebar">
-            <div class="d-flex p-3 justify-content-between">
-                <h3 class="mb-3">{{translate('Module Assign')}}</h3>
-                <span class="circle bg-light withdraw-info-hide cursor-pointer">
-                    <i class="tio-clear"></i>
-                </span>
-            </div>
-
-
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="text-center mb-3">
-                        <div class="d-flex justify-content-center mb-3">
-                            <img src="brand-logo.png" id="brand_img_src" alt="Brand Logo" width="90">
-                            <h5 id="brand_name"  class="mt-2 ml-2"></h5>
-                        </div>
-                            <div class="alert fs-13 alert-primary-light text-dark mb-0  mt-md-0 add_text_mute text-muted mt-2"  role="alert">
-                                <img src="{{ asset('/public/assets/admin/img/lnfo_light.png') }}" alt="">
-                                {{translate('Currently, this brand is active in all modules of the')}} <strong>{{ Config::get('module.current_module_name') }}</strong> {{ translate('Module_Type') }}
-                            </div>
-
-                    </div>
-                </div>
-            </div>
-            <form action="{{ route('admin.brand.moduleUpadte') }}" method="post">
+        <div class="withdraw-info-sidebar p-0" style="--width: 500px">
+            <form action="{{ route('admin.brand.moduleUpadte') }}" method="post" class="h-100">
                 @csrf
-                <input type="text" hidden  name="brand_id"  id="brand_id">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h4 class="card-title mb-0 font-medium">{{translate('Assign Brand')}}</h4>
-                        <small class="card-text">{{ translate('Select your preferred assign option for this brand') }}</small>
+                <div class="d-flex flex-column h-100">
+                    <div class="d-flex p-3 justify-content-between mb-3 bg-light">
+                        <h4 class="mb-0">{{translate('Module Assign')}}</h4>
+                        <span class="circle bg-light withdraw-info-hide cursor-pointer">
+                            <i class="tio-clear"></i>
+                        </span>
+                    </div>
 
-                        <div class=" mt-4 mb-3">
 
-                            <div class="radio-card selected mb-2" data-value="module-only">
-                                <input type="radio" name="type" value="only_this_module" checked>
-                                    <strong>{{ translate('Use this Brand only for this module’s product') }}</strong>
-                                    <br>
-                                    <small class="text-muted mt-1 mb-0">
-                                    {{ translate(' This brand will only use for') }} <strong>{{ Config::get('module.current_module_name') }}</strong> {{ translate('Module and will be removed from other module’s product.') }}
-                                    </small>
+                    <div class="p-3">
+                        <div class="bg-light rounded p-3 mb-3">
+                            <div class="text-center mb-3">
+                                <div class="d-flex justify-content-center align-items-center mb-4">
+                                    <img class="rounded" src="brand-logo.png" id="brand_img_src" alt="Brand Logo" width="50">
+                                    <h5 id="brand_name"  class="mt-2 ml-2"></h5>
+                                </div>
+
+                                <div class="alert fs-12 alert-primary-light text-dark mb-0  mt-md-0 add_text_mute mt-2"  role="alert">
+                                    <img src="{{ asset('/public/assets/admin/img/lnfo_light.png') }}" alt="">
+                                    {{translate('Currently, this brand is active in all modules of the')}} <b>{{ Config::get('module.current_module_name') }}</b> {{ translate('Module_Type') }}
+                                </div>
                             </div>
+                        </div>
 
-                                <div class="radio-card mt-2"  data-value="all-modules">
-                                    <input type="radio" name="type" value="copy_this_brand">
-                                    <strong>{{ translate('Create the same brand for other modules also') }}</strong>
-                                    <br>
-                                    <small class="text-muted mt-1 mb-0">
-                                        {{ translate('This brand will be created automatically for every module. And the products in each module will automatically be assigned to that brand.') }}
-                                    </small>
+                        <input type="text" hidden  name="brand_id"  id="brand_id">
+                        <div class="bg-light p-3 rounded mb-3">
+                            <h4 class="card-title mb-2 font-medium">{{translate('Assign Brand')}}</h4>
+                            <small class="card-text">{{ translate('Select your preferred assign option for this brand') }}</small>
+
+                            <div class="bg-white p-3 rounded mt-4 mb-3">
+                                <div class="radio-card selected mb-4 media gap-3" data-value="module-only">
+                                    <input class="mt-2" type="radio" id="only-brands" name="type" value="only_this_module" checked>
+                                    <label for="only-brands" class="media-body">
+                                        <strong>{{ translate('Use this Brand only for this module’s product') }}</strong>
+                                        <br>
+                                        <small class="text-muted mt-1 mb-0">
+                                        {{ translate(' This brand will only use for') }} <strong>{{ Config::get('module.current_module_name') }}</strong> {{ translate('Module and will be removed from other module’s product.') }}
+                                        </small>
+                                    </label>
+                                </div>
+
+                                <div class="radio-card media gap-3"  data-value="all-modules">
+                                    <input class="mt-2" type="radio" id="same-brands" name="type" value="copy_this_brand">
+                                    <label for="same-brands" class="media-body">
+                                        <strong>{{ translate('Create the same brand for other modules also') }}</strong>
+                                        <br>
+                                        <small class="text-muted mt-1 mb-0">
+                                            {{ translate('This brand will be created automatically for every module. And the products in each module will automatically be assigned to that brand.') }}
+                                        </small>
+                                    </label>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-4 d-flex justify-content-center gap-3">
-                        <button  type="reset" class="btn btn-outline-secondary min-w-120 withdraw-info-hide">
+                    <div class="mt-auto shadow-lg p-3 bg-white d-flex gap-3">
+                        <button  type="reset" class="btn btn-secondary btn-block withdraw-info-hide">
                             {{translate("Cancel")}}
-                            <button type="submit" class="btn btn-outline-primary min-w-120" >{{translate('Transfer')}}</button>
                         </button>
+                        <button type="submit" class="btn btn-primary btn-block mt-0" >{{translate('Transfer')}}</button>
                     </div>
-
                 </div>
             </form>
-
-
         </div>
 
 @endsection
