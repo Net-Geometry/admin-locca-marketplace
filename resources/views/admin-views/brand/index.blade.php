@@ -20,96 +20,22 @@
             </h1>
         </div>
 
-        <!-- End Page Header -->
-        <div class="card">
-            <div class="card-body">
-                <form action="{{route('admin.brand.store')}}" method="post" enctype="multipart/form-data">
-                @csrf
-                    <div class="row">
-                        <div class="col-12">
-                            @if($language)
-                                <ul class="nav nav-tabs mb-4">
-                                    <li class="nav-item">
-                                        <a class="nav-link lang_link active"
-                                           href="#"
-                                           id="default-link">{{translate('messages.default')}}</a>
-                                    </li>
-                                    @foreach ($language as $lang)
-                                        <li class="nav-item">
-                                            <a class="nav-link lang_link"
-                                               href="#"
-                                               id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            @endif
-                        </div>
-                        <div class="col-6">
-                            @if($language)
-                                <div class="form-group lang_form" id="default-form">
-                                    <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{ translate('messages.default') }})</label>
-                                    <input type="text" name="name[]" value="{{ old('name.0') }}"  class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191">
-                                </div>
-                                <input type="hidden" name="lang[]" value="default">
-                                @foreach($language as $key => $lang)
-                                    <div class="form-group d-none lang_form" id="{{$lang}}-form">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="name[]" value="{{ old('name.'.$key+1) }}"  class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191">
-                                    </div>
-                                    <input type="hidden" name="lang[]" value="{{$lang}}">
-                                @endforeach
-                            @else
-                                <div class="form-group">
-                                    <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}}</label>
-                                    <input type="text" name="name" class="form-control" placeholder="{{translate('messages.new_brand')}}" value="{{old('name')}}" maxlength="191">
-                                </div>
-                                <input type="hidden" name="lang[]" value="default">
-                            @endif
-                        </div>
-                        <div class="col-6">
-                            <div class="h-100 d-flex align-items-center flex-column">
-                                <label class="mb-3 text-center">{{translate('messages.image')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small></label>
-                                <label class="text-center my-auto position-relative d-inline-block">
-                                    <img class="img--176 border" id="viewer"
-                                         @if(isset($category))
-                                             src="{{asset('storage/app/public/category')}}/{{$category['image']}}"
-                                         @else
-                                             src="{{asset('public/assets/admin/img/upload-img.png')}}"
-                                         @endif
-                                         alt="image"/>
-                                    <div class="icon-file-group">
-                                        <div class="icon-file">
-                                            <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
-                                                   accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" >
-                                            <i class="tio-edit"></i>
-                                        </div>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="btn--container justify-content-end mt-3">
-                        <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="submit" class="btn btn--primary">{{isset($brand)?translate('messages.update'):translate('messages.add')}}</button>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-
         <div class="card mt-2">
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
                     <h5 class="card-title">{{translate('messages.All_Brand_List')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$brands->total()}}</span></h5>
-                    <form  class="search-form">
-                        <!-- Search -->
-                        <div class="input-group input--group">
-                            <input id="datatableSearch" name="search" value="{{ request()?->search ?? null }}"  type="search" class="form-control" placeholder="{{translate('messages.search_by_name')}}" aria-label="{{translate('messages.Brands')}}">
-                            <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
-                        </div>
-                        <!-- End Search -->
-                    </form>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <form  class="search-form">
+                            <!-- Search -->
+                            <div class="input-group input--group">
+                                <input id="datatableSearch" name="search" value="{{ request()?->search ?? null }}"  type="search" class="form-control" placeholder="{{translate('messages.search_by_name')}}" aria-label="{{translate('messages.Brands')}}">
+                                <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
+                            </div>
+                            <!-- End Search -->
+                        </form>
+
+                        <button  type="button" class="btn btn-primary withdraw-info-show2"><i class="tio-add"></i> {{translate('messages.add_new_brand')}}</button>
+                    </div>
                 </div>
             </div>
             <div class="card-body p-0">
@@ -137,8 +63,6 @@
                         @foreach($brands as $key=>$brand)
                             <tr>
                                 <td>{{$key+$brands->firstItem()}}</td>
-
-
                                 <td>
                                     <div class="media align-items-center">
                                         <img class="avatar avatar-lg mr-3 onerror-image"
@@ -169,7 +93,7 @@
                                 <td>
                                     <div class="btn--container justify-content-center">
                                         @if ($brand->module_id == null)
-                                        <button  title="{{translate('Module_Assign')}}" class="btn action-btn btn--primary btn-outline-primary  withdraw-info-show" type="button" data-brand_id="{{ $brand['id'] }}"
+                                        <button  title="{{translate('Module_Assign')}}" class="btn action-btn btn--primary btn-outline-primary withdraw-info-show" type="button" data-brand_id="{{ $brand['id'] }}"
                                         data-image_src="{{ $brand['image_full_url'] }}"
                                         data-name="{{ $brand['name'] }}"
                                             ><i class="tio-apps"></i>
@@ -235,6 +159,129 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    {{-- Add New Brand Offcanvas --}}
+    <div class="withdraw-info-sidebar-wrap2">
+        <div class="withdraw-info-sidebar withdraw-info-sidebar2 p-0" style="--width: 500px">
+            <form action="{{route('admin.brand.store')}}" method="post" enctype="multipart/form-data" class="h-100">
+                @csrf
+                <div class="d-flex flex-column h-100">
+                    <div class="d-flex p-3 justify-content-between mb-3 bg-light">
+                        <h4 class="mb-0">{{translate('add_New_Brand')}}</h4>
+                        <span class="circle bg-light withdraw-info-hide2 cursor-pointer">
+                            <i class="tio-clear"></i>
+                        </span>
+                    </div>
+
+
+                    <div class="p-3">
+                        <div class="bg-light p-3 rounded">
+                            <h4>{{translate('messages.status')}}</h4>
+                            <p class="fs-12">{{ translate('messages.If you turn off the switch the brand will not active or visible in customer app & website.') }}</p>
+
+                            <div class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center py-2 px-3">
+                                <h5 class="text-capitalize m-0 text--primary">{{translate('messages.Status')}}</h5>
+
+                                <label class="toggle-switch toggle-switch-sm">
+                                    <input type="checkbox" class="status toggle-switch-input">
+                                    <span class="toggle-switch-label text mb-0">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="bg-light p-3 rounded my-4">
+                            <h4>{{translate('messages.Brand Logo')}} <small class="text-danger">*</small></h4>
+                            <p class="fs-12">{{ translate('messages.It will show in website & app.') }}</p>
+                            <div class="d-flex justify-content-center">
+                                <label class="text-center position-relative d-inline-block mb-3">
+                                    <img class="img--176 border" id="viewer"
+                                            @if(isset($category))
+                                                src="{{asset('storage/app/public/category')}}/{{$category['image']}}"
+                                            @else
+                                                src="{{asset('public/assets/admin/img/upload-img.png')}}"
+                                            @endif
+                                            alt="image"/>
+                                    <div class="icon-file-group">
+                                        <div class="icon-file">
+                                            <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
+                                                    accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" >
+                                            <i class="tio-edit"></i>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                {{-- <div class="upload-file">
+                                    <input type="file" class="cover_attachment js-upload-input" data-target="profile-prev-image" name="profile_image" accept=".webp, .png,.jpg,.jpeg,.gif, |image/*">
+                                    <div class="upload-file__img">
+                                        <img src="http://localhost/Backend-6amMart/public/assets/admin/img/media/upload-file.png" alt="">
+                                    </div>
+                                    <button class="remove-file-button" type="button">
+                                        <i class="tio-clear"></i>
+                                    </button>
+                                </div> --}}
+                            </div>
+                            <p class="text-center fs-12">{{translate('messages.JPG, JPEG, PNG Less Than 1MB (Ratio 3 : 1)')}}</p>
+                        </div>
+
+                        <div class="bg-light p-3 rounded">
+                            @if($language)
+                                <ul class="nav nav-tabs mb-4">
+                                    <li class="nav-item">
+                                        <a class="nav-link lang_link active" href="#" id="default-link">{{translate('messages.default')}}</a>
+                                    </li>
+                                    @foreach ($language as $lang)
+                                        <li class="nav-item">
+                                            <a class="nav-link lang_link" href="#" id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
+
+                            @if($language)
+                                <div class="form-group lang_form" id="default-form">
+                                    <label class="input-label">
+                                        {{translate('messages.name')}} ({{ translate('messages.default') }})
+                                        <small class="text-danger">*</small>
+                                        <i class="tio-info text-muted" data-toggle="tooltip" title="hello title"></i>
+                                    </label>
+                                    <input type="text" name="name[]" value="{{ old('name.0') }}"  class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191">
+                                </div>
+                                <input type="hidden" name="lang[]" value="default">
+                                @foreach($language as $key => $lang)
+                                    <div class="form-group d-none lang_form" id="{{$lang}}-form">
+                                        <label class="input-label">
+                                            {{translate('messages.name')}} ({{strtoupper($lang)}})
+                                            <small class="text-danger">*</small>
+                                            <i class="tio-info text-muted" data-toggle="tooltip" title="hello title"></i>
+                                        </label>
+                                        <input type="text" name="name[]" value="{{ old('name.'.$key+1) }}"  class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191">
+                                    </div>
+                                    <input type="hidden" name="lang[]" value="{{$lang}}">
+                                @endforeach
+                            @else
+                                <div class="form-group">
+                                    <label class="input-label">
+                                        {{translate('messages.name')}}
+                                        <small class="text-danger">*</small>
+                                        <i class="tio-info text-muted" data-toggle="tooltip" title="hello title"></i>
+                                    </label>
+                                    <input type="text" name="name" class="form-control" placeholder="{{translate('messages.type_brand_name')}}" value="{{old('name')}}" maxlength="191">
+                                </div>
+                                <input type="hidden" name="lang[]" value="default">
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="mt-auto shadow-lg p-3 bg-white d-flex gap-3">
+                        <button  type="reset" class="btn btn-secondary btn-block withdraw-info-hide2">{{translate('messages.reset')}}</button>
+                        <button type="submit" class="btn btn-primary btn-block mt-0" >{{ translate('messages.save') }}</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -308,15 +355,15 @@
                 </div>
             </form>
         </div>
-
+    </div>
 @endsection
 
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/brand-index.js"></script>
     <script>
         "use strict";
-        $('.withdraw-info-hide, .withdraw-info-sidebar-overlay').on('click', function () {
-            $('.withdraw-info-sidebar, .withdraw-info-sidebar-overlay').removeClass('show');
+        $('.withdraw-info-hide, .withdraw-info-sidebar-overlay, .withdraw-info-hide2').on('click', function () {
+            $('.withdraw-info-sidebar, .withdraw-info-sidebar-overlay, .withdraw-info-sidebar2').removeClass('show');
         });
 
         $(document).on('click', '.withdraw-info-show', function () {
@@ -324,9 +371,12 @@
             $('#brand_name').text($(this).data('name'));
             $('#brand_id').val($(this).data('brand_id'));
             $('.withdraw-info-sidebar, .withdraw-info-sidebar-overlay').addClass('show');
-            });
+        });
+        $(document).on('click', '.withdraw-info-show2', function () {
+            $('.withdraw-info-sidebar2, .withdraw-info-sidebar-overlay').addClass('show');
+        });
         $(document).on('submit', '.withdraw_status_form', function (event) {
-    $(this).find('button[type="submit"]').attr('disabled', true);
+            $(this).find('button[type="submit"]').attr('disabled', true);
 });
 
         $('#reset_btn').click(function(){
