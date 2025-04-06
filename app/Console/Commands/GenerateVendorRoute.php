@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Module;
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-use Nwidart\Modules\Facades\Module;
 
 class GenerateVendorRoute extends Command
 {
@@ -90,16 +91,29 @@ class GenerateVendorRoute extends Command
                     }
 
                     $bladePath = $this->getBladePathFromController($route);
-                    $keywords = $this->getTextDataFromBladeFile($bladePath);
-                    $keywords = ucwords(str_replace(['.', '_', '-'], ' ', $keywords));
-                    if ($bladePath) {
-                        $formattedRoutes[] = [
-                            'routeName' => $routeName,
-                            'URI' => $uri,
-                            'keywords' => $keywords,
-                            'bladePath' => $bladePath,
-                            'isModified' => false
-                        ];
+                    $bladePaths = is_array($bladePath) ? $bladePath : [null => $bladePath];
+
+                    foreach ($bladePaths as $moduleType => $path) {
+                        if (!$path) continue;
+                        if (strpos($path, '::') !== false) {
+                            list($moduleName, $viewFileName) = explode('::', $path);
+                            if (Module::where('module_type' , $moduleName)->exists()) {
+                                $moduleType=$moduleName;
+                            }
+                        }
+                        $keywords = $this->getTextDataFromBladeFile($path);
+                        $keywords = ucwords(str_replace(['.', '_', '-'], ' ', $keywords));
+
+                        if (strlen($keywords) > 3) {
+                            $formattedRoutes[] = [
+                                'routeName'   => $routeName,
+                                'URI'         => $uri,
+                                'keywords'    => $keywords,
+                                'bladePath'   => $path,
+                                'moduleType'  => $moduleType  !== "" ?  $moduleType : null,
+                                'isModified'  => false,
+                            ];
+                        }
                     }
                 }
             }
@@ -171,7 +185,7 @@ class GenerateVendorRoute extends Command
     }
 
 
-    function getBladePathFromController($route): ?string
+    function getBladePathFromController($route)
     {
         $action = $route->getAction();
         $controller = $action['controller'] ?? null;
@@ -189,7 +203,29 @@ class GenerateVendorRoute extends Command
                 $methodBody = implode('', array_slice($file, $startLine - 1, $endLine - $startLine + 1));
 
                 if (preg_match("/view\\(['\"](.*?)['\"]/", $methodBody, $matches)) {
-                    return $matches[1];
+                    $bladePath = $matches[1];
+
+                    if (preg_match_all('/\{\$(\w+)\}/', $bladePath, $varMatches)) {
+                        $moduleTypes =config('module.module_type');
+                        $viewBasePaths =null;
+
+                        foreach ($moduleTypes as $type) {
+                            $resolvedPath = $bladePath;
+                            foreach ($varMatches[1] as $varName) {
+                                $resolvedPath = str_replace('{$' . $varName . '}', $type, $resolvedPath);
+                            }
+                            $filePath = str_replace('.', '/', $resolvedPath);
+                            if (View::exists($filePath)) {
+                                $fullPath = View::getFinder()->find($filePath);
+                                if (file_exists($fullPath)) {
+                                    $viewBasePaths[$type] =$filePath;
+                                }
+                            }
+                        }
+
+                        return $viewBasePaths;
+                    }
+                    return str_replace('.', '/', $bladePath);
                 }
             }
         }
@@ -197,49 +233,46 @@ class GenerateVendorRoute extends Command
         return null;
     }
 
-    function getTextDataFromBladeFile($viewPath): ?string
+    function getTextDataFromBladeFile($viewPath): ? string
     {
-        if (!$viewPath) {
-            return null;
-        }
-
-        if (strpos($viewPath, '::') !== false) {
-            list($moduleName, $viewFileName) = explode('::', $viewPath);
-            $module = Module::find($moduleName);
-
-            if ($module) {
-                $viewFilePath = $module->getPath() . '/Resources/views/' . str_replace('.', '/', $viewFileName) . '.blade.php';
-            } else {
+        try {
+            if (!$viewPath) {
                 return null;
             }
-        } else {
-            $viewFilePath = resource_path('views/' . str_replace('.', '/', $viewPath) . '.blade.php');
-        }
+            if (!View::exists($viewPath)) {
+                return null;
+            }
+            $viewFilePath = View::getFinder()->find($viewPath);
+            if (!File::exists($viewFilePath)) {
+                return null;
+            }
 
-        if (!File::exists($viewFilePath)) {
+            $pattern = "/translate\('([^']+)'\)/";
+            $textData = [];
+
+            $content = File::get($viewFilePath);
+            preg_match_all($pattern, $content, $matches);
+
+            if (!empty($matches[1])) {
+                foreach ($matches[1] as $text) {
+                    $cleanedText = preg_replace("/^messages\./", "", $text);
+                    $cleanedText = preg_replace("/[_:\?\.,-]+/", " ", $cleanedText);
+                    $cleanedText = preg_replace("/\d+/", "", $cleanedText);
+                    $cleanedText = preg_replace("/\s+/", " ", trim($cleanedText));
+
+                    $textData[] = $cleanedText;
+                }
+            }
+
+            $textData = array_unique($textData);
+            $finalText = implode(" ", $textData);
+
+            return trim($finalText);
+        }
+        catch (\Exception $exception) {
+            info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             return null;
         }
 
-        $pattern = "/translate\('([^']+)'\)/";
-        $textData = [];
-
-        $content = File::get($viewFilePath);
-        preg_match_all($pattern, $content, $matches);
-
-        if (!empty($matches[1])) {
-            foreach ($matches[1] as $text) {
-                $cleanedText = preg_replace("/^messages\./", "", $text);
-                $cleanedText = preg_replace("/[_:\?\.,-]+/", " ", $cleanedText);
-                $cleanedText = preg_replace("/\d+/", "", $cleanedText);
-                $cleanedText = preg_replace("/\s+/", " ", trim($cleanedText));
-
-                $textData[] = $cleanedText;
-            }
-        }
-
-        $textData = array_unique($textData);
-        $finalText = implode(" ", $textData);
-
-        return trim($finalText);
     }
 }
