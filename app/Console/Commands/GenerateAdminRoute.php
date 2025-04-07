@@ -30,6 +30,7 @@ class GenerateAdminRoute extends Command
      */
     public function handle()
     {
+
         $routes = Route::getRoutes();
         $adminRoutes = collect($routes->getRoutesByMethod()['GET'])->filter(function ($route) {
             return Str::startsWith($route->uri(), 'admin');
@@ -55,76 +56,18 @@ class GenerateAdminRoute extends Command
             if (!$exclude) {
                 $hasParameters = preg_match('/\{(.*?)\}/', $uri);
                 if (!$hasParameters) {
-                    $actualRouteName = $route->getName();
-                    $routeNameParts = explode('.', $actualRouteName);
-                    if (count($routeNameParts) >= 2) {
-                        $lastPart = $routeNameParts[count($routeNameParts) - 1];
-                        $secondLastPart = $routeNameParts[count($routeNameParts) - 2];
-
-                        if (strtolower($lastPart) === 'index') {
-                            $lastPart = 'List';
-                        }
-
-                        $lastPartWords = explode(' ', str_replace(['_', '-'], ' ', $lastPart));
-                        $secondLastPartWords = explode(' ', str_replace(['_', '-'], ' ', $secondLastPart));
-                        $allWords = array_merge($secondLastPartWords, $lastPartWords);
-                        $uniqueWords = [];
-
-                        foreach ($allWords as $word) {
-                            $lowerWord = strtolower($word);
-                            if (empty($uniqueWords) || strtolower(end($uniqueWords)) !== $lowerWord) {
-                                $uniqueWords[] = $word;
-                            }
-                        }
-
-                        if (count($uniqueWords) > 1 && strtolower($uniqueWords[0]) === strtolower(end($uniqueWords))) {
-                            array_shift($uniqueWords);
-                        }
-
-                        $uniqueWords = array_filter($uniqueWords, function ($word) {
-                            return strtolower($word) !== 'rental';
-                        });
-
-                        $routeName = ucwords(implode(' ', $uniqueWords));
-                    } else {
-                        $routeName = ucwords(str_replace(['.', '_', '-'], ' ', Str::afterLast($actualRouteName, '.')));
-                    }
-
+                    $routeName = $this->getRouteName($route->getName());
                     $bladePath = $this->getBladePathFromController($route);
-                    $bladePaths = is_array($bladePath) ? $bladePath : [null => $bladePath];
-
-                    foreach ($bladePaths as $moduleType => $path) {
-                        if (!$path) continue;
-
-                        if (strpos($path, '::') !== false) {
-                            list($moduleName, $viewFileName) = explode('::', $path);
-                            if (Module::where('module_type' , $moduleName)->exists()) {
-                                $moduleType=$moduleName;
-                            }
-                        }
-
-                        $keywords = $this->getTextDataFromBladeFile($path);
-                        $keywords = ucwords(str_replace(['.', '_', '-'], ' ', $keywords));
-
-                        if (strlen($keywords) > 3) {
-                            $formattedRoutes[] = [
-                                'routeName'   => $routeName,
-                                'URI'         => $uri,
-                                'keywords'    => $keywords,
-                                'bladePath'   => $path,
-                                'moduleType'  => $moduleType  !== "" ?  $moduleType : null,
-                                'isModified'  => false,
-                            ];
-                        }
-                    }
-                } else{
-                    info($route->getName());
-                    info($uri);
-                    $this->manualyAddedRoutes();
+                    $formattedRoutes= $this->genetateRouteJsonFileFormate($formattedRoutes,$bladePath,$routeName, $uri);
 
                 }
+                // else{
+                //     info("Route excluded: " . $route->getName() . " - " . $uri);
+                // }
             }
         }
+        $formattedRoutes= $this->manualyAddedBladePath($formattedRoutes);
+
 
         if (file_exists($jsonFilePath)) {
             $fileContents = file_get_contents($jsonFilePath);
@@ -280,12 +223,85 @@ class GenerateAdminRoute extends Command
         }
     }
 
- private function manualyAddedRoutes()
+ private function manualyAddedBladePath($formattedRoutes): array
     {
-        return [
-            'admin.order.offline_verification_list' ,
+        $array = [
+            'admin-views.order.offline_verification_list' => ['admin/order/offline/payment/list/all'],
         ];
+
+        foreach ($array as $bladePath => $value) {
+            foreach ($value as $uri) {
+                $formattedRoutes=  $this->genetateRouteJsonFileFormate($formattedRoutes,$bladePath,$this->getRouteName($bladePath), $uri);
+            }
+        }
+        return $formattedRoutes;
     }
 
 
+    private function genetateRouteJsonFileFormate($formattedRoutes,$bladePath, $routeName, $uri) : array  {
+        $bladePaths = is_array($bladePath) ? $bladePath : [null => $bladePath];
+
+        foreach ($bladePaths as $moduleType => $path) {
+            if (!$path) continue;
+
+            if (strpos($path, '::') !== false) {
+                list($moduleName, $viewFileName) = explode('::', $path);
+                if (Module::where('module_type' , $moduleName)->exists()) {
+                    $moduleType=$moduleName;
+                }
+            }
+
+            $keywords = $this->getTextDataFromBladeFile($path);
+            $keywords = ucwords(str_replace(['.', '_', '-'], ' ', $keywords));
+
+            if (strlen($keywords) > 3) {
+                $formattedRoutes[] = [
+                    'routeName'   => $routeName,
+                    'URI'         => $uri,
+                    'keywords'    => $keywords,
+                    'bladePath'   => $path,
+                    'moduleType'  => $moduleType  !== "" ?  $moduleType : null,
+                    'isModified'  => false,
+                ];
+            }
+        }
+        return $formattedRoutes;
+    }
+
+    private function getRouteName($actualRouteName){
+        $routeNameParts = explode('.', $actualRouteName);
+        if (count($routeNameParts) >= 2) {
+            $lastPart = $routeNameParts[count($routeNameParts) - 1];
+            $secondLastPart = $routeNameParts[count($routeNameParts) - 2];
+
+            if (strtolower($lastPart) === 'index') {
+                $lastPart = 'List';
+            }
+
+            $lastPartWords = explode(' ', str_replace(['_', '-'], ' ', $lastPart));
+            $secondLastPartWords = explode(' ', str_replace(['_', '-'], ' ', $secondLastPart));
+            $allWords = array_merge($secondLastPartWords, $lastPartWords);
+            $uniqueWords = [];
+
+            foreach ($allWords as $word) {
+                $lowerWord = strtolower($word);
+                if (empty($uniqueWords) || strtolower(end($uniqueWords)) !== $lowerWord) {
+                    $uniqueWords[] = $word;
+                }
+            }
+
+            if (count($uniqueWords) > 1 && strtolower($uniqueWords[0]) === strtolower(end($uniqueWords))) {
+                array_shift($uniqueWords);
+            }
+
+            $uniqueWords = array_filter($uniqueWords, function ($word) {
+                return strtolower($word) !== 'rental';
+            });
+
+            $routeName = ucwords(implode(' ', $uniqueWords));
+        } else {
+            $routeName = ucwords(str_replace(['.', '_', '-'], ' ', Str::afterLast($actualRouteName, '.')));
+        }
+        return $routeName;
+    }
 }

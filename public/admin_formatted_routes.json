@@ -1,5 +1,13 @@
 [
     {
+        "routeName": "Order Offline Verification List",
+        "URI": "admin/order/offline/payment/list/all",
+        "keywords": "Order List Verify Offline Payments For Offline Payments Please Verify If The Payments Are Safely Received To Your Account Customer Id Not Liable If You Confirm And Deliver The Orders Without Checking Payments Transactions All Pending Verified Denied Ex Search Reset Selected Export Options Download Options Excel Csv Sl Order Id Order Date Customer Information Total Amount Payment Method Actions Invalid Customer Data Verify Payment Recheck Verification Payment Verification Please Check & Verify The Payment Information Weather It Is Correct Or Not Before Confirm The Order Name Phone Payment Information Customer Note N/A Payment Didn\u2019t Recerive Make The Payment Verified For This Order Switched To COD Yes Payment Received No Data Found Add Offline Payment Rejection Note Transaction Id Mismatched Close Confirm Rejection",
+        "bladePath": "admin-views.order.offline_verification_list",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
         "routeName": "Admin Settings",
         "URI": "admin/settings",
         "keywords": "Profile Settings Settings Dashboard Nav Menu Basic Information Password Full Name Display Name Your First Name Your Last Name Phone Optional Email Enter New Email Address Want To Update Admin Info Save Change Your Password New Password Must Contain At Least One Number And One Uppercase And Lowercase Letter And Symbol And At Least Or More Characters Confirm Password Want To Update Admin Password",
