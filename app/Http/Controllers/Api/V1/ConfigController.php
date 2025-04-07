@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Setting;
 use App\Models\Zone;
-use App\Models\Order;
 use App\Models\Module;
 use App\Models\Currency;
 use App\Models\DMVehicle;
@@ -14,12 +13,9 @@ use App\Traits\AddonHelper;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
-use App\Models\OfflinePayments;
 use App\Models\ReactTestimonial;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\ExternalConfiguration;
 use App\Models\OfflinePaymentMethod;
 use Illuminate\Support\Facades\Http;
 use App\Models\FlutterSpecialCriteria;
@@ -205,7 +201,6 @@ class ConfigController extends Controller
             'digital_payment_info' => $digital_payment_infos,
             'per_km_shipping_charge' => (double)$settings['per_km_shipping_charge'],
             'minimum_shipping_charge' => (double)$settings['minimum_shipping_charge'],
-
             'demo' => (boolean)(env('APP_MODE') == 'demo' ? true : false),
             'maintenance_mode' => (boolean)Helpers::get_business_settings('maintenance_mode') ?? 0,
             'order_confirmation_model' => config('order_confirmation_model'),
@@ -227,7 +222,6 @@ class ConfigController extends Controller
             'module' => $module,
             'parcel_per_km_shipping_charge' => (float)$settings['parcel_per_km_shipping_charge'],
             'parcel_minimum_shipping_charge' => (float)$settings['parcel_minimum_shipping_charge'],
-
             'social_media' => SocialMedia::active()->get()->toArray(),
             'footer_text' => isset($settings['footer_text']) ? $settings['footer_text'] : '',
             'cookies_text' => isset($settings['cookies_text']) ? $settings['cookies_text'] : '',
@@ -284,7 +278,6 @@ class ConfigController extends Controller
             'subscription_free_trial_status' => (int)(isset($settings['subscription_free_trial_status']) ? $settings['subscription_free_trial_status'] : 0),
             'country_picker_status' => (int)(isset($settings['country_picker_status']) ? $settings['country_picker_status'] : 1),
             'external_system' => $drivemondExternalSetting,
-
             'drivemond_app_url_android' => $drivemondExternalSetting ? Helpers::get_external_data('drivemond_app_url_android') : '',
             'drivemond_app_url_ios' => $drivemondExternalSetting ? Helpers::get_external_data('drivemond_app_url_ios') : '',
             'firebase_otp_verification' => (int)(isset($settings['firebase_otp_verification']) ? $settings['firebase_otp_verification'] : 0),
@@ -361,8 +354,29 @@ class ConfigController extends Controller
         if ($validator->errors()->count() > 0) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $response = Http::get('https://maps.googleapis.com/maps/api/place/autocomplete/json?input=' . $request['search_text'] . '&key=' . $this->map_api_key . '&language=' . app()->getLocale());
-        return $response->json();
+
+        $apiKey = $this->map_api_key;
+        $url = "https://places.googleapis.com/v1/places:autocomplete";
+        $data = [
+            "input" => $request['search_text'],
+            "languageCode" => app()->getLocale(),
+        ];
+
+        $headers = [
+            "Content-Type: application/json",
+            "X-Goog-Api-Key: $apiKey",
+        ];
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response,true);
     }
 
 
@@ -373,29 +387,43 @@ class ConfigController extends Controller
             'origin_lng' => 'required',
             'destination_lat' => 'required',
             'destination_lng' => 'required',
-            'mode' => 'nullable|in:driving,walking',
+            'mode' => 'nullable|in:DRIVE,WALK',
         ]);
 
         if ($validator->errors()->count() > 0) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        // $response = Http::get('https://maps.googleapis.com/maps/api/distancematrix/json?origins=' . $request['origin_lat'] . ',' . $request['origin_lng'] . '&destinations=' . $request['destination_lat'] . ',' . $request['destination_lng'] . '&key=' . $this->map_api_key . '&mode=walking');
 
-        $originLat = $request['origin_lat'] ?? null;
-        $originLng = $request['origin_lng'] ?? null;
-        $destinationLat = $request['destination_lat'] ?? null;
-        $destinationLng = $request['destination_lng'] ?? null;
-        $mode = $request['mode'] ?? 'walking';
-        $apiUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json';
-        $queryParams = [
-            'origins' => "$originLat,$originLng",
-            'destinations' => "$destinationLat,$destinationLng",
-            'key' => $this->map_api_key,
-            'mode' => $mode
+        $apiKey = $this->map_api_key;
+        $url = "https://routes.googleapis.com/distanceMatrix/v2:computeRouteMatrix";
+
+        $data = [
+            "origins" => [
+                ["waypoint" => ["location" => ["latLng" => ["latitude" => $request['origin_lat'], "longitude" => $request['origin_lng']]]]]
+            ],
+            "destinations" => [
+                ["waypoint" => ["location" => ["latLng" => ["latitude" => $request['destination_lat'], "longitude" => $request['destination_lng']]]]],
+            ],
+            "travelMode" =>  $request['mode'] ?? 'WALK',
+           // "routingPreference" => "TRAFFIC_AWARE"
         ];
 
-        $response = Http::get($apiUrl, $queryParams);
-        return $response->json();
+        $headers = [
+            "Content-Type: application/json",
+            "X-Goog-Api-Key: $apiKey",
+            "X-Goog-FieldMask: duration,distanceMeters,localizedValues"
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+        return json_decode($response, true)[0];
     }
 
 
@@ -408,8 +436,23 @@ class ConfigController extends Controller
         if ($validator->errors()->count() > 0) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $response = Http::get('https://maps.googleapis.com/maps/api/place/details/json?placeid=' . $request['placeid'] . '&key=' . $this->map_api_key);
-        return $response->json();
+
+        $apiKey = $this->map_api_key;
+        $url = 'https://places.googleapis.com/v1/places/'.$request['placeid'];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'X-Goog-Api-Key: ' . $apiKey,
+            'X-Goog-FieldMask: id,displayName,formattedAddress,location',
+        ]);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response,true);
     }
 
     public function geocode_api(Request $request)
@@ -558,11 +601,9 @@ class ConfigController extends Controller
                 'earning_seller_sub_title' => (isset($settings['earning_seller_sub_title'])) ? $settings['earning_seller_sub_title'] : null,
                 'earning_seller_button_name' => (isset($settings['earning_seller_button_name'])) ? $settings['earning_seller_button_name'] : null,
                 'earning_seller_status' => (int)((isset($settings['join_seller_react_status'])) ? $settings['join_seller_react_status'] : 0),
-                // 'earning_seller_button_url' => (isset($settings['earning_seller_button_url'])) ? $settings['earning_seller_button_url'] : null,
                 'earning_dm_title' => (isset($settings['earning_dm_title'])) ? $settings['earning_dm_title'] : null,
                 'earning_dm_sub_title' => (isset($settings['earning_dm_sub_title'])) ? $settings['earning_dm_sub_title'] : null,
                 'earning_dm_button_name' => (isset($settings['earning_dm_button_name'])) ? $settings['earning_dm_button_name'] : null,
-                // 'earning_dm_button_url' => (isset($settings['earning_dm_button_url'])) ? $settings['earning_dm_button_url'] : null,
                 'earning_dm_status' => (int)((isset($settings['join_DM_react_status'])) ? $settings['join_DM_react_status'] : 0),
 
                 'business_title' => (isset($settings['business_title'])) ? $settings['business_title'] : null,
@@ -588,8 +629,6 @@ class ConfigController extends Controller
                 'available_zone_image' => (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null,
                 'available_zone_image_full_url' => Helpers::get_full_url('available_zone_image', (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null, (isset($settings['available_zone_image_storage'])) ? $settings['available_zone_image_storage'] : 'public'),
                 'available_zone_list' => $zones,
-
-
 
                 'module_home_page_data_title' => (isset($settings['module_home_page_data_title'])) ? $settings['module_home_page_data_title'] : null,
                 'module_home_page_data_sub_title' => (isset($settings['module_home_page_data_sub_title'])) ? $settings['module_home_page_data_sub_title'] : null,
@@ -672,11 +711,9 @@ class ConfigController extends Controller
                 'join_seller_sub_title' => (isset($settings['join_seller_sub_title'])) ? $settings['join_seller_sub_title'] : null,
                 'join_seller_button_name' => (isset($settings['join_seller_button_name'])) ? $settings['join_seller_button_name'] : null,
                 'join_seller_status' => (int)((isset($settings['join_seller_flutter_status'])) ? $settings['join_seller_flutter_status'] : 0),
-                // 'join_seller_button_url' => (isset($settings['join_seller_button_url'])) ? $settings['join_seller_button_url'] : null,
                 'join_delivery_man_title' => (isset($settings['join_delivery_man_title'])) ? $settings['join_delivery_man_title'] : null,
                 'join_delivery_man_sub_title' => (isset($settings['join_delivery_man_sub_title'])) ? $settings['join_delivery_man_sub_title'] : null,
                 'join_delivery_man_button_name' => (isset($settings['join_delivery_man_button_name'])) ? $settings['join_delivery_man_button_name'] : null,
-                // 'join_delivery_man_button_url' => (isset($settings['join_delivery_man_button_url'])) ? $settings['join_delivery_man_button_url'] : null,
                 'join_delivery_man_status' => (int)((isset($settings['join_DM_flutter_status'])) ? $settings['join_DM_flutter_status'] : 0),
 
                 'download_user_app_title' => (isset($settings['download_user_app_title'])) ? $settings['download_user_app_title'] : null,
@@ -698,7 +735,6 @@ class ConfigController extends Controller
 
     private function getPaymentMethods()
     {
-        // Check if the addon_settings table exists
         if (!Schema::hasTable('addon_settings')) {
             return [];
         }
@@ -725,7 +761,6 @@ class ConfigController extends Controller
 
     private function getDefaultPaymentMethods()
     {
-        // Check if the addon_settings table exists
         if (!Schema::hasTable('addon_settings')) {
             return [];
         }
@@ -786,7 +821,52 @@ class ConfigController extends Controller
         if ($validator->errors()->count() > 0) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $response = Http::get('https://maps.googleapis.com/maps/api/directions/json?origin=' . $request['origin_lat'] . ',' . $request['origin_lng'] . '&destination=' . $request['destination_lat'] . ',' . $request['destination_lng'] . '&key=' . $this->map_api_key . '&mode=driving');
-        return $response->json();
+
+        $apiKey = $this->map_api_key;
+        $url = "https://routes.googleapis.com/directions/v2:computeRoutes";
+
+        $data = [
+            "origin" => [
+                "location" => [
+                    "latLng" => [
+                        "latitude" => $request['origin_lat'],
+                        "longitude" => $request['origin_lng']
+                    ]
+                ]
+            ],
+            "destination" => [
+                "location" => [
+                    "latLng" => [
+                        "latitude" => $request['destination_lat'],
+                        "longitude" => $request['destination_lng']
+                    ]
+                ]
+            ],
+            "travelMode" => strtoupper($request['mode'] ?? 'DRIVE'),
+            "routingPreference" => "TRAFFIC_AWARE",
+        ];
+
+        $headers = [
+            "Content-Type: application/json",
+            "X-Goog-Api-Key: $apiKey",
+            "X-Goog-FieldMask: routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline"
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
+
+        $response = curl_exec($ch);
+        $error = curl_error($ch);
+        curl_close($ch);
+
+        if ($error) {
+            return ["error" => $error];
+        }
+        return json_decode($response, true);
     }
 }
