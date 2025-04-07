@@ -117,6 +117,11 @@ class GenerateAdminRoute extends Command
                             ];
                         }
                     }
+                } else{
+                    info($route->getName());
+                    info($uri);
+                    $this->manualyAddedRoutes();
+
                 }
             }
         }
@@ -206,7 +211,7 @@ class GenerateAdminRoute extends Command
                     $bladePath = $matches[1];
 
                     if (preg_match_all('/\{\$(\w+)\}/', $bladePath, $varMatches)) {
-                        $moduleTypes =config('module.module_type'); 
+                        $moduleTypes =config('module.module_type');
                         $viewBasePaths =null;
 
                         foreach ($moduleTypes as $type) {
@@ -273,6 +278,14 @@ class GenerateAdminRoute extends Command
             info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             return null;
         }
-
     }
+
+ private function manualyAddedRoutes()
+    {
+        return [
+            'admin.order.offline_verification_list' ,
+        ];
+    }
+
+
 }

@@ -118,9 +118,14 @@ class SearchRoutingController extends Controller
                         return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || str_contains($route->uri(), 'deny-requests') || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store'  )
                             && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions') ;
                     });
-                } else{
+                } elseif($store->vendor->status=== null){
                     $storeRoutes = $adminRoutes->filter(function ($route) {
                         return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || str_contains($route->uri(), 'pending-requests')  || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store'  )
+                            && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions') ;
+                    });
+                } else{
+                    $storeRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store'  )
                             && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions') ;
                     });
                 }
@@ -133,11 +138,16 @@ class SearchRoutingController extends Controller
             }
 
             //order
-            $order = Order::find($searchKeyword);
+            $order = Order::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->where('module_id', $currentModuleId);
+            })->find($searchKeyword);
             if ($order){
+
                 $orderRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'order') && str_contains($route->uri(), 'details');
+                    return str_contains($route->uri(), 'admin/order/details') ;
                 });
+
+
                 if (isset($orderRoutes)) {
                     foreach ($orderRoutes as $route) {
                         $validRoutes[] = $this->filterRoute(model: $order, route: $route, type: 'order', prefix: 'Order');
@@ -147,6 +157,9 @@ class SearchRoutingController extends Controller
 
             //multiple orders with customer id
             $orders = Order::with(['customer', 'store'])
+                ->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->where('module_id', $currentModuleId);
+                })
                 ->whereHas('customer', function ($query) use ($searchKeyword){
                     $query->where('id', $searchKeyword);
                 })
@@ -157,8 +170,7 @@ class SearchRoutingController extends Controller
 
             if ($orders){
                 $ordersRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'order') && str_contains($route->uri(), 'details')
-                        && !str_contains($route->uri(), 'post');
+                    return str_contains($route->uri(), 'admin/order/details');
                 });
                 if (isset($ordersRoutes)) {
                     foreach ($orders as $order)
