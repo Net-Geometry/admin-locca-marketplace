@@ -1,13 +1,5 @@
 [
     {
-        "routeName": "Order Offline Verification List",
-        "URI": "admin/order/offline/payment/list/all",
-        "keywords": "Order List Verify Offline Payments For Offline Payments Please Verify If The Payments Are Safely Received To Your Account Customer Id Not Liable If You Confirm And Deliver The Orders Without Checking Payments Transactions All Pending Verified Denied Ex Search Reset Selected Export Options Download Options Excel Csv Sl Order Id Order Date Customer Information Total Amount Payment Method Actions Invalid Customer Data Verify Payment Recheck Verification Payment Verification Please Check & Verify The Payment Information Weather It Is Correct Or Not Before Confirm The Order Name Phone Payment Information Customer Note N/A Payment Didn\u2019t Recerive Make The Payment Verified For This Order Switched To COD Yes Payment Received No Data Found Add Offline Payment Rejection Note Transaction Id Mismatched Close Confirm Rejection",
-        "bladePath": "admin-views.order.offline_verification_list",
-        "moduleType": null,
-        "isModified": false
-    },
-    {
         "routeName": "Admin Settings",
         "URI": "admin/settings",
         "keywords": "Profile Settings Settings Dashboard Nav Menu Basic Information Password Full Name Display Name Your First Name Your Last Name Phone Optional Email Enter New Email Address Want To Update Admin Info Save Change Your Password New Password Must Contain At Least One Number And One Uppercase And Lowercase Letter And Symbol And At Least Or More Characters Confirm Password Want To Update Admin Password",
@@ -973,6 +965,158 @@
         "keywords": "Provider Report Provider Wise Report Monitor Provider\u2019s Business Analytics & Reports Summary Report Vehicle Report Trip Report Filter Data All Zones Select Provider All Providers All Time This Year Previous Year This Month This Week Custom Show Data Total Trip Total Trip Amount Canceled Incomplete Completed Total Discount Given Coupon Discount Vehicle Discount Total Trips Average Trip Value This Average Trip Value Is Calculated From All Completed Trips Trip Statistics Trips Total Canceled Total Ongoing Total Completed View All Trips Search By ID Search Export Download Options Excel Csv SL Trip ID Trip Booking Date Trip Schedule Date Customer Info Total Trip Amount Discount Tax Additional Charge Action Invalid Customer Data Paid Unpaid No Data Found",
         "bladePath": "rental::admin/report/provider-trip-report",
         "moduleType": "rental",
+        "isModified": false
+    },
+    {
+        "routeName": "Order Offline Verification List",
+        "URI": "admin/order/offline/payment/list/all",
+        "keywords": "Order List Verify Offline Payments For Offline Payments Please Verify If The Payments Are Safely Received To Your Account Customer Id Not Liable If You Confirm And Deliver The Orders Without Checking Payments Transactions All Pending Verified Denied Ex Search Reset Selected Export Options Download Options Excel Csv Sl Order Id Order Date Customer Information Total Amount Payment Method Actions Invalid Customer Data Verify Payment Recheck Verification Payment Verification Please Check & Verify The Payment Information Weather It Is Correct Or Not Before Confirm The Order Name Phone Payment Information Customer Note N/A Payment Didn\u2019t Recerive Make The Payment Verified For This Order Switched To COD Yes Payment Received No Data Found Add Offline Payment Rejection Note Transaction Id Mismatched Close Confirm Rejection",
+        "bladePath": "admin-views.order.offline_verification_list",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Order List",
+        "URI": "admin/refund/requested",
+        "keywords": "Order List Parcel Orders Refund Orders Ex Search Reset Selected Export Download Options Excel Csv Refund Requests Rejected Filter Columns Date Customer Parcel Category Store Item Quantity Total Order Status Actions Sl Order Id Order Date Scheduled At Customer Information Item Quantity Total Amount Refunded Order Status Invalid Customer Data Not Found Store Deleted! Paid Partially Paid Unpaid Pending Confirmed Processing Out For Delivery Delivered Payment Failed Handover Canceled Accepted Refund Requested Take Away Home Delivery No Data Found Order Filter Zone Failed RefundRequest Refunded Scheduled Order Type Delivery Date Between To Clear All Filters Save",
+        "bladePath": "admin-views.order.list",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Zone List",
+        "URI": "admin/business-settings/zone",
+        "keywords": "Add New Zone Add New Business Zone Instructions Create & Connect Dots In A Specific Area On The Map To Add A New Business Zone Use This \u2018Hand Tool\u2019 To Find Your Target Zone Use This \u2018Shape Tool\u2019 To Point Out The Areas And Connect The Dots Minimum Points/dots Are Required Default Choose Your Preferred Language & Set Your Zone Name Veg Non Veg Business Zone Name Write A New Business Zone Name Display Name Write A New Display Zone Name Coordinates Draw Your Zone On The Map Search Your Location Here Search Here Reset Submit Zone List Search Business Zone Search Export Download Options Excel Csv SL Zone Id Vendors Deliverymen Status Digital Payment Cash On Delivery Offline Payment Action Want To Activate This Zone Want To Deactivate This Zone If You Activate This Zone Customers Can See All Stores & Products Available Under This Zone From The Customer App & Website If You Deactivate This Zone Customers Will NOT See All Stores & Products Available Under This Zone From The Customer App & Website Want To Disable \u2018Digital Payment\u2019 Want To Enable \u2018Digital Payment\u2019 If Yes The Digital Payment Option Will Be Hidden During Checkout If Yes Customers Can Choose The \u2018Digital Payment\u2019 Option During Checkout Want To Disable \u2018Cash On Delivery\u2019 Want To Enable \u2018Cash On Delivery\u2019 If Yes The Cash On Delivery Option Will Be Hidden During Checkout If Yes Customers Can Choose The \u2018Cash On Delivery\u2019 Option During Checkout Want To Disable \u2018offline Payment\u2019 Want To Enable \u2018offline Payment\u2019 If Yes The Offline Payment Option Will Be Hidden During Checkout If Yes Customers Can Choose The \u2018offline Payment\u2019 Option During Checkout Edit Zone Important! The Business Zone Will NOT Work If You Don\u2019t Select Your Business Module & Payment Method Want To Delete This Zone If Yes All Its Modules Stores And Products Will Be DELETED FOREVER Delete Zone No Data Found New Business Zone Created Successfully! Go To Zone Settings By Switching The Status To \u201cON\u201d This Zone And Under All The Functionality Of This Zone Will Be Turned On Ok No Yes Zone Added Successfully",
+        "bladePath": "admin-views.zone.index",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Category List",
+        "URI": "admin/category/add?position=0",
+        "keywords": "Add New Category Add New Category Default Name Required New Category Image Ratio Reset Update Add Category List Search Categories Ex Categories Export Download Options Excel Csv Sl Id Status Featured Priority Action Normal Medium High Edit Category Want To Delete This Category Delete Category No Data Found",
+        "bladePath": "admin-views.category.index",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Category Sub Index",
+        "URI": "admin/category/add?position=1",
+        "keywords": "Add New Sub Category Add New Sub Category Default Name Required New Sub Category Main Category Select Main Category Reset Add Sub Category List Ex Search Sub Categories Ex Sub Categories Export Download Options Excel Csv Sl Id Sub Category Status Featured Priority Action Invalid Category Normal Medium High Edit Category Want To Delete This Category Delete Category No Data Found",
+        "bladePath": "admin-views.category.sub-index",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Category Bulk Import",
+        "URI": "admin/category/bulk-import",
+        "keywords": "Category Bulk Import Step Download Excel File Instruction Download The Format File And Fill It With Proper Data You Can Download The Example File To Understand How The Data Must Be Filled Have To Upload Excel File Match Spread Sheet Data According To Instruction Fill Up The Data According To The Format For Parent Category \"position\" Will And For Sub Category It Will Be By Default Status Will Be Please Input The Right Ids For A Category Parent Id Will Be Empty For Sub Category It Will Be The Category Id For A Sub Category Module Id Will It`s Parents Module Id Validate Data And Complete Import In The Excel File Upload Section First Select The Upload Option Upload Your File In Xls Xlsx Format Finally Click The Upload Button You Can Upload Your Category Images In Category Folder From Gallery And Copy Image`s Path Download Spreadsheet Template Template With Existing Data Template Without Data Select Data Upload Type Upload New Data Update Existing Data Import Category File Must Be Excel Files Using Our Excel Template Above Reset Upload Are You Sure You Want To No Yes Cancelled",
+        "bladePath": "admin-views.category.bulk-import",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Category Bulk Export",
+        "URI": "admin/category/bulk-export",
+        "keywords": "Category Bulk Export Export Categories Step Select Data Type Instruction Select Data Type In Which Order You Want Your Data Sorted While Downloading Select Data Range By Date Or ID And Export The File Will Be Downloaded In Xls Format Click Reset If You Want To Clear You Changes And Want To Download In Default Sort Wise Data Type Select Type All Data Date Wise Id Wise Start Id From Date End Id To Date Clear Export",
+        "bladePath": "admin-views.category.bulk-export",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Product Bulk Export",
+        "URI": "admin/item/bulk-export",
+        "keywords": "Food Bulk Export Items Bulk Export Step Select Data Type Instruction Select Data Type In Which Order You Want Your Data Sorted While Downloading Select Data Range By Date Or ID And Export The File Will Be Downloaded In Xls Format Click Reset If You Want To Clear You Changes And Want To Download In Default Sort Wise Data Type Select Type All Data Date Wise Id Wise Start Id From Date End Id To Date Clear Export",
+        "bladePath": "admin-views.product.bulk-export",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Vendor Bulk Export",
+        "URI": "admin/store/bulk-export",
+        "keywords": "Restaurant Bulk Export Export Stores Step Select Data Type Instruction Select Data Type In Which Order You Want Your Data Sorted While Downloading Select Data Range By Date Or ID And Export The File Will Be Downloaded In Xls Format Click Reset If You Want To Clear You Changes And Want To Download In Default Sort Wise Data Type Select Type All Data Date Wise Id Wise Start Id From Date End Id To Date Clear Export",
+        "bladePath": "admin-views.vendor.bulk-export",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Addon Bulk Import",
+        "URI": "admin/addon/bulk-import",
+        "keywords": "AddOn Bulk Import Addons Bulk Import Step Download Excel File Instruction Download The Format File And Fill It With Proper Data You Can Download The Example File To Understand How The Data Must Be Filled Have To Upload Excel File Match Spread Sheet Data According To Instruction Fill Up The Data According To The Format You Can Get Store Id From Their List Please Input The Right Ids Validate Data And Complete Import In The Excel File Upload Section First Select The Upload Option Upload Your File In Xls Xlsx Format Finally Click The Upload Button Download Spreadsheet Template Template With Existing Data Template Without Data Select Data Upload Type Upload New Data Update Existing Data Import Addons File Must Be Excel Files Using Our Excel Template Above Reset Upload Are You Sure You Want To No Yes",
+        "bladePath": "admin-views.addon.bulk-import",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Addon Bulk Export",
+        "URI": "admin/addon/bulk-export",
+        "keywords": "Addon Bulk Export Addons Bulk Export Step Select Data Type Instruction Select Data Type In Which Order You Want Your Data Sorted While Downloading Select Data Range By Date Or ID And Export The File Will Be Downloaded In Xls Format Click Reset If You Want To Clear You Changes And Want To Download In Default Sort Wise Data Type Select Type All Data Date Wise Id Wise Start Id From Date End Id To Date Clear Export",
+        "bladePath": "admin-views.addon.bulk-export",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Wallet Bonus List",
+        "URI": "admin/users/customer/wallet/bonus",
+        "keywords": "Bonuses Wallet Bonus Setup See How It Works! Default Bonus Title Default Required Ex EID Dhamaka Short Description Bonus Type Percentage Amount Bonus Amount Set The Bonus Amount/percentage A Customer Will Receive After Adding Money To His Wallet Ex Minimum Add Money Amount Set The Minimum Add Money Amount For A Customer To Be Eligible For The Bonus Maximum Bonus Set The Maximum Bonus Amount A Customer Can Receive For Adding Money To His Wallet Start Date Expire Date Reset Submit Bonus List Ex Search By Bonus Title Search Here Sl Bonus Title Bonus Info Bonus Amount Started On Expires On Status Action Minimum Add Amount Maximum Bonus Edit Bonus Want To Delete This Bonus Delete Bonus No Data Found Wallet Bonus Is Only Applicable When A Customer Add Fund To Wallet Via Outside Payment Gateway ! Customer Will Get Extra Amount To His / Her Wallet Additionally With The Amount He / She Added From Other Payment Gateways The Bonus Amount Will Be Deduct From Admin Wallet & Will Consider As Admin Expense",
+        "bladePath": "admin-views.wallet-bonus.index",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Dm Vehicle List",
+        "URI": "admin/users/delivery-man/vehicle",
+        "keywords": "Vehicle List Vehicles Category List Add Vehicle Category Ex Search By Type Reset Sl Type Total Deliveryman Minimum Coverage Area Km Maximum Coverage Area Extra Charges Status Action By Turning ON Vehicle Category! By Turning OFF Vehicle Category! Turned On This Vehicle Category Extra Charge Will Be Added On The Delivery Charge And This Categories Deliverymen Can Receives The Order Turned Off This Vehicle Category Extra Charge Will Not Be Added On The Delivery Charge And This Categories Deliverymen Can Not Receives The Order Edit Vehicle Category Want To Delete This Vehicle Category Delete Vehicle Category No Data Found Vehicle Type Maximum Coverage Area Extra Charges Delete Vehicle Edit Active Inactive",
+        "bladePath": "admin-views.dm-vehicle.list",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Delivery Man List",
+        "URI": "admin/users/delivery-man/add",
+        "keywords": "Add New Delivery Man Add New Deliveryman General Information First Name Required Last Name Email Ex Deliveryman Type Select Deliveryman Type Freelancer Salary Based Zone Select Zone Vehicle Select Vehicle Deliveryman Image Ratio Choose File Identity Type Select Identity Type Passport Driving License Nid Store Id Identity Number Identity Image Max Identity Images Login Information Phone Password Must Contain At Least One Number And One Uppercase And Lowercase Letter And Symbol And At Least Or More Characters Confirm Password Reset Submit Please Only Input Png Or Jpg Type File File Size Too Big",
+        "bladePath": "admin-views.delivery-man.index",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Delivery Man List",
+        "URI": "admin/users/delivery-man",
+        "keywords": "Deliverymen Deliveryman Deliveryman List All Types Online Offline Suspended All Job Types Freelancer Salary Base All Zones Ex DM Name Email Or Phone Reset Export Download Options Excel Csv Sl Name Contact Info Zone Total Completed Orders Availability Status Status Action Zone Deleted Currently Assigned Orders Active Status Online Offline Denied Pending Active View Edit Want To Remove This Deliveryman Delete No Data Found",
+        "bladePath": "admin-views.delivery-man.list",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Delivery Man New",
+        "URI": "admin/users/delivery-man/new",
+        "keywords": "New Joining Requests All Zones Pending Delivery Man Denied Deliveryman Deliveryman List Ex DM Name Email Or Phone Search Reset Sl Name Contact Info Zone Job Type Join Request Date Action Zone Deleted Freelancer Salary Based Approve You Want To Approve This Application Edit Deny You Want To Deny This Application No Data Found Are You Sure No Yes",
+        "bladePath": "admin-views.delivery-man.new",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Delivery Man Deny",
+        "URI": "admin/users/delivery-man/deny",
+        "keywords": "Denied Deliveryman Denied Delivery Man All Zones Pending Delivery Man Deliveryman List Ex Search Delivery Man Email Or Phone Search Reset Sl Name Contact Info Zone Job Type Join Request Date Action Zone Deleted Freelancer Salary Based Approve You Want To Approve This Application Edit Deny You Want To Deny This Application No Data Found Are You Sure No Yes",
+        "bladePath": "admin-views.delivery-man.deny",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Custom Role Create",
+        "URI": "admin/users/custom-role/create",
+        "keywords": "Custom Role Employee Role Default Role Name Required Role Name Example Set Permission Select All Collect Cash Addon Attribute Banner Campaign Category Coupon Cashback Customer Management Deliveryman Provide Dm Earning Employee Item Notification Order Store Report Settings Withdraw List Zone Module Parcel Pos Unit Subscription Rental Role Trip Promotion Vehicle Provider Driver Download App Report Reset Submit Roles Table Ex Search Role Name Sl Permissions Created At Action Edit Role Want To Delete This Role Delete Role No Data Found",
+        "bladePath": "admin-views.custom-role.create",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Employee Add New",
+        "URI": "admin/users/employee/store",
+        "keywords": "Employee Add Add New Employee General Information First Name Required Last Name Zone All Role Select Role Phone Ex Employee Image Ratio Choose File Account Information Email Password Must Contain At Least One Number And One Uppercase And Lowercase Letter And Symbol And At Least Or More Characters Confirm Password Reset Submit",
+        "bladePath": "admin-views.employee.add-new",
+        "moduleType": null,
         "isModified": false
     }
 ]

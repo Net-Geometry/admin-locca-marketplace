@@ -227,6 +227,24 @@ class GenerateAdminRoute extends Command
     {
         $array = [
             'admin-views.order.offline_verification_list' => ['admin/order/offline/payment/list/all'],
+            'admin-views.order.list' => ['admin/refund/requested'],
+            'admin-views.zone.index' => ['admin/business-settings/zone'],
+            'admin-views.category.index' => ['admin/category/add?position=0'],
+            'admin-views.category.sub-index' => ['admin/category/add?position=1'],
+            'admin-views.category.bulk-import' => ['admin/category/bulk-import'],
+            'admin-views.category.bulk-export' => ['admin/category/bulk-export'],
+            'admin-views.product.bulk-export' => ['admin/item/bulk-export'],
+            'admin-views.vendor.bulk-export' => ['admin/store/bulk-export'],
+            'admin-views.addon.bulk-import' => ['admin/addon/bulk-import'],
+            'admin-views.addon.bulk-export' => ['admin/addon/bulk-export'],
+            'admin-views.wallet-bonus.index' => ['admin/users/customer/wallet/bonus'],
+            'admin-views.dm-vehicle.list' => ['admin/users/delivery-man/vehicle'],
+            'admin-views.delivery-man.index' => ['admin/users/delivery-man/add'],
+            'admin-views.delivery-man.list' => ['admin/users/delivery-man'],
+            'admin-views.delivery-man.new' => ['admin/users/delivery-man/new'],
+            'admin-views.delivery-man.deny' => ['admin/users/delivery-man/deny'],
+            'admin-views.custom-role.create' => ['admin/users/custom-role/create'],
+            'admin-views.employee.add-new' => ['admin/users/employee/store'],
         ];
 
         foreach ($array as $bladePath => $value) {
