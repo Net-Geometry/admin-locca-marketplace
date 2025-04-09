@@ -13,6 +13,8 @@ use App\Models\Order;
 use App\Models\Store;
 use App\Models\Banner;
 use App\Models\Coupon;
+use App\Models\Module;
+use App\Models\Review;
 use App\Models\Contact;
 use App\Models\Campaign;
 use App\Models\CashBack;
@@ -20,7 +22,10 @@ use App\Models\Category;
 use App\Models\AdminRole;
 use App\Models\Attribute;
 use App\Models\DMVehicle;
+use App\Models\FlashSale;
+use App\Models\Newsletter;
 use App\Models\DeliveryMan;
+use App\Models\TempProduct;
 use App\Models\WalletBonus;
 use Illuminate\Support\Str;
 use App\Models\Disbursement;
@@ -29,15 +34,20 @@ use App\Models\Notification;
 use App\Models\RecentSearch;
 use Illuminate\Http\Request;
 use App\Models\Advertisement;
+use App\Models\WalletPayment;
 use App\Models\ContactMessage;
+use App\Models\ParcelCategory;
+use App\Models\CommonCondition;
 use App\Models\WithdrawRequest;
 use App\Models\WithdrawalMethod;
 use App\Models\StoreSubscription;
+use App\Models\WalletTransaction;
 use Illuminate\Http\JsonResponse;
 use App\Models\SubscriptionPackage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Models\LoyaltyPointTransaction;
 
 
 class SearchRoutingController extends Controller
@@ -60,8 +70,8 @@ class SearchRoutingController extends Controller
                 });
             }
 
-        $currentModuleType =config('module.current_module_type') ?? null;
-        $currentModuleId =config('module.current_module_id') ?? null;
+            $currentModuleType =config('module.current_module_type') ?? null;
+            $currentModuleId =config('module.current_module_id') ?? null;
 
             foreach ($routes as $route) {
                 $uri = $route['URI'];
@@ -113,538 +123,676 @@ class SearchRoutingController extends Controller
         if (is_numeric($searchKeyword) && $searchKeyword > 0) {
             //store
 
-            // $store = Store::with('vendor')
-            //     ->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-            //         return $query->where('module_id', $currentModuleId);
-            //     })
-            //     ->where('id', $searchKeyword)
-            //     ->orWhereHas('vendor', function ($query) use ($searchKeyword){
-            //         $query->where('id', $searchKeyword);
-            //     })
-            //     ->first();
+            $store = Store::with('vendor')
+                ->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->where('module_id', $currentModuleId);
+                })
+                ->where('id', $searchKeyword)
+                ->orWhereHas('vendor', function ($query) use ($searchKeyword){
+                    $query->where('id', $searchKeyword);
+                })
+                ->first();
 
-            // if ($store){
+            if ($store){
 
-            //     if($store->vendor->status===0){
-            //         $storeRoutes = $adminRoutes->filter(function ($route) {
-            //             return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || str_contains($route->uri(), 'deny-requests') || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store'  )
-            //                 && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions') ;
-            //         });
-            //     } elseif($store->vendor->status=== null){
-            //         $storeRoutes = $adminRoutes->filter(function ($route) {
-            //             return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || str_contains($route->uri(), 'pending-requests')  || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store'  )
-            //                 && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions') ;
-            //         });
-            //     } else{
-            //         $storeRoutes = $adminRoutes->filter(function ($route) {
-            //             return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store'  )
-            //                 && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions') ;
-            //         });
-            //     }
+                if($store->vendor->status===0){
+                    $storeRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || str_contains($route->uri(), 'deny-requests') || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store'  )
+                            && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions') ;
+                    });
+                } elseif($store->vendor->status=== null){
+                    $storeRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || str_contains($route->uri(), 'pending-requests')  || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store'  )
+                            && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions') ;
+                    });
+                } else{
+                    $storeRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store'  )
+                            && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions') ;
+                    });
+                }
 
-            //     if (isset($storeRoutes)) {
-            //         foreach ($storeRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $store, route: $route, type: 'store', prefix: 'Store');
-            //         }
-            //     }
-            // }
+                if (isset($storeRoutes)) {
+                    foreach ($storeRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $store, route: $route, type: 'store', prefix: 'Store');
+                    }
+                }
+            }
 
-            // //order
-            // $order = Order::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-            //     return $query->where('module_id', $currentModuleId);
-            // })->find($searchKeyword);
-            // if ($order){
+            //order
+            $order = Order::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->where('module_id', $currentModuleId);
+            })->find($searchKeyword);
+            if ($order){
 
-            //     $orderRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'admin/order/details') ;
+                $orderRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'admin/order/details') ;
+                });
+
+
+                if (isset($orderRoutes)) {
+                    foreach ($orderRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $order, route: $route, type: 'order', prefix: 'Order');
+                    }
+                }
+            }
+
+            //multiple orders with customer id
+            $orders = Order::with(['customer', 'store'])
+                ->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->where('module_id', $currentModuleId);
+                })
+                ->whereHas('customer', function ($query) use ($searchKeyword){
+                    $query->where('id', $searchKeyword);
+                })
+                ->orWhereHas('store', function ($query) use ($searchKeyword){
+                    $query->where('id', $searchKeyword);
+                })
+                ->get();
+
+            if ($orders){
+                $ordersRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'admin/order/details');
+                });
+                if (isset($ordersRoutes)) {
+                    foreach ($orders as $order)
+                    {
+                        foreach ($ordersRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $order, route: $route, type: 'order', prefix: 'Order');
+                        }
+                    }
+                }
+            }
+
+            //zone
+            $zone = Zone::find($searchKeyword);
+            if ($zone){
+                $zoneRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'business-settings/zone') &&
+                        (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'zone/module-setup/'));
+                });
+
+                if (isset($zoneRoutes)) {
+                    foreach ($zoneRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $zone, route: $route, type: 'zone', prefix: 'Zone');
+                    }
+                }
+            }
+
+            //category
+            $category = Category::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                        return $query->where('module_id', $currentModuleId);
+                    })->find($searchKeyword);
+
+            if ($category){
+                $categoryRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'category') && str_contains($route->uri(), 'update') && !str_contains($route->uri(), 'category/update-priority');
+                });
+
+                if (isset($categoryRoutes)) {
+                    foreach ($categoryRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $category, route: $route, type: 'category', prefix: 'Category');
+                    }
+                }
+            }
+
+
+
+            //AddOn
+            $addOn = AddOn::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                                return $query->wherehas('store', function($query) use ($currentModuleId){
+                                    $query->where('module_id', $currentModuleId);
+                                });
+                            })
+            ->find($searchKeyword);
+            if ($addOn){
+                $addOnRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'addon') && str_contains($route->uri(), 'edit');
+                });
+
+                if (isset($addOnRoutes)) {
+                    foreach ($addOnRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $addOn, route: $route, prefix: 'Addon');
+                    }
+                }
+            }
+
+
+            if(in_array($currentModuleType ,['grocery', 'pharmacy', 'ecommerce'])){
+                //Unit
+                $unit = Unit::find($searchKeyword);
+                if ($unit){
+                    $unitRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'unit')  && !str_contains($route->uri(), 'unit/export');
+                    });
+
+                    if (isset($unitRoutes)) {
+                        foreach ($unitRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $unit, route: $route, prefix: 'unit');
+                        }
+                    }
+                }
+
+                // attribute
+                $attribute = Attribute::find($searchKeyword);
+                if ($attribute){
+                    $attributeRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'attribute')  && !str_contains($route->uri(), 'attribute/export');
+                    });
+
+                    if (isset($attributeRoutes)) {
+                        foreach ($attributeRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $attribute, route: $route, prefix: 'attribute');
+                        }
+                    }
+                }
+            }
+
+
+
+
+            if(in_array($currentModuleType ,['ecommerce'])){
+                      // Brand
+                $Brand = Brand::
+                when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                                return $query->where(function ($query) use ($currentModuleId) {
+                                    $query->where('module_id', $currentModuleId)
+                                        ->orWhere('module_id', null);
+                                });
+                            })
+                ->find($searchKeyword);
+                if ($Brand){
+                    $BrandRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'brand')  && !str_contains($route->uri(), 'brand/export') && !str_contains($route->uri(), 'brand/status');
+                    });
+
+                    if (isset($BrandRoutes)) {
+                        foreach ($BrandRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $Brand, route: $route, prefix: 'Brand');
+                        }
+                    }
+                }
+            }
+
+
+            //Item
+            $Item = Item::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                            return $query->where('module_id', $currentModuleId);
+                        })->find($searchKeyword);
+
+            if ($Item){
+                $ItemRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'admin/item/edit/') || str_contains($route->uri(), 'admin/item/view/');
+                });
+
+                if (isset($ItemRoutes)) {
+                    foreach ($ItemRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $Item, route: $route, type: 'Item', prefix: 'Item');
+                    }
+                }
+            }
+
+            //basic campaign
+            $campaign = Campaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                                return $query->where('module_id', $currentModuleId);
+                            })->find($searchKeyword);
+            if ($campaign){
+                $campaignRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'campaign')
+                        && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
+                });
+
+                if (isset($campaignRoutes)) {
+                    foreach ($campaignRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $campaign, route: $route, type: 'basic-campaign', prefix: 'Basic Campaign');
+                    }
+                }
+            }
+
+            //item campaign
+            $itemCampaign = ItemCampaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                                    return $query->where('module_id', $currentModuleId);
+                                })->find($searchKeyword);
+            if ($itemCampaign){
+                $itemCampaignRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'campaign')
+                        && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
+                });
+
+                if (isset($itemCampaignRoutes)) {
+                    foreach ($itemCampaignRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $itemCampaign, route: $route, type: 'item-campaign', prefix: 'Item Campaign');
+                    }
+                }
+            }
+
+            //coupon
+            $coupon = Coupon::where('created_by','admin')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                                        return $query->where('module_id', $currentModuleId);
+                                    })->find($searchKeyword);
+            if ($coupon){
+                $couponRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'coupon/edit') ;
+                });
+
+                if (isset($couponRoutes)) {
+                    foreach ($couponRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $coupon, route: $route, prefix: 'Coupon');
+                    }
+                }
+            }
+
+            //cashback
+            $cashback = CashBack::find($searchKeyword);
+            if ($cashback){
+                $cashbackRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'cashback') && !str_contains($route->uri(), 'status') ;
+                });
+
+                if (isset($cashbackRoutes)) {
+                    foreach ($cashbackRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $cashback, route: $route, prefix: 'Cashback');
+                    }
+                }
+            }
+
+            //banner
+            $banner = Banner::where('created_by','admin')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                                            return $query->where('module_id', $currentModuleId);
+                                        })->find($searchKeyword);
+            if ($banner){
+                $bannerRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'admin/banner') && !str_contains($route->uri(), 'status') ;
+                });
+
+                if (isset($bannerRoutes)) {
+                    foreach ($bannerRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $banner, route: $route, prefix: 'Banner');
+                    }
+                }
+            }
+
+            //Advertisement
+            $ads = Advertisement::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                                                return $query->where('module_id', $currentModuleId);
+                                            })->find($searchKeyword);
+            if ($ads){
+                $adsRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'advertisement')
+                        && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'detail'));
+                });
+                if (isset($adsRoutes)) {
+                    foreach ($adsRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $ads, route: $route, prefix: 'Advertisement');
+                    }
+                }
+            }
+
+            $contact = Contact::find($searchKeyword);
+            if ($contact){
+                $contactRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'contact') && str_contains($route->uri(), 'view');
+                });
+
+                if (isset($contactRoutes)) {
+                    foreach ($contactRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $contact, route: $route, prefix: 'Contact');
+                    }
+                }
+            }
+
+            $notification = Notification::find($searchKeyword);
+            if ($notification){
+                $notificationRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'notification') && str_contains($route->uri(), 'edit');
+                });
+
+                if (isset($notificationRoutes)) {
+                    foreach ($notificationRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $notification, route: $route, prefix: 'Notification');
+                    }
+                }
+            }
+
+            //customer
+            $customer = User::find($searchKeyword);
+            if ($customer){
+                $customerRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'users/customer/view');
+                });
+
+                if (isset($customerRoutes)) {
+                    foreach ($customerRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $customer, route: $route, type: 'customer', prefix: 'Customer');
+                    }
+                }
+            }
+
+            //WalletBonus
+            $bonus = WalletBonus::find($searchKeyword);
+            if ($bonus){
+                $bonusRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'wallet/bonus');
+                });
+
+                if (isset($bonusRoutes)) {
+                    foreach ($bonusRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $bonus, route: $route, type: 'bonus', prefix: 'Bonus');
+                    }
+                }
+            }
+
+            //vehicle
+            $vehicle = DMVehicle::find($searchKeyword);
+            if ($vehicle){
+                $vehicleRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'delivery-man/vehicle/edit');
+                });
+
+                if (isset($vehicleRoutes)) {
+                    foreach ($vehicleRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $vehicle, route: $route, type: 'vehicle', prefix: 'Vehicle');
+                    }
+                }
+            }
+
+            //delivery man
+            $deliveryMan = DeliveryMan::find($searchKeyword);
+            if ($deliveryMan){
+                $deliveryManRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'delivery-man/edit') || str_contains($route->uri(), 'delivery-man/preview');
+                });
+                if (isset($deliveryManRoutes)) {
+                    foreach ($deliveryManRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $deliveryMan, route: $route, type: 'deliveryMan', prefix: 'Delivery Man');
+                    }
+                }
+            }
+
+            //store disbursement
+            $storeDisbursement = Disbursement::where('created_for', 'store')->find($searchKeyword);
+            if ($storeDisbursement){
+                $storeDisbursementRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'store-disbursement') &&  str_contains($route->uri(), 'details');
+                });
+
+                if (isset($storeDisbursementRoutes)) {
+                    foreach ($storeDisbursementRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $storeDisbursement, route: $route, prefix: 'Store Disbursement');
+                    }
+                }
+            }
+
+            //delivery man disbursement
+            $dmDisbursement = Disbursement::where('created_for', 'delivery_man')->find($searchKeyword);
+            if ($dmDisbursement){
+                $dmDisbursementRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'dm-disbursement') &&  str_contains($route->uri(), 'details');
+                });
+
+                if (isset($dmDisbursementRoutes)) {
+                    foreach ($dmDisbursementRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $dmDisbursement, route: $route, prefix: 'Delivery Man Disbursement');
+                    }
+                }
+            }
+
+
+
+            //withdraw method
+            $withdrawalMethod = WithdrawalMethod::find($searchKeyword);
+            if ($withdrawalMethod){
+                $withdrawalMethodRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'withdraw-method') && str_contains($route->uri(), 'edit');
+                });
+
+                if (isset($withdrawalMethodRoutes)) {
+                    foreach ($withdrawalMethodRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $withdrawalMethod, route: $route, prefix: 'Withdraw Method');
+                    }
+                }
+            }
+
+           // Employee role
+            $adminRole = AdminRole::find($searchKeyword);
+            if ($adminRole){
+                $adminRoleRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'custom-role') && str_contains($route->uri(), 'edit');
+                });
+
+                if (isset($adminRoleRoutes)) {
+                    foreach ($adminRoleRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $adminRole, route: $route, prefix: 'Employee Role');
+                    }
+                }
+            }
+
+            //Employee
+            $employee = Admin::whereNotIn('id', [1,auth('admin')->user()->id])->find($searchKeyword);
+            if ($employee){
+                $employeeRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'employee') && str_contains($route->uri(), 'edit');
+                });
+
+                if (isset($employeeRoutes)) {
+                    foreach ($employeeRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $employee, route: $route, prefix: 'Employee');
+                    }
+                }
+            }
+
+            //subscription package
+            $subscriptionPackage = SubscriptionPackage::find($searchKeyword);
+            if ($subscriptionPackage){
+                $subscriptionPackageRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'subscription/subscriptionackage')
+                        ;
+                });
+
+                if (isset($subscriptionPackageRoutes)) {
+                    foreach ($subscriptionPackageRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $subscriptionPackage, route: $route, prefix: 'Subscription');
+                    }
+                }
+            }
+
+            //Module
+            $module = Module::find($searchKeyword);
+            if ($module){
+                $moduleRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'business-settings/module') && !str_contains($route->uri(), 'export') ;
+                });
+
+                if (isset($moduleRoutes)) {
+                    foreach ($moduleRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $module, route: $route, prefix: 'Module');
+                    }
+                }
+            }
+
+            //flashSale
+            $flashSale = FlashSale::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                                                    return $query->where('module_id', $currentModuleId);
+                                                })->find($searchKeyword);
+            if ($flashSale){
+                $flashSaleRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'flash-sale/') && !str_contains($route->uri(), 'publish') ;
+                });
+
+                if (isset($flashSaleRoutes)) {
+                    foreach ($flashSaleRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $flashSale, route: $route, prefix: 'flashSale');
+                    }
+                }
+            }
+
+            //ParcelCategory
+            if(in_array($currentModuleType ,['parcel'])){
+                $ParcelCategory = ParcelCategory::find($searchKeyword);
+                if ($ParcelCategory){
+                    $ParcelCategoryRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'admin/parcel/category/') && (str_contains($route->uri(), 'edit'));
+                    });
+
+                    if (isset($ParcelCategoryRoutes)) {
+                        foreach ($ParcelCategoryRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $ParcelCategory, route: $route, prefix: 'Parcel Category');
+                        }
+                    }
+                }
+            }
+            //CommonCondition
+            if(in_array($currentModuleType ,['pharmacy'])){
+                $CommonCondition = CommonCondition::find($searchKeyword);
+                if ($CommonCondition){
+                    $CommonConditionRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'admin/common-condition');
+                    });
+
+                    if (isset($CommonConditionRoutes)) {
+                        foreach ($CommonConditionRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $CommonCondition, route: $route, prefix: 'Common Condition');
+                        }
+                    }
+                }
+            }
+            //walletTransaction
+            $walletTransaction = WalletTransaction::find($searchKeyword);
+            if ($walletTransaction){
+                $walletTransactionRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'users/customer/wallet/report');
+                });
+
+                if (isset($walletTransactionRoutes)) {
+                    foreach ($walletTransactionRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $walletTransaction, route: $route, prefix: 'Customer Wallet Report');
+                    }
+                }
+            }
+
+
+            //LoyaltyPoint
+            $LoyaltyPoint = LoyaltyPointTransaction::find($searchKeyword);
+            if ($LoyaltyPoint){
+                $LoyaltyPointRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'users/customer/loyalty-point/report');
+                });
+
+                if (isset($LoyaltyPointRoutes)) {
+                    foreach ($LoyaltyPointRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $LoyaltyPoint, route: $route, prefix: 'Customer Loyalty Point');
+                    }
+                }
+            }
+            //Newsletter
+            $Newsletter = Newsletter::find($searchKeyword);
+            if ($Newsletter){
+                $NewsletterRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'admin/users/customer/subscribed');
+                });
+
+                if (isset($NewsletterRoutes)) {
+                    foreach ($NewsletterRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $Newsletter, route: $route, prefix: 'Customers');
+                    }
+                }
+            }
+
+
+            //tepmProduct
+            $tepmProduct = TempProduct::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                                                    return $query->where('module_id', $currentModuleId);
+                                                })->find($searchKeyword);
+            if ($tepmProduct){
+                $tepmProductRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'admin/item/new/item/list') || str_contains($route->uri(), 'admin/item/requested/item/view/') ;
+                });
+
+                if (isset($tepmProductRoutes)) {
+                    foreach ($tepmProductRoutes as $route) {
+                        $validRoutes[] = $this->filterRoute(model: $tepmProduct, route: $route, prefix: 'New Product');
+                    }
+                }
+            }
+
+            // review
+            // $review = Review::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+            //                                         return $query->where('module_id', $currentModuleId);
+            //                                     })->find($searchKeyword);
+            // if ($review){
+            //     $reviewRoutes = $adminRoutes->filter(function ($route) {
+            //         return str_contains($route->uri(), 'admin/item/reviews') || str_contains($route->uri(), 'admin/item/requested/item/view/') ;
             //     });
 
-
-            //     if (isset($orderRoutes)) {
-            //         foreach ($orderRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $order, route: $route, type: 'order', prefix: 'Order');
+            //     if (isset($reviewRoutes)) {
+            //         foreach ($reviewRoutes as $route) {
+            //             $validRoutes[] = $this->filterRoute(model: $review, route: $route, prefix: 'Review');
             //         }
             //     }
             // }
 
-            // //multiple orders with customer id
-            // $orders = Order::with(['customer', 'store'])
-            //     ->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-            //         return $query->where('module_id', $currentModuleId);
-            //     })
-            //     ->whereHas('customer', function ($query) use ($searchKeyword){
-            //         $query->where('id', $searchKeyword);
-            //     })
-            //     ->orWhereHas('store', function ($query) use ($searchKeyword){
-            //         $query->where('id', $searchKeyword);
+            // //subscriber
+            // $storeSubscription = StoreSubscription::wherehas('store', function($query){
+            //     $query->whereIn('store_business_model' ,['subscription','unsubscribed']);
+            // })->where('store_id',$searchKeyword);
+
+            // if ($storeSubscription){
+            //     $storeSubscriptionRoutes = $adminRoutes->filter(function ($route) {
+            //         return str_contains($route->uri(), 'subscription') && str_contains($route->uri(), 'subscriber-detail');
+            //     });
+
+            //     if (isset($storeSubscriptionRoutes)) {
+            //         foreach ($storeSubscriptionRoutes as $route) {
+            //             $validRoutes[] = $this->filterRoute(model: $storeSubscription, route: $route, prefix: 'Subscription');
+            //         }
+            //     }
+            // }
+        }
+
+        else {
+            //Store
+            // $stores = Store::where('name', 'LIKE', '%' . $searchKeyword . '%')
+            //     ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
+            //     ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+            //     ->orWhere('address', 'LIKE', '%' . $searchKeyword . '%')
+            //     ->orWhere('meta_title', 'LIKE', '%' . $searchKeyword . '%')
+            //     ->orWhere('meta_description', 'LIKE', '%' . $searchKeyword . '%')
+            //     ->orWhereHas('vendor', function($query) use ($searchKeyword){
+            //         return $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
+            //             ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
+            //             ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+            //             ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
+            //             ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+            //             ->orWhereRaw("CONCAT(l_name, ' ', f_name) LIKE ?", ['%' . $searchKeyword . '%'])
+            //             ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%'])
+            //             ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%']);
             //     })
             //     ->get();
 
-            // if ($orders){
-            //     $ordersRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'admin/order/details');
-            //     });
-            //     if (isset($ordersRoutes)) {
-            //         foreach ($orders as $order)
-            //         {
-            //             foreach ($ordersRoutes as $route) {
-            //                 $validRoutes[] = $this->filterRoute(model: $order, route: $route, type: 'order', prefix: 'Order');
+            // if ($stores){
+            //     foreach ($stores as $store){
+            //         if ($store->status == 1){
+            //             $storeRoutes = $adminRoutes->filter(function ($route) {
+            //                 return str_contains($route->uri(), 'store') &&
+            //                     (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'))
+            //                     && !str_contains($route->uri(), 'withdraw-view');
+            //             });
+            //         }else{
+            //             $storeRoutes = $adminRoutes->filter(function ($route) {
+            //                 return str_contains($route->uri(), 'store') &&
+            //                     (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'))
+            //                     && !str_contains($route->uri(), 'withdraw-view');
+
+            //             });
+            //         }
+
+            //         if (isset($storeRoutes)) {
+            //             foreach ($storeRoutes as $route) {
+            //                 $validRoutes[] = $this->filterRoute(model: $store, route: $route, type: 'store', prefix: 'Store');
             //             }
             //         }
             //     }
             // }
-
-            // //zone
-            // $zone = Zone::find($searchKeyword);
-            // if ($zone){
-            //     $zoneRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'business-settings/zone') &&
-            //             (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'zone/module-setup/'));
-            //     });
-
-            //     if (isset($zoneRoutes)) {
-            //         foreach ($zoneRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $zone, route: $route, type: 'zone', prefix: 'Zone');
-            //         }
-            //     }
-            // }
-
-            // //category
-            // $category = Category::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-            //             return $query->where('module_id', $currentModuleId);
-            //         })->find($searchKeyword);
-
-            // if ($category){
-            //     $categoryRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'category') && str_contains($route->uri(), 'update') && !str_contains($route->uri(), 'category/update-priority');
-            //     });
-
-            //     if (isset($categoryRoutes)) {
-            //         foreach ($categoryRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $category, route: $route, type: 'category', prefix: 'Category');
-            //         }
-            //     }
-            // }
-
-
-
-            // //AddOn
-            // $addOn = AddOn::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-            //                     return $query->wherehas('store', function($query) use ($currentModuleId){
-            //                         $query->where('module_id', $currentModuleId);
-            //                     });
-            //                 })
-            // ->find($searchKeyword);
-            // if ($addOn){
-            //     $addOnRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'addon') && str_contains($route->uri(), 'edit');
-            //     });
-
-            //     if (isset($addOnRoutes)) {
-            //         foreach ($addOnRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $addOn, route: $route, prefix: 'Addon');
-            //         }
-            //     }
-            // }
-
-
-            // if(in_array($currentModuleType ,['grocery', 'pharmacy', 'ecommerce'])){
-            //     //Unit
-            //     $unit = Unit::find($searchKeyword);
-            //     if ($unit){
-            //         $unitRoutes = $adminRoutes->filter(function ($route) {
-            //             return str_contains($route->uri(), 'unit')  && !str_contains($route->uri(), 'unit/export');
-            //         });
-
-            //         if (isset($unitRoutes)) {
-            //             foreach ($unitRoutes as $route) {
-            //                 $validRoutes[] = $this->filterRoute(model: $unit, route: $route, prefix: 'unit');
-            //             }
-            //         }
-            //     }
-
-            //     // attribute
-            //     $attribute = Attribute::find($searchKeyword);
-            //     if ($attribute){
-            //         $attributeRoutes = $adminRoutes->filter(function ($route) {
-            //             return str_contains($route->uri(), 'attribute')  && !str_contains($route->uri(), 'attribute/export');
-            //         });
-
-            //         if (isset($attributeRoutes)) {
-            //             foreach ($attributeRoutes as $route) {
-            //                 $validRoutes[] = $this->filterRoute(model: $attribute, route: $route, prefix: 'attribute');
-            //             }
-            //         }
-            //     }
-            // }
-
-
-
-
-            // if(in_array($currentModuleType ,['ecommerce'])){
-            //           // Brand
-            //     $Brand = Brand::
-            //     when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-            //                     return $query->where(function ($query) use ($currentModuleId) {
-            //                         $query->where('module_id', $currentModuleId)
-            //                             ->orWhere('module_id', null);
-            //                     });
-            //                 })
-            //     ->find($searchKeyword);
-            //     if ($Brand){
-            //         $BrandRoutes = $adminRoutes->filter(function ($route) {
-            //             return str_contains($route->uri(), 'brand')  && !str_contains($route->uri(), 'brand/export') && !str_contains($route->uri(), 'brand/status');
-            //         });
-
-            //         if (isset($BrandRoutes)) {
-            //             foreach ($BrandRoutes as $route) {
-            //                 $validRoutes[] = $this->filterRoute(model: $Brand, route: $route, prefix: 'Brand');
-            //             }
-            //         }
-            //     }
-            // }
-
-
-            // //Item
-            // $Item = Item::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-            //                 return $query->where('module_id', $currentModuleId);
-            //             })->find($searchKeyword);
-
-            // if ($Item){
-            //     $ItemRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'admin/item/edit/') || str_contains($route->uri(), 'admin/item/view/');
-            //     });
-
-            //     if (isset($ItemRoutes)) {
-            //         foreach ($ItemRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $Item, route: $route, type: 'Item', prefix: 'Item');
-            //         }
-            //     }
-            // }
-
-            // //basic campaign
-            // $campaign = Campaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-            //                     return $query->where('module_id', $currentModuleId);
-            //                 })->find($searchKeyword);
-            // if ($campaign){
-            //     $campaignRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'campaign')
-            //             && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
-            //     });
-
-            //     if (isset($campaignRoutes)) {
-            //         foreach ($campaignRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $campaign, route: $route, type: 'basic-campaign', prefix: 'Basic Campaign');
-            //         }
-            //     }
-            // }
-
-            // //item campaign
-            // $itemCampaign = ItemCampaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-            //                         return $query->where('module_id', $currentModuleId);
-            //                     })->find($searchKeyword);
-            // if ($itemCampaign){
-            //     $itemCampaignRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'campaign')
-            //             && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
-            //     });
-
-            //     if (isset($itemCampaignRoutes)) {
-            //         foreach ($itemCampaignRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $itemCampaign, route: $route, type: 'item-campaign', prefix: 'Item Campaign');
-            //         }
-            //     }
-            // }
-
-            // //coupon
-            // $coupon = Coupon::where('created_by','admin')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-            //                             return $query->where('module_id', $currentModuleId);
-            //                         })->find($searchKeyword);
-            // if ($coupon){
-            //     $couponRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'coupon/edit') ;
-            //     });
-
-            //     if (isset($couponRoutes)) {
-            //         foreach ($couponRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $coupon, route: $route, prefix: 'Coupon');
-            //         }
-            //     }
-            // }
-
-            // //cashback
-            // $cashback = CashBack::find($searchKeyword);
-            // if ($cashback){
-            //     $cashbackRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'cashback') && !str_contains($route->uri(), 'status') ;
-            //     });
-
-            //     if (isset($cashbackRoutes)) {
-            //         foreach ($cashbackRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $cashback, route: $route, prefix: 'Cashback');
-            //         }
-            //     }
-            // }
-
-            // //banner
-            // $banner = Banner::where('created_by','admin')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-            //                                 return $query->where('module_id', $currentModuleId);
-            //                             })->find($searchKeyword);
-            // if ($banner){
-            //     $bannerRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'admin/banner') && !str_contains($route->uri(), 'status') ;
-            //     });
-
-            //     if (isset($bannerRoutes)) {
-            //         foreach ($bannerRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $banner, route: $route, prefix: 'Banner');
-            //         }
-            //     }
-            // }
-
-            //Advertisement
-            // $ads = Advertisement::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-            //                                     return $query->where('module_id', $currentModuleId);
-            //                                 })->find($searchKeyword);
-            // if ($ads){
-            //     $adsRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'advertisement')
-            //             && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'detail'));
-            //     });
-            //     if (isset($adsRoutes)) {
-            //         foreach ($adsRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $ads, route: $route, prefix: 'Advertisement');
-            //         }
-            //     }
-            // }
-
-            // $contact = Contact::find($searchKeyword);
-            // if ($contact){
-            //     $contactRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'contact') && str_contains($route->uri(), 'view');
-            //     });
-
-            //     if (isset($contactRoutes)) {
-            //         foreach ($contactRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $contact, route: $route, prefix: 'Contact');
-            //         }
-            //     }
-            // }
-
-            // $notification = Notification::find($searchKeyword);
-            // if ($notification){
-            //     $notificationRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'notification') && str_contains($route->uri(), 'edit');
-            //     });
-
-            //     if (isset($notificationRoutes)) {
-            //         foreach ($notificationRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $notification, route: $route, prefix: 'Notification');
-            //         }
-            //     }
-            // }
-
-            // //customer
-            // $customer = User::find($searchKeyword);
-            // if ($customer){
-            //     $customerRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'users/customer/view');
-            //     });
-
-            //     if (isset($customerRoutes)) {
-            //         foreach ($customerRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $customer, route: $route, type: 'customer', prefix: 'Customer');
-            //         }
-            //     }
-            // }
-
-            // //WalletBonus
-            // $bonus = WalletBonus::find($searchKeyword);
-            // if ($bonus){
-            //     $bonusRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'wallet/bonus');
-            //     });
-
-            //     if (isset($bonusRoutes)) {
-            //         foreach ($bonusRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $bonus, route: $route, type: 'bonus', prefix: 'Bonus');
-            //         }
-            //     }
-            // }
-
-            // //vehicle
-            // $vehicle = DMVehicle::find($searchKeyword);
-            // if ($vehicle){
-            //     $vehicleRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'delivery-man/vehicle/edit');
-            //     });
-
-            //     if (isset($vehicleRoutes)) {
-            //         foreach ($vehicleRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $vehicle, route: $route, type: 'vehicle', prefix: 'Vehicle');
-            //         }
-            //     }
-            // }
-
-            // //delivery man
-            // $deliveryMan = DeliveryMan::find($searchKeyword);
-            // if ($deliveryMan){
-            //     $deliveryManRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'delivery-man/edit') || str_contains($route->uri(), 'delivery-man/preview');
-            //     });
-            //     if (isset($deliveryManRoutes)) {
-            //         foreach ($deliveryManRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $deliveryMan, route: $route, type: 'deliveryMan', prefix: 'Delivery Man');
-            //         }
-            //     }
-            // }
-
-            // //store disbursement
-            // $storeDisbursement = Disbursement::where('created_for', 'store')->find($searchKeyword);
-            // if ($storeDisbursement){
-            //     $storeDisbursementRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'store-disbursement') &&  str_contains($route->uri(), 'details');
-            //     });
-
-            //     if (isset($storeDisbursementRoutes)) {
-            //         foreach ($storeDisbursementRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $storeDisbursement, route: $route, prefix: 'Store Disbursement');
-            //         }
-            //     }
-            // }
-
-            // //delivery man disbursement
-            // $dmDisbursement = Disbursement::where('created_for', 'delivery_man')->find($searchKeyword);
-            // if ($dmDisbursement){
-            //     $dmDisbursementRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'dm-disbursement') &&  str_contains($route->uri(), 'details');
-            //     });
-
-            //     if (isset($dmDisbursementRoutes)) {
-            //         foreach ($dmDisbursementRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $dmDisbursement, route: $route, prefix: 'Delivery Man Disbursement');
-            //         }
-            //     }
-            // }
-
-
-
-            // //withdraw method
-            // $withdrawalMethod = WithdrawalMethod::find($searchKeyword);
-            // if ($withdrawalMethod){
-            //     $withdrawalMethodRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'withdraw-method') && str_contains($route->uri(), 'edit');
-            //     });
-
-            //     if (isset($withdrawalMethodRoutes)) {
-            //         foreach ($withdrawalMethodRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $withdrawalMethod, route: $route, prefix: 'Withdraw Method');
-            //         }
-            //     }
-            // }
-
-            //Employee role
-            // $adminRole = AdminRole::find($searchKeyword);
-            // if ($adminRole){
-            //     $adminRoleRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'custom-role') && str_contains($route->uri(), 'edit');
-            //     });
-
-            //     if (isset($adminRoleRoutes)) {
-            //         foreach ($adminRoleRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $adminRole, route: $route, prefix: 'Employee Role');
-            //         }
-            //     }
-            // }
-
-            // //Employee
-            // $employee = Admin::whereNotIn('id', [1,auth('admin')->user()->id])->find($searchKeyword);
-            // if ($employee){
-            //     $employeeRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'employee') && str_contains($route->uri(), 'edit');
-            //     });
-
-            //     if (isset($employeeRoutes)) {
-            //         foreach ($employeeRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $employee, route: $route, prefix: 'Employee');
-            //         }
-            //     }
-            // }
-
-            // //subscription package
-            // $subscriptionPackage = SubscriptionPackage::find($searchKeyword);
-            // if ($subscriptionPackage){
-            //     $subscriptionPackageRoutes = $adminRoutes->filter(function ($route) {
-            //         return str_contains($route->uri(), 'subscription/subscriptionackage')
-            //             ;
-            //     });
-
-            //     if (isset($subscriptionPackageRoutes)) {
-            //         foreach ($subscriptionPackageRoutes as $route) {
-            //             $validRoutes[] = $this->filterRoute(model: $subscriptionPackage, route: $route, prefix: 'Subscription');
-            //         }
-            //     }
-            // }
-
-        //     //subscriber
-        //     $storeSubscription = StoreSubscription::find($searchKeyword);
-        //     if ($storeSubscription){
-        //         $storeSubscriptionRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'subscription') && str_contains($route->uri(), 'subscriber-detail');
-        //         });
-
-        //         if (isset($storeSubscriptionRoutes)) {
-        //             foreach ($storeSubscriptionRoutes as $route) {
-        //                 $validRoutes[] = $this->filterRoute(model: $storeSubscription, route: $route, prefix: 'Subscription');
-        //             }
-        //         }
-        //     }
-
-        }
-        // else {
-        //     //Store
-        //     $stores = Store::where('name', 'LIKE', '%' . $searchKeyword . '%')
-        //         ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
-        //         ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
-        //         ->orWhere('address', 'LIKE', '%' . $searchKeyword . '%')
-        //         ->orWhere('meta_title', 'LIKE', '%' . $searchKeyword . '%')
-        //         ->orWhere('meta_description', 'LIKE', '%' . $searchKeyword . '%')
-        //         ->orWhereHas('vendor', function($query) use ($searchKeyword){
-        //             return $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
-        //                 ->orWhereRaw("CONCAT(l_name, ' ', f_name) LIKE ?", ['%' . $searchKeyword . '%'])
-        //                 ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%'])
-        //                 ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%']);
-        //         })
-        //         ->get();
-
-        //     if ($stores){
-        //         foreach ($stores as $store){
-        //             if ($store->status == 1){
-        //                 $storeRoutes = $adminRoutes->filter(function ($route) {
-        //                     return str_contains($route->uri(), 'store') &&
-        //                         (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'))
-        //                         && !str_contains($route->uri(), 'withdraw-view');
-        //                 });
-        //             }else{
-        //                 $storeRoutes = $adminRoutes->filter(function ($route) {
-        //                     return str_contains($route->uri(), 'store') &&
-        //                         (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'))
-        //                         && !str_contains($route->uri(), 'withdraw-view');
-
-        //                 });
-        //             }
-
-        //             if (isset($storeRoutes)) {
-        //                 foreach ($storeRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $store, route: $route, type: 'store', prefix: 'Store');
-        //                 }
-        //             }
-        //         }
-        //     }
 
         //     //Order
         //     $orders = Order::with('customer')
@@ -1222,7 +1370,7 @@ class SearchRoutingController extends Controller
         //             }
         //         }
         //     }
-        // }
+        }
 
         return array_merge($formattedRoutes, $validRoutes);
     }
