@@ -215,7 +215,6 @@
 
 <!-- ========== END SECONDARY CONTENTS ========== -->
 <script src="{{asset('public/assets/admin')}}/js/custom.js"></script>
-<script src="{{asset('public/assets/admin/js/keyword-highlighted.js')}}"></script>
 <script src="{{asset('public/assets/admin')}}/js/firebase.min.js"></script>
 <!-- JS Implementing Plugins -->
 
@@ -250,6 +249,7 @@
     <source src="{{asset('public/assets/admin/sound/notification.mp3')}}" type="audio/mpeg">
 </audio>
     <script src="{{asset('public/assets/admin/js/view-pages/common.js')}}"></script>
+    <script src="{{asset('public/assets/admin/js/keyword-highlighted.js')}}"></script>
 
 <script>
     var audio = document.getElementById("myAudio");
@@ -562,7 +562,8 @@
                         } else {
                             var resultHtml = '';
                             response.forEach(function (route) {
-                                var fullRouteWithKeyword = route.fullRoute + '?keyword=' + encodeURIComponent(searchKeyword);
+                                var separator = route.fullRoute.includes('?') ? '&' : '?';
+                                var fullRouteWithKeyword = route.fullRoute + separator + 'keyword=' + encodeURIComponent(searchKeyword);
                                 resultHtml += '<a href="' + fullRouteWithKeyword + '" class="search-list-item d-flex flex-column" data-route-name="' + route.routeName + '" data-route-uri="' + route.URI + '" data-route-full-url="' + route.fullRoute + '" aria-current="true">';
                                 resultHtml += '<h5>' + route.routeName + '</h5>';
                                 resultHtml += '<p class="text-muted fs-12 mb-0">' + route.URI + '</p>';
