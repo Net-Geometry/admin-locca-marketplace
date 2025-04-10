@@ -35,7 +35,6 @@ use App\Models\RecentSearch;
 use Illuminate\Http\Request;
 use App\Models\Advertisement;
 use App\Models\WalletPayment;
-use App\Models\ContactMessage;
 use App\Models\ParcelCategory;
 use App\Models\CommonCondition;
 use App\Models\WithdrawRequest;
@@ -45,7 +44,6 @@ use App\Models\WalletTransaction;
 use Illuminate\Http\JsonResponse;
 use App\Models\SubscriptionPackage;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Models\LoyaltyPointTransaction;
 
@@ -70,8 +68,8 @@ class SearchRoutingController extends Controller
                 });
             }
 
-            $currentModuleType =config('module.current_module_type') ?? null;
-            $currentModuleId =config('module.current_module_id') ?? null;
+            $currentModuleType = config('module.current_module_type') ?? null;
+            $currentModuleId = config('module.current_module_id') ?? null;
 
             foreach ($routes as $route) {
                 $uri = $route['URI'];
@@ -81,7 +79,7 @@ class SearchRoutingController extends Controller
                     $fullURL = $this->routeFullUrl($uri);
 
                     if (!$hasParameters) {
-                        if($currentModuleType === $route['moduleType'] || $route['moduleType'] === null){
+                        if ($currentModuleType === $route['moduleType'] || $route['moduleType'] === null) {
 
                             $routeName = $route['routeName'];
                             $formattedRoutes[] = [
@@ -104,11 +102,11 @@ class SearchRoutingController extends Controller
         $excludeTermsRoute = ['{status}'];
         $excludeTermsAjax = $this->getAjaxRoutes($adminRoutes);
 
-        $addUrl=[
+        $addUrl = [
             'admin/users/cashback/edit/{id}'
         ];
 
-        $excludeTermsAjax =array_values(array_diff($excludeTermsAjax, $addUrl));
+        $excludeTermsAjax = array_values(array_diff($excludeTermsAjax, $addUrl));
         // info($excludeTermsAjax);
         $excludeTerms = array_merge($excludeTermsAjax, $excludeTermsRoute);
         $adminRoutes = $adminRoutes->filter(function ($route) use ($excludeTerms) {
@@ -128,27 +126,27 @@ class SearchRoutingController extends Controller
                     return $query->where('module_id', $currentModuleId);
                 })
                 ->where('id', $searchKeyword)
-                ->orWhereHas('vendor', function ($query) use ($searchKeyword){
+                ->orWhereHas('vendor', function ($query) use ($searchKeyword) {
                     $query->where('id', $searchKeyword);
                 })
                 ->first();
 
-            if ($store){
+            if ($store) {
 
-                if($store->vendor->status===0){
+                if ($store->vendor->status === 0) {
                     $storeRoutes = $adminRoutes->filter(function ($route) {
-                        return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || str_contains($route->uri(), 'deny-requests') || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store'  )
-                            && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions') ;
+                        return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || str_contains($route->uri(), 'deny-requests') || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store')
+                            && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions');
                     });
-                } elseif($store->vendor->status=== null){
+                } elseif ($store->vendor->status === null) {
                     $storeRoutes = $adminRoutes->filter(function ($route) {
-                        return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || str_contains($route->uri(), 'pending-requests')  || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store'  )
-                            && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions') ;
+                        return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || str_contains($route->uri(), 'pending-requests')  || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store')
+                            && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions');
                     });
-                } else{
+                } else {
                     $storeRoutes = $adminRoutes->filter(function ($route) {
-                        return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store'  )
-                            && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions') ;
+                        return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store')
+                            && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions');
                     });
                 }
 
@@ -163,10 +161,10 @@ class SearchRoutingController extends Controller
             $order = Order::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
                 return $query->where('module_id', $currentModuleId);
             })->find($searchKeyword);
-            if ($order){
+            if ($order) {
 
                 $orderRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'admin/order/details') ;
+                    return str_contains($route->uri(), 'admin/order/details');
                 });
 
 
@@ -182,21 +180,20 @@ class SearchRoutingController extends Controller
                 ->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
                     return $query->where('module_id', $currentModuleId);
                 })
-                ->whereHas('customer', function ($query) use ($searchKeyword){
+                ->whereHas('customer', function ($query) use ($searchKeyword) {
                     $query->where('id', $searchKeyword);
                 })
-                ->orWhereHas('store', function ($query) use ($searchKeyword){
+                ->orWhereHas('store', function ($query) use ($searchKeyword) {
                     $query->where('id', $searchKeyword);
                 })
                 ->get();
 
-            if ($orders){
+            if ($orders) {
                 $ordersRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'admin/order/details');
                 });
                 if (isset($ordersRoutes)) {
-                    foreach ($orders as $order)
-                    {
+                    foreach ($orders as $order) {
                         foreach ($ordersRoutes as $route) {
                             $validRoutes[] = $this->filterRoute(model: $order, route: $route, type: 'order', prefix: 'Order');
                         }
@@ -206,7 +203,7 @@ class SearchRoutingController extends Controller
 
             //zone
             $zone = Zone::find($searchKeyword);
-            if ($zone){
+            if ($zone) {
                 $zoneRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'business-settings/zone') &&
                         (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'zone/module-setup/'));
@@ -221,10 +218,10 @@ class SearchRoutingController extends Controller
 
             //category
             $category = Category::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                        return $query->where('module_id', $currentModuleId);
-                    })->find($searchKeyword);
+                return $query->where('module_id', $currentModuleId);
+            })->find($searchKeyword);
 
-            if ($category){
+            if ($category) {
                 $categoryRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'category') && str_contains($route->uri(), 'update') && !str_contains($route->uri(), 'category/update-priority');
                 });
@@ -240,12 +237,12 @@ class SearchRoutingController extends Controller
 
             //AddOn
             $addOn = AddOn::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                                return $query->wherehas('store', function($query) use ($currentModuleId){
-                                    $query->where('module_id', $currentModuleId);
-                                });
-                            })
-            ->find($searchKeyword);
-            if ($addOn){
+                return $query->wherehas('store', function ($query) use ($currentModuleId) {
+                    $query->where('module_id', $currentModuleId);
+                });
+            })
+                ->find($searchKeyword);
+            if ($addOn) {
                 $addOnRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'addon') && str_contains($route->uri(), 'edit');
                 });
@@ -258,10 +255,10 @@ class SearchRoutingController extends Controller
             }
 
 
-            if(in_array($currentModuleType ,['grocery', 'pharmacy', 'ecommerce'])){
+            if (in_array($currentModuleType, ['grocery', 'pharmacy', 'ecommerce'])) {
                 //Unit
                 $unit = Unit::find($searchKeyword);
-                if ($unit){
+                if ($unit) {
                     $unitRoutes = $adminRoutes->filter(function ($route) {
                         return str_contains($route->uri(), 'unit')  && !str_contains($route->uri(), 'unit/export');
                     });
@@ -275,7 +272,7 @@ class SearchRoutingController extends Controller
 
                 // attribute
                 $attribute = Attribute::find($searchKeyword);
-                if ($attribute){
+                if ($attribute) {
                     $attributeRoutes = $adminRoutes->filter(function ($route) {
                         return str_contains($route->uri(), 'attribute')  && !str_contains($route->uri(), 'attribute/export');
                     });
@@ -291,17 +288,16 @@ class SearchRoutingController extends Controller
 
 
 
-            if(in_array($currentModuleType ,['ecommerce'])){
-                      // Brand
-                $Brand = Brand::
-                when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                                return $query->where(function ($query) use ($currentModuleId) {
-                                    $query->where('module_id', $currentModuleId)
-                                        ->orWhere('module_id', null);
-                                });
-                            })
-                ->find($searchKeyword);
-                if ($Brand){
+            if (in_array($currentModuleType, ['ecommerce'])) {
+                // Brand
+                $Brand = Brand::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                        return $query->where(function ($query) use ($currentModuleId) {
+                            $query->where('module_id', $currentModuleId)
+                                ->orWhere('module_id', null);
+                        });
+                    })
+                    ->find($searchKeyword);
+                if ($Brand) {
                     $BrandRoutes = $adminRoutes->filter(function ($route) {
                         return str_contains($route->uri(), 'brand')  && !str_contains($route->uri(), 'brand/export') && !str_contains($route->uri(), 'brand/status');
                     });
@@ -317,10 +313,10 @@ class SearchRoutingController extends Controller
 
             //Item
             $Item = Item::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                            return $query->where('module_id', $currentModuleId);
-                        })->find($searchKeyword);
+                return $query->where('module_id', $currentModuleId);
+            })->find($searchKeyword);
 
-            if ($Item){
+            if ($Item) {
                 $ItemRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'admin/item/edit/') || str_contains($route->uri(), 'admin/item/view/');
                 });
@@ -334,9 +330,9 @@ class SearchRoutingController extends Controller
 
             //basic campaign
             $campaign = Campaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                                return $query->where('module_id', $currentModuleId);
-                            })->find($searchKeyword);
-            if ($campaign){
+                return $query->where('module_id', $currentModuleId);
+            })->find($searchKeyword);
+            if ($campaign) {
                 $campaignRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'campaign')
                         && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
@@ -351,9 +347,9 @@ class SearchRoutingController extends Controller
 
             //item campaign
             $itemCampaign = ItemCampaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                                    return $query->where('module_id', $currentModuleId);
-                                })->find($searchKeyword);
-            if ($itemCampaign){
+                return $query->where('module_id', $currentModuleId);
+            })->find($searchKeyword);
+            if ($itemCampaign) {
                 $itemCampaignRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'campaign')
                         && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
@@ -367,12 +363,12 @@ class SearchRoutingController extends Controller
             }
 
             //coupon
-            $coupon = Coupon::where('created_by','admin')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                                        return $query->where('module_id', $currentModuleId);
-                                    })->find($searchKeyword);
-            if ($coupon){
+            $coupon = Coupon::where('created_by', 'admin')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->where('module_id', $currentModuleId);
+            })->find($searchKeyword);
+            if ($coupon) {
                 $couponRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'coupon/edit') ;
+                    return str_contains($route->uri(), 'coupon/edit');
                 });
 
                 if (isset($couponRoutes)) {
@@ -384,9 +380,9 @@ class SearchRoutingController extends Controller
 
             //cashback
             $cashback = CashBack::find($searchKeyword);
-            if ($cashback){
+            if ($cashback) {
                 $cashbackRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'cashback') && !str_contains($route->uri(), 'status') ;
+                    return str_contains($route->uri(), 'cashback') && !str_contains($route->uri(), 'status');
                 });
 
                 if (isset($cashbackRoutes)) {
@@ -397,12 +393,12 @@ class SearchRoutingController extends Controller
             }
 
             //banner
-            $banner = Banner::where('created_by','admin')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                                            return $query->where('module_id', $currentModuleId);
-                                        })->find($searchKeyword);
-            if ($banner){
+            $banner = Banner::where('created_by', 'admin')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->where('module_id', $currentModuleId);
+            })->find($searchKeyword);
+            if ($banner) {
                 $bannerRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'admin/banner') && !str_contains($route->uri(), 'status') ;
+                    return str_contains($route->uri(), 'admin/banner') && !str_contains($route->uri(), 'status');
                 });
 
                 if (isset($bannerRoutes)) {
@@ -414,9 +410,9 @@ class SearchRoutingController extends Controller
 
             //Advertisement
             $ads = Advertisement::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                                                return $query->where('module_id', $currentModuleId);
-                                            })->find($searchKeyword);
-            if ($ads){
+                return $query->where('module_id', $currentModuleId);
+            })->find($searchKeyword);
+            if ($ads) {
                 $adsRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'advertisement')
                         && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'detail'));
@@ -429,7 +425,7 @@ class SearchRoutingController extends Controller
             }
 
             $contact = Contact::find($searchKeyword);
-            if ($contact){
+            if ($contact) {
                 $contactRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'contact') && str_contains($route->uri(), 'view');
                 });
@@ -442,7 +438,7 @@ class SearchRoutingController extends Controller
             }
 
             $notification = Notification::find($searchKeyword);
-            if ($notification){
+            if ($notification) {
                 $notificationRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'notification') && str_contains($route->uri(), 'edit');
                 });
@@ -456,7 +452,7 @@ class SearchRoutingController extends Controller
 
             //customer
             $customer = User::find($searchKeyword);
-            if ($customer){
+            if ($customer) {
                 $customerRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'users/customer/view');
                 });
@@ -470,7 +466,7 @@ class SearchRoutingController extends Controller
 
             //WalletBonus
             $bonus = WalletBonus::find($searchKeyword);
-            if ($bonus){
+            if ($bonus) {
                 $bonusRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'wallet/bonus');
                 });
@@ -484,7 +480,7 @@ class SearchRoutingController extends Controller
 
             //vehicle
             $vehicle = DMVehicle::find($searchKeyword);
-            if ($vehicle){
+            if ($vehicle) {
                 $vehicleRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'delivery-man/vehicle/edit');
                 });
@@ -498,7 +494,7 @@ class SearchRoutingController extends Controller
 
             //delivery man
             $deliveryMan = DeliveryMan::find($searchKeyword);
-            if ($deliveryMan){
+            if ($deliveryMan) {
                 $deliveryManRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'delivery-man/edit') || str_contains($route->uri(), 'delivery-man/preview');
                 });
@@ -511,7 +507,7 @@ class SearchRoutingController extends Controller
 
             //store disbursement
             $storeDisbursement = Disbursement::where('created_for', 'store')->find($searchKeyword);
-            if ($storeDisbursement){
+            if ($storeDisbursement) {
                 $storeDisbursementRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'store-disbursement') &&  str_contains($route->uri(), 'details');
                 });
@@ -525,7 +521,7 @@ class SearchRoutingController extends Controller
 
             //delivery man disbursement
             $dmDisbursement = Disbursement::where('created_for', 'delivery_man')->find($searchKeyword);
-            if ($dmDisbursement){
+            if ($dmDisbursement) {
                 $dmDisbursementRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'dm-disbursement') &&  str_contains($route->uri(), 'details');
                 });
@@ -541,7 +537,7 @@ class SearchRoutingController extends Controller
 
             //withdraw method
             $withdrawalMethod = WithdrawalMethod::find($searchKeyword);
-            if ($withdrawalMethod){
+            if ($withdrawalMethod) {
                 $withdrawalMethodRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'withdraw-method') && str_contains($route->uri(), 'edit');
                 });
@@ -553,9 +549,9 @@ class SearchRoutingController extends Controller
                 }
             }
 
-           // Employee role
+            // Employee role
             $adminRole = AdminRole::find($searchKeyword);
-            if ($adminRole){
+            if ($adminRole) {
                 $adminRoleRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'custom-role') && str_contains($route->uri(), 'edit');
                 });
@@ -568,8 +564,8 @@ class SearchRoutingController extends Controller
             }
 
             //Employee
-            $employee = Admin::whereNotIn('id', [1,auth('admin')->user()->id])->find($searchKeyword);
-            if ($employee){
+            $employee = Admin::whereNotIn('id', [1, auth('admin')->user()->id])->find($searchKeyword);
+            if ($employee) {
                 $employeeRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'employee') && str_contains($route->uri(), 'edit');
                 });
@@ -583,10 +579,9 @@ class SearchRoutingController extends Controller
 
             //subscription package
             $subscriptionPackage = SubscriptionPackage::find($searchKeyword);
-            if ($subscriptionPackage){
+            if ($subscriptionPackage) {
                 $subscriptionPackageRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'subscription/subscriptionackage')
-                        ;
+                    return str_contains($route->uri(), 'subscription/subscriptionackage');
                 });
 
                 if (isset($subscriptionPackageRoutes)) {
@@ -598,9 +593,9 @@ class SearchRoutingController extends Controller
 
             //Module
             $module = Module::find($searchKeyword);
-            if ($module){
+            if ($module) {
                 $moduleRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'business-settings/module') && !str_contains($route->uri(), 'export') ;
+                    return str_contains($route->uri(), 'business-settings/module') && !str_contains($route->uri(), 'export');
                 });
 
                 if (isset($moduleRoutes)) {
@@ -612,11 +607,11 @@ class SearchRoutingController extends Controller
 
             //flashSale
             $flashSale = FlashSale::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                                                    return $query->where('module_id', $currentModuleId);
-                                                })->find($searchKeyword);
-            if ($flashSale){
+                return $query->where('module_id', $currentModuleId);
+            })->find($searchKeyword);
+            if ($flashSale) {
                 $flashSaleRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'flash-sale/') && !str_contains($route->uri(), 'publish') ;
+                    return str_contains($route->uri(), 'flash-sale/') && !str_contains($route->uri(), 'publish');
                 });
 
                 if (isset($flashSaleRoutes)) {
@@ -627,9 +622,11 @@ class SearchRoutingController extends Controller
             }
 
             //ParcelCategory
-            if(in_array($currentModuleType ,['parcel'])){
-                $ParcelCategory = ParcelCategory::find($searchKeyword);
-                if ($ParcelCategory){
+            if (in_array($currentModuleType, ['parcel'])) {
+                $ParcelCategory = ParcelCategory::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                        return $query->where('module_id', $currentModuleId);
+                    })->find($searchKeyword);
+                if ($ParcelCategory) {
                     $ParcelCategoryRoutes = $adminRoutes->filter(function ($route) {
                         return str_contains($route->uri(), 'admin/parcel/category/') && (str_contains($route->uri(), 'edit'));
                     });
@@ -642,9 +639,9 @@ class SearchRoutingController extends Controller
                 }
             }
             //CommonCondition
-            if(in_array($currentModuleType ,['pharmacy'])){
+            if (in_array($currentModuleType, ['pharmacy'])) {
                 $CommonCondition = CommonCondition::find($searchKeyword);
-                if ($CommonCondition){
+                if ($CommonCondition) {
                     $CommonConditionRoutes = $adminRoutes->filter(function ($route) {
                         return str_contains($route->uri(), 'admin/common-condition');
                     });
@@ -658,7 +655,7 @@ class SearchRoutingController extends Controller
             }
             //walletTransaction
             $walletTransaction = WalletTransaction::find($searchKeyword);
-            if ($walletTransaction){
+            if ($walletTransaction) {
                 $walletTransactionRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'users/customer/wallet/report');
                 });
@@ -673,7 +670,7 @@ class SearchRoutingController extends Controller
 
             //LoyaltyPoint
             $LoyaltyPoint = LoyaltyPointTransaction::find($searchKeyword);
-            if ($LoyaltyPoint){
+            if ($LoyaltyPoint) {
                 $LoyaltyPointRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'users/customer/loyalty-point/report');
                 });
@@ -686,7 +683,7 @@ class SearchRoutingController extends Controller
             }
             //Newsletter
             $Newsletter = Newsletter::find($searchKeyword);
-            if ($Newsletter){
+            if ($Newsletter) {
                 $NewsletterRoutes = $adminRoutes->filter(function ($route) {
                     return str_contains($route->uri(), 'admin/users/customer/subscribed');
                 });
@@ -701,11 +698,11 @@ class SearchRoutingController extends Controller
 
             //tepmProduct
             $tepmProduct = TempProduct::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                                                    return $query->where('module_id', $currentModuleId);
-                                                })->find($searchKeyword);
-            if ($tepmProduct){
+                return $query->where('module_id', $currentModuleId);
+            })->find($searchKeyword);
+            if ($tepmProduct) {
                 $tepmProductRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'admin/item/new/item/list') || str_contains($route->uri(), 'admin/item/requested/item/view/') ;
+                    return str_contains($route->uri(), 'admin/item/new/item/list') || str_contains($route->uri(), 'admin/item/requested/item/view/');
                 });
 
                 if (isset($tepmProductRoutes)) {
@@ -747,629 +744,918 @@ class SearchRoutingController extends Controller
             //         }
             //     }
             // }
-        }
-
-        else {
+        } else {
             //Store
-            // $stores = Store::where('name', 'LIKE', '%' . $searchKeyword . '%')
-            //     ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
-            //     ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
-            //     ->orWhere('address', 'LIKE', '%' . $searchKeyword . '%')
-            //     ->orWhere('meta_title', 'LIKE', '%' . $searchKeyword . '%')
-            //     ->orWhere('meta_description', 'LIKE', '%' . $searchKeyword . '%')
-            //     ->orWhereHas('vendor', function($query) use ($searchKeyword){
-            //         return $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
-            //             ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
-            //             ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
-            //             ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
-            //             ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
-            //             ->orWhereRaw("CONCAT(l_name, ' ', f_name) LIKE ?", ['%' . $searchKeyword . '%'])
-            //             ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%'])
-            //             ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%']);
-            //     })
-            //     ->get();
+            $stores = Store::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->where('module_id', $currentModuleId);
+            })
+                ->where('name', 'LIKE', '%' . $searchKeyword . '%')
+                ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
+                ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+                ->orWhere('address', 'LIKE', '%' . $searchKeyword . '%')
+                ->orWhere('meta_title', 'LIKE', '%' . $searchKeyword . '%')
+                ->orWhere('meta_description', 'LIKE', '%' . $searchKeyword . '%')
+                ->orWhereHas('vendor', function ($query) use ($searchKeyword) {
+                    return $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                        ->orWhereRaw("CONCAT(l_name, ' ', f_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                        ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                        ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%']);
+                })
+                ->get();
 
-            // if ($stores){
-            //     foreach ($stores as $store){
-            //         if ($store->status == 1){
-            //             $storeRoutes = $adminRoutes->filter(function ($route) {
-            //                 return str_contains($route->uri(), 'store') &&
-            //                     (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'))
-            //                     && !str_contains($route->uri(), 'withdraw-view');
-            //             });
-            //         }else{
-            //             $storeRoutes = $adminRoutes->filter(function ($route) {
-            //                 return str_contains($route->uri(), 'store') &&
-            //                     (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'))
-            //                     && !str_contains($route->uri(), 'withdraw-view');
+            if ($stores) {
+                foreach ($stores as $store) {
+                    if ($store->vendor->status === 0) {
+                        $storeRoutes = $adminRoutes->filter(function ($route) {
+                            return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || str_contains($route->uri(), 'deny-requests') || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store')
+                                && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions');
+                        });
+                    } elseif ($store->vendor->status === null) {
+                        $storeRoutes = $adminRoutes->filter(function ($route) {
+                            return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || str_contains($route->uri(), 'pending-requests')  || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store')
+                                && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions');
+                        });
+                    } else {
+                        $storeRoutes = $adminRoutes->filter(function ($route) {
+                            return str_contains($route->uri(), 'store') && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')  || basename(parse_url($route->uri(), PHP_URL_PATH)) == 'recommended-store')
+                                && !str_contains($route->uri(), 'withdraw-view')  && !str_contains($route->uri(), 'transactions');
+                        });
+                    }
 
-            //             });
-            //         }
+                    if (isset($storeRoutes)) {
+                        foreach ($storeRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $store, route: $route, type: 'store', prefix: 'Store');
+                        }
+                    }
+                }
+            }
 
-            //         if (isset($storeRoutes)) {
-            //             foreach ($storeRoutes as $route) {
-            //                 $validRoutes[] = $this->filterRoute(model: $store, route: $route, type: 'store', prefix: 'Store');
+            //  Order
+            $orders = Order::with('customer')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->where('module_id', $currentModuleId);
+            })
+                ->whereHas('customer', function ($query) use ($searchKeyword) {
+                    $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                        ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                        ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%']);
+                })
+                ->orWhereHas('store', function ($query) use ($searchKeyword) {
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('address', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('meta_title', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('meta_description', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($orders) {
+                $ordersRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'admin/order/details');
+                });
+                if (isset($ordersRoutes)) {
+                    foreach ($orders as $order) {
+                        foreach ($ordersRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $order, route: $route, type: 'order', prefix: 'Order');
+                        }
+                    }
+                }
+            }
+
+            //Zone
+            $zones = Zone::where(function ($query) use ($searchKeyword) {
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('display_name', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($zones) {
+                $zoneRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'business-settings/zone') &&
+                        (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'zone/module-setup/'));
+                });
+
+                if (isset($zoneRoutes)) {
+                    foreach ($zones as $zone) {
+                        foreach ($zoneRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $zone, route: $route, type: 'zone', prefix: 'Zone');
+                        }
+                    }
+                }
+            }
+
+            //Category
+            $categories = Category::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->where('module_id', $currentModuleId);
+                })
+                ->where(function ($query) use ($searchKeyword) {
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($categories) {
+                $categoryRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'category') && str_contains($route->uri(), 'update') && !str_contains($route->uri(), 'category/update-priority');
+                });
+
+                if (isset($categoryRoutes)) {
+                    foreach ($categories as $category) {
+                        foreach ($categoryRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $category, route: $route, type: 'category', prefix: 'Category');
+                        }
+                    }
+                }
+            }
+
+            //AddOn
+            $addOns = AddOn::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->wherehas('store', function ($query) use ($currentModuleId) {
+                    $query->where('module_id', $currentModuleId);
+                });
+            })
+                ->where(function ($query) use ($searchKeyword) {
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($addOns) {
+                $addOnRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'addon') && str_contains($route->uri(), 'edit');
+                });
+
+                if (isset($addOnRoutes)) {
+                    foreach ($addOns as $addOn) {
+                        foreach ($addOnRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $addOn, route: $route, prefix: 'Addon');
+                        }
+                    }
+                }
+            }
+
+            if (in_array($currentModuleType, ['grocery', 'pharmacy', 'ecommerce'])) {
+                //unit
+                $units = Unit::where(function ($query) use ($searchKeyword) {
+                        $query->where('unit', 'LIKE', '%' . $searchKeyword . '%');
+                    })
+                    ->get();
+
+                if ($units) {
+                    $unitRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'unit')  && !str_contains($route->uri(), 'unit/export');
+                    });
+
+                    if (isset($unitRoutes)) {
+                        foreach ($units as $unit) {
+                            foreach ($unitRoutes as $route) {
+                                $validRoutes[] = $this->filterRoute(model: $unit, route: $route, prefix: 'unit');
+                            }
+                        }
+                    }
+                }
+                //Attribute
+                $Attributes = Attribute::where(function ($query) use ($searchKeyword) {
+                        $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
+                    })
+                    ->get();
+
+                if ($Attributes) {
+                    $AttributeRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'attribute')  && !str_contains($route->uri(), 'attribute/export');
+                    });
+
+                    if (isset($AttributeRoutes)) {
+                        foreach ($Attributes as $Attribute) {
+                            foreach ($AttributeRoutes as $route) {
+                                $validRoutes[] = $this->filterRoute(model: $Attribute, route: $route, prefix: 'Attribute');
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (in_array($currentModuleType, ['ecommerce'])) {
+                //Brand
+                $Brands = Brand::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                        return $query->where(function ($query) use ($currentModuleId) {
+                            $query->where('module_id', $currentModuleId)
+                                ->orWhere('module_id', null);
+                        });
+                    })
+                    ->where(function ($query) use ($searchKeyword) {
+                        $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
+                    })
+                    ->get();
+
+                if ($Brands) {
+                    $BrandRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'brand')  && !str_contains($route->uri(), 'brand/export') && !str_contains($route->uri(), 'brand/status');
+                    });
+
+                    if (isset($BrandRoutes)) {
+                        foreach ($Brands as $Brand) {
+                            foreach ($BrandRoutes as $route) {
+                                $validRoutes[] = $this->filterRoute(model: $Brand, route: $route, prefix: 'Brand');
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+
+            //Item
+            $Items = Item::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->where('module_id', $currentModuleId);
+            })->where(function ($query) use ($searchKeyword) {
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($Items) {
+                $ItemRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'admin/item/edit/') || str_contains($route->uri(), 'admin/item/view/');
+                });
+
+                if (isset($ItemRoutes)) {
+                    foreach ($Items as $Item) {
+                        foreach ($ItemRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $Item, route: $route, type: 'Item', prefix: 'Item');
+                        }
+                    }
+                }
+            }
+
+            //Campaign
+            $campaigns = Campaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->where('module_id', $currentModuleId);
+            })->where(function ($query) use ($searchKeyword) {
+                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($campaigns) {
+                $campaignRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'campaign')
+                        && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
+                });
+
+                if (isset($campaignRoutes)) {
+                    foreach ($campaigns as $campaign) {
+                        foreach ($campaignRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $campaign, route: $route, type: 'basic-campaign', prefix: 'Basic Campaign');
+                        }
+                    }
+                }
+            }
+
+            //ItemCampaign
+            $itemCampaigns = ItemCampaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->where('module_id', $currentModuleId);
+            })->where(function ($query) use ($searchKeyword) {
+                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($itemCampaigns) {
+                $itemCampaignRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'campaign')
+                        && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
+                });
+
+                if (isset($itemCampaignRoutes)) {
+                    foreach ($itemCampaigns as $itemCampaign) {
+                        foreach ($itemCampaignRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $itemCampaign, route: $route, type: 'item-campaign', prefix: 'Item Campaign');
+                        }
+                    }
+                }
+            }
+
+            //Coupon
+            $coupons = Coupon::where('created_by', 'admin')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->where('module_id', $currentModuleId);
+                })->where(function ($query) use ($searchKeyword) {
+                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('code', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('discount_type', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('coupon_type', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($coupons) {
+                $couponRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'coupon/edit');
+                });
+                if (isset($couponRoutes)) {
+                    foreach ($coupons as $coupon) {
+                        foreach ($couponRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $coupon, route: $route, prefix: 'Coupon');
+                        }
+                    }
+                }
+            }
+
+            //CashBack
+            $cashBacks = CashBack::where(function ($query) use ($searchKeyword) {
+                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('cashback_type', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($cashBacks) {
+                $cashbackRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'cashback') && !str_contains($route->uri(), 'status');
+                });
+                if (isset($cashbackRoutes)) {
+                    foreach ($cashBacks as $cashBack) {
+                        foreach ($cashbackRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $cashBack, route: $route, prefix: 'Cashback');
+                        }
+                    }
+                }
+            }
+
+            //Banner
+            $banners = Banner::where('created_by', 'admin')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->where('module_id', $currentModuleId);
+            })->where(function ($query) use ($searchKeyword) {
+                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('type', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($banners) {
+                $bannerRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'admin/banner') && !str_contains($route->uri(), 'status');
+                });
+
+                if (isset($bannerRoutes)) {
+                    foreach ($banners as $banner) {
+                        foreach ($bannerRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $banner, route: $route, prefix: 'Banner');
+                        }
+                    }
+                }
+            }
+
+            //Advertisement
+            $advertisements = Advertisement::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->where('module_id', $currentModuleId);
+            })->where(function ($query) use ($searchKeyword) {
+                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('add_type', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($advertisements) {
+                $adsRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'advertisement')
+                        && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'detail'));
+                });
+                if (isset($adsRoutes)) {
+                    foreach ($advertisements as $advertisement) {
+                        foreach ($adsRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $advertisement, route: $route, prefix: 'Advertisement');
+                        }
+                    }
+                }
+            }
+
+            // ContactMessage
+            $contactMessages = Contact::where(function ($query) use ($searchKeyword) {
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('subject', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('message', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('reply', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($contactMessages) {
+                $contactRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'contact') && str_contains($route->uri(), 'view');
+                });
+
+                if (isset($contactRoutes)) {
+                    foreach ($contactMessages as $contactMessage) {
+                        foreach ($contactRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $contactMessage, route: $route, prefix: 'Contact');
+                        }
+                    }
+                }
+            }
+
+            //Notification
+            $notifications = Notification::where(function ($query) use ($searchKeyword) {
+                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($notifications) {
+                $notificationRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'notification') && str_contains($route->uri(), 'edit');
+                });
+
+                if (isset($notificationRoutes)) {
+                    foreach ($notifications as $notification) {
+                        foreach ($notificationRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $notification, route: $route, prefix: 'Notification');
+                        }
+                    }
+                }
+            }
+
+            //customer
+            $customers = User::where(function ($query) use ($searchKeyword) {
+                    $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                        ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                        ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%']);
+                })
+                ->get();
+
+            if ($customers) {
+                $customerRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'users/customer/view');
+                });
+
+                if (isset($customerRoutes)) {
+                    foreach ($customers as $customer) {
+                        foreach ($customerRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $customer, route: $route, type: 'customer', name: $customer->f_name . ' ' . $customer->l_name, prefix: 'Customer');
+                        }
+                    }
+                }
+            }
+
+            //WalletBonus
+            $walletBonus = WalletBonus::where(function ($query) use ($searchKeyword) {
+                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('bonus_type', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($walletBonus) {
+                $bonusRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'wallet/bonus');
+                });
+
+                if (isset($bonusRoutes)) {
+                    foreach ($walletBonus as $bonus) {
+                        foreach ($bonusRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $bonus, route: $route, type: 'bonus', prefix: 'Bonus');
+                        }
+                    }
+                }
+            }
+
+            //Vehicle
+            $vehicles = DmVehicle::where(function ($query) use ($searchKeyword) {
+                    $query->where('type', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($vehicles) {
+                $vehicleRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'delivery-man/vehicle/edit');
+                });
+
+                if (isset($vehicleRoutes)) {
+                    foreach ($vehicles as $vehicle) {
+                        foreach ($vehicleRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $vehicle, route: $route, type: 'vehicle', prefix: 'Vehicle');
+                        }
+                    }
+                }
+            }
+
+            //DeliveryMan
+            $deliveryMen = DeliveryMan::where(function ($query) use ($searchKeyword) {
+                    $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('identity_type', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                        ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                        ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%']);
+                })
+                ->get();
+
+            if ($deliveryMen) {
+                $deliveryManRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'delivery-man/edit') || str_contains($route->uri(), 'delivery-man/preview');
+                });
+                if (isset($deliveryManRoutes)) {
+                    foreach ($deliveryMen as $deliveryMan) {
+                        foreach ($deliveryManRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $deliveryMan, route: $route, type: 'deliveryMan', name: $deliveryMan->f_name . ' ' . $deliveryMan->l_name, prefix: 'Delivery Man');
+                        }
+                    }
+                }
+            }
+
+            //Store Disbursement
+            $storeDisbursements = Disbursement::where('created_for', 'store')
+                ->where(function ($query) use ($searchKeyword) {
+                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($storeDisbursements) {
+                $storeDisbursementRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'store-disbursement') &&  str_contains($route->uri(), 'details');
+                });
+
+
+                if (isset($storeDisbursementRoutes)) {
+                    foreach ($storeDisbursements as $storeDisbursement)
+                        foreach ($storeDisbursementRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $storeDisbursement, route: $route, prefix: 'Store Disbursement');
+                        }
+                }
+            }
+
+            //DM Disbursement
+            $dmDisbursements = Disbursement::where('created_for', 'delivery_man')
+                ->where(function ($query) use ($searchKeyword) {
+                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($dmDisbursements) {
+                $dmDisbursementRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'dm-disbursement') &&  str_contains($route->uri(), 'details');
+                });
+
+                if (isset($dmDisbursementRoutes)) {
+                    foreach ($dmDisbursements as $dmDisbursement) {
+                        foreach ($dmDisbursementRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $dmDisbursement, route: $route, prefix: 'Delivery Man Disbursement');
+                        }
+                    }
+                }
+            }
+
+            //     //Withdraw Request
+            //     $withdrawRequests = WithdrawRequest::
+            //         where(function($query) use ($searchKeyword) {
+            //             $query->where('type', 'LIKE', '%' . $searchKeyword . '%')
+            //                 ->orWhere('withdrawal_method_fields->account_name', 'LIKE', '%' . $searchKeyword . '%')
+            //                 ->orWhere('withdrawal_method_fields->account_number', 'LIKE', '%' . $searchKeyword . '%')
+            //                 ->orWhere('withdrawal_method_fields->email', 'LIKE', '%' . $searchKeyword . '%');
+            //         })
+            //         ->get();
+
+            //     if ($withdrawRequests){
+            //         $withdrawRequestRoutes = $adminRoutes->filter(function ($route) {
+            //             return str_contains($route->uri(), 'withdraw') && str_contains($route->uri(), 'withdraw-view');
+            //         });
+
+            //         if (isset($withdrawRequestRoutes)) {
+            //             foreach ($withdrawRequests as $withdrawRequest) {
+            //                 foreach ($withdrawRequestRoutes as $route) {
+            //                     $validRoutes[] = $this->filterRoute(model: $withdrawRequest, route: $route, prefix: 'Withdraw Request');
+            //                 }
             //             }
             //         }
             //     }
-            // }
-
-        //     //Order
-        //     $orders = Order::with('customer')
-        //         ->whereHas('customer', function ($query) use ($searchKeyword){
-        //             $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
-        //                 ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%'])
-        //                 ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%']);
-        //         })
-        //         ->orWhereHas('store', function ($query) use ($searchKeyword){
-        //             $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('address', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('meta_title', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('meta_description', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($orders){
-        //         $ordersRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'order') && str_contains($route->uri(), 'details')
-        //                 && !str_contains($route->uri(), 'post');
-        //         });
-        //         if (isset($ordersRoutes)) {
-        //             foreach ($orders as $order)
-        //             {
-        //                 foreach ($ordersRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $order, route: $route, type: 'order', prefix: 'Order');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Zone
-        //     $zones = Zone::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('display_name', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($zones){
-        //         $zoneRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'zone') &&
-        //                 (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'settings'));
-        //         });
-
-        //         if (isset($zoneRoutes)) {
-        //             foreach ($zones as $zone) {
-        //                 foreach ($zoneRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $zone, route: $route, type: 'zone', prefix: 'Zone');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Category
-        //     $categories = Category::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($categories){
-        //         $categoryRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'category') && str_contains($route->uri(), 'edit');
-        //         });
-
-        //         if (isset($categoryRoutes)) {
-        //             foreach ($categories as $category) {
-        //                 foreach ($categoryRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $category, route: $route, type: 'category', prefix: 'Category');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //AddOn
-        //     $addOns = AddOn::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
-        //                 // ->orWhere('stock_type', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($addOns){
-        //         $addOnRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'addon') && str_contains($route->uri(), 'edit');
-        //         });
-
-        //         if (isset($addOnRoutes)) {
-        //             foreach ($addOns as $addOn) {
-        //                 foreach ($addOnRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $addOn, route: $route, prefix: 'Addon');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Item
-        //     $Items = Item::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
-        //                 // ->orWhere('stock_type', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($Items){
-        //         $ItemRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'Item')
-        //                 && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'))
-        //                 && !str_contains($route->uri(), 'status') && !str_contains($route->uri(), 'Item-wise')
-        //                 && !str_contains($route->uri(), 'reviews-export');
-        //         });
-
-        //         if (isset($ItemRoutes)) {
-        //             foreach ($Items as $Item) {
-        //                 foreach ($ItemRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $Item, route: $route, type: 'Item', prefix: 'Item');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Campaign
-        //     $campaigns = Campaign::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($campaigns){
-        //         $campaignRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'campaign')
-        //                 && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
-        //         });
-
-        //         if (isset($campaignRoutes)) {
-        //             foreach ($campaigns as $campaign) {
-        //                 foreach ($campaignRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $campaign, route: $route, type: 'basic-campaign', prefix: 'Basic Campaign');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //ItemCampaign
-        //     $itemCampaigns = ItemCampaign::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($itemCampaigns){
-        //         $itemCampaignRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'campaign')
-        //                 && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
-        //         });
-
-        //         if (isset($itemCampaignRoutes)) {
-        //             foreach ($itemCampaigns as $itemCampaign) {
-        //                 foreach ($itemCampaignRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $itemCampaign, route: $route, type: 'item-campaign', prefix: 'Item Campaign');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Coupon
-        //     $coupons = Coupon::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('code', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('discount_type', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('coupon_type', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($coupons){
-        //         $couponRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'coupon') && str_contains($route->uri(), 'update');
-        //         });
-
-        //         if (isset($couponRoutes)) {
-        //             foreach ($coupons as $coupon) {
-        //                 foreach ($couponRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $coupon, route: $route, prefix: 'Coupon');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //CashBack
-        //     $cashBacks = CashBack::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('cashback_type', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($cashBacks){
-        //         $cashbackRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'cashback') && str_contains($route->uri(), 'edit');
-        //         });
-
-        //         if (isset($cashbackRoutes)) {
-        //             foreach ($cashBacks as $cashBack) {
-        //                 foreach ($cashbackRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $cashBack, route: $route, prefix: 'Cashback');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Banner
-        //     $banners = Banner::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('type', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($banners){
-        //         $bannerRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'banner') && str_contains($route->uri(), 'edit')
-        //                 && !str_contains($route->uri(), 'promotional-banner');
-        //         });
-
-        //         if (isset($bannerRoutes)) {
-        //             foreach ($banners as $banner) {
-        //                 foreach ($bannerRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $banner, route: $route, prefix: 'Banner');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Advertisement
-        //     $advertisements = Advertisement::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('add_type', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($advertisements){
-        //         $adsRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'advertisement')
-        //                 && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'detail'));
-        //         });
-        //         if (isset($adsRoutes)) {
-        //             foreach ($advertisements as $advertisement) {
-        //                 foreach ($adsRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $advertisement, route: $route, prefix: 'Advertisement');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //ContactMessage
-        //     // $contactMessages = ContactMessage::
-        //     //     where(function($query) use ($searchKeyword) {
-        //     //         $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
-        //     //             ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
-        //     //             ->orWhere('mobile_number', 'LIKE', '%' . $searchKeyword . '%')
-        //     //             ->orWhere('subject', 'LIKE', '%' . $searchKeyword . '%')
-        //     //             ->orWhere('message', 'LIKE', '%' . $searchKeyword . '%')
-        //     //             ->orWhere('reply', 'LIKE', '%' . $searchKeyword . '%');
-        //     //     })
-        //     //     ->get();
-
-        //     // if ($contactMessages){
-        //     //     $contactRoutes = $adminRoutes->filter(function ($route) {
-        //     //         return str_contains($route->uri(), 'contact') && str_contains($route->uri(), 'view');
-        //     //     });
-
-        //     //     if (isset($contactRoutes)) {
-        //     //         foreach ($contactMessages as $contactMessage) {
-        //     //             foreach ($contactRoutes as $route) {
-        //     //                 $validRoutes[] = $this->filterRoute(model: $contactMessage, route: $route, prefix: 'Contact');
-        //     //             }
-        //     //         }
-        //     //     }
-        //     // }
-
-        //     //Notification
-        //     $notifications = Notification::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($notifications){
-        //         $notificationRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'notification') && str_contains($route->uri(), 'edit');
-        //         });
-
-        //         if (isset($notificationRoutes)) {
-        //             foreach ($notifications as $notification) {
-        //                 foreach ($notificationRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $notification, route: $route, prefix: 'Notification');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //customer
-        //     $customers = User::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
-        //                 ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%'])
-        //                 ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%']);
-        //         })
-        //         ->get();
-
-        //     if ($customers){
-        //         $customerRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'customer') &&  str_contains($route->uri(), 'view');
-        //         });
-        //         if (isset($customerRoutes)) {
-        //             foreach ($customers as $customer){
-        //                 foreach ($customerRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $customer, route: $route, type: 'customer', name: $customer->f_name. ' '. $customer->l_name, prefix: 'Customer');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //WalletBonus
-        //     $walletBonus = WalletBonus::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('bonus_type', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($walletBonus){
-        //         $bonusRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'bonus') &&  str_contains($route->uri(), 'update');
-        //         });
-
-        //         if (isset($bonusRoutes)) {
-        //             foreach ($walletBonus as $bonus) {
-        //                 foreach ($bonusRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $bonus, route: $route, type: 'bonus', prefix: 'Bonus');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Vehicle
-        //     $vehicles = DmVehicle::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('type', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($vehicles){
-        //         $vehicleRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'vehicle') &&
-        //                 str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view')
-        //                 && !str_contains($route->uri(), 'review') && !str_contains($route->uri(), 'Item')
-        //                 && !str_contains($route->uri(), 'campaign') && !str_contains($route->uri(), 'store')
-        //                 && !str_contains($route->uri(), 'order') && !str_contains($route->uri(), 'message')
-        //                 && !str_contains($route->uri(), 'delivery-man') && !str_contains($route->uri(), 'pos')
-        //                 && !str_contains($route->uri(), 'customer') && !str_contains($route->uri(), 'subscription')
-        //                 && !str_contains($route->uri(), 'social-login') && !str_contains($route->uri(), 'contact')
-        //                 ;
-        //         });
-
-        //         if (isset($vehicleRoutes)) {
-        //             foreach ($vehicles as $vehicle) {
-        //                 foreach ($vehicleRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $vehicle, route: $route, type: 'vehicle', prefix: 'Vehicle');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //DeliveryMan
-        //     $deliveryMen = DeliveryMan::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('identity_type', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
-        //                 ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%'])
-        //                 ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%']);
-        //         })
-        //         ->get();
-
-        //     if ($deliveryMen){
-        //         $deliveryManRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'delivery-man')
-        //                 && str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'preview');
-        //         });
-        //         if (isset($deliveryManRoutes)) {
-        //             foreach ($deliveryMen as $deliveryMan) {
-        //                 foreach ($deliveryManRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $deliveryMan, route: $route, type: 'deliveryMan', name: $deliveryMan->f_name. ' '. $deliveryMan->l_name, prefix: 'Delivery Man');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Store Disbursement
-        //     $storeDisbursements = Disbursement::where('created_for', 'store')
-        //         ->where(function($query) use ($searchKeyword) {
-        //             $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($storeDisbursements){
-        //         $storeDisbursementRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'store-disbursement') &&  str_contains($route->uri(), 'details');
-        //         });
-
-        //         if (isset($storeDisbursementRoutes)) {
-        //             foreach ($storeDisbursements as $storeDisbursement)
-        //             foreach ($storeDisbursementRoutes as $route) {
-        //                 $validRoutes[] = $this->filterRoute(model: $storeDisbursement, route: $route, prefix: 'Store Disbursement');
-        //             }
-        //         }
-        //     }
-
-        //     //DM Disbursement
-        //     $dmDisbursements = Disbursement::where('created_for', 'delivery_man')
-        //         ->where(function($query) use ($searchKeyword) {
-        //             $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($dmDisbursements){
-        //         $dmDisbursementRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'dm-disbursement') &&  str_contains($route->uri(), 'details');
-        //         });
-
-        //         if (isset($dmDisbursementRoutes)) {
-        //             foreach ($dmDisbursements as $dmDisbursement) {
-        //                 foreach ($dmDisbursementRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $dmDisbursement, route: $route, prefix: 'Delivery Man Disbursement');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Withdraw Request
-        //     $withdrawRequests = WithdrawRequest::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('type', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('withdrawal_method_fields->account_name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('withdrawal_method_fields->account_number', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('withdrawal_method_fields->email', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($withdrawRequests){
-        //         $withdrawRequestRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'withdraw') && str_contains($route->uri(), 'withdraw-view');
-        //         });
-
-        //         if (isset($withdrawRequestRoutes)) {
-        //             foreach ($withdrawRequests as $withdrawRequest) {
-        //                 foreach ($withdrawRequestRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $withdrawRequest, route: $route, prefix: 'Withdraw Request');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Withdrawal Method
-        //     $withdrawalMethods = WithdrawalMethod::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('method_name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhereRaw("JSON_SEARCH(method_fields, 'one', ?) IS NOT NULL", ['%' . $searchKeyword . '%']);
-        //         })
-        //         ->get();
-
-        //     if ($withdrawalMethods){
-        //         $withdrawalMethodRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'withdraw-method') && str_contains($route->uri(), 'edit');
-        //         });
-
-        //         if (isset($withdrawalMethodRoutes)) {
-        //             foreach ($withdrawalMethods as $withdrawalMethod){
-        //                 foreach ($withdrawalMethodRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $withdrawalMethod, route: $route, prefix: 'Withdraw Method');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Admin Role
-        //     $adminRoles = AdminRole::whereNotIn('id', [1])
-        //         ->where(function($query) use ($searchKeyword) {
-        //             $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($adminRoles){
-        //         $adminRoleRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'custom-role') && str_contains($route->uri(), 'edit');
-        //         });
-
-        //         if (isset($adminRoleRoutes)) {
-        //             foreach ($adminRoles as $adminRole) {
-        //                 foreach ($adminRoleRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $adminRole, route: $route, prefix: 'Employee Role');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Subscription Package
-        //     $subscriptionPackages = SubscriptionPackage::
-        //         where(function($query) use ($searchKeyword) {
-        //             $query->where('package_name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('colour', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('text', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($subscriptionPackages){
-        //         $subscriptionPackageRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'package')
-        //                 && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'details'));
-        //         });
-
-        //         if (isset($subscriptionPackageRoutes)) {
-        //             foreach ($subscriptionPackages as $subscriptionPackage) {
-        //                 foreach ($subscriptionPackageRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $subscriptionPackage, route: $route, prefix: 'Subscription');
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     //Store Subscription
-        //     $storeSubscriptions = StoreSubscription::with('package')
-        //         ->whereHas('package', function ($query) use ($searchKeyword){
-        //             $query->where('package_name', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('colour', 'LIKE', '%' . $searchKeyword . '%')
-        //                 ->orWhere('text', 'LIKE', '%' . $searchKeyword . '%');
-        //         })
-        //         ->get();
-
-        //     if ($storeSubscriptions){
-        //         $storeSubscriptionRoutes = $adminRoutes->filter(function ($route) {
-        //             return str_contains($route->uri(), 'subscription') && str_contains($route->uri(), 'subscriber-detail');
-        //         });
-
-        //         if (isset($storeSubscriptionRoutes)) {
-        //             foreach ($storeSubscriptions as $storeSubscription) {
-        //                 foreach ($storeSubscriptionRoutes as $route) {
-        //                     $validRoutes[] = $this->filterRoute(model: $storeSubscription, route: $route, name: $storeSubscription?->store?->name, prefix: 'Subscription');
-        //                 }
-        //             }
-        //         }
-        //     }
+
+            //Withdrawal Method
+            $withdrawalMethods = WithdrawalMethod::where(function ($query) use ($searchKeyword) {
+                    $query->where('method_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhereRaw("JSON_SEARCH(method_fields, 'one', ?) IS NOT NULL", ['%' . $searchKeyword . '%']);
+                })
+                ->get();
+
+            if ($withdrawalMethods) {
+                $withdrawalMethodRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'withdraw-method') && str_contains($route->uri(), 'edit');
+                });
+
+                if (isset($withdrawalMethodRoutes)) {
+                    foreach ($withdrawalMethods as $withdrawalMethod) {
+                        foreach ($withdrawalMethodRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $withdrawalMethod, route: $route, prefix: 'Withdraw Method');
+                        }
+                    }
+                }
+            }
+
+            //Admin Role
+            $adminRoles = AdminRole::
+                // whereNotIn('id', [1])
+                where(function ($query) use ($searchKeyword) {
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($adminRoles) {
+                $adminRoleRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'custom-role') && str_contains($route->uri(), 'edit');
+                });
+
+                if (isset($adminRoleRoutes)) {
+                    foreach ($adminRoles as $adminRole) {
+                        foreach ($adminRoleRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $adminRole, route: $route, prefix: 'Employee Role');
+                        }
+                    }
+                }
+            }
+            //Admin Employee
+            $adminEmpoyee = Admin::whereNotIn('id', [1, auth('admin')->user()->id])
+
+                ->where(function ($query) use ($searchKeyword) {
+                    $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                        ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                        ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%']);
+                })
+                ->get();
+
+
+            if ($adminEmpoyee) {
+                $adminEmployeeRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'employee') && str_contains($route->uri(), 'edit');
+                });
+
+                if (isset($adminEmployeeRoutes)) {
+                    foreach ($adminEmpoyee as $Employee) {
+                        foreach ($adminEmployeeRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $Employee, route: $route, prefix: 'Employee');
+                        }
+                    }
+                }
+            }
+
+            //Subscription Package
+            $subscriptionPackages = SubscriptionPackage::where(function ($query) use ($searchKeyword) {
+                    $query->where('package_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('colour', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('text', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($subscriptionPackages) {
+                $subscriptionPackageRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'subscription/subscriptionackage');
+                });
+
+                if (isset($subscriptionPackageRoutes)) {
+                    foreach ($subscriptionPackages as $subscriptionPackage) {
+                        foreach ($subscriptionPackageRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $subscriptionPackage, route: $route, prefix: 'Subscription');
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+
+            //Modules
+            $Modules = Module::where(function ($query) use ($searchKeyword) {
+                    $query->where('module_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('module_type', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($Modules) {
+                $moduleRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'business-settings/module') && !str_contains($route->uri(), 'export');
+                });
+
+                if (isset($moduleRoutes)) {
+                    foreach ($Modules as $module) {
+                        foreach ($moduleRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $module, route: $route, prefix: 'Module', name: $module->module_name);
+                        }
+                    }
+                }
+            }
+            //flashSale
+            $flashSales = FlashSale::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->where('module_id', $currentModuleId);
+                })->where(function ($query) use ($searchKeyword) {
+                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($flashSales) {
+                $flashSaleRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'flash-sale/') && !str_contains($route->uri(), 'publish');
+                });
+                if (isset($flashSaleRoutes)) {
+                    foreach ($flashSales as $flashSale) {
+                        foreach ($flashSaleRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $flashSale, route: $route, prefix: 'flashSale', name: $flashSale->title);
+                        }
+                    }
+                }
+            }
+
+
+            if (in_array($currentModuleType, ['parcel'])) {
+                //ParcelCategory
+                $ParcelCategories = ParcelCategory::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                        return $query->where('module_id', $currentModuleId);
+                    })->where(function ($query) use ($searchKeyword) {
+                        $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
+                            ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
+                    })
+                    ->get();
+
+                if ($ParcelCategories) {
+                    $parcelCategoryRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'admin/parcel/category/') && (str_contains($route->uri(), 'edit'));
+                    });
+                    if (isset($parcelCategoryRoutes)) {
+                        foreach ($ParcelCategories as $parcelCategory) {
+                            foreach ($parcelCategoryRoutes as $route) {
+                                $validRoutes[] = $this->filterRoute(model: $parcelCategory, route: $route, prefix: 'parcelCategory', name: $parcelCategory->name);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (in_array($currentModuleType, ['pharmacy'])) {
+                //CommonCondition
+                $CommonCondition = CommonCondition::where(function ($query) use ($searchKeyword) {
+                        $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
+                    })
+                    ->get();
+
+                if ($CommonCondition) {
+                    $commonconRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'admin/common-condition');
+                    });
+                    if (isset($commonconRoutes)) {
+                        foreach ($CommonCondition as $commoncon) {
+                            foreach ($commonconRoutes as $route) {
+                                $validRoutes[] = $this->filterRoute(model: $commoncon, route: $route, prefix: 'Common Condition', name: $commoncon->name);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            //walletTransaction
+            $walletTransaction = WalletTransaction::with('user')->whereAny([
+                'transaction_id',
+                'transaction_type',
+                'reference',
+            ], 'LIKE', "%$searchKeyword%")
+                ->orwherehas('user', function ($query) use ($searchKeyword) {
+                    $query->whereAny([
+                        'f_name',
+                        'l_name',
+                        'phone',
+                        'email',
+                    ], 'LIKE', "%$searchKeyword%");
+                })
+                ->get();
+
+            if ($walletTransaction) {
+                $walletTransactionRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'users/customer/wallet/report');
+                });
+                if (isset($walletTransactionRoutes)) {
+                    foreach ($walletTransaction as $walletTransaction) {
+                        foreach ($walletTransactionRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $walletTransaction, route: $route, prefix: 'Wallet Transaction', name: $walletTransaction?->user?->f_name . ' ' . $walletTransaction?->user?->l_name);
+                        }
+                    }
+                }
+            }
+
+
+            //LoyaltyPoint
+            $LoyaltyPoint = LoyaltyPointTransaction::with('user')->whereAny([
+                'transaction_id',
+                'transaction_type',
+                'reference',
+            ], 'LIKE', "%$searchKeyword%")
+                ->orwherehas('user', function ($query) use ($searchKeyword) {
+                    $query->whereAny([
+                        'f_name',
+                        'l_name',
+                        'phone',
+                        'email',
+                    ], 'LIKE', "%$searchKeyword%");
+                })
+                ->get();
+
+            if ($LoyaltyPoint) {
+                $LoyaltyPointRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'users/customer/loyalty-point/report');
+                });
+                if (isset($LoyaltyPointRoutes)) {
+                    foreach ($LoyaltyPoint as $LoyaltyPoint) {
+                        foreach ($LoyaltyPointRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $LoyaltyPoint, route: $route, prefix: 'Wallet Transaction', name: $LoyaltyPoint?->user?->f_name . ' ' . $LoyaltyPoint?->user?->l_name);
+                        }
+                    }
+                }
+            }
+
+
+            //Newsletter
+            $Newsletter = Newsletter::whereAny([
+                'email',
+            ], 'LIKE', "%$searchKeyword%")
+
+                ->get();
+
+            if ($Newsletter) {
+                $NewsletterRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'admin/users/customer/subscribed');
+                });
+                if (isset($NewsletterRoutes)) {
+                    foreach ($Newsletter as $Newsletter) {
+                        foreach ($NewsletterRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $Newsletter, route: $route, prefix: 'Customers', name: $Newsletter?->email);
+                        }
+                    }
+                }
+            }
+
+
+
+            //tepmProduct
+            $tepmProduct = TempProduct::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->where('module_id', $currentModuleId);
+            })->whereAny([
+                'name',
+                'description',
+            ], 'LIKE', "%$searchKeyword%")
+
+                ->get();
+
+            if ($tepmProduct) {
+                $tepmProductRoutes = $adminRoutes->filter(function ($route) {
+                    return str_contains($route->uri(), 'admin/item/new/item/list') || str_contains($route->uri(), 'admin/item/requested/item/view/');
+                });
+                if (isset($tepmProductRoutes)) {
+                    foreach ($tepmProduct as $tepmProduct) {
+                        foreach ($tepmProductRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $tepmProduct, route: $route, prefix: 'New Product', name: $tepmProduct?->name);
+                        }
+                    }
+                }
+            }
+
+            //     //Store Subscription
+            //     $storeSubscriptions = StoreSubscription::with('package')
+            //         ->whereHas('package', function ($query) use ($searchKeyword){
+            //             $query->where('package_name', 'LIKE', '%' . $searchKeyword . '%')
+            //                 ->orWhere('colour', 'LIKE', '%' . $searchKeyword . '%')
+            //                 ->orWhere('text', 'LIKE', '%' . $searchKeyword . '%');
+            //         })
+            //         ->get();
+
+            //     if ($storeSubscriptions){
+            //         $storeSubscriptionRoutes = $adminRoutes->filter(function ($route) {
+            //             return str_contains($route->uri(), 'subscription') && str_contains($route->uri(), 'subscriber-detail');
+            //         });
+
+            //         if (isset($storeSubscriptionRoutes)) {
+            //             foreach ($storeSubscriptions as $storeSubscription) {
+            //                 foreach ($storeSubscriptionRoutes as $route) {
+            //                     $validRoutes[] = $this->filterRoute(model: $storeSubscription, route: $route, name: $storeSubscription?->store?->name, prefix: 'Subscription');
+            //                 }
+            //             }
+            //         }
+            //     }
         }
 
         return array_merge($formattedRoutes, $validRoutes);
@@ -1393,7 +1679,7 @@ class SearchRoutingController extends Controller
 
         if (!empty($placeholders)) {
             $firstPlaceholder = $placeholders[0];
-            $uriWithParameter = str_replace("{{$firstPlaceholder}}", $model->id, $uriWithParameter);
+            $uriWithParameter = str_replace("{{ $firstPlaceholder }}", $model->id, $uriWithParameter);
         }
 
         $uriWithParameter = preg_replace('/\{\w+\?\}/', '', $uriWithParameter);
@@ -1402,8 +1688,8 @@ class SearchRoutingController extends Controller
 
         $fullURL = url('/') . '/' . $uriWithParameter;
 
-        if ($type == 'store' && $model->vendor->status == null){
-            $fullURL = $formattedRouteName == 'View' ? $fullURL. '/pending-list' : $fullURL;
+        if ($type == 'store' && $model->vendor->status == null) {
+            $fullURL = $formattedRouteName == 'View' ? $fullURL . '/pending-list' : $fullURL;
         }
 
         if ($type === 'basic-campaign') {
@@ -1421,16 +1707,16 @@ class SearchRoutingController extends Controller
         }
 
         if ($type === 'deliveryMan' && !$model->active) {
-            $fullURL = url('/') . '/admin/delivery-man/pending-delivery-man-view/'. $model->id;
+            $fullURL = url('/') . '/admin/delivery-man/pending-delivery-man-view/' . $model->id;
             $uriWithParameter = $formattedRouteName === 'Preview' ? "admin/delivery-man/pending-delivery-man-view/{$model->id}" : $uriWithParameter;
         }
 
-//        if ($type == 'order' && $model->subscription_id != null){
-//            $fullURL = $formattedRouteName == 'Details' ? url('/') . '/' . 'admin/order/subscription/show/'.$model->id : $fullURL;
-//        }
+        //        if ($type == 'order' && $model->subscription_id != null){
+        //            $fullURL = $formattedRouteName == 'Details' ? url('/') . '/' . 'admin/order/subscription/show/'.$model->id : $fullURL;
+        //        }
 
-        $routeName = $prefix ? $prefix. ' '. $formattedRouteName : $formattedRouteName;
-        $routeName = $name ? $routeName. ' - (' . $name. ')' : $routeName;
+        $routeName = $prefix ? $prefix . ' ' . $formattedRouteName : $formattedRouteName;
+        $routeName = $name ? $routeName . ' - (' . $name . ')' : $routeName;
 
         return [
             'routeName' => $routeName,
@@ -1451,6 +1737,7 @@ class SearchRoutingController extends Controller
         $routeUri = $request->input('routeUri');
         $routeFullUrl = $request->input('routeFullUrl');
         $searchKeyword = $request->input('searchKeyword');
+        $module_id = $request->input('moduleId');
 
         $existingClick = RecentSearch::where('user_id', $userId)
             ->where('user_type', $userType)
@@ -1463,9 +1750,11 @@ class SearchRoutingController extends Controller
             $clickedRoute->user_type = $userType;
             $clickedRoute->route_name = $routeName;
             $clickedRoute->route_uri = $routeUri;
+            $clickedRoute->module_id = $module_id;
+            $clickedRoute->keyword = $searchKeyword;
             $clickedRoute->route_full_url = isset($searchKeyword) ? $routeFullUrl . '?keyword=' . $searchKeyword : $routeFullUrl;
             $clickedRoute->save();
-        }else{
+        } else {
             $existingClick->created_at = now();
             $existingClick->update();
         }
@@ -1491,6 +1780,9 @@ class SearchRoutingController extends Controller
         $userType = auth('admin')->user()->role_id ? 'admin' : 'admin-employee';
 
         $recentSearches = RecentSearch::where('user_id', $userId)
+            ->where(function ($query) {
+                $query->whereNull('module_id')->orwhere('module_id', config('module.current_module_id'));
+            })
             ->where('user_type', $userType)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -1499,7 +1791,7 @@ class SearchRoutingController extends Controller
     }
 
 
-    function getAjaxRoutes ($adminRoutes): array
+    private function getAjaxRoutes($adminRoutes): array
     {
         $jsonRoutes = [];
         $route_names = [];
@@ -1533,11 +1825,9 @@ class SearchRoutingController extends Controller
         }
 
         foreach ($jsonRoutes as $route) {
-            $route_names[] =$route['uri'];
+            $route_names[] = $route['uri'];
         }
 
         return $route_names;
     }
-
-
 }

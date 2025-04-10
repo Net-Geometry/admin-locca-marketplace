@@ -811,6 +811,7 @@ $(document).on('keyup', 'input[type="tel"]', function () {
                                             routeUri: routeUri,
                                             routeFullUrl: routeFullUrl,
                                             searchKeyword: searchKeyword,
+                                            moduleId: '{{ config('module.current_module_id') ?? null }}',
                                             _token: $('input[name="_token"]').val()
                                         },
                                         success: function (response) {

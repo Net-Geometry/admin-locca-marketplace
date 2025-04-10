@@ -151,7 +151,7 @@
                     <form class="flex-grow-1" id="searchForm" action="{{ route('vendor.search.routing') }}">
                         @csrf
                         <div class="d-flex align-items-center global-search-container">
-                            <input class="form-control flex-grow-1 rounded-10 search-input" id="searchInput" name="search" type="search" placeholder="Search" aria-label="Search" autofocus>
+                            <input class="form-control flex-grow-1 rounded-10 search-input" id="searchInput" maxlength="255" name="search" type="search" placeholder="Search" aria-label="Search" autofocus>
                         </div>
                     </form>
                     <div class="position-absolute right-0 pr-2">
@@ -455,32 +455,6 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
 
 @endif
 
-
-
-<div class="modal fade removeSlideDown" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered max-w-520">
-        <div class="modal-content modal-content__search border-0">
-            <div class="d-flex flex-column gap-3 rounded-20 bg-card py-2 px-3">
-                <div class="d-flex gap-2 align-items-center position-relative">
-                    <form class="flex-grow-1" id="searchForm" action="{{ route('admin.search.routing') }}">
-                        @csrf
-                        <div class="d-flex align-items-center global-search-container">
-                            <input class="form-control flex-grow-1 rounded-10 search-input" id="searchInput" name="search" type="search" placeholder="Search" aria-label="Search" autofocus>
-                        </div>
-                    </form>
-                    <div class="position-absolute right-0 pr-2">
-                        <button class="border-0 rounded px-2 py-1" type="button" data-dismiss="modal">{{ translate('Esc') }}</button>
-                    </div>
-                </div>
-                <div class="min-h-350">
-                    <div class="search-result" id="searchResults">
-                        <div class="text-center text-muted py-5">{{translate('It appears that you have not yet searched.')}}.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <script>
