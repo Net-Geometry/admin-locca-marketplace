@@ -223,7 +223,7 @@ class GenerateAdminRoute extends Command
         }
     }
 
- private function manualyAddedBladePath($formattedRoutes): array
+    private function manualyAddedBladePath($formattedRoutes): array
     {
         $array = [
             'admin-views.order.offline_verification_list' => ['admin/order/offline/payment/list/all'],

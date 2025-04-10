@@ -282,6 +282,7 @@ $countryCode= strtolower($country?$country->value:'auto');
 </script>
 
 <script src="{{asset('public/assets/admin/js/view-pages/common.js')}}"></script>
+<script src="{{asset('public/assets/admin/js/keyword-highlighted.js')}}"></script>
 <audio id="myAudio">
     <source src="{{asset('public/assets/admin/sound/notification.mp3')}}" type="audio/mpeg">
 </audio>
