@@ -414,5 +414,21 @@
         "bladePath": "rental::provider/review/list",
         "moduleType": "rental",
         "isModified": false
+    },
+    {
+        "routeName": "Product Bulk Export",
+        "URI": "vendor-panel/item/bulk-export",
+        "keywords": "Item Bulk Export Export Items STEP Select Data Type Select Data Range And Export Type Select Type All Data Date Wise Id Wise Start Id From Date End Id To Date Reset Export",
+        "bladePath": "vendor-views.product.bulk-export",
+        "moduleType": null,
+        "isModified": false
+    },
+    {
+        "routeName": "Messages List",
+        "URI": "vendor-panel/message/list",
+        "keywords": "Conversation List Search View Conversation",
+        "bladePath": "vendor-views.messages.index",
+        "moduleType": null,
+        "isModified": false
     }
 ]

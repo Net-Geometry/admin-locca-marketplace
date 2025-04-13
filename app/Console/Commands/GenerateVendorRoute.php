@@ -225,7 +225,8 @@ class GenerateVendorRoute extends Command
     private function manualyAddedBladePath($formattedRoutes): array
     {
         $array = [
-            // 'admin-views.order.offline_verification_list' => ['admin/order/offline/payment/list/all'],
+            'vendor-views.product.bulk-export' => ['vendor-panel/item/bulk-export'],
+            'vendor-views.messages.index' => ['vendor-panel/message/list'],
 
         ];
 

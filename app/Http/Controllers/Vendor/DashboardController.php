@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Vendor;
 use Carbon\Carbon;
 use App\Models\Item;
 use App\Models\Order;
-use App\Models\Store;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
@@ -18,6 +17,10 @@ class DashboardController extends Controller
 {
     public function dashboard(Request $request)
     {
+        if(Helpers::get_store_data()->module_type == 'rental'){
+            return to_route('vendor.providerDashboard');
+
+        }
         $params = [
             'statistics_type' => $request['statistics_type'] ?? 'overall'
         ];
