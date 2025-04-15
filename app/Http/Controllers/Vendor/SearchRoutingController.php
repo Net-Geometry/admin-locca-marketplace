@@ -57,70 +57,39 @@ class SearchRoutingController extends Controller
         //1st layer
         $formattedRoutes = [];
         $jsonFilePath = public_path('vendor_formatted_routes.json');
-        // if (file_exists($jsonFilePath)) {
-        //     $fileContents = file_get_contents($jsonFilePath);
-        //     $routes = json_decode($fileContents, true);
+        if (file_exists($jsonFilePath)) {
+            $fileContents = file_get_contents($jsonFilePath);
+            $routes = json_decode($fileContents, true);
 
-        //     $excludedUrls = [
-        //         'trip',
-        //         'vehicle',
-        //         'vehicle-category',
-        //         'vehicle-brand',
-        //         'driver',
-        //         'rental-coupon',
-        //         'rental-banner',
-        //         'rental-reviews',
-        //         'trip-report',
-        //     ];
+            if (!addon_published_status('Rental')) {
+                $routes = array_filter($routes, function ($route) {
+                    return $route['moduleType'] !== 'rental';
+                });
+            }
 
-        //     foreach ($routes as $route) {
-        //         $uri = $route['URI'];
-        //         $shouldExclude = false;
 
-        //         foreach ($excludedUrls as $excludedUrl) {
-        //             if (Str::contains($uri, $excludedUrl)) {
-        //                 $shouldExclude = true;
-        //                 break;
-        //             }
-        //         }
 
-        //         $excludePos = $moduleType && Str::contains($uri, 'pos');
+            foreach ($routes as $route) {
+                $uri = $route['URI'];
+                if (Str::contains(strtolower($route['keywords']), strtolower($searchKeyword))) {
+                    $hasParameters = preg_match('/\{(.*?)\}/', $uri);
 
-        //         if ($moduleType) {
-        //             if ($shouldExclude && !$excludePos) {
-        //                 if (Str::contains(strtolower($route['keywords']), strtolower($searchKeyword))) {
-        //                     $hasParameters = preg_match('/\{(.*?)\}/', $uri);
-        //                     $fullURL = $this->routeFullUrl($uri);
+                    $fullURL = $this->routeFullUrl($uri);
 
-        //                     if (!$hasParameters) {
-        //                         $routeName = $route['routeName'];
-        //                         $formattedRoutes[] = [
-        //                             'routeName' => ucwords($routeName),
-        //                             'URI' => $uri,
-        //                             'fullRoute' => $fullURL,
-        //                         ];
-        //                     }
-        //                 }
-        //             }
-        //         } else {
-        //             if (!$shouldExclude) {
-        //                 if (Str::contains(strtolower($route['keywords']), strtolower($searchKeyword))) {
-        //                     $hasParameters = preg_match('/\{(.*?)\}/', $uri);
-        //                     $fullURL = $this->routeFullUrl($uri);
+                    if (!$hasParameters) {
+                        if ($moduleType === $route['moduleType'] || $route['moduleType'] === null) {
 
-        //                     if (!$hasParameters) {
-        //                         $routeName = $route['routeName'];
-        //                         $formattedRoutes[] = [
-        //                             'routeName' => ucwords($routeName),
-        //                             'URI' => $uri,
-        //                             'fullRoute' => $fullURL,
-        //                         ];
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+                            $routeName = $route['routeName'];
+                            $formattedRoutes[] = [
+                                'routeName' => ucwords($routeName),
+                                'URI' => $uri,
+                                'fullRoute' => $fullURL,
+                            ];
+                        }
+                    }
+                }
+            }
+        }
 
         //2nd layer
         $routes = Route::getRoutes();
@@ -801,7 +770,7 @@ class SearchRoutingController extends Controller
                     if (isset($ItemRoutes)) {
                         foreach ($Tempfood as $Item) {
                             foreach ($ItemRoutes as $route) {
-                                $validRoutes[] = $this->filterRoute(model: $Tempfood, route: $route, type: 'tempitem', name: $Tempfood->name);
+                                $validRoutes[] = $this->filterRoute(model: $Item, route: $route, type: 'tempitem', name: $Item?->name);
                             }
                         }
                     }
@@ -1000,7 +969,7 @@ class SearchRoutingController extends Controller
 
             //store disbursement
             $storeDisbursement = DisbursementDetails::where('store_id', $store_id)
-                ->where(function ($query) use ($searchKeyword) {
+                ->wherehas('withdraw_method',function($query) use ($searchKeyword){
                     $query->where('method_name', 'LIKE', '%' . $searchKeyword . '%')
                         ->orWhereRaw("JSON_SEARCH(method_fields, 'one', ?) IS NOT NULL", ['%' . $searchKeyword . '%']);
                 })
@@ -1168,8 +1137,7 @@ class SearchRoutingController extends Controller
                 //Subscription Transaction
                 $SubscriptionTransaction = SubscriptionTransaction::where('store_id', $store_id)
                     ->where(function ($query) use ($searchKeyword) {
-                        $query->where('transaction_type', 'LIKE', '%' . $searchKeyword . '%')
-                            ->orWhere('reference', 'LIKE', '%' . $searchKeyword . '%');
+                        $query->where('reference', 'LIKE', '%' . $searchKeyword . '%');
                     })
                     ->get();
 
@@ -1182,7 +1150,7 @@ class SearchRoutingController extends Controller
                     if (isset($storeSubscriptionBillingAndRefundHistoryRoutes)) {
                         foreach ($SubscriptionTransaction as $history) {
                             foreach ($storeSubscriptionBillingAndRefundHistoryRoutes as $route) {
-                                $validRoutes[] = $this->filterRoute(model: $SubscriptionTransaction, type: 'subscriber-transactions', route: $route, searchKeyword: $SubscriptionTransaction->id);
+                                $validRoutes[] = $this->filterRoute(model: $history, type: 'subscriber-transactions', route: $route, searchKeyword: $history->id);
                             }
                         }
                     }
@@ -1353,9 +1321,9 @@ class SearchRoutingController extends Controller
                     });
 
                     if (isset($VehicleBrandRoutes)) {
-                        foreach ($VehicleBrand as $VehicleCategory) {
+                        foreach ($VehicleBrand as $Vehicle_Brand) {
                             foreach ($VehicleBrandRoutes as $route) {
-                                $validRoutes[] = $this->filterRoute(model: $VehicleBrand, route: $route, type: 'VehicleBrand', prefix: 'VehicleBrand', name: $VehicleBrand->name, searchKeyword: $VehicleBrand->name);
+                                $validRoutes[] = $this->filterRoute(model: $Vehicle_Brand, route: $route, type: 'VehicleBrand', prefix: 'VehicleBrand', name: $VehicleBrand->name, searchKeyword: $VehicleBrand->name);
                             }
                         }
                     }
@@ -1377,9 +1345,9 @@ class SearchRoutingController extends Controller
                     });
 
                     if (isset($VehicleDriverRoutes)) {
-                        foreach ($VehicleDriver as $VehicleCategory) {
+                        foreach ($VehicleDriver as $Vehicle_Driver) {
                             foreach ($VehicleDriverRoutes as $route) {
-                                $validRoutes[] = $this->filterRoute(model: $VehicleDriver, route: $route, type: 'VehicleDriver', prefix: 'VehicleDriver', name: $VehicleDriver->first_name, searchKeyword: $VehicleDriver->first_name);
+                                $validRoutes[] = $this->filterRoute(model: $Vehicle_Driver, route: $route, type: 'VehicleDriver', prefix: 'VehicleDriver', name: $VehicleDriver->first_name, searchKeyword: $VehicleDriver->first_name);
                             }
                         }
                     }
@@ -1397,9 +1365,9 @@ class SearchRoutingController extends Controller
                     });
 
                     if (isset($VehicleReviewRoutes)) {
-                        foreach ($VehicleReview as $VehicleCategory) {
+                        foreach ($VehicleReview as $Vehicle_Review) {
                             foreach ($VehicleReviewRoutes as $route) {
-                                $validRoutes[] = $this->filterRoute(model: $VehicleReview, route: $route, type: 'Vehicle_Review', prefix: 'VehicleReview');
+                                $validRoutes[] = $this->filterRoute(model: $Vehicle_Review, route: $route, type: 'Vehicle_Review', prefix: 'VehicleReview');
                             }
                         }
                     }

@@ -227,7 +227,7 @@ class GenerateVendorRoute extends Command
         $array = [
             'vendor-views.product.bulk-export' => ['vendor-panel/item/bulk-export'],
             'vendor-views.messages.index' => ['vendor-panel/message/list'],
-
+            'vendor-views.business-settings.restaurant-index' => ['vendor-panel/business-settings/store-setup'],
         ];
 
         foreach ($array as $bladePath => $value) {
