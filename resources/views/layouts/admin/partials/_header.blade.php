@@ -131,7 +131,7 @@
                     @endif
 
 
-                    <li class="nav-item max-sm-m-0 w-md-200px flex-grow-0">
+                    <li class="nav-item max-sm-m-0 w-md-200px ml-auto flex-grow-0">
                         <button type="button" id="modalOpener" class="title-color bg--secondary border-0 rounded justify-content-between w-100 align-items-center py-2 px-2 px-md-3 d-flex gap-1" data-toggle="modal" data-target="#staticBackdrop">
                             <div class="d-flex gap-1 align-items-center">
                                 <i class="tio-search"></i>
@@ -141,7 +141,7 @@
                         </button>
                     </li>
 
-                    <li class="nav-item max-sm-m-0 ml-auto mr-lg-3">
+                    <li class="nav-item max-sm-m-0  mr-lg-3">
                         <a class="btn btn-icon rounded-circle nav-msg-icon"
                            href="{{route('admin.message.list')}}">
                             <img src="{{asset('/public/assets/admin/img/new-img/message-icon.svg')}}" alt="public/img">

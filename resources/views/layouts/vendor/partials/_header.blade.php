@@ -18,16 +18,16 @@
             <div class="navbar-nav-wrap-content-right">
                 <!-- Navbar -->
                 <ul class="navbar-nav align-items-center flex-row">
-                    <li class="nav-item max-sm-m-0">
-                        <button type="button" id="modalOpener"
-                                class="title-color bg--secondary border-0 rounded align-items-center py-2 px-2 px-md-3 d-flex gap-1"
-                                data-toggle="modal" data-target="#staticBackdrop">
-                            <i class="tio-search"></i>
-                            <span class="d-none d-md-block">{{translate('Search')}}</span>
+                    <li class="nav-item max-sm-m-0 w-md-200px ml-auto mr-2 flex-grow-0">
+                        <button type="button" id="modalOpener" class="title-color bg--secondary border-0 rounded justify-content-between w-100 align-items-center py-2 px-2 px-md-3 d-flex gap-1" data-toggle="modal" data-target="#staticBackdrop">
+                            <div class="d-flex gap-1 align-items-center">
+                                <i class="tio-search"></i>
+                                <span class="d-none d-xxl-block text-muted">{{translate('Search')}}</span>
+                            </div>
                             <span class="bg-card text-muted border rounded-3 p-1 fs-12 fw-bold lh-1 ms-1 ctrlplusk d-none d-md-block">Ctrl+K</span>
                         </button>
                     </li>
-                    <li class="nav-item max-sm-m-0">
+                    <li class="nav-item ml-3 max-sm-m-0">
                         <div class="hs-unfold">
                             <div>
                                 @php($local = session()->has('vendor_local')?session('vendor_local'):null)
