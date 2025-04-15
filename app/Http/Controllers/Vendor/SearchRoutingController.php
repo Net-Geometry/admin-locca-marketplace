@@ -1428,7 +1428,7 @@ class SearchRoutingController extends Controller
 
         if (!empty($placeholders)) {
             $firstPlaceholder = $placeholders[0];
-            $uriWithParameter = str_replace("{{ $firstPlaceholder }}", $model->id, $uriWithParameter);
+            $uriWithParameter = str_replace("{{$firstPlaceholder}}", $model->id, $uriWithParameter);
         }
 
         $uriWithParameter = preg_replace('/\{\w+\?\}/', '', $uriWithParameter);
