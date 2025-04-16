@@ -80,6 +80,9 @@ class SearchRoutingController extends Controller
                         if ($moduleType === $route['moduleType'] || $route['moduleType'] === null) {
 
                             $routeName = $route['routeName'];
+                            $routeName = preg_replace('/(?<=[a-z])(?=[A-Z])/', ' ', $routeName);
+                            $routeName = trim(preg_replace('/\s+/', ' ', $routeName));
+
                             $formattedRoutes[] = [
                                 'routeName' => ucwords($routeName),
                                 'URI' => $uri,
@@ -1375,7 +1378,8 @@ class SearchRoutingController extends Controller
             }
         }
 
-        return array_merge($formattedRoutes, $validRoutes);
+        $result= array_merge($formattedRoutes, $validRoutes);
+        return $this->sortBySearchKeyword($result, $searchKeyword);
     }
 
     private function routeFullUrl($uri)
@@ -1410,9 +1414,11 @@ class SearchRoutingController extends Controller
         $fullURL = url('/') . '/' . $uriWithParameter;
         $routeName = $prefix ? $prefix . ' ' . $formattedRouteName : $formattedRouteName;
         $routeName = $name ? $routeName . ' - (' . $name . ')' : $routeName;
+        $routeName = preg_replace('/(?<=[a-z])(?=[A-Z])/', ' ', $routeName);
+        $routeName = trim(preg_replace('/\s+/', ' ', $routeName));
 
         return [
-            'routeName' => $routeName,
+            'routeName' => $routeName ,
             'URI' => $uriWithParameter,
             'fullRoute' => $fullURL,
         ];
@@ -1478,5 +1484,31 @@ class SearchRoutingController extends Controller
             ->get();
 
         return response()->json($recentSearches);
+    }
+
+    private function sortBySearchKeyword(array $routes, string $keyword): array
+    {
+        usort($routes, function ($a, $b) use ($keyword) {
+            $aMatch = min(
+                $this->strposIgnoreCase($a['routeName'], $keyword),
+                $this->strposIgnoreCase($a['URI'], $keyword),
+                $this->strposIgnoreCase($a['fullRoute'], $keyword)
+            );
+            $bMatch = min(
+                $this->strposIgnoreCase($b['routeName'], $keyword),
+                $this->strposIgnoreCase($b['URI'], $keyword),
+                $this->strposIgnoreCase($b['fullRoute'], $keyword)
+            );
+
+            return $aMatch <=> $bMatch;
+        });
+
+        return $routes;
+    }
+
+    private function strposIgnoreCase($haystack, $needle)
+    {
+        $pos = stripos($haystack, $needle);
+        return $pos === false ? PHP_INT_MAX : $pos;
     }
 }

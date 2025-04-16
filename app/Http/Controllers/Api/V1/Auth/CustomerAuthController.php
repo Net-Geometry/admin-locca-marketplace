@@ -1074,16 +1074,11 @@ class CustomerAuthController extends Controller
     private function check_guest_cart($user, $guest_id){
         if($guest_id && isset($user->id)){
 
-            $userStoreIds = Cart::where('user_id', $guest_id)
-                ->join('items', 'carts.item_id', '=', 'items.id')
-                ->pluck('items.store_id')
-                ->toArray();
 
-            Cart::where('user_id', $user->id)
-                ->whereHas('item', function ($query) use ($userStoreIds) {
-                    $query->whereNotIn('store_id', $userStoreIds);
-                })
-                ->delete();
+                    Cart::where(['user_id' => $user->id, 'is_guest' => 0])
+                    ->when(Cart::where(['user_id' => $guest_id, 'is_guest' => 1])->exists(),function ($query) {
+                        $query->delete();
+                    });
 
             Cart::where('user_id', $guest_id)->update(['user_id' => $user->id, 'is_guest' => 0]);
 

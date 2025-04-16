@@ -61,10 +61,9 @@ class SearchRoutingController extends Controller
         if (file_exists($jsonFilePath)) {
             $fileContents = file_get_contents($jsonFilePath);
             $routes = json_decode($fileContents, true);
-
-            if (!addon_published_status('Rental')) {
+            if (addon_published_status('Rental')) {
                 $routes = array_filter($routes, function ($route) {
-                    return $route['moduleType'] !== 'rental';
+                    return  !in_array('rental', $route['moduleType']);
                 });
             }
 
@@ -73,19 +72,24 @@ class SearchRoutingController extends Controller
 
             foreach ($routes as $route) {
                 $uri = $route['URI'];
-                if (Str::contains(strtolower($route['keywords']), strtolower($searchKeyword))) {
+                if (Str::contains(strtolower($route['keywords']), strtolower($searchKeyword)) || Str::contains(strtolower($route['URI']), strtolower($searchKeyword))) {
                     $hasParameters = preg_match('/\{(.*?)\}/', $uri);
 
                     $fullURL = $this->routeFullUrl($uri);
 
                     if (!$hasParameters) {
-                        if ($currentModuleType === $route['moduleType'] || $route['moduleType'] === null) {
+                        if (in_array($currentModuleType, $route['moduleType']) || $route['moduleType'] === []) {
 
                             $routeName = $route['routeName'];
+                            $routeName = preg_replace('/(?<=[a-z])(?=[A-Z])/', ' ', $routeName);
+                            $routeName = trim(preg_replace('/\s+/', ' ', $routeName));
+
                             $formattedRoutes[] = [
                                 'routeName' => ucwords($routeName),
                                 'URI' => $uri,
                                 'fullRoute' => $fullURL,
+                                'currentModuleType' =>$currentModuleType,
+                                'data_from' => 'files',
                             ];
                         }
                     }
@@ -107,7 +111,7 @@ class SearchRoutingController extends Controller
         ];
 
         $excludeTermsAjax = array_values(array_diff($excludeTermsAjax, $addUrl));
-        // info($excludeTermsAjax);
+
         $excludeTerms = array_merge($excludeTermsAjax, $excludeTermsRoute);
         $adminRoutes = $adminRoutes->filter(function ($route) use ($excludeTerms) {
             foreach ($excludeTerms as $term) {
@@ -1658,7 +1662,9 @@ class SearchRoutingController extends Controller
             //     }
         }
 
-        return array_merge($formattedRoutes, $validRoutes);
+        $result= array_merge($formattedRoutes, $validRoutes);
+        info($result);
+        return $this->sortBySearchKeyword($result, $searchKeyword);
     }
 
     private function routeFullUrl($uri)
@@ -1666,7 +1672,7 @@ class SearchRoutingController extends Controller
         return url($uri);
     }
 
-    private function filterRoute($model, $route, $type = null, $name = null, $prefix = null): array
+    private function filterRoute($model, $route, $type = null, $name = null, $prefix = null, $module_type=null): array
     {
         $uri = $route->uri();
         $routeName = $route->getName();
@@ -1711,17 +1717,18 @@ class SearchRoutingController extends Controller
             $uriWithParameter = $formattedRouteName === 'Preview' ? "admin/delivery-man/pending-delivery-man-view/{$model->id}" : $uriWithParameter;
         }
 
-        //        if ($type == 'order' && $model->subscription_id != null){
-        //            $fullURL = $formattedRouteName == 'Details' ? url('/') . '/' . 'admin/order/subscription/show/'.$model->id : $fullURL;
-        //        }
 
         $routeName = $prefix ? $prefix . ' ' . $formattedRouteName : $formattedRouteName;
         $routeName = $name ? $routeName . ' - (' . $name . ')' : $routeName;
+        $routeName = preg_replace('/(?<=[a-z])(?=[A-Z])/', ' ', $routeName);
+        $routeName = trim(preg_replace('/\s+/', ' ', $routeName));
 
         return [
-            'routeName' => $routeName,
+            'routeName' => $routeName ,
             'URI' => $uriWithParameter,
             'fullRoute' => $fullURL,
+            'module_type' => $module_type,
+            'data_from' => 'database',
         ];
     }
 
@@ -1829,5 +1836,31 @@ class SearchRoutingController extends Controller
         }
 
         return $route_names;
+    }
+
+    private function sortBySearchKeyword(array $routes, string $keyword): array
+    {
+        usort($routes, function ($a, $b) use ($keyword) {
+            $aMatch = min(
+                $this->strposIgnoreCase($a['routeName'], $keyword),
+                $this->strposIgnoreCase($a['URI'], $keyword),
+                $this->strposIgnoreCase($a['fullRoute'], $keyword)
+            );
+            $bMatch = min(
+                $this->strposIgnoreCase($b['routeName'], $keyword),
+                $this->strposIgnoreCase($b['URI'], $keyword),
+                $this->strposIgnoreCase($b['fullRoute'], $keyword)
+            );
+
+            return $aMatch <=> $bMatch;
+        });
+
+        return $routes;
+    }
+
+    private function strposIgnoreCase($haystack, $needle)
+    {
+        $pos = stripos($haystack, $needle);
+        return $pos === false ? PHP_INT_MAX : $pos;
     }
 }

@@ -245,6 +245,73 @@ class GenerateAdminRoute extends Command
             'admin-views.delivery-man.deny' => ['admin/users/delivery-man/deny'],
             'admin-views.custom-role.create' => ['admin/users/custom-role/create'],
             'admin-views.employee.add-new' => ['admin/users/employee/store'],
+            'admin-views.campaign.item.list' => ['admin/campaign/item/list'],
+            'admin-views.campaign.basic.list' => ['admin/campaign/basic/list'],
+            'admin-views.business-settings.order-index' => ['admin/business-settings/business-setup/order'],
+            'admin-views.business-settings.business-index' => ['admin/business-settings/business-setup'],
+            'admin-views.business-settings.refund-index' => ['admin/business-settings/business-setup/refund-settings'],
+            'admin-views.business-settings.store-index' => ['admin/business-settings/business-setup/store'],
+            'admin-views.business-settings.deliveryman-index' => ['admin/business-settings/business-setup/deliveryman'],
+            'admin-views.business-settings.customer-index' => ['admin/business-settings/business-setup/customer'],
+            'admin-views.business-settings.priority-index' => ['admin/business-settings/business-setup/priority'],
+            'admin-views.business-settings.language.index' => ['admin/business-settings/language'],
+            'admin-views.business-settings.landing-index' => ['admin/business-settings/business-setup/landing-page'],
+            'admin-views.business-settings.websocket-index' => ['admin/business-settings/business-setup/websocket'],
+            'admin-views.business-settings.automated_message' => ['admin/business-settings/business-setup/automated-message'],
+            'admin-views.business-settings.disbursement-index' => ['admin/business-settings/business-setup/disbursement'],
+            'admin-views.business-settings.landing-page-settings.admin-fixed-data' => ['admin/business-settings/pages/admin-landing-page-settings/fixed-data'],
+            'admin-views.business-settings.landing-page-settings.admin-promotional-section' => ['admin/business-settings/pages/admin-landing-page-settings/promotional-section'],
+            'admin-views.business-settings.landing-page-settings.admin-feature-list' => ['admin/business-settings/pages/admin-landing-page-settings/feature-list'],
+            'admin-views.business-settings.landing-page-settings.admin-earn-money' => ['admin/business-settings/pages/admin-landing-page-settings/earn-money'],
+            'admin-views.business-settings.landing-page-settings.admin-landing-why-choose' => ['admin/business-settings/pages/admin-landing-page-settings/why-choose-us'],
+            'admin-views.business-settings.landing-page-settings.admin-landing-available-zone' => ['admin/business-settings/pages/admin-landing-page-settings/available-zone'],
+            'admin-views.business-settings.landing-page-settings.admin-landing-download-apps' => ['admin/business-settings/pages/admin-landing-page-settings/download-apps'],
+            'admin-views.business-settings.landing-page-settings.admin-landing-contact' => ['admin/business-settings/pages/admin-landing-page-settings/contact-us'],
+            'admin-views.business-settings.landing-page-settings.admin-landing-background-color' => ['admin/business-settings/pages/admin-landing-page-settings/background-color'],
+            'admin-views.business-settings.landing-page-settings.react-landing-page-header' => ['admin/business-settings/pages/react-landing-page-settings/header'],
+            'admin-views.business-settings.landing-page-settings.react-landing-page-company' => ['admin/business-settings/pages/react-landing-page-settings/company-intro'],
+            'admin-views.business-settings.landing-page-settings.react-landing-earn-money' => ['admin/business-settings/pages/react-landing-page-settings/earn-money'],
+            'admin-views.business-settings.landing-page-settings.react-landing-available-zone' => ['admin/business-settings/pages/react-landing-page-settings/available-zone'],
+            'admin-views.business-settings.landing-page-settings.react-landing-business' => ['admin/business-settings/pages/react-landing-page-settings/business-section'],
+            'admin-views.business-settings.landing-page-settings.react-landing-testimonial' => ['admin/business-settings/pages/react-landing-page-settings/testimonials'],
+            'admin-views.business-settings.landing-page-settings.react-landing-fixed-data' => ['admin/business-settings/pages/react-landing-page-settings/fixed-data'],
+            'admin-views.business-settings.landing-page-settings.flutter-fixed-data' => ['admin/business-settings/pages/flutter-landing-page-settings/fixed-data'],
+            'admin-views.business-settings.landing-page-settings.flutter-landing-page-special-criteria' => ['admin/business-settings/pages/flutter-landing-page-settings/special-criteria'],
+            'admin-views.business-settings.landing-page-settings.flutter-landing-page-available-zone' => ['admin/business-settings/pages/flutter-landing-page-settings/available-zone'],
+            'admin-views.business-settings.landing-page-settings.flutter-download-apps' => ['admin/business-settings/pages/flutter-landing-page-settings/download-apps'],
+            'admin-views.business-settings.landing-page-settings.flutter-landing-page-join-as' => ['admin/business-settings/pages/flutter-landing-page-settings/join-as'],
+            'admin-views.file-manager.index' => ['admin/business-settings/file-manager/index'],
+            'admin-views.business-settings.notification_setup' => ['admin/business-settings/notification-setup'],
+            'admin-views.business-settings.email-format-setting.admin-email-formats.forgot-pass-format' => ['admin/business-settings/email-setup/admin/forgot-password'],
+            'admin-views.coupon.index' => ['admin/coupon'],
+            'rental::admin.coupon.list' => ['admin/rental/coupon'],
+            'rental::admin.push-notification.list' => ['admin/rental/notification'],
+            'admin-views.notification.index' => ['admin/notification'],
+            'admin-views.attribute.index' => ['admin/attribute'],
+            'admin-views.unit.index' => ['admin/unit'],
+            'admin-views.common-condition.index' => ['admin/common-condition'],
+            'admin-views.brand.index' => ['admin/brand'],
+            'admin-views.order.distaptch_list' => ['admin/parcel/dispatch/searching_for_deliverymen'],
+            'admin-views.order.distaptch_list' => ['admin/parcel/dispatch/on_going'],
+            'rental::admin.dashboard-rental' => ['admin/rental'],
+            'rental::admin.trip.list' => ['admin/rental/trip'],
+            'rental::admin.banner.list' => ['admin/rental/banner'],
+            'rental::admin.cashback.list' => ['admin/rental/cashback'],
+            'rental::admin.category.list' => ['admin/rental/category/list'],
+            'rental::admin.brand.list' => ['admin/rental/brand/list'],
+            'rental::admin.vehicle.create' => ['admin/rental/provider/vehicle/create'],
+            'rental::admin.vehicle.list' => ['admin/rental/provider/vehicle/list'],
+            'rental::admin.vehicle.review-list' => ['admin/rental/provider/vehicle/review-list'],
+            'rental::admin.vehicle.bulk-import' => ['admin/rental/provider/vehicle/bulk-import'],
+            'rental::admin.vehicle.bulk-export' => ['admin/rental/provider/vehicle/bulk-export'],
+            'rental::admin.provider.new-reques' => ['admin/rental/provider/new-requests'],
+            'rental::admin.provider.create' => ['admin/rental/provider/create'],
+            'rental::admin.provider.list' => ['admin/rental/provider/list'],
+            'rental::admin.provider.bulk-export' => ['dmin/rental/provider/bulk-export'],
+            'rental::admin.provider.bulk-import' => ['admin/rental/provider/bulk-import'],
+            'rental::admin.home-page-setup.download-app' => ['admin/rental/settings'],
+
+
         ];
 
         foreach ($array as $bladePath => $value) {
@@ -269,6 +336,25 @@ class GenerateAdminRoute extends Command
                 }
             }
 
+            if($moduleType  == ""){
+                $containsParcel = (
+                    stripos($path, 'parcel') !== false ||
+                    stripos($routeName, 'parcel') !== false ||
+                    stripos($uri, 'parcel') !== false
+                );
+                if($containsParcel){
+                    $moduleType='parcel';
+                }
+                $containsRental = (
+                    stripos($path, 'rental') !== false ||
+                    stripos($routeName, 'rental') !== false ||
+                    stripos($uri, 'rental') !== false
+                );
+                if($containsRental){
+                    $moduleType='rental';
+                }
+            }
+
             $keywords = $this->getTextDataFromBladeFile($path);
             $keywords = ucwords(str_replace(['.', '_', '-'], ' ', $keywords));
 
@@ -278,7 +364,7 @@ class GenerateAdminRoute extends Command
                     'URI'         => $uri,
                     'keywords'    => $keywords,
                     'bladePath'   => $path,
-                    'moduleType'  => $moduleType  !== "" ?  $moduleType : null,
+                    'moduleType'  => $moduleType  !== "" ? [$moduleType] : [],
                     'isModified'  => false,
                 ];
             }
