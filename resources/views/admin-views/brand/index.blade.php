@@ -185,7 +185,7 @@
                                 <h5 class="text-capitalize m-0 text--primary">{{translate('messages.Status')}}</h5>
 
                                 <label class="toggle-switch toggle-switch-sm">
-                                    <input type="checkbox" name="brand_status" class="status toggle-switch-input">
+                                    <input type="checkbox" name="brand_status" checked class="status toggle-switch-input">
                                     <span class="toggle-switch-label text mb-0">
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
@@ -238,7 +238,7 @@
                                     <label class="input-label">
                                         {{translate('messages.name')}} ({{ translate('messages.default') }})
                                         <small class="text-danger">*</small>
-                                        <i class="tio-info text-muted" data-toggle="tooltip" title="hello title"></i>
+                                        {{-- <i class="tio-info text-muted" data-toggle="tooltip" title="hello title"></i> --}}
                                     </label>
                                     <input type="text" name="name[]" value="{{ old('name.0') }}"  class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191">
                                 </div>
@@ -248,7 +248,7 @@
                                         <label class="input-label">
                                             {{translate('messages.name')}} ({{strtoupper($lang)}})
                                             <small class="text-danger">*</small>
-                                            <i class="tio-info text-muted" data-toggle="tooltip" title="hello title"></i>
+                                            {{-- <i class="tio-info text-muted" data-toggle="tooltip" title="hello title"></i> --}}
                                         </label>
                                         <input type="text" name="name[]" value="{{ old('name.'.$key+1) }}"  class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191">
                                     </div>
@@ -259,7 +259,7 @@
                                     <label class="input-label">
                                         {{translate('messages.name')}}
                                         <small class="text-danger">*</small>
-                                        <i class="tio-info text-muted" data-toggle="tooltip" title="hello title"></i>
+                                        {{-- <i class="tio-info text-muted" data-toggle="tooltip" title="hello title"></i> --}}
                                     </label>
                                     <input type="text" name="name" class="form-control" placeholder="{{translate('messages.type_brand_name')}}" value="{{old('name')}}" maxlength="191">
                                 </div>

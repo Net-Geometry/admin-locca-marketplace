@@ -479,6 +479,8 @@ $(document).on("click", ".confirm-Toggle", function () {
     }
 
     if (toggle_id === "admin_free_delivery_status") {
+
+
         if ($("#admin_free_delivery_status").is(":checked")) {
             $('.add_text_mute').removeClass('text-muted').addClass('text-dark');
 
@@ -486,6 +488,7 @@ $(document).on("click", ".confirm-Toggle", function () {
                 input.removeAttribute('disabled');
                 input.classList.remove('radio-disable-bg');
             });
+            $("#free_delivery_over").removeAttr("readonly")
         } else {
             document.querySelectorAll('input[name="admin_free_delivery_option"]').forEach(input => {
                 if (input.checked) {
@@ -494,6 +497,8 @@ $(document).on("click", ".confirm-Toggle", function () {
                 input.setAttribute('disabled', true);
             });
                 $('.add_text_mute').addClass('text-muted').removeClass('text-dark');
+
+                $("#free_delivery_over").attr("readonly" , true).removeAttr("required");
         }
     }
 

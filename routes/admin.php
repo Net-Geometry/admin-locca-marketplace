@@ -403,10 +403,10 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::delete('/delete/{file_path}', 'FileManagerController@destroy')->name('destroy');
             });
 
-            Route::group(['prefix' => 'external-system', 'as' => 'external-system.'], function () {
-                Route::get('drivemond-configuration', 'ExternalConfigurationController@index')->name('drivemond-configuration');
-                Route::post('update-drivemond-configuration', 'ExternalConfigurationController@updateDrivemondConfiguration')->name('update-drivemond-configuration');
-            });
+            // Route::group(['prefix' => 'external-system', 'as' => 'external-system.'], function () {
+            //     Route::get('drivemond-configuration', 'ExternalConfigurationController@index')->name('drivemond-configuration');
+            //     Route::post('update-drivemond-configuration', 'ExternalConfigurationController@updateDrivemondConfiguration')->name('update-drivemond-configuration');
+            // });
             Route::group(['prefix' => 'third-party', 'as' => 'third-party.'], function () {
                 Route::get('sms-module', 'SMSModuleController@sms_index')->name('sms-module');
                 Route::post('sms-module-update/{sms_module}', 'SMSModuleController@sms_update')->name('sms-module-update');
