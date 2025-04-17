@@ -42,10 +42,16 @@ use App\Models\WithdrawalMethod;
 use App\Models\StoreSubscription;
 use App\Models\WalletTransaction;
 use Illuminate\Http\JsonResponse;
+use Modules\Rental\Entities\Trips;
 use App\Models\SubscriptionPackage;
 use App\Http\Controllers\Controller;
+use Modules\Rental\Entities\Vehicle;
 use Illuminate\Support\Facades\Route;
 use App\Models\LoyaltyPointTransaction;
+use Modules\Rental\Entities\VehicleBrand;
+use Modules\Rental\Entities\VehicleDriver;
+use Modules\Rental\Entities\VehicleReview;
+use Modules\Rental\Entities\VehicleCategory;
 
 
 class SearchRoutingController extends Controller
@@ -61,7 +67,7 @@ class SearchRoutingController extends Controller
         if (file_exists($jsonFilePath)) {
             $fileContents = file_get_contents($jsonFilePath);
             $routes = json_decode($fileContents, true);
-            if (addon_published_status('Rental')) {
+            if (!addon_published_status('Rental')) {
                 $routes = array_filter($routes, function ($route) {
                     return  !in_array('rental', $route['moduleType']);
                 });
@@ -88,7 +94,7 @@ class SearchRoutingController extends Controller
                                 'routeName' => ucwords($routeName),
                                 'URI' => $uri,
                                 'fullRoute' => $fullURL,
-                                'currentModuleType' =>$currentModuleType,
+                                'currentModuleType' => $currentModuleType,
                                 'data_from' => 'files',
                             ];
                         }
@@ -103,11 +109,16 @@ class SearchRoutingController extends Controller
             return str_starts_with($route->uri(), 'admin');
         });
 
-        $excludeTermsRoute = ['{status}'];
-        $excludeTermsAjax = $this->getAjaxRoutes($adminRoutes);
 
+        $excludeTermsRoute = ['{status}'];
+        if (!addon_published_status('Rental')) {
+            $excludeTermsRoute[] = ['rental'];
+        }
+        $excludeTermsAjax = $this->getAjaxRoutes($adminRoutes);
         $addUrl = [
-            'admin/users/cashback/edit/{id}'
+            'admin/users/cashback/edit/{id}',
+            'admin/rental',
+            'admin/rental/trip/details/{id}'
         ];
 
         $excludeTermsAjax = array_values(array_diff($excludeTermsAjax, $addUrl));
@@ -121,6 +132,7 @@ class SearchRoutingController extends Controller
             }
             return true;
         });
+
         $validRoutes = [];
         if (is_numeric($searchKeyword) && $searchKeyword > 0) {
             //store
@@ -160,46 +172,185 @@ class SearchRoutingController extends Controller
                     }
                 }
             }
+            if ($currentModuleType !== 'rental') {
 
-            //order
-            $order = Order::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                return $query->where('module_id', $currentModuleId);
-            })->find($searchKeyword);
-            if ($order) {
+                //order
+                $order = Order::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->where('module_id', $currentModuleId);
+                })->find($searchKeyword);
+                if ($order) {
 
-                $orderRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'admin/order/details');
-                });
+                    $orderRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'admin/order/details');
+                    });
 
 
-                if (isset($orderRoutes)) {
-                    foreach ($orderRoutes as $route) {
-                        $validRoutes[] = $this->filterRoute(model: $order, route: $route, type: 'order', prefix: 'Order');
+                    if (isset($orderRoutes)) {
+                        foreach ($orderRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $order, route: $route, type: 'order', prefix: 'Order');
+                        }
                     }
                 }
-            }
 
-            //multiple orders with customer id
-            $orders = Order::with(['customer', 'store'])
-                ->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                //multiple orders with customer id
+                $orders = Order::with(['customer', 'store'])
+                    ->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                        return $query->where('module_id', $currentModuleId);
+                    })
+                    ->whereHas('customer', function ($query) use ($searchKeyword) {
+                        $query->where('id', $searchKeyword);
+                    })
+                    ->orWhereHas('store', function ($query) use ($searchKeyword) {
+                        $query->where('id', $searchKeyword);
+                    })
+                    ->get();
+
+                if ($orders) {
+                    $ordersRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'admin/order/details');
+                    });
+                    if (isset($ordersRoutes)) {
+                        foreach ($orders as $order) {
+                            foreach ($ordersRoutes as $route) {
+                                $validRoutes[] = $this->filterRoute(model: $order, route: $route, type: 'order', prefix: 'Order');
+                            }
+                        }
+                    }
+                }
+
+
+                //category
+                $category = Category::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
                     return $query->where('module_id', $currentModuleId);
-                })
-                ->whereHas('customer', function ($query) use ($searchKeyword) {
-                    $query->where('id', $searchKeyword);
-                })
-                ->orWhereHas('store', function ($query) use ($searchKeyword) {
-                    $query->where('id', $searchKeyword);
-                })
-                ->get();
+                })->find($searchKeyword);
 
-            if ($orders) {
-                $ordersRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'admin/order/details');
-                });
-                if (isset($ordersRoutes)) {
-                    foreach ($orders as $order) {
-                        foreach ($ordersRoutes as $route) {
-                            $validRoutes[] = $this->filterRoute(model: $order, route: $route, type: 'order', prefix: 'Order');
+                if ($category) {
+                    $categoryRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'category') && str_contains($route->uri(), 'update') && !str_contains($route->uri(), 'category/update-priority');
+                    });
+
+                    if (isset($categoryRoutes)) {
+                        foreach ($categoryRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $category, route: $route, type: 'category', prefix: 'Category');
+                        }
+                    }
+                }
+
+
+
+                //AddOn
+                $addOn = AddOn::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->wherehas('store', function ($query) use ($currentModuleId) {
+                        $query->where('module_id', $currentModuleId);
+                    });
+                })
+                    ->find($searchKeyword);
+                if ($addOn) {
+                    $addOnRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'addon') && str_contains($route->uri(), 'edit');
+                    });
+
+                    if (isset($addOnRoutes)) {
+                        foreach ($addOnRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $addOn, route: $route, prefix: 'Addon');
+                        }
+                    }
+                }
+
+                //Item
+                $Item = Item::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->where('module_id', $currentModuleId);
+                })->find($searchKeyword);
+
+                if ($Item) {
+                    $ItemRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'admin/item/edit/') || str_contains($route->uri(), 'admin/item/view/');
+                    });
+
+                    if (isset($ItemRoutes)) {
+                        foreach ($ItemRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $Item, route: $route, type: 'Item', prefix: 'Item');
+                        }
+                    }
+                }
+
+                //basic campaign
+                $campaign = Campaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->where('module_id', $currentModuleId);
+                })->find($searchKeyword);
+                if ($campaign) {
+                    $campaignRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'campaign')
+                            && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
+                    });
+
+                    if (isset($campaignRoutes)) {
+                        foreach ($campaignRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $campaign, route: $route, type: 'basic-campaign', prefix: 'Basic Campaign');
+                        }
+                    }
+                }
+
+                //item campaign
+                $itemCampaign = ItemCampaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->where('module_id', $currentModuleId);
+                })->find($searchKeyword);
+                if ($itemCampaign) {
+                    $itemCampaignRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'campaign')
+                            && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
+                    });
+
+                    if (isset($itemCampaignRoutes)) {
+                        foreach ($itemCampaignRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $itemCampaign, route: $route, type: 'item-campaign', prefix: 'Item Campaign');
+                        }
+                    }
+                }
+
+                //vehicle
+                $vehicle = DMVehicle::find($searchKeyword);
+                if ($vehicle) {
+                    $vehicleRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'delivery-man/vehicle/edit');
+                    });
+
+                    if (isset($vehicleRoutes)) {
+                        foreach ($vehicleRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $vehicle, route: $route, type: 'vehicle', prefix: 'Vehicle');
+                        }
+                    }
+                }
+
+                //delivery man
+                $deliveryMan = DeliveryMan::find($searchKeyword);
+                if ($deliveryMan) {
+                    $deliveryManRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'delivery-man/edit') || str_contains($route->uri(), 'delivery-man/preview');
+                    });
+                    if (isset($deliveryManRoutes)) {
+                        foreach ($deliveryManRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $deliveryMan, route: $route, type: 'deliveryMan', prefix: 'Delivery Man');
+                        }
+                    }
+                }
+
+
+
+
+
+                //tepmProduct
+                $tepmProduct = TempProduct::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->where('module_id', $currentModuleId);
+                })->find($searchKeyword);
+                if ($tepmProduct) {
+                    $tepmProductRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'admin/item/new/item/list') || str_contains($route->uri(), 'admin/item/requested/item/view/');
+                    });
+
+                    if (isset($tepmProductRoutes)) {
+                        foreach ($tepmProductRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $tepmProduct, route: $route, prefix: 'New Product');
                         }
                     }
                 }
@@ -220,43 +371,7 @@ class SearchRoutingController extends Controller
                 }
             }
 
-            //category
-            $category = Category::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                return $query->where('module_id', $currentModuleId);
-            })->find($searchKeyword);
 
-            if ($category) {
-                $categoryRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'category') && str_contains($route->uri(), 'update') && !str_contains($route->uri(), 'category/update-priority');
-                });
-
-                if (isset($categoryRoutes)) {
-                    foreach ($categoryRoutes as $route) {
-                        $validRoutes[] = $this->filterRoute(model: $category, route: $route, type: 'category', prefix: 'Category');
-                    }
-                }
-            }
-
-
-
-            //AddOn
-            $addOn = AddOn::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                return $query->wherehas('store', function ($query) use ($currentModuleId) {
-                    $query->where('module_id', $currentModuleId);
-                });
-            })
-                ->find($searchKeyword);
-            if ($addOn) {
-                $addOnRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'addon') && str_contains($route->uri(), 'edit');
-                });
-
-                if (isset($addOnRoutes)) {
-                    foreach ($addOnRoutes as $route) {
-                        $validRoutes[] = $this->filterRoute(model: $addOn, route: $route, prefix: 'Addon');
-                    }
-                }
-            }
 
 
             if (in_array($currentModuleType, ['grocery', 'pharmacy', 'ecommerce'])) {
@@ -295,11 +410,11 @@ class SearchRoutingController extends Controller
             if (in_array($currentModuleType, ['ecommerce'])) {
                 // Brand
                 $Brand = Brand::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                        return $query->where(function ($query) use ($currentModuleId) {
-                            $query->where('module_id', $currentModuleId)
-                                ->orWhere('module_id', null);
-                        });
-                    })
+                    return $query->where(function ($query) use ($currentModuleId) {
+                        $query->where('module_id', $currentModuleId)
+                            ->orWhere('module_id', null);
+                    });
+                })
                     ->find($searchKeyword);
                 if ($Brand) {
                     $BrandRoutes = $adminRoutes->filter(function ($route) {
@@ -315,66 +430,26 @@ class SearchRoutingController extends Controller
             }
 
 
-            //Item
-            $Item = Item::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                return $query->where('module_id', $currentModuleId);
-            })->find($searchKeyword);
 
-            if ($Item) {
-                $ItemRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'admin/item/edit/') || str_contains($route->uri(), 'admin/item/view/');
-                });
-
-                if (isset($ItemRoutes)) {
-                    foreach ($ItemRoutes as $route) {
-                        $validRoutes[] = $this->filterRoute(model: $Item, route: $route, type: 'Item', prefix: 'Item');
-                    }
-                }
-            }
-
-            //basic campaign
-            $campaign = Campaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                return $query->where('module_id', $currentModuleId);
-            })->find($searchKeyword);
-            if ($campaign) {
-                $campaignRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'campaign')
-                        && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
-                });
-
-                if (isset($campaignRoutes)) {
-                    foreach ($campaignRoutes as $route) {
-                        $validRoutes[] = $this->filterRoute(model: $campaign, route: $route, type: 'basic-campaign', prefix: 'Basic Campaign');
-                    }
-                }
-            }
-
-            //item campaign
-            $itemCampaign = ItemCampaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                return $query->where('module_id', $currentModuleId);
-            })->find($searchKeyword);
-            if ($itemCampaign) {
-                $itemCampaignRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'campaign')
-                        && (str_contains($route->uri(), 'edit') || str_contains($route->uri(), 'view'));
-                });
-
-                if (isset($itemCampaignRoutes)) {
-                    foreach ($itemCampaignRoutes as $route) {
-                        $validRoutes[] = $this->filterRoute(model: $itemCampaign, route: $route, type: 'item-campaign', prefix: 'Item Campaign');
-                    }
-                }
-            }
 
             //coupon
             $coupon = Coupon::where('created_by', 'admin')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
                 return $query->where('module_id', $currentModuleId);
             })->find($searchKeyword);
             if ($coupon) {
-                $couponRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'coupon/edit');
-                });
 
+
+                if ($currentModuleType == 'rental') {
+
+                    $couponRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'rental/coupon') && (!str_contains($route->uri(), 'status') && !str_contains($route->uri(), 'export'));
+                    });
+                } else {
+
+                    $couponRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'coupon/edit');
+                    });
+                }
                 if (isset($couponRoutes)) {
                     foreach ($couponRoutes as $route) {
                         $validRoutes[] = $this->filterRoute(model: $coupon, route: $route, prefix: 'Coupon');
@@ -482,32 +557,7 @@ class SearchRoutingController extends Controller
                 }
             }
 
-            //vehicle
-            $vehicle = DMVehicle::find($searchKeyword);
-            if ($vehicle) {
-                $vehicleRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'delivery-man/vehicle/edit');
-                });
 
-                if (isset($vehicleRoutes)) {
-                    foreach ($vehicleRoutes as $route) {
-                        $validRoutes[] = $this->filterRoute(model: $vehicle, route: $route, type: 'vehicle', prefix: 'Vehicle');
-                    }
-                }
-            }
-
-            //delivery man
-            $deliveryMan = DeliveryMan::find($searchKeyword);
-            if ($deliveryMan) {
-                $deliveryManRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'delivery-man/edit') || str_contains($route->uri(), 'delivery-man/preview');
-                });
-                if (isset($deliveryManRoutes)) {
-                    foreach ($deliveryManRoutes as $route) {
-                        $validRoutes[] = $this->filterRoute(model: $deliveryMan, route: $route, type: 'deliveryMan', prefix: 'Delivery Man');
-                    }
-                }
-            }
 
             //store disbursement
             $storeDisbursement = Disbursement::where('created_for', 'store')->find($searchKeyword);
@@ -609,18 +659,20 @@ class SearchRoutingController extends Controller
                 }
             }
 
-            //flashSale
-            $flashSale = FlashSale::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                return $query->where('module_id', $currentModuleId);
-            })->find($searchKeyword);
-            if ($flashSale) {
-                $flashSaleRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'flash-sale/') && !str_contains($route->uri(), 'publish');
-                });
+            if (in_array($currentModuleType, ['grocery', 'ecommerce'])) {
+                //flashSale
+                $flashSale = FlashSale::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->where('module_id', $currentModuleId);
+                })->find($searchKeyword);
+                if ($flashSale) {
+                    $flashSaleRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'flash-sale/') && !str_contains($route->uri(), 'publish');
+                    });
 
-                if (isset($flashSaleRoutes)) {
-                    foreach ($flashSaleRoutes as $route) {
-                        $validRoutes[] = $this->filterRoute(model: $flashSale, route: $route, prefix: 'flashSale');
+                    if (isset($flashSaleRoutes)) {
+                        foreach ($flashSaleRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $flashSale, route: $route, prefix: 'flashSale');
+                        }
                     }
                 }
             }
@@ -628,8 +680,8 @@ class SearchRoutingController extends Controller
             //ParcelCategory
             if (in_array($currentModuleType, ['parcel'])) {
                 $ParcelCategory = ParcelCategory::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                        return $query->where('module_id', $currentModuleId);
-                    })->find($searchKeyword);
+                    return $query->where('module_id', $currentModuleId);
+                })->find($searchKeyword);
                 if ($ParcelCategory) {
                     $ParcelCategoryRoutes = $adminRoutes->filter(function ($route) {
                         return str_contains($route->uri(), 'admin/parcel/category/') && (str_contains($route->uri(), 'edit'));
@@ -700,21 +752,99 @@ class SearchRoutingController extends Controller
             }
 
 
-            //tepmProduct
-            $tepmProduct = TempProduct::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                return $query->where('module_id', $currentModuleId);
-            })->find($searchKeyword);
-            if ($tepmProduct) {
-                $tepmProductRoutes = $adminRoutes->filter(function ($route) {
-                    return str_contains($route->uri(), 'admin/item/new/item/list') || str_contains($route->uri(), 'admin/item/requested/item/view/');
-                });
 
-                if (isset($tepmProductRoutes)) {
-                    foreach ($tepmProductRoutes as $route) {
-                        $validRoutes[] = $this->filterRoute(model: $tepmProduct, route: $route, prefix: 'New Product');
+
+
+            if ($currentModuleType == 'rental') {
+                $trip = Trips::find($searchKeyword);
+                if ($trip) {
+                    $tripRoutes = $adminRoutes->filter(function ($route) {
+                        return (str_contains($route->uri(), 'rental/trip/details')) && !str_contains($route->uri(), 'transactions/rental/trip/details/')  && !str_contains($route->uri(), 'expense-report') && !str_contains($route->uri(), 'export');
+                    });
+
+                    if (isset($tripRoutes)) {
+                        foreach ($tripRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $trip, route: $route, type: 'trip', prefix: 'Trip', name: $trip->id, searchKeyword: $trip->id);
+                        }
+                    }
+                }
+
+
+                //Vehicle
+                $Vehicle = Vehicle::find($searchKeyword);
+                if ($Vehicle) {
+                    $VehicleRoutes = $adminRoutes->filter(function ($route) {
+                        return (str_contains($route->uri(), 'vehicle/details') || str_contains($route->uri(), 'vehicle/update'));
+                    });
+
+                    if (isset($VehicleRoutes)) {
+                        foreach ($VehicleRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $Vehicle, route: $route, type: 'Vehicle', prefix: 'Vehicle', name: $Vehicle->name);
+                        }
+                    }
+                }
+
+                $VehicleCategory = VehicleCategory::find($searchKeyword);
+                if ($VehicleCategory) {
+                    $VehicleCategoryRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'rental/category/edit/');
+                    });
+
+                    if (isset($VehicleCategoryRoutes)) {
+                        foreach ($VehicleCategoryRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $VehicleCategory, route: $route, type: 'VehicleCategory', prefix: 'VehicleCategory', name: $VehicleCategory->name, searchKeyword: $VehicleCategory->name);
+                        }
+                    }
+                }
+                $VehicleBrand = VehicleBrand::find($searchKeyword);
+                if ($VehicleBrand) {
+                    $VehicleBrandRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'vehicle-brand/list');
+                    });
+
+                    if (isset($VehicleBrandRoutes)) {
+                        foreach ($VehicleBrandRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $VehicleBrand, route: $route, type: 'VehicleBrand', prefix: 'VehicleBrand', name: $VehicleBrand->name, searchKeyword: $VehicleBrand->name);
+                        }
+                    }
+                }
+                $VehicleDriver = VehicleDriver::find($searchKeyword);
+                if ($VehicleDriver) {
+                    $VehicleDriverRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'driver/details') || str_contains($route->uri(), 'driver/update');
+                    });
+
+                    if (isset($VehicleDriverRoutes)) {
+                        foreach ($VehicleDriverRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $VehicleDriver, route: $route, type: 'VehicleDriver', prefix: 'VehicleDriver', name: $VehicleDriver->first_name, searchKeyword: $VehicleDriver->first_name);
+                        }
+                    }
+                }
+                $VehicleReview = VehicleReview::where('review_id', $searchKeyword)->first();
+                if ($VehicleReview) {
+                    $VehicleReviewRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'rental-reviews');
+                    });
+
+                    if (isset($VehicleReviewRoutes)) {
+                        foreach ($VehicleReviewRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $VehicleReview, route: $route, type: 'Vehicle_Review', prefix: 'VehicleReview',);
+                        }
                     }
                 }
             }
+
+
+
+
+
+
+
+
+
+
+
+
 
             // review
             // $review = Review::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
@@ -836,9 +966,9 @@ class SearchRoutingController extends Controller
 
             //Zone
             $zones = Zone::where(function ($query) use ($searchKeyword) {
-                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('display_name', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('display_name', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($zones) {
@@ -858,8 +988,8 @@ class SearchRoutingController extends Controller
 
             //Category
             $categories = Category::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                    return $query->where('module_id', $currentModuleId);
-                })
+                return $query->where('module_id', $currentModuleId);
+            })
                 ->where(function ($query) use ($searchKeyword) {
                     $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
                 })
@@ -907,8 +1037,8 @@ class SearchRoutingController extends Controller
             if (in_array($currentModuleType, ['grocery', 'pharmacy', 'ecommerce'])) {
                 //unit
                 $units = Unit::where(function ($query) use ($searchKeyword) {
-                        $query->where('unit', 'LIKE', '%' . $searchKeyword . '%');
-                    })
+                    $query->where('unit', 'LIKE', '%' . $searchKeyword . '%');
+                })
                     ->get();
 
                 if ($units) {
@@ -926,8 +1056,8 @@ class SearchRoutingController extends Controller
                 }
                 //Attribute
                 $Attributes = Attribute::where(function ($query) use ($searchKeyword) {
-                        $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
-                    })
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
+                })
                     ->get();
 
                 if ($Attributes) {
@@ -948,11 +1078,11 @@ class SearchRoutingController extends Controller
             if (in_array($currentModuleType, ['ecommerce'])) {
                 //Brand
                 $Brands = Brand::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                        return $query->where(function ($query) use ($currentModuleId) {
-                            $query->where('module_id', $currentModuleId)
-                                ->orWhere('module_id', null);
-                        });
-                    })
+                    return $query->where(function ($query) use ($currentModuleId) {
+                        $query->where('module_id', $currentModuleId)
+                            ->orWhere('module_id', null);
+                    });
+                })
                     ->where(function ($query) use ($searchKeyword) {
                         $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
                     })
@@ -982,9 +1112,9 @@ class SearchRoutingController extends Controller
             $Items = Item::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
                 return $query->where('module_id', $currentModuleId);
             })->where(function ($query) use ($searchKeyword) {
-                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($Items) {
@@ -1005,9 +1135,9 @@ class SearchRoutingController extends Controller
             $campaigns = Campaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
                 return $query->where('module_id', $currentModuleId);
             })->where(function ($query) use ($searchKeyword) {
-                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($campaigns) {
@@ -1029,9 +1159,9 @@ class SearchRoutingController extends Controller
             $itemCampaigns = ItemCampaign::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
                 return $query->where('module_id', $currentModuleId);
             })->where(function ($query) use ($searchKeyword) {
-                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($itemCampaigns) {
@@ -1051,13 +1181,13 @@ class SearchRoutingController extends Controller
 
             //Coupon
             $coupons = Coupon::where('created_by', 'admin')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                    return $query->where('module_id', $currentModuleId);
-                })->where(function ($query) use ($searchKeyword) {
-                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('code', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('discount_type', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('coupon_type', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                return $query->where('module_id', $currentModuleId);
+            })->where(function ($query) use ($searchKeyword) {
+                $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('code', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('discount_type', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('coupon_type', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($coupons) {
@@ -1075,9 +1205,9 @@ class SearchRoutingController extends Controller
 
             //CashBack
             $cashBacks = CashBack::where(function ($query) use ($searchKeyword) {
-                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('cashback_type', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('cashback_type', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($cashBacks) {
@@ -1097,9 +1227,9 @@ class SearchRoutingController extends Controller
             $banners = Banner::where('created_by', 'admin')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
                 return $query->where('module_id', $currentModuleId);
             })->where(function ($query) use ($searchKeyword) {
-                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('type', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('type', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($banners) {
@@ -1120,10 +1250,10 @@ class SearchRoutingController extends Controller
             $advertisements = Advertisement::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
                 return $query->where('module_id', $currentModuleId);
             })->where(function ($query) use ($searchKeyword) {
-                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('add_type', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('add_type', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($advertisements) {
@@ -1142,12 +1272,12 @@ class SearchRoutingController extends Controller
 
             // ContactMessage
             $contactMessages = Contact::where(function ($query) use ($searchKeyword) {
-                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('subject', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('message', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('reply', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('subject', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('message', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('reply', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($contactMessages) {
@@ -1166,9 +1296,9 @@ class SearchRoutingController extends Controller
 
             //Notification
             $notifications = Notification::where(function ($query) use ($searchKeyword) {
-                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($notifications) {
@@ -1187,14 +1317,14 @@ class SearchRoutingController extends Controller
 
             //customer
             $customers = User::where(function ($query) use ($searchKeyword) {
-                    $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
-                        ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%'])
-                        ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%']);
-                })
+                $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                    ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                    ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%']);
+            })
                 ->get();
 
             if ($customers) {
@@ -1213,10 +1343,10 @@ class SearchRoutingController extends Controller
 
             //WalletBonus
             $walletBonus = WalletBonus::where(function ($query) use ($searchKeyword) {
-                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('bonus_type', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                $query->where('title', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('bonus_type', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($walletBonus) {
@@ -1235,8 +1365,8 @@ class SearchRoutingController extends Controller
 
             //Vehicle
             $vehicles = DmVehicle::where(function ($query) use ($searchKeyword) {
-                    $query->where('type', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                $query->where('type', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($vehicles) {
@@ -1255,15 +1385,15 @@ class SearchRoutingController extends Controller
 
             //DeliveryMan
             $deliveryMen = DeliveryMan::where(function ($query) use ($searchKeyword) {
-                    $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('identity_type', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
-                        ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%'])
-                        ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%']);
-                })
+                $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('identity_type', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                    ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                    ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%']);
+            })
                 ->get();
 
             if ($deliveryMen) {
@@ -1349,9 +1479,9 @@ class SearchRoutingController extends Controller
 
             //Withdrawal Method
             $withdrawalMethods = WithdrawalMethod::where(function ($query) use ($searchKeyword) {
-                    $query->where('method_name', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhereRaw("JSON_SEARCH(method_fields, 'one', ?) IS NOT NULL", ['%' . $searchKeyword . '%']);
-                })
+                $query->where('method_name', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhereRaw("JSON_SEARCH(method_fields, 'one', ?) IS NOT NULL", ['%' . $searchKeyword . '%']);
+            })
                 ->get();
 
             if ($withdrawalMethods) {
@@ -1420,10 +1550,10 @@ class SearchRoutingController extends Controller
 
             //Subscription Package
             $subscriptionPackages = SubscriptionPackage::where(function ($query) use ($searchKeyword) {
-                    $query->where('package_name', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('colour', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('text', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                $query->where('package_name', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('colour', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('text', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($subscriptionPackages) {
@@ -1447,9 +1577,9 @@ class SearchRoutingController extends Controller
 
             //Modules
             $Modules = Module::where(function ($query) use ($searchKeyword) {
-                    $query->where('module_name', 'LIKE', '%' . $searchKeyword . '%')
-                        ->orWhere('module_type', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                $query->where('module_name', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('module_type', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($Modules) {
@@ -1467,10 +1597,10 @@ class SearchRoutingController extends Controller
             }
             //flashSale
             $flashSales = FlashSale::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                    return $query->where('module_id', $currentModuleId);
-                })->where(function ($query) use ($searchKeyword) {
-                    $query->where('title', 'LIKE', '%' . $searchKeyword . '%');
-                })
+                return $query->where('module_id', $currentModuleId);
+            })->where(function ($query) use ($searchKeyword) {
+                $query->where('title', 'LIKE', '%' . $searchKeyword . '%');
+            })
                 ->get();
 
             if ($flashSales) {
@@ -1490,11 +1620,11 @@ class SearchRoutingController extends Controller
             if (in_array($currentModuleType, ['parcel'])) {
                 //ParcelCategory
                 $ParcelCategories = ParcelCategory::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
-                        return $query->where('module_id', $currentModuleId);
-                    })->where(function ($query) use ($searchKeyword) {
-                        $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
-                            ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
-                    })
+                    return $query->where('module_id', $currentModuleId);
+                })->where(function ($query) use ($searchKeyword) {
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
+                })
                     ->get();
 
                 if ($ParcelCategories) {
@@ -1514,8 +1644,8 @@ class SearchRoutingController extends Controller
             if (in_array($currentModuleType, ['pharmacy'])) {
                 //CommonCondition
                 $CommonCondition = CommonCondition::where(function ($query) use ($searchKeyword) {
-                        $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
-                    })
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
+                })
                     ->get();
 
                 if ($CommonCondition) {
@@ -1662,8 +1792,7 @@ class SearchRoutingController extends Controller
             //     }
         }
 
-        $result= array_merge($formattedRoutes, $validRoutes);
-        info($result);
+        $result = array_merge($formattedRoutes, $validRoutes);
         return $this->sortBySearchKeyword($result, $searchKeyword);
     }
 
@@ -1672,7 +1801,7 @@ class SearchRoutingController extends Controller
         return url($uri);
     }
 
-    private function filterRoute($model, $route, $type = null, $name = null, $prefix = null, $module_type=null): array
+    private function filterRoute($model, $route, $type = null, $name = null, $prefix = null, $module_type = null, $searchKeyword = null): array
     {
         $uri = $route->uri();
         $routeName = $route->getName();
@@ -1717,14 +1846,16 @@ class SearchRoutingController extends Controller
             $uriWithParameter = $formattedRouteName === 'Preview' ? "admin/delivery-man/pending-delivery-man-view/{$model->id}" : $uriWithParameter;
         }
 
-
+        if ($searchKeyword && (!is_numeric($searchKeyword) || in_array($type, ['subscriber-transactions', 'order', 'trip', 'Vehicle_Review']))) {
+            $uriWithParameter .= '?search=' . urlencode($searchKeyword);
+        }
         $routeName = $prefix ? $prefix . ' ' . $formattedRouteName : $formattedRouteName;
         $routeName = $name ? $routeName . ' - (' . $name . ')' : $routeName;
         $routeName = preg_replace('/(?<=[a-z])(?=[A-Z])/', ' ', $routeName);
         $routeName = trim(preg_replace('/\s+/', ' ', $routeName));
 
         return [
-            'routeName' => $routeName ,
+            'routeName' => $routeName,
             'URI' => $uriWithParameter,
             'fullRoute' => $fullURL,
             'module_type' => $module_type,

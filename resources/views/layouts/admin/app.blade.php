@@ -791,7 +791,9 @@ $(document).on('keyup', 'input[type="tel"]', function () {
                             } else {
                                 var resultHtml = '';
                                 response.forEach(function (route) {
-                                    var fullRouteWithKeyword = route.fullRoute + '?keyword=' + encodeURIComponent(searchKeyword);
+                                    var separator = route.fullRoute.includes('?') ? '&' : '?';
+                                    var fullRouteWithKeyword = route.fullRoute + separator + 'keyword=' + encodeURIComponent(searchKeyword);
+
                                     resultHtml += '<a href="' + fullRouteWithKeyword + '" class="search-list-item d-flex flex-column" data-route-name="' + route.routeName + '" data-route-uri="' + route.URI + '" data-route-full-url="' + route.fullRoute + '" aria-current="true">';
                                     resultHtml += '<h5>' + route.routeName + '</h5>';
                                     resultHtml += '<p class="text-muted fs-12 mb-0">' + route.URI + '</p>';

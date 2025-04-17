@@ -482,7 +482,7 @@ class SearchRoutingController extends Controller
                 }
             }
 
-            if (in_array($moduleType, ['grocery', 'pharmacy', 'ecommerce'])) {
+            if (in_array($moduleType, ['grocery', 'ecommerce'])) {
                 //item
                 $FlashSaleItem = FlashSaleItem::wherehas('item', function ($query) use ($store_id) {
                     $query->where('store_id', $store_id);
@@ -972,7 +972,7 @@ class SearchRoutingController extends Controller
 
             //store disbursement
             $storeDisbursement = DisbursementDetails::where('store_id', $store_id)
-                ->wherehas('withdraw_method',function($query) use ($searchKeyword){
+                ->wherehas('withdraw_method', function ($query) use ($searchKeyword) {
                     $query->where('method_name', 'LIKE', '%' . $searchKeyword . '%')
                         ->orWhereRaw("JSON_SEARCH(method_fields, 'one', ?) IS NOT NULL", ['%' . $searchKeyword . '%']);
                 })
@@ -1207,7 +1207,7 @@ class SearchRoutingController extends Controller
 
 
 
-            if (in_array($moduleType, ['grocery', 'pharmacy', 'ecommerce'])) {
+            if (in_array($moduleType, ['grocery', 'ecommerce'])) {
                 //item
                 $FlashSaleItems = FlashSaleItem::wherehas('item', function ($query) use ($store_id, $searchKeyword) {
                     $query->where('store_id', $store_id)
@@ -1294,8 +1294,8 @@ class SearchRoutingController extends Controller
                 }
 
                 $VehicleCategorys = VehicleCategory::where(function ($query) use ($searchKeyword) {
-                        $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
-                    })
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
+                })
                     ->get();
 
 
@@ -1313,8 +1313,8 @@ class SearchRoutingController extends Controller
                     }
                 }
                 $VehicleBrand = VehicleBrand::where(function ($query) use ($searchKeyword) {
-                        $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
-                    })
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
+                })
                     ->get();
 
 
@@ -1356,9 +1356,9 @@ class SearchRoutingController extends Controller
                     }
                 }
                 $VehicleReview = VehicleReview::where(function ($query) use ($searchKeyword) {
-                        $query->where('comment', 'LIKE', '%' . $searchKeyword . '%')
-                            ->orwhere('reply', 'LIKE', '%' . $searchKeyword . '%');
-                    })
+                    $query->where('comment', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orwhere('reply', 'LIKE', '%' . $searchKeyword . '%');
+                })
                     ->get();
 
 
@@ -1378,7 +1378,7 @@ class SearchRoutingController extends Controller
             }
         }
 
-        $result= array_merge($formattedRoutes, $validRoutes);
+        $result = array_merge($formattedRoutes, $validRoutes);
         return $this->sortBySearchKeyword($result, $searchKeyword);
     }
 
@@ -1418,7 +1418,7 @@ class SearchRoutingController extends Controller
         $routeName = trim(preg_replace('/\s+/', ' ', $routeName));
 
         return [
-            'routeName' => $routeName ,
+            'routeName' => $routeName,
             'URI' => $uriWithParameter,
             'fullRoute' => $fullURL,
         ];
