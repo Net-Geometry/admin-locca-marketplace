@@ -601,7 +601,7 @@
                     }
                 });
             } else {
-                $('#searchResults').html('<div class="text-center text-muted py-5">{{translate('Write a minimum of one characters.')}}.</div>');
+                $('#searchResults').html('<div class="text-center text-muted py-5">{{translate('Write something to search.')}}.</div>');
             }
         });
     });

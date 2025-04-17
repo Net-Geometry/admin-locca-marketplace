@@ -420,7 +420,7 @@
                                                             accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                             <i class="tio-edit"></i>
                                                     </div>
-                                                    
+
                                                 </div>
                                             </label>
                                         </div>
@@ -1086,7 +1086,7 @@
                                                     data-image-on="{{ asset('/public/assets/admin/img/modal/free-delivery-on.png') }}"
                                                     data-image-off="{{ asset('/public/assets/admin/img/modal/free-delivery-off.png') }}"
                                                     data-title-on="<strong>{{ translate('messages.Want_to_enable_Free_Delivery_Option?') }}</strong>"
-                                                    data-title-off="<strong>{{ translate('messages.Want_to_disable_Free_Delivery_Optionr?') }}</strong>"
+                                                    data-title-off="<strong>{{ translate('messages.Want_to_disable_Free_Delivery_Option?') }}</strong>"
 
                                                     class="status toggle-switch-input dynamic-checkbox-toggle"
 

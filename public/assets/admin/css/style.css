@@ -15141,8 +15141,14 @@ ul.address-info .label {
 .radio-disable-bg {
     background-color: #14b19f53 !important;
 }
-  @media (min-width: 992px) {
-    .w-md-200px{
+.bg-E7E6E8 {
+    background-color: #E7E6E8 !important;
+}
+.h-300 {
+    height: 300px !important;
+}
+  @media (min-width: 1399px) {
+    .w-xxl-200px{
         width: 200px !important;
     }
 }

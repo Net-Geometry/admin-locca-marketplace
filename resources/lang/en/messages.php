@@ -7526,4 +7526,7 @@ Smartly or Earn. ',
   'JPG, JPEG, PNG Less Than 1MB (Ratio 3 : 1)' => 'JPG, JPEG, PNG Less Than 1MB (Ratio 3 : 1)',
   'It will show in website & app.' => 'It will show in website & app.',
   'Brand Logo' => 'Brand Logo',
+  'JPG, JPEG, PNG Less Than 1MB (Ratio 1 : 1)' => 'JPG, JPEG, PNG Less Than 1MB (Ratio 1 : 1)',
+  'Search_or' => 'Search or',
+  'Write something to search.' => 'Write something to search.',
 );
