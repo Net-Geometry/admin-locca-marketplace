@@ -185,7 +185,7 @@
                                 <h5 class="text-capitalize m-0 text--primary">{{translate('messages.Status')}}</h5>
 
                                 <label class="toggle-switch toggle-switch-sm">
-                                    <input type="checkbox" class="status toggle-switch-input">
+                                    <input type="checkbox" name="brand_status" class="status toggle-switch-input">
                                     <span class="toggle-switch-label text mb-0">
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
@@ -214,17 +214,9 @@
                                     </div>
                                 </label>
 
-                                {{-- <div class="upload-file">
-                                    <input type="file" class="cover_attachment js-upload-input" data-target="profile-prev-image" name="profile_image" accept=".webp, .png,.jpg,.jpeg,.gif, |image/*">
-                                    <div class="upload-file__img">
-                                        <img src="http://localhost/Backend-6amMart/public/assets/admin/img/media/upload-file.png" alt="">
-                                    </div>
-                                    <button class="remove-file-button" type="button">
-                                        <i class="tio-clear"></i>
-                                    </button>
-                                </div> --}}
+
                             </div>
-                            <p class="text-center fs-12">{{translate('messages.JPG, JPEG, PNG Less Than 1MB (Ratio 3 : 1)')}}</p>
+                            <p class="text-center fs-12">{{translate('messages.JPG, JPEG, PNG Less Than 1MB (Ratio 1 : 1)')}}</p>
                         </div>
 
                         <div class="bg-light p-3 rounded">
@@ -277,7 +269,7 @@
                     </div>
 
                     <div class="mt-auto shadow-lg p-3 bg-white d-flex gap-3">
-                        <button  type="reset" class="btn btn-secondary btn-block withdraw-info-hide2">{{translate('messages.reset')}}</button>
+                        <button  type="reset" id="reset_btn" class="btn btn-secondary btn-block withdraw-info-hide2">{{translate('messages.reset')}}</button>
                         <button type="submit" class="btn btn-primary btn-block mt-0" >{{ translate('messages.save') }}</button>
                     </div>
                 </div>
