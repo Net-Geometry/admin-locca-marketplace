@@ -1326,7 +1326,7 @@ class SearchRoutingController extends Controller
                     if (isset($VehicleBrandRoutes)) {
                         foreach ($VehicleBrand as $Vehicle_Brand) {
                             foreach ($VehicleBrandRoutes as $route) {
-                                $validRoutes[] = $this->filterRoute(model: $Vehicle_Brand, route: $route, type: 'VehicleBrand', prefix: 'VehicleBrand', name: $VehicleBrand->name, searchKeyword: $VehicleBrand->name);
+                                $validRoutes[] = $this->filterRoute(model: $Vehicle_Brand, route: $route, type: 'VehicleBrand', prefix: 'VehicleBrand', name: $Vehicle_Brand->name, searchKeyword: $Vehicle_Brand->name);
                             }
                         }
                     }
@@ -1350,7 +1350,7 @@ class SearchRoutingController extends Controller
                     if (isset($VehicleDriverRoutes)) {
                         foreach ($VehicleDriver as $Vehicle_Driver) {
                             foreach ($VehicleDriverRoutes as $route) {
-                                $validRoutes[] = $this->filterRoute(model: $Vehicle_Driver, route: $route, type: 'VehicleDriver', prefix: 'VehicleDriver', name: $VehicleDriver->first_name, searchKeyword: $VehicleDriver->first_name);
+                                $validRoutes[] = $this->filterRoute(model: $Vehicle_Driver, route: $route, type: 'VehicleDriver', prefix: 'VehicleDriver', name: $Vehicle_Driver->first_name, searchKeyword: $Vehicle_Driver->first_name);
                             }
                         }
                     }
@@ -1379,6 +1379,8 @@ class SearchRoutingController extends Controller
         }
 
         $result = array_merge($formattedRoutes, $validRoutes);
+        $result = collect($result);
+        $result = $result->unique('fullRoute')->values()->all();
         return $this->sortBySearchKeyword($result, $searchKeyword);
     }
 

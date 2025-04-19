@@ -60,21 +60,20 @@ class SearchRoutingController extends Controller
     {
         $searchKeyword = $request->input('search');
         session(['search_keyword' => $searchKeyword]);
-
+        $currentModuleType = config('module.current_module_type') ?? null;
+        $currentModuleId = config('module.current_module_id') ?? null;
         //1st layer
         $formattedRoutes = [];
         $jsonFilePath = public_path('admin_formatted_routes.json');
         if (file_exists($jsonFilePath)) {
             $fileContents = file_get_contents($jsonFilePath);
             $routes = json_decode($fileContents, true);
-            if (!addon_published_status('Rental')) {
+            if (!addon_published_status('Rental') || $currentModuleType !== 'rental') {
                 $routes = array_filter($routes, function ($route) {
                     return  !in_array('rental', $route['moduleType']);
                 });
             }
 
-            $currentModuleType = config('module.current_module_type') ?? null;
-            $currentModuleId = config('module.current_module_id') ?? null;
 
             foreach ($routes as $route) {
                 $uri = $route['URI'];
@@ -111,8 +110,8 @@ class SearchRoutingController extends Controller
 
 
         $excludeTermsRoute = ['{status}'];
-        if (!addon_published_status('Rental')) {
-            $excludeTermsRoute[] = ['rental'];
+        if (!addon_published_status('Rental') || $currentModuleType !== 'rental') {
+            $excludeTermsRoute[] = 'rental';
         }
         $excludeTermsAjax = $this->getAjaxRoutes($adminRoutes);
         $addUrl = [
@@ -769,7 +768,6 @@ class SearchRoutingController extends Controller
                     }
                 }
 
-
                 //Vehicle
                 $Vehicle = Vehicle::find($searchKeyword);
                 if ($Vehicle) {
@@ -799,7 +797,7 @@ class SearchRoutingController extends Controller
                 $VehicleBrand = VehicleBrand::find($searchKeyword);
                 if ($VehicleBrand) {
                     $VehicleBrandRoutes = $adminRoutes->filter(function ($route) {
-                        return str_contains($route->uri(), 'vehicle-brand/list');
+                        return str_contains($route->uri(), 'rental/brand/edit');
                     });
 
                     if (isset($VehicleBrandRoutes)) {
@@ -808,42 +806,31 @@ class SearchRoutingController extends Controller
                         }
                     }
                 }
-                $VehicleDriver = VehicleDriver::find($searchKeyword);
-                if ($VehicleDriver) {
-                    $VehicleDriverRoutes = $adminRoutes->filter(function ($route) {
-                        return str_contains($route->uri(), 'driver/details') || str_contains($route->uri(), 'driver/update');
-                    });
+                // $VehicleDriver = VehicleDriver::find($searchKeyword);
+                // if ($VehicleDriver) {
+                //     $VehicleDriverRoutes = $adminRoutes->filter(function ($route) {
+                //         return str_contains($route->uri(), 'driver/details') || str_contains($route->uri(), 'driver/update');
+                //     });
 
-                    if (isset($VehicleDriverRoutes)) {
-                        foreach ($VehicleDriverRoutes as $route) {
-                            $validRoutes[] = $this->filterRoute(model: $VehicleDriver, route: $route, type: 'VehicleDriver', prefix: 'VehicleDriver', name: $VehicleDriver->first_name, searchKeyword: $VehicleDriver->first_name);
-                        }
-                    }
-                }
-                $VehicleReview = VehicleReview::where('review_id', $searchKeyword)->first();
+                //     if (isset($VehicleDriverRoutes)) {
+                //         foreach ($VehicleDriverRoutes as $route) {
+                //             $validRoutes[] = $this->filterRoute(model: $VehicleDriver, route: $route, type: 'VehicleDriver', prefix: 'VehicleDriver', name: $VehicleDriver->first_name, searchKeyword: $VehicleDriver->first_name);
+                //         }
+                //     }
+                // }
+                $VehicleReview = VehicleReview::with('vehicle')->where('review_id', $searchKeyword)->first();
                 if ($VehicleReview) {
                     $VehicleReviewRoutes = $adminRoutes->filter(function ($route) {
-                        return str_contains($route->uri(), 'rental-reviews');
+                        return str_contains($route->uri(), 'vehicle/review-list');
                     });
 
                     if (isset($VehicleReviewRoutes)) {
                         foreach ($VehicleReviewRoutes as $route) {
-                            $validRoutes[] = $this->filterRoute(model: $VehicleReview, route: $route, type: 'Vehicle_Review', prefix: 'VehicleReview',);
+                            $validRoutes[] = $this->filterRoute(model: $VehicleReview, route: $route, type: 'Vehicle_Review', prefix: 'VehicleReview', name: $VehicleReview?->vehicle?->name, searchKeyword: $VehicleReview?->vehicle?->name );
                         }
                     }
                 }
             }
-
-
-
-
-
-
-
-
-
-
-
 
 
             // review
@@ -1790,9 +1777,166 @@ class SearchRoutingController extends Controller
             //             }
             //         }
             //     }
+
+
+
+
+
+            if ($currentModuleType == 'rental') {
+
+            //  Trips
+            $trips = Trips::with('customer')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                return $query->where('module_id', $currentModuleId);
+            })
+                ->whereHas('customer', function ($query) use ($searchKeyword) {
+                    $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhereRaw("CONCAT(f_name, ' ', l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                        ->orWhereRaw("CONCAT(f_name,l_name) LIKE ?", ['%' . $searchKeyword . '%'])
+                        ->orWhereRaw("CONCAT(l_name,f_name) LIKE ?", ['%' . $searchKeyword . '%']);
+                })
+                ->orWhereHas('provider', function ($query) use ($searchKeyword) {
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('address', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('meta_title', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('meta_description', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+            if ($trips) {
+                $tripsRoutes = $adminRoutes->filter(function ($route) {
+                    return (str_contains($route->uri(), 'rental/trip/details')) && !str_contains($route->uri(), 'transactions/rental/trip/details/')  && !str_contains($route->uri(), 'expense-report') && !str_contains($route->uri(), 'export');
+                });
+                if (isset($tripsRoutes)) {
+                    foreach ($trips as $trip) {
+                        foreach ($tripsRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $trip, route: $route, type: 'trip', prefix: 'Trip', name: $trip->id, searchKeyword: $trip->id);
+                        }
+                    }
+                }
+            }
+
+                //Vehicle
+                $vehicles = Vehicle::when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
+                    return $query->wherehas('provider', function ($query) use ($currentModuleId) {
+                        $query->where('module_id', $currentModuleId);
+                    });
+                })
+                ->where(function ($query) use ($searchKeyword) {
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('description', 'LIKE', '%' . $searchKeyword . '%');
+                })
+                ->get();
+
+
+                if ($vehicles) {
+                    $vehiclesRoutes = $adminRoutes->filter(function ($route) {
+                        return (str_contains($route->uri(), 'vehicle/details') || str_contains($route->uri(), 'vehicle/update'));
+                    });
+
+                    if (isset($vehiclesRoutes)) {
+                        foreach ($vehicles as $vehicle) {
+                            foreach ($vehiclesRoutes as $route) {
+                                $validRoutes[] = $this->filterRoute(model: $vehicle, route: $route, type: 'Vehicle', prefix: 'Vehicle', name: $vehicle?->name);
+                            }
+                        }
+                    }
+                }
+
+                $VehicleCategorys = VehicleCategory::where(function ($query) use ($searchKeyword) {
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
+                })->get();
+
+
+                if ($VehicleCategorys) {
+                    $VehicleCategorysRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'rental/category/edit/');
+                    });
+
+                    if (isset($VehicleCategorysRoutes)) {
+                        foreach ($VehicleCategorys as $VehicleCategory) {
+                            foreach ($VehicleCategorysRoutes as $route) {
+                                $validRoutes[] = $this->filterRoute(model: $VehicleCategory, route: $route, type: 'VehicleCategory', prefix: 'VehicleCategory', name: $VehicleCategory?->name, searchKeyword: $VehicleCategory?->name);
+                            }
+                        }
+                    }
+                }
+
+
+                $VehicleBrand = VehicleBrand::where(function ($query) use ($searchKeyword) {
+                    $query->where('name', 'LIKE', '%' . $searchKeyword . '%');
+                })->get();
+
+                if ($VehicleBrand) {
+                    $VehicleBrandRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'rental/brand/edit');
+                    });
+
+                    if (isset($VehicleBrandRoutes)) {
+                        foreach ($VehicleBrand as $Vehicle_Brand) {
+                            foreach ($VehicleBrandRoutes as $route) {
+                                $validRoutes[] = $this->filterRoute(model: $Vehicle_Brand, route: $route, type: 'VehicleBrand', prefix: 'VehicleBrand', name: $Vehicle_Brand?->name, searchKeyword: $Vehicle_Brand?->name);
+                            }
+                        }
+                    }
+                }
+
+
+                // $VehicleDriver = VehicleDriver::find($searchKeyword);
+                // if ($VehicleDriver) {
+                //     $VehicleDriverRoutes = $adminRoutes->filter(function ($route) {
+                //         return str_contains($route->uri(), 'driver/details') || str_contains($route->uri(), 'driver/update');
+                //     });
+
+                //     if (isset($VehicleDriverRoutes)) {
+                //         foreach ($VehicleDriverRoutes as $route) {
+                //             $validRoutes[] = $this->filterRoute(model: $VehicleDriver, route: $route, type: 'VehicleDriver', prefix: 'VehicleDriver', name: $VehicleDriver->first_name, searchKeyword: $VehicleDriver->first_name);
+                //         }
+                //     }
+                // }
+
+                $VehicleReview = VehicleReview::where(function ($query) use ($searchKeyword) {
+                    $query->where('comment', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orwhere('reply', 'LIKE', '%' . $searchKeyword . '%');
+                })->get();
+
+
+                if ($VehicleReview) {
+                    $VehicleReviewRoutes = $adminRoutes->filter(function ($route) {
+                        // return str_contains($route->uri(), 'vehicle/review-list');
+                    });
+
+                    if (isset($VehicleReviewRoutes)) {
+                        foreach ($VehicleReviewRoutes as $route) {
+                            $validRoutes[] = $this->filterRoute(model: $VehicleReview, route: $route, type: 'Vehicle_Review', prefix: 'VehicleReview', name: $VehicleReview?->vehicle?->name, searchKeyword: $VehicleReview?->vehicle?->name );
+                        }
+                    }
+                }
+
+                if ($VehicleReview) {
+                    $VehicleReviewRoutes = $adminRoutes->filter(function ($route) {
+                        return str_contains($route->uri(), 'vehicle/review-list');
+                    });
+
+                    if (isset($VehicleReviewRoutes)) {
+                        foreach ($VehicleReview as $Vehicle_Review) {
+                            foreach ($VehicleReviewRoutes as $route) {
+                                $validRoutes[] = $this->filterRoute(model: $Vehicle_Review, route: $route, type: 'Vehicle_Review', prefix: 'VehicleReview', name: $Vehicle_Review?->vehicle?->name, searchKeyword: $Vehicle_Review?->vehicle?->name );
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         $result = array_merge($formattedRoutes, $validRoutes);
+        $result = collect($result);
+        $result = $result->unique('fullRoute')->values()->all();
+
         return $this->sortBySearchKeyword($result, $searchKeyword);
     }
 
@@ -1821,6 +1965,10 @@ class SearchRoutingController extends Controller
         $uriWithParameter = preg_replace('/\/+/', '/', $uriWithParameter);
         $uriWithParameter = rtrim($uriWithParameter, '/');
 
+        if ($searchKeyword && (!is_numeric($searchKeyword) || in_array($type, ['subscriber-transactions', 'order', 'trip', 'Vehicle_Review']))) {
+            $uriWithParameter .= '?search=' . urlencode($searchKeyword);
+        }
+
         $fullURL = url('/') . '/' . $uriWithParameter;
 
         if ($type == 'store' && $model->vendor->status == null) {
@@ -1846,9 +1994,6 @@ class SearchRoutingController extends Controller
             $uriWithParameter = $formattedRouteName === 'Preview' ? "admin/delivery-man/pending-delivery-man-view/{$model->id}" : $uriWithParameter;
         }
 
-        if ($searchKeyword && (!is_numeric($searchKeyword) || in_array($type, ['subscriber-transactions', 'order', 'trip', 'Vehicle_Review']))) {
-            $uriWithParameter .= '?search=' . urlencode($searchKeyword);
-        }
         $routeName = $prefix ? $prefix . ' ' . $formattedRouteName : $formattedRouteName;
         $routeName = $name ? $routeName . ' - (' . $name . ')' : $routeName;
         $routeName = preg_replace('/(?<=[a-z])(?=[A-Z])/', ' ', $routeName);

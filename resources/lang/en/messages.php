@@ -7529,4 +7529,7 @@ Smartly or Earn. ',
   'JPG, JPEG, PNG Less Than 1MB (Ratio 1 : 1)' => 'JPG, JPEG, PNG Less Than 1MB (Ratio 1 : 1)',
   'Search_or' => 'Search or',
   'Write something to search.' => 'Write something to search.',
+  'Search_by_keyword' => 'Search by keyword',
+  'Geo CAR' => 'Geo CAR',
+  'Tamekah Maldonado' => 'Tamekah Maldonado',
 );

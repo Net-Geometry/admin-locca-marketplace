@@ -15152,3 +15152,8 @@ ul.address-info .label {
         width: 200px !important;
     }
 }
+mark {
+    background-color: #ffe58f;
+    padding: 0 2px;
+    border-radius: 2px;
+}

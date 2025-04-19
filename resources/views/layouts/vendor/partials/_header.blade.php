@@ -154,7 +154,7 @@
                     <form class="flex-grow-1" id="searchForm" action="{{ route('vendor.search.routing') }}">
                         @csrf
                         <div class="d-flex align-items-center global-search-container">
-                            <input class="form-control flex-grow-1 rounded-10 search-input" id="searchInput" maxlength="255" name="search" type="search" placeholder="{{ translate('Search_by_keyword') }}" aria-label="Search" autofocus>
+                            <input autocomplete="off" class="form-control flex-grow-1 rounded-10 search-input" id="searchInput" maxlength="255" name="search" type="search" placeholder="{{ translate('Search_by_keyword') }}" aria-label="Search" autofocus>
                         </div>
                     </form>
                     <div class="position-absolute right-0 pr-2">

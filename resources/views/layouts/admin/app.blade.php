@@ -793,10 +793,13 @@ $(document).on('keyup', 'input[type="tel"]', function () {
                                 response.forEach(function (route) {
                                     var separator = route.fullRoute.includes('?') ? '&' : '?';
                                     var fullRouteWithKeyword = route.fullRoute + separator + 'keyword=' + encodeURIComponent(searchKeyword);
-
+                                    var keywordRegex = searchKeyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                                        keywordRegex = new RegExp('(' + keywordRegex + ')', 'gi');
+                                    var highlightedRouteName = route.routeName.replace(keywordRegex, '<mark>$1</mark>');
+                                    var highlightedURI = route.URI.replace(keywordRegex, '<mark>$1</mark>');
                                     resultHtml += '<a href="' + fullRouteWithKeyword + '" class="search-list-item d-flex flex-column" data-route-name="' + route.routeName + '" data-route-uri="' + route.URI + '" data-route-full-url="' + route.fullRoute + '" aria-current="true">';
-                                    resultHtml += '<h5>' + route.routeName + '</h5>';
-                                    resultHtml += '<p class="text-muted fs-12 mb-0">' + route.URI + '</p>';
+                                    resultHtml += '<h5>' + highlightedRouteName + '</h5>';
+                                    resultHtml += '<p class="text-muted fs-12 mb-0">' + highlightedURI + '</p>';
                                     resultHtml += '</a>';
                                 });
                                 $('#searchResults').html('<div class="fs-16 fw-500 mb-2">' + @json(translate('Search Result')) + '</div>' + '<div class="search-list d-flex flex-column">' + resultHtml + '</div>');
@@ -831,8 +834,9 @@ $(document).on('keyup', 'input[type="tel"]', function () {
                             console.error(xhr.responseText);
                         }
                     });
-                } else {
-                    $('#searchResults').html('<div class="text-center text-muted py-5">{{translate('Write something to search.')}}.</div>');
+                }
+                else {
+                    getRecentSearch()
                 }
             });
         });
@@ -846,7 +850,13 @@ $(document).on('keyup', 'input[type="tel"]', function () {
 
         $(document).ready(function () {
             $("#staticBackdrop").on("shown.bs.modal", function () {
-                $(this).find("#searchForm input[type=search]").val('');
+                getRecentSearch()
+            });
+        });
+
+
+        function getRecentSearch(){
+            $(this).find("#searchForm input[type=search]").val('');
                 $('#searchResults').html('<div class="text-center text-muted py-5">{{translate('Loading recent searches')}}...</div>');
                 $(this).find("#searchForm input[type=search]").focus();
 
@@ -898,8 +908,11 @@ $(document).on('keyup', 'input[type="tel"]', function () {
                         $('#searchResults').html('<div class="text-center text-muted py-5">{{translate('Error loading recent searches')}}.</div>');
                     }
                 });
-            });
-        });
+        }
+
+
+
+
 
         $("#staticBackdrop").on("hidden.bs.modal", function () {
             $('#searchResults').empty();

@@ -563,11 +563,16 @@
                             var resultHtml = '';
                             response.forEach(function (route) {
                                 var separator = route.fullRoute.includes('?') ? '&' : '?';
-                                var fullRouteWithKeyword = route.fullRoute + separator + 'keyword=' + encodeURIComponent(searchKeyword);
-                                resultHtml += '<a href="' + fullRouteWithKeyword + '" class="search-list-item d-flex flex-column" data-route-name="' + route.routeName + '" data-route-uri="' + route.URI + '" data-route-full-url="' + route.fullRoute + '" aria-current="true">';
-                                resultHtml += '<h5>' + route.routeName + '</h5>';
-                                resultHtml += '<p class="text-muted fs-12 mb-0">' + route.URI + '</p>';
-                                resultHtml += '</a>';
+                                    var fullRouteWithKeyword = route.fullRoute + separator + 'keyword=' + encodeURIComponent(searchKeyword);
+
+                                    var keywordRegex = searchKeyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                                         keywordRegex = new RegExp('(' + keywordRegex + ')', 'gi');
+                                    var highlightedRouteName = route.routeName.replace(keywordRegex, '<mark>$1</mark>');
+                                    var highlightedURI = route.URI.replace(keywordRegex, '<mark>$1</mark>');
+                                    resultHtml += '<a href="' + fullRouteWithKeyword + '" class="search-list-item d-flex flex-column" data-route-name="' + route.routeName + '" data-route-uri="' + route.URI + '" data-route-full-url="' + route.fullRoute + '" aria-current="true">';
+                                    resultHtml += '<h5>' + highlightedRouteName + '</h5>';
+                                    resultHtml += '<p class="text-muted fs-12 mb-0">' + highlightedURI + '</p>';
+                                    resultHtml += '</a>';
                             });
                             $('#searchResults').html('<div class="fs-16 fw-500 mb-2">' + @json(translate('Search Result')) + '</div>' + '<div class="search-list d-flex flex-column">' + resultHtml + '</div>');
 
