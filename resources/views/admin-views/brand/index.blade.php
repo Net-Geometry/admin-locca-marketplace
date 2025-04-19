@@ -193,32 +193,6 @@
                             </div>
                         </div>
 
-                        <div class="bg-light p-3 rounded my-4">
-                            <h4>{{translate('messages.Brand Logo')}} <small class="text-danger">*</small></h4>
-                            <p class="fs-12">{{ translate('messages.It will show in website & app.') }}</p>
-                            <div class="d-flex justify-content-center">
-                                <label class="text-center position-relative d-inline-block mb-3">
-                                    <img class="img--176 border" id="viewer"
-                                            @if(isset($category))
-                                                src="{{asset('storage/app/public/category')}}/{{$category['image']}}"
-                                            @else
-                                                src="{{asset('public/assets/admin/img/upload-img.png')}}"
-                                            @endif
-                                            alt="image"/>
-                                    <div class="icon-file-group">
-                                        <div class="icon-file">
-                                            <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
-                                                    accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" >
-                                            <i class="tio-edit"></i>
-                                        </div>
-                                    </div>
-                                </label>
-
-
-                            </div>
-                            <p class="text-center fs-12">{{translate('messages.JPG, JPEG, PNG Less Than 1MB (Ratio 1 : 1)')}}</p>
-                        </div>
-
                         <div class="bg-light p-3 rounded">
                             @if($language)
                                 <ul class="nav nav-tabs mb-4">
@@ -266,9 +240,34 @@
                                 <input type="hidden" name="lang[]" value="default">
                             @endif
                         </div>
+
+                        <div class="bg-light p-3 rounded my-4">
+                            <h4>{{translate('messages.Brand Logo')}} <small class="text-danger">*</small></h4>
+                            <p class="fs-12">{{ translate('messages.It will show in website & app.') }}</p>
+                            <div class="d-flex justify-content-center">
+                                <label class="text-center position-relative d-inline-block mb-3">
+                                    <img class="img--176 border" id="viewer"
+                                            @if(isset($category))
+                                                src="{{asset('storage/app/public/category')}}/{{$category['image']}}"
+                                            @else
+                                                src="{{asset('public/assets/admin/img/upload-img.png')}}"
+                                            @endif
+                                            alt="image"/>
+                                    <div class="icon-file-group">
+                                        <div class="icon-file">
+                                            <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
+                                                    accept=".webp, .jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" >
+                                            <i class="tio-edit"></i>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <p class="text-center fs-12">{{translate('messages.JPG, JPEG, PNG Less Than 1MB (Ratio 1 : 1)')}}</p>
+                        </div>
+
                     </div>
 
-                    <div class="mt-auto shadow-lg p-3 bg-white d-flex gap-3">
+                    <div class="bg-white bottom-0 d-flex gap-3 mt-auto p-3 position-sticky shadow-lg">
                         <button  type="reset" id="reset_btn" class="btn btn-secondary btn-block withdraw-info-hide2">{{translate('messages.reset')}}</button>
                         <button type="submit" class="btn btn-primary btn-block mt-0" >{{ translate('messages.save') }}</button>
                     </div>

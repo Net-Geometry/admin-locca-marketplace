@@ -890,7 +890,14 @@
                                                 {{ \App\CentralLogics\Helpers::format_currency($total_tax_amount) }}
                                             </dd>
                                         @endif
-                                        <dt class="col-6">{{ translate('messages.delivery_fee') }}:</dt>
+                                        <dt class="col-6">{{ translate('messages.delivery_fee') }}
+                                            @if ($order->free_delivery_by == 'admin')
+                                            <i class="tio-info-outined" data-toggle="tooltip" title="{{ translate('Delivery fee is applicable and will be covered by the admin.') }}"></i>
+
+                                            @elseif ($order->free_delivery_by == 'vendor')
+                                            <i class="tio-info-outined" data-toggle="tooltip" title="{{ translate('Delivery fee is applicable and will be covered by the Vendor.') }}"></i>
+                                            @endif
+                                                :</dt>
                                         <dd class="col-6">
                                             + {{ \App\CentralLogics\Helpers::format_currency($del_c) }}
                                             <hr>

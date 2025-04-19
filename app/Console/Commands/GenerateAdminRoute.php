@@ -40,6 +40,7 @@ class GenerateAdminRoute extends Command
             'print', 'download', 'export', 'edit', 'update', 'invoice', 'child', 'update-default-status', 'update-status',
             'system-currency', 'status', 'paidStatus', 'priority', 'remove-proof-image', 'select-customer', 'orders', 'logs',
             'refund_mode', 'account-transaction/create', 'provide-deliveryman-earnings/create', 'system-addons', 'social-media/create',
+            'drivemond'
         ];
 
         $excludeTermsAjax = $this->getAjaxRoutes($adminRoutes);
@@ -84,9 +85,11 @@ class GenerateAdminRoute extends Command
 
             if (!empty($newRoutes)) {
                 $updatedRoutes = array_merge($existingRoutes, $newRoutes);
+               $updatedRoutes= $this->manualyAddedBladePartialsPath($updatedRoutes);
                 file_put_contents($jsonFilePath, json_encode($updatedRoutes, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
             }
         } else {
+            $updatedRoutes= $this->manualyAddedBladePartialsPath($formattedRoutes);
             file_put_contents($jsonFilePath, json_encode($formattedRoutes, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
         }
 
@@ -223,6 +226,73 @@ class GenerateAdminRoute extends Command
         }
     }
 
+    private function manualyAddedBladePartialsPath(array $formattedArray): array
+    {
+        try {
+            $bladePartials = [
+                'admin-views/dashboard-grocery' => [
+                    'admin-views.partials._top-restaurants',
+                    'admin-views.partials._zone-change',
+                    'admin-views.partials._popular-restaurants',
+                    'admin-views.partials._top-selling-foods',
+                    'admin-views.partials._top-rated-foods',
+                    'admin-views.partials._top-deliveryman',
+                    'admin-views.partials._top-customer'
+                ],
+                'admin-views/dashboard-food' => [
+                    'admin-views.partials._top-restaurants',
+                    'admin-views.partials._zone-change',
+                    'admin-views.partials._popular-restaurants',
+                    'admin-views.partials._top-selling-foods',
+                    'admin-views.partials._top-rated-foods',
+                    'admin-views.partials._top-deliveryman',
+                    'admin-views.partials._top-customer'
+                ],
+                'admin-views/dashboard-ecommerce' => [
+                    'admin-views.partials._top-restaurants',
+                    'admin-views.partials._zone-change',
+                    'admin-views.partials._popular-restaurants',
+                    'admin-views.partials._top-selling-foods',
+                    'admin-views.partials._top-rated-foods',
+                    'admin-views.partials._top-deliveryman',
+                    'admin-views.partials._top-customer'
+                ],
+                'admin-views/dashboard-pharmacy' => [
+                    'admin-views.partials._top-restaurants',
+                    'admin-views.partials._zone-change',
+                    'admin-views.partials._popular-restaurants',
+                    'admin-views.partials._top-selling-foods',
+                    'admin-views.partials._top-rated-foods',
+                    'admin-views.partials._top-deliveryman',
+                    'admin-views.partials._top-customer'
+                ],
+                'admin-views/dashboard-parcel' => [
+                    'admin-views.partials._zone-change',
+                    'admin-views.partials._top-deliveryman',
+                    'admin-views.partials._top-customer'
+                ],
+
+            ];
+
+            foreach ($formattedArray as $index => $item) {
+                $bladePath = $item['bladePath'] ?? null;
+                if ($bladePath &&  array_key_exists($bladePath, $bladePartials)) {
+                    $keywords = $item['keywords'] ?? '';
+                    foreach ($bladePartials[$bladePath] as $partialPath) {
+                        $text = $this->getTextDataFromBladeFile($partialPath);
+                        if ($text) {
+                            $keywords .= ' ' . $text;
+                        }
+                    }
+                    $formattedArray[$index]['keywords'] = trim($keywords);
+                }
+
+            }
+        } catch (\Exception $exception) {
+            info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
+        }
+        return $formattedArray;
+    }
     private function manualyAddedBladePath($formattedRoutes): array
     {
         $array = [
