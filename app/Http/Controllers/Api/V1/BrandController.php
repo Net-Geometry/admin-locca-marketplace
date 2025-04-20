@@ -118,6 +118,9 @@ class BrandController extends Controller
         whereHas('module.zones', function($query)use($zone_id){
             $query->whereIn('zones.id', json_decode($zone_id, true));
         })
+        ->when(config('module.current_module_data'), function($query){
+            $query->where('module_id', config('module.current_module_data')['id']);
+        })
         ->whereHas('store', function($query)use($zone_id){
             $query->whereIn('zone_id', json_decode($zone_id, true))->whereHas('zone.modules',function($query){
                 $query->when(config('module.current_module_data'), function($query){
