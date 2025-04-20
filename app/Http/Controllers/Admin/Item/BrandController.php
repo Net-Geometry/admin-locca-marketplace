@@ -58,13 +58,7 @@ class BrandController extends BaseController
         return back();
     }
 
-    public function getUpdateView(string|int $id): View
-    {
-        $brand = $this->brandRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        $language = getWebConfig('language');
-        $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view(BrandViewPath::UPDATE[VIEW], compact('brand','language','defaultLang'));
-    }
+
 
     public function update(BrandUpdateRequest $request, $id): RedirectResponse
     {
@@ -202,5 +196,15 @@ class BrandController extends BaseController
                     ->where('module_id', '!=', Config::get('module.current_module_id'))
                     ->pluck('id')
             );
+    }
+
+    public function getBrandData(Request $request): JsonResponse
+    {
+        $brand = $this->brandRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $request->id]);
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return response()->json([
+            'view' => view('admin-views.brand.partials.edit_partial', compact('brand','language'))->render(),
+        ]);
     }
 }

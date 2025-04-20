@@ -181,16 +181,41 @@
 
 
                                     <td class="text-center">
-                                    @if (isset($exp?->order?->customer))
-                                    {{ $exp?->order?->fullName }}
-                                    @elseif($exp?->order?->is_guest)
-                                        @php($customer_details = json_decode($exp?->order['delivery_address'],true))
-                                        {{$customer_details['contact_person_name']}}
-                                    @else
-                                    <label class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
+                                        @if ($exp->order)
 
-                                    @endif
-                                </td>
+                                        @if($exp->order?->is_guest)
+                                        @php($customer_details = json_decode($exp->order['delivery_address'],true))
+                                        <strong>{{$customer_details['contact_person_name']}}</strong>
+
+                                        @elseif($exp->order?->customer)
+
+                                        {{$exp->order?->customer['f_name'].' '.$exp->order?->customer['l_name']}}
+                                        @else
+                                            <label
+                                                class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
+                                        @endif
+
+                                        @elseif($exp->trip)
+                                        @if ($exp?->trip?->customer)
+
+                                            {{ $exp?->trip?->customer?->fullName }}
+
+                                            @elseif($exp?->trip?->user_info['contact_person_name'])
+                                                <div class="font-medium">
+                                                    {{$exp?->trip?->user_info['contact_person_name'] }}
+                                                </div>
+                                            @else
+                                                {{ translate('messages.Guest_user') }}
+                                            @endif
+
+
+                                        @elseif ($exp['type'] == 'add_fund_bonus')
+                                        {{ $exp->user->f_name.' '.$exp->user->l_name }}
+                                        @else
+                                        <label class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
+
+                                        @endif
+                                    </td>
                                 <td class="text-right pr-xl-5">
                                     <div class="pr-xl-5">
                                         {{\App\CentralLogics\Helpers::format_currency($exp['amount'])}}

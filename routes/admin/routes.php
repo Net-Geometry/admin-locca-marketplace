@@ -154,11 +154,11 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get(Brand::DROPDOWN[URI], [BrandController::class, 'getDropdownList'])->name('get-all');
             Route::get(Brand::INDEX[URI], [BrandController::class, 'index'])->name('add');
             Route::post(Brand::ADD[URI], [BrandController::class, 'add'])->name('store');
-            Route::get(Brand::UPDATE[URI].'/{id}', [BrandController::class, 'getUpdateView'])->name('edit');
             Route::post(Brand::UPDATE[URI].'/{id}', [BrandController::class, 'update'])->name('update');
             Route::delete(Brand::DELETE[URI].'/{id}', [BrandController::class, 'delete'])->name('delete');
             Route::get(Brand::STATUS[URI].'/{id}/{status}', [BrandController::class,'updateStatus'])->name('status');
             Route::post('module-upadte', [BrandController::class,'moduleUpadte'])->name('moduleUpadte');
+            Route::get('get-brand-data', [BrandController::class,'getBrandData'])->name('getBrandData');
         });
 
 

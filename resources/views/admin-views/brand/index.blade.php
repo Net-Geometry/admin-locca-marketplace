@@ -99,8 +99,10 @@
                                             ><i class="tio-apps"></i>
                                         </button>
                                         @endif
-                                        <a class="btn action-btn btn--primary btn-outline-primary"
-                                        href="{{route('admin.brand.edit',[$brand['id']])}}" title="{{translate('messages.edit_brand')}}"><i class="tio-edit"></i>
+                                        <a class="btn action-btn withdraw-info-show3 btn--primary btn-outline-primary"
+                                        data-id="{{$brand['id']}}"
+                                        href="#" title="{{translate('messages.edit_brand')}}">
+                                        <i class="tio-edit"></i>
                                     </a>
                                     <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="brand-{{$brand['id']}}" data-message="{{ translate('messages.Want to delete this brand') }}"  title="{{translate('messages.delete_brand')}}"><i class="tio-delete-outlined"></i>
                                     </a>
@@ -268,11 +270,21 @@
                     </div>
 
                     <div class="bg-white bottom-0 d-flex gap-3 mt-auto p-3 position-sticky shadow-lg">
-                        <button  type="reset" id="reset_btn" class="btn btn-secondary btn-block withdraw-info-hide2">{{translate('messages.reset')}}</button>
+                        <button  type="reset" id="reset_btn" class="btn btn-secondary btn-block ">{{translate('messages.reset')}}</button>
                         <button type="submit" class="btn btn-primary btn-block mt-0" >{{ translate('messages.save') }}</button>
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+
+
+    {{-- edit --}}
+    <div class="withdraw-info-sidebar-wrap2">
+        <div class="withdraw-info-sidebar withdraw-info-sidebar3 p-0" style="--width: 500px">
+            <div id="data-view">
+
+            </div>
         </div>
     </div>
 
@@ -365,6 +377,27 @@
         });
         $(document).on('click', '.withdraw-info-show2', function () {
             $('.withdraw-info-sidebar2, .withdraw-info-sidebar-overlay').addClass('show');
+        });
+
+        $(document).on('click', '.withdraw-info-show3', function () {
+            var id = $(this).data('id');
+            $.ajax({
+                url: "{{ route('admin.brand.getBrandData')}}",
+                type: "get",
+                data: { id: id },
+                beforeSend: function () {
+                    $('#data-view').empty();
+                    $('#loading').show()
+                },
+                success: function(data) {
+                    $('.withdraw-info-sidebar3, .withdraw-info-sidebar-overlay').addClass('show');
+                    $("#data-view").append(data.view);
+                },
+                complete: function () {
+                    $('#loading').hide()
+                }
+            })
+
         });
         $(document).on('submit', '.withdraw_status_form', function (event) {
             $(this).find('button[type="submit"]').attr('disabled', true);
