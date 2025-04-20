@@ -424,15 +424,15 @@
         "isModified": false
     },
     {
-        "routeName": "Messages List",
+        "routeName": "Chat List",
         "URI": "vendor-panel/message/list",
-        "keywords": "Conversation List Search View Conversation",
+        "keywords": "Conversation List Search View Conversation chat",
         "bladePath": "vendor-views.messages.index",
         "moduleType": null,
         "isModified": false
     },
     {
-        "routeName": "Business Settings Restaurant Index",
+        "routeName": "Business Settings Config",
         "URI": "vendor-panel/business-settings/store-setup",
         "keywords": "Settings Store Setup Store Temporarily Closed Title To View A List Of All Active Zones On Your Admin Landing Page Enable The Available Zones Feature Provider Temporarily Closed Title Store Settings Scheduled Order When Enabled Store Owner Can Take Scheduled Orders From Customers Scheduled Order Hint Delivery When Enabled Customers Can Make Home Delivery Orders From This Store Home Delivery Hint Take Away When Enabled Customers Can Place Takeaway Orders From This Store Take Away Hint Prescription Order Free Delivery If This Option Is On Customers Will Get Free Delivery Veg Non Veg Cutlery Halal Tag Status If Enabled Customers Can See Halal Tag On Product Want To Enable Halal Tag Status For This Restaurant Want To Disable Halal Tag Status For This Restaurant If Disabled Customers Can Not See Halal Tag On Product Store Basic Settings Minimum Order Amount Specify The Minimum Order Amount Required For Customers When Ordering From This Store Self Delivery Hint Minimum Processing Time Minimum Processing Time Warning Approx Delivery Time Set The Total Time To Deliver Products Minimum Delivery Time Maximum Delivery Time Minutes Hours Days Minimum Shipping Charge Delivery Charge Per Km Maximum Delivery Charge It Will Add A Limite On Total Delivery Charge Minimum Stock For Warning When The Stock Of A Product Reaches Its Minimum Value That You Have Set You Will Receive A Warning To Update The Stock Additionally These Products Will Appear In The Admin\u2019s Low Stock List Ex GST If GST Is Enable GST Number Will Show In Invoice Gst Status Extra Packaging Charge Amount By Enabling The Status Customer Will Get The Option For Choosing Extra Packaging Charge When Placing Order For Extra Package Offer Want To Enable Extra Packaging Status For This Restaurant Want To Disable Extra Packaging Status For This Restaurant If Enabled Customers Have To Pay Extra Packaging Charge On Order If Disabled Customers Do Not Have To Pay Extra Packaging Charge On Order Reset Update Store Meta Data Default Meta Title Meta Description Default Store Meta Image Meta Image  Save Changes Daily Time Schedule Create Schedule For Start Time End Time Submit Are You Sure You Want To Temporarily Close This Store You Want To Open This Store No Yes Want To Delete This Schedule If You Select Yes The Time Schedule Will Be Deleted Schedule Removed Successfully Schedule Not Found Schedule Added Successfully",
         "bladePath": "vendor-views.business-settings.restaurant-index",

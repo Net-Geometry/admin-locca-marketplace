@@ -139,7 +139,7 @@
                                     <span class="bg-E7E6E8 border ctrlplusk d-md-block d-none font-bold fs-12 fw-bold lh-1 ms-1 px-1 rounded text-muted">Ctrl+K</span>
 
                                 </span>
-                                <img width="14" src="{{asset('/public/assets/admin/img/new-img/search.svg')}}" class="svg" alt="">
+                                <img width="14" class="h-auto" src="{{asset('/public/assets/admin/img/new-img/search.svg')}}" class="svg" alt="">
                             </div>
                         </button>
                     </li>

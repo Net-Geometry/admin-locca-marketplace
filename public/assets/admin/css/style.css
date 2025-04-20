@@ -15152,8 +15152,12 @@ ul.address-info .label {
         width: 200px !important;
     }
 }
-mark {
+.mark {
     background-color: #ffe58f;
     padding: 0 2px;
     border-radius: 2px;
+}
+
+.text-italic {
+ font-style: italic;
 }

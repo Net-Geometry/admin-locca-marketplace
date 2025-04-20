@@ -988,7 +988,10 @@ class SearchRoutingController extends Controller
                 $orders = Order::with('customer')->when(is_numeric($currentModuleId), function ($query) use ($currentModuleId) {
                     return $query->where('module_id', $currentModuleId);
                 })->where(function ($query) use ($searchKeyword) {
-                    $query->whereHas('customer', function ($query) use ($searchKeyword) {
+
+                    $query->where('order_status', 'LIKE', '%' . $searchKeyword . '%' )
+                    ->orwhere('payment_method', 'LIKE', '%' . $searchKeyword . '%' )
+                    ->orwhereHas('customer', function ($query) use ($searchKeyword) {
                         $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
                             ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
                             ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')

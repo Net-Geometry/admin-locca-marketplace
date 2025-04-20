@@ -241,6 +241,15 @@ $countryCode= strtolower($country?$country->value:'auto');
     </div>
 
 
+
+<?php
+$current_module_type_for_search = null;
+if(in_array(config('module.current_module_type'),config('module.module_type') )){
+    $current_module_type_for_search = config('module.current_module_type');
+}
+?>
+
+
 <!-- ========== END MAIN CONTENT ========== -->
 
 <!-- ========== END SECONDARY CONTENTS ========== -->
@@ -782,11 +791,19 @@ $(document).on('keyup', 'input[type="tel"]', function () {
                         data: {search: searchKeyword, _token: $('input[name="_token"]').val()},
                         success: function (response) {
                             if (response.length === 0) {
-                                $('#searchResults').html('<div class="fs-16 fw-500 mb-2">' + @json(translate('Search Result')) + '</div>' +
-                                '<div class="search-list h-300 d-flex flex-column gap-2 justify-content-center align-items-center fs-16">' +
-                                    '<img width="30" src="' + @json(asset('/public/assets/admin/img/modal/no-search-found.png')) + '" alt="">' + ' ' +
-                                    @json(translate('No result found')) +
-                                '</div>');
+                                let htmlContent = '';
+
+                                @if (!$current_module_type_for_search)
+                                    htmlContent += '<div class="bg--13 d-inline-block fs-12 fw-500 mb-2 px-2 py-1 rounded text-italic">' + @json(translate('* To get module-specific results, please search within the module.')) + '</div>';
+                                @endif
+
+                                htmlContent += '<div class="fs-16 fw-500 mb-2">' + @json(translate('Search Result')) + '</div>' +
+                                    '<div class="search-list h-300 d-flex flex-column gap-2 justify-content-center align-items-center fs-16">' +
+                                        '<img width="30" class="h-auto" src="' + @json(asset('/public/assets/admin/img/modal/no-search-found.png')) + '" alt="">' + ' ' +
+                                        @json(translate('No result found')) +
+                                    '</div>';
+
+                                $('#searchResults').html(htmlContent);
 
                             } else {
                                 var resultHtml = '';
@@ -802,8 +819,15 @@ $(document).on('keyup', 'input[type="tel"]', function () {
                                     resultHtml += '<p class="text-muted fs-12 mb-0">' + highlightedURI + '</p>';
                                     resultHtml += '</a>';
                                 });
-                                $('#searchResults').html('<div class="fs-16 fw-500 mb-2">' + @json(translate('Search Result')) + '</div>' + '<div class="search-list d-flex flex-column">' + resultHtml + '</div>');
 
+                                let htmlContent = '';
+
+                                @if (!$current_module_type_for_search)
+                                    htmlContent += '<div class="bg--13 d-inline-block fs-12 fw-500 mb-2 px-2 py-1 rounded text-italic">' + @json(translate('* To get module-specific results, please search within the module.')) + '</div>';
+                                @endif
+                                htmlContent +='<div class="fs-16 fw-500 mb-2">' + @json(translate('Search Result')) + '</div>' + '<div class="search-list d-flex flex-column">' + resultHtml + '</div>';
+
+                                $('#searchResults').html(htmlContent);
                                 $('.search-list-item').click(function () {
                                     var routeName = $(this).data('route-name');
                                     var routeUri = $(this).data('route-uri');
@@ -821,7 +845,7 @@ $(document).on('keyup', 'input[type="tel"]', function () {
                                             _token: $('input[name="_token"]').val()
                                         },
                                         success: function (response) {
-                                            console.log(response.message);
+
                                         },
                                         error: function (xhr, status, error) {
                                             console.error(xhr.responseText);

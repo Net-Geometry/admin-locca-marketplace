@@ -635,10 +635,10 @@ class SearchRoutingController extends Controller
             if ($moduleType !== 'rental') {
                 //Order
                 $orders = Order::where('store_id', $store_id)
-
-
                     ->with('customer')->where(function ($query) use ($searchKeyword) {
-                        $query->whereHas('customer', function ($query) use ($searchKeyword) {
+                        $query->where('order_status', 'LIKE', '%' . $searchKeyword . '%' )
+                    ->orwhere('payment_method', 'LIKE', '%' . $searchKeyword . '%' )
+                        ->orwhereHas('customer', function ($query) use ($searchKeyword) {
                             $query->where('f_name', 'LIKE', '%' . $searchKeyword . '%')
                                 ->orWhere('l_name', 'LIKE', '%' . $searchKeyword . '%')
                                 ->orWhere('email', 'LIKE', '%' . $searchKeyword . '%')
