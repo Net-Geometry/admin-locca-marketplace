@@ -54,9 +54,11 @@ class CartController extends Controller
         $model = $request->model === 'Item' ? 'App\Models\Item' : 'App\Models\ItemCampaign';
         $item = $request->model === 'Item' ? Item::find($request->item_id) : ItemCampaign::find($request->item_id);
 
-        $cart = Cart::where('item_id',$request->item_id)->where('item_type',$model)->where('variation',json_encode($request->variation))->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->first();
 
-        if($cart){
+        $cart = Cart::where('item_id',$request->item_id)->where('item_type',$model)->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->first();
+
+        if ($cart && json_decode($cart->variation, true) == $request->variation) {
+
             return response()->json([
                 'errors' => [
                     ['code' => 'cart_item', 'message' => translate('messages.Item_already_exists')]
@@ -71,19 +73,6 @@ class CartController extends Controller
                 ]
             ], 403);
         }
-
-        $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('item')->get();
-
-//        foreach($carts as $cart){
-//                if($cart?->item?->store_id  && $cart?->item?->store_id != $item->store_id){
-//                    return response()->json([
-//                        'errors' => [
-//                            ['code' => 'different_stores', 'message' => translate('messages.Please_select_items_from_the_same_store')]
-//                        ]
-//                    ], 403);
-//                }
-//            }
-
 
         $cart = new Cart();
         $cart->user_id = $user_id;
@@ -174,7 +163,7 @@ class CartController extends Controller
         $is_guest = $request->user ? 0 : 1;
 
         $cart = Cart::find($request->cart_id);
-        $cart->delete();
+        $cart?->delete();
 
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
         ->map(function ($data) {
@@ -204,7 +193,7 @@ class CartController extends Controller
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get();
 
         foreach($carts as $cart){
-            $cart->delete();
+            $cart?->delete();
         }
 
 
