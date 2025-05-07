@@ -7538,4 +7538,5 @@ Smartly or Earn. ',
   '*By Turning ON Refund Mode, Customers Can Sent Refund Requests' => '*By Turning ON Refund Mode, Customers Can Sent Refund Requests',
   'invalid_order_data' => 'Invalid order data',
   'ex_:_search_sub_category' => 'Ex : search sub category',
+  'new_page' => 'New page',
 );
