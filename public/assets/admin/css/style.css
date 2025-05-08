@@ -15,6 +15,12 @@
     --danger-clr: #ff6d6d;
     --success-clr: #00aa6d;
     --info-clr: #0096ff;
+
+
+    /*new color add*/
+    --cus-warning-light: #F0AF34;
+    --cus-warning-clr: #CC952C;
+
 }
 
 :root {
@@ -438,6 +444,7 @@ a[class*="btn--"]:hover {
     --success-clr: #77c668;
     background: var(--success-clr);
     color: #fff !important;
+    stroke: #fff !important;
 }
 
 .btn--primary-light {
@@ -1157,6 +1164,9 @@ aside .nav-link {
     font-size: 12px !important;
     font-weight: 700;
     line-height: 13px;
+}
+.fz-11{
+    font-size: 11px !important;
 }
 
 .fz--11 .legend-indicator {
@@ -7765,7 +7775,7 @@ ul.delivery--information-single li:not(:last-child) {
 }
 
 .fz-12px {
-    font-size: 12px;
+    font-size: 12px !important;
 }
 
 .rated--products a {
@@ -15160,4 +15170,88 @@ ul.address-info .label {
 
 .text-italic {
  font-style: italic;
+}
+
+
+/*New css Add 3.1*/
+.h-100-vh{
+    height: 100vh;
+}
+.d-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.d-align-center{
+    display: flex;
+    align-items: center;
+}
+.d-content-between{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.info--outline{
+    border: 1px solid var(--info-clr);
+}
+.info-hover:hover{
+    background: var(--info-clr);
+    color: #fff !important;
+}
+.p-15{
+    padding: 15px;
+}
+.p-12{
+    padding: 12px;
+}
+.mb-15{
+    margin-bottom: 15px;
+}
+.h-20px{
+    height: 20px;
+}
+.title-clr{
+    color: var(--title-clr);
+}
+.info-notes-bg{
+    background: #E5EDFF;
+}
+
+.bg-opacity-primary-10{
+    background: #EFF4FF;
+}
+.bg-opacity-warning-10{
+    background: #FFF9EC;
+}
+
+.danger-notes-bg{
+    background: #FFE9E9;
+}
+.theme-clr{
+    color: var(--theameColor);
+}
+.theme-border{
+    border: 1px solid var(--theameColor);
+}
+.theme-hover:hover{
+    background-color: var(--theameColor);
+    color: #fff;
+}
+.success-border{
+    border: 1px solid var(--success-clr);
+}
+.hungar-export .js-hs-unfold-invoker.dropdown-toggle:not(:hover) {
+    color: #fff !important;
+}
+.cus-warning-clr{
+    color: var(--cus-warning-clr);
+}
+.cus-warning-light-clr{
+    color: var(--cus-warning-light);
+}
+
+@media screen and (max-width: 1199px) {
+    .tax-error__table.h-100-vh{
+        height: initial;
+    }
 }
