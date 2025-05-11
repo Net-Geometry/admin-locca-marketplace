@@ -58,12 +58,12 @@
                                         <form id="search-form" class="search-form">
                                             <!-- Search -->
                                             <div class="position-relative">
-                                                <input id="datatableSearch" type="search" value="{{$keyword??''}}" name="search" class="form-control h--45px pl-5" placeholder="{{translate('messages.Search_by_product_name')}}" aria-label="{{translate('messages.search_here')}}" disabled>
+                                                <input id="datatableSearch" type="search" value="{{$keyword??''}}" name="keyword" class="form-control h--45px pl-5" placeholder="{{translate('messages.Search_by_product_name')}}" aria-label="{{translate('messages.search_here')}}" disabled>
                                                 <img width="16" height="16" src="{{asset('public/assets/admin/img/icons/search-icon.png')}}" alt="" class="search-icon">
 
-                                                @if($keyword)
+                                                {{-- @if($keyword)
                                                     <button type="reset" class="btn btn--primary ml-2 location-reload-to-base-pos" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
-                                                @endif
+                                                @endif --}}
                                             </div>
                                             <!-- End Search -->
                                         </form>
@@ -1043,5 +1043,15 @@
         });
 
 
+        document.querySelectorAll('[name="keyword"]').forEach(function(element) {
+            element.addEventListener('input', function(event) {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (this.value === "" && urlParams.has('keyword')) {
+                        var nurl = new URL('{!! url()->full() !!}');
+                        nurl.searchParams.delete("keyword");
+                        location.href = nurl;
+                }
+            });
+        });
 </script>
 @endpush

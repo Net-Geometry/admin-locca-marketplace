@@ -1769,7 +1769,7 @@
                                 </label>
                                 <div class="col-md-10 js-form-message">
                                     <input type="text" class="form-control" name="house"
-                                           value="{{ isset($address['house']) ? $address['house'] : '' }}" required>
+                                           value="{{ isset($address['house']) ? $address['house'] : '' }}" >
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -1778,7 +1778,7 @@
                                 </label>
                                 <div class="col-md-10 js-form-message">
                                     <input type="text" class="form-control" name="floor"
-                                           value="{{ isset($address['floor']) ? $address['floor'] : '' }}" required>
+                                           value="{{ isset($address['floor']) ? $address['floor'] : '' }}" >
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -1787,7 +1787,7 @@
                                 </label>
                                 <div class="col-md-10 js-form-message">
                                     <input type="text" class="form-control" name="road"
-                                           value="{{ isset($address['road']) ? $address['road'] : '' }}" required>
+                                           value="{{ isset($address['road']) ? $address['road'] : '' }}" >
                                 </div>
                             </div>
 
