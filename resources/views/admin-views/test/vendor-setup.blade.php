@@ -105,7 +105,7 @@
                         </div>
                         <div>
                             <span class="mb-2 d-block title-clr fw-normal">Select Tax Rate</span>
-                            <select required name="" id="select_customer" class="form-control js-select2-custom" multiple="multiple" placeholder="Type & Select Tax Rate">
+                            <select required name="" id="tax__rate" class="form-control js-select2-custom" multiple="multiple" placeholder="Type & Select Tax Rate">
                                 <option value="all">all</option>
                                 <option value="2">VAT (5%)</option>
                                 <option value="2">GST (7%)</option>
@@ -132,7 +132,7 @@
                             </defs>
                         </svg>
                         <span>
-                            When you change <span class="fw-semibold title-clr">Tax Type</span> it will effects on all your tax calculation. Please make sure when you change Tax Type.  
+                            When you change <span class="font-semibold title-clr">Tax Type</span> it will effects on all your tax calculation. Please make sure when you change Tax Type.  
                         </span>
                     </div>
                 </div>
@@ -172,7 +172,7 @@
                                 </defs>
                             </svg>
                             <span>
-                                Please specify the tax rate while creating a category from <span class="fw-semibold theme-clr text-decoration-underline">Category List.</span> If you already created category without tax then go to category edit & update tax.                                
+                                Please specify the tax rate while creating a category from <span class="font-semibold theme-clr text-decoration-underline">Category List.</span> If you already created category without tax then go to category edit & update tax.                                
                             </span>
                         </div>
                     </div>
@@ -229,1152 +229,200 @@
         <button type="button" class="btn btn--primary">Save Information</button>
     </div>
 
-
-
-    <!--- Vendor Tax Report -->
-    <h2 class="mb-20">Vendor Tax Report</h3>
-    <div class="card p-20 mb-20">
-        <div class="row g-lg-4 g-3 align-items-end">
-            <div class="col-lg-4 col-md-6">
-                <div class="form-group mb-0">
-                    <label class="input-label mb-2 d-block title-clr fw-normal" for="exampleFormControlInput1">Date Range</label>
-                    <input type="date" name="start_date" value="" class="form-control" id="date_from" required>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <span class="mb-2 d-block title-clr fw-normal">Select Vendor</span>
-                <select class="custom-select custom-select-color border rounded w-100">
-                    <option>
-                        All Vendor
-                    </option>
-                    <option>
-                        Single Vendor
-                    </option>
-                </select>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="d-flex justify-content-end">
-                    <button type="button" class="btn min-w-135px btn--primary">Filter</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card p-20 mb-20">
-        <div class="row g-lg-4 g-3">
-            <div class="col-md-6 col-xl-4">
-                <div class="bg--secondary rounded p-15 d-flex align-items-center justify-content-between gap-2 flex-wrap">
-                    <div class="d-flex align-items-center gap-2 fw-semibold title-clr">
-                        <img src="{{asset('/public/assets/admin/img/t-total-order.png')}}" alt="img">
-                        Total Orders
-                    </div>
-                    <h3 class="theme-clr fw-bold mb-0">124</h3>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-4">
-                <div class="bg--secondary rounded p-15 d-flex align-items-center justify-content-between gap-2 flex-wrap">
-                    <div class="d-flex align-items-center gap-2 fw-semibold title-clr">
-                        <img src="{{asset('/public/assets/admin/img/t-toal-amount.png')}}" alt="img">
-                        Total Order Amount
-                    </div>
-                    <h3 class="text-success fw-bold mb-0">$12,345.25</h3>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-4">
-                <div class="bg--secondary rounded p-15 d-flex align-items-center justify-content-between gap-2 flex-wrap">
-                    <div class="d-flex align-items-center gap-2 fw-semibold title-clr">
-                        <img src="{{asset('/public/assets/admin/img/t-tax-amount.png')}}" alt="img">
-                        Total Tax Amount
-                    </div>
-                    <h3 class="text-danger fw-bold mb-0">$325.00</h3>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--- Vendor Tax Report Here -->
-    <div class="card p-20 mt-5">
-        <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap mb-20">
-            <h4 class="mb-0">All Vendor Taxes</h4>
-            <div class="search--button-wrapper justify-content-end">
-                <form class="search-form min--260">
-                    <div class="input-group input--group">
-                        <input id="datatableSearch_" type="search" name="search" class="form-control h--40px"
-                                placeholder="{{ translate('messages.Ex:') }} 10010" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search')}}">
-                                
-                                <input type="hidden" name="parcel_order" value="">
-                                
-                        <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
-                    </div>
-                </form>
-                @if(request()->get('search'))
-                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
-                @endif
-                <!-- Datatable Info -->
-                <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0 initial-hidden">
-                    <div class="d-flex align-items-center">
-                        <span class="font-size-sm mr-3">
-                        <span id="datatableCounter">0</span>
-                        {{translate('messages.selected')}}
-                        </span>
-                    </div>
-                </div>
-                <div class="hs-unfold mr-2">
-                    <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle h--40px" href="javascript:;"
-                        data-hs-unfold-options='{
-                            "target": "#usersExportDropdown", "type": "css-animation" }'>
-                        <i class="tio-download-to mr-1"></i> {{translate('messages.export')}}
-                    </a>
-                    <div id="usersExportDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                        <span class="dropdown-header">{{translate('messages.download_options')}}</span>
-                        <a id="export-excel" class="dropdown-item" href="javascript:;">
-                            <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{asset('public/assets/admin')}}/svg/components/excel.svg"
-                                    alt="Image Description">
-                            {{translate('messages.excel')}}
-                        </a>
-                        <a id="export-csv" class="dropdown-item" href="javascript:;">
-                            <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{asset('public/assets/admin')}}/svg/components/placeholder-csv-format.svg"
-                                    alt="Image Description">
-                            .{{translate('messages.csv')}}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Table -->
-        <div class="table-responsive datatable-custom">
-            <table id="datatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table fz--14px">
-                <thead class="thead-light">
-                <tr>
-                    <th class="border-0">sl</th>
-                    <th class="border-0">Vendor Info</th>
-                    <th class="border-0">Total Order</th>
-                    <th class="border-0">Total Order Amount</th>
-                    <th class="border-0">Tax Amount</th>
-                    <th class="border-0 text-end">Action</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                    <tr>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            <span class="fz-14 title-clr">
-                                Hungary Puppet
-                                <span class="fz-11 d-block">+880 23456 2356</span>
-                            </span>
-                        </td>
-                        <td>
-                            42
-                        </td>
-                        <td>
-                            $ 1,830.25
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                        <td class="text-end">
-                            <div class="d-flex gap-2 justify-content-end">
-                                <a class="btn btn-sm btn--primary action-btn btn-outline-primary" href="#0">
-                                    <i class="tio-invisible"></i>
-                                </a>
-                                <a class="btn btn-sm action-btn success-border btn-outline-varify text-success" href="#0">
-                                    <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9.87499 4.31958H7.37499V0.56958H3.625V4.31958H1.125L5.5 9.31957L9.87499 4.31958ZM0.5 10.5696H10.5V11.8196H0.5V10.5696Z" fill="#04BB7B"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            2
-                        </td>
-                        <td>
-                            <span class="fz-14 title-clr">
-                                BFC
-                                <span class="fz-11 d-block">+880 23456 2356</span>
-                            </span>
-                        </td>
-                        <td>
-                            20
-                        </td>
-                        <td>
-                            $ 1,030.25
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 2.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                        <td class="text-end">
-                            <div class="d-flex gap-2 justify-content-end">
-                                <a class="btn btn-sm btn--primary action-btn btn-outline-primary" href="#0">
-                                    <i class="tio-invisible"></i>
-                                </a>
-                                <a class="btn btn-sm action-btn success-border btn-outline-varify text-success" href="#0">
-                                    <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9.87499 4.31958H7.37499V0.56958H3.625V4.31958H1.125L5.5 9.31957L9.87499 4.31958ZM0.5 10.5696H10.5V11.8196H0.5V10.5696Z" fill="#04BB7B"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            3
-                        </td>
-                        <td>
-                            <span class="fz-14 title-clr">
-                                New Vendor
-                                <span class="fz-11 d-block">+880 23456 2356</span>
-                            </span>
-                        </td>
-                        <td>
-                            32
-                        </td>
-                        <td>
-                            $ 830.25
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                        <td class="text-end">
-                            <div class="d-flex gap-2 justify-content-end">
-                                <a class="btn btn-sm btn--primary action-btn btn-outline-primary" href="#0">
-                                    <i class="tio-invisible"></i>
-                                </a>
-                                <a class="btn btn-sm action-btn success-border btn-outline-varify text-success" href="#0">
-                                    <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9.87499 4.31958H7.37499V0.56958H3.625V4.31958H1.125L5.5 9.31957L9.87499 4.31958ZM0.5 10.5696H10.5V11.8196H0.5V10.5696Z" fill="#04BB7B"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            4
-                        </td>
-                        <td>
-                            <span class="fz-14 title-clr">
-                                Happy Tummy
-                                <span class="fz-11 d-block">+880 23456 2356</span>
-                            </span>
-                        </td>
-                        <td>
-                            18
-                        </td>
-                        <td>
-                            $ 230.25
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                        <td class="text-end">
-                            <div class="d-flex gap-2 justify-content-end">
-                                <a class="btn btn-sm btn--primary action-btn btn-outline-primary" href="#0">
-                                    <i class="tio-invisible"></i>
-                                </a>
-                                <a class="btn btn-sm action-btn success-border btn-outline-varify text-success" href="#0">
-                                    <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9.87499 4.31958H7.37499V0.56958H3.625V4.31958H1.125L5.5 9.31957L9.87499 4.31958ZM0.5 10.5696H10.5V11.8196H0.5V10.5696Z" fill="#04BB7B"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            5
-                        </td>
-                        <td>
-                            <span class="fz-14 title-clr">
-                                Fresh Item
-                                <span class="fz-11 d-block">+880 23456 2356</span>
-                            </span>
-                        </td>
-                        <td>
-                            36
-                        </td>
-                        <td>
-                            $ 1,530.25
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                        <td class="text-end">
-                            <div class="d-flex gap-2 justify-content-end">
-                                <a class="btn btn-sm btn--primary action-btn btn-outline-primary" href="#0">
-                                    <i class="tio-invisible"></i>
-                                </a>
-                                <a class="btn btn-sm action-btn success-border btn-outline-varify text-success" href="#0">
-                                    <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9.87499 4.31958H7.37499V0.56958H3.625V4.31958H1.125L5.5 9.31957L9.87499 4.31958ZM0.5 10.5696H10.5V11.8196H0.5V10.5696Z" fill="#04BB7B"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <!-- End Table -->
-    </div>
-
-
-
-    <!--- Vendor Tax Details Page -->
-    <h2 class="mb-20 mt-5">Vendor Tax Details Page</h3>
-    <div class="bg--secondary rounded p-20">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-15">
-            <div>
-                <h5 class="mb-1">Hungary Puppet</h3>
-                <p class="fz-12px mb-0">Date: 25 Feb, 2024 - 25 Apr, 2024</p>
-            </div>
-            <div class="hs-unfold mr-2 hungar-export">
-                <a class="js-hs-unfold-invoker btn btn-sm btn-primary dropdown-toggle h--40px" href="javascript:;"
-                    data-hs-unfold-options='{
-                        "target": "#usersExportDropdown2", "type": "css-animation" }'>
-                    <i class="tio-download-to mr-1"></i> {{translate('messages.export')}}
-                </a>
-                <div id="usersExportDropdown2" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                    <span class="dropdown-header">{{translate('messages.download_options')}}</span>
-                    <a id="export-excel" class="dropdown-item" href="javascript:;">
-                        <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                src="{{asset('public/assets/admin')}}/svg/components/excel.svg"
-                                alt="Image Description">
-                        {{translate('messages.excel')}}
-                    </a>
-                    <a id="export-csv" class="dropdown-item" href="javascript:;">
-                        <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                src="{{asset('public/assets/admin')}}/svg/components/placeholder-csv-format.svg"
-                                alt="Image Description">
-                        .{{translate('messages.csv')}}
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex align-items-center gap-3 justify-content-between flex-md-nowrap flex-wrap">
-            <div class="bg-white p-12 w-100 rounded d-flex align-items-center justify-content-between">
-                Total Order Amount <span class="title-clr">$1,245.25</span>
-            </div>
-            <div class="bg-white p-12 w-100 rounded d-flex align-items-center justify-content-between">
-                Total Tax Amount <span class="title-clr">$45.25</span>
-            </div>
-        </div>
-    </div>
-    <div class="card p-20 mt-5">
-        <div class="table-responsive datatable-custom">
-            <table id="datatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table fz--14px">
-                <thead class="thead-light">
-                <tr>
-                    <th class="border-0">SL</th>
-                    <th class="border-0">Order ID</th>
-                    <th class="border-0">Order Amount</th>
-                    <th class="border-0">Tax Type</th>
-                    <th class="border-0">Tax Amount</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                    <tr>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            #100124
-                        </td>
-                        <td>
-                            $ 30.25
-                        </td>
-                        <td>
-                            Order Wise
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            2
-                        </td>
-                        <td>
-                            #100124
-                        </td>
-                        <td>
-                            $ 30.25
-                        </td>
-                        <td>
-                            Order Wise
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            3
-                        </td>
-                        <td>
-                            #100124
-                        </td>
-                        <td>
-                            $ 30.25
-                        </td>
-                        <td>
-                            Order Wise
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            4
-                        </td>
-                        <td>
-                            #100124
-                        </td>
-                        <td>
-                            $ 30.25
-                        </td>
-                        <td>
-                            Order Wise
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            5
-                        </td>
-                        <td>
-                            #100124
-                        </td>
-                        <td>
-                            $ 30.25
-                        </td>
-                        <td>
-                            Order Wise
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <!-- End Table -->
-    </div>
-
-
-
-    <!--- Admin Tax Report -->
-    <h2 class="mb-20">Admin Tax Report</h3>
-    <div class="card p-20 mb-20">
-        <div class="mb-20">
-            <h3 class="mb-1">Generate Tax Report</h3>
-            <p class="mb-0 fz-12">To generate you tax report please select & input following field and submit for the result.</p>
-        </div>
-        <div class="bg--secondary rounded p-20 mb-20">
-            <div class="row g-lg-4 g-md-3 g-2">            
-                <div class="col-md-6">
-                    <div class="d-flex flex-column gap-lg-4 gap-3">
-                        <div>
-                            <span class="mb-2 d-block title-clr fw-normal">Date Range Type</span>
-                            <select class="custom-select custom-select-color border rounded w-100">
-                                <option>
-                                    This Fiscal Year
-                                </option>
-                                <option>
-                                    Custom Date Range
-                                </option>
-                                <option>
-                                    Custom Date Range
-                                </option>
-                            </select>
-                        </div>
-                        <div>
-                            <span class="mb-2 d-block title-clr fw-normal">Tax on Order Commission</span>
-                            <select required name="" id="select_customer_fiscal1" class="form-control js-select2-custom" multiple="multiple" placeholder="Type & Select Tax Rate">
-                                <option value="all">all</option>
-                                <option value="2">Income Tax (15%)</option>
-                                <option value="2">VAT (5%)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <span class="mb-2 d-block title-clr fw-normal">Tax on Delivery charge</span>
-                            <select required name="" id="select_customer_fiscal2" class="form-control js-select2-custom" multiple="multiple" placeholder="Type & Select Tax Rate">
-                                <option value="all">all</option>
-                                <option value="2">VAT (5%)</option>
-                                <option value="2">GST (7%)</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="d-flex flex-column gap-lg-4 gap-3">
-                        <div>
-                            <span class="mb-2 d-block title-clr fw-normal">Select How to calculate tax</span>
-                            <select class="custom-select custom-select-color border rounded w-100">
-                                <option>
-                                    Same Tax for All Income Source
-                                </option>
-                                <option>
-                                    Different Tax for Different Income Source
-                                </option>
-                                <option>
-                                    Same Tax for All Income Source
-                                </option>
-                            </select>
-                        </div>
-                        <div>
-                            <span class="mb-2 d-block title-clr fw-normal">Tax on Service charge</span>
-                            <select required name="" id="select_customer_fiscal-3" class="form-control js-select2-custom" multiple="multiple" placeholder="Type & Select Tax Rate">
-                                <option value="all">all</option>
-                                <option value="2">Service Tax (5%)</option>
-                                <option value="2">GST (5%)</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex align-items-center justify-content-end gap-2">
-            <button type="button" class="btn bg--secondary h--42px title-clr px-4">Reset</button>
-            <button type="button" class="btn btn--primary">Submit</button>
-        </div>
-    </div>
-    <div class="card p-20 mb-20">
-        <div class="row g-lg-4 g-3">
-            <div class="col-md-6">
-                <div class="bg-opacity-primary-10 rounded p-20 d-flex align-items-center gap-2 flex-wrap">
-                    <div class="d-flex align-items-center gap-3 fw-semibold title-clr">
-                        <img src="{{asset('/public/assets/admin/img/t-toal-amount.png')}}" alt="img">
-                        Total Income
-                    </div>
-                    <h3 class="theme-clr fw-bold mb-0">$ 12,345.25</h3>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="bg-opacity-warning-10 rounded p-20 d-flex align-items-center gap-2 flex-wrap">
-                    <div class="d-flex align-items-center gap-3 fw-semibold title-clr">
-                        <img src="{{asset('/public/assets/admin/img/t-tax-amount.png')}}" alt="img">
-                        Total Tax
-                    </div>
-                    <h3 class="text-danger fw-bold mb-0">$ 00.00</h3>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--- Vendor Tax Report Here -->
-    <div class="card p-20 mb-20">
-        <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap mb-20">
-            <h4 class="mb-0">Tax Report List</h4>
-            <div class="search--button-wrapper justify-content-end">
-                <form class="search-form min--260">
-                    <div class="input-group input--group">
-                        <input id="datatableSearch_" type="search" name="search" class="form-control h--40px"
-                                placeholder="{{ translate('messages.Ex:') }} 10010" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search')}}">
-                                
-                                <input type="hidden" name="parcel_order" value="">
-                                
-                        <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
-                    </div>
-                </form>
-                @if(request()->get('search'))
-                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
-                @endif
-                <!-- Datatable Info -->
-                <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0 initial-hidden">
-                    <div class="d-flex align-items-center">
-                        <span class="font-size-sm mr-3">
-                        <span id="datatableCounter">0</span>
-                        {{translate('messages.selected')}}
-                        </span>
-                    </div>
-                </div>
-                <div class="hs-unfold mr-2">
-                    <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle h--40px" href="javascript:;"
-                        data-hs-unfold-options='{
-                            "target": "#usersExportDropdown__admin", "type": "css-animation" }'>
-                        <i class="tio-download-to mr-1"></i> {{translate('messages.export')}}
-                    </a>
-                    <div id="usersExportDropdown__admin" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                        <span class="dropdown-header">{{translate('messages.download_options')}}</span>
-                        <a id="export-excel" class="dropdown-item" href="javascript:;">
-                            <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{asset('public/assets/admin')}}/svg/components/excel.svg"
-                                    alt="Image Description">
-                            {{translate('messages.excel')}}
-                        </a>
-                        <a id="export-csv" class="dropdown-item" href="javascript:;">
-                            <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{asset('public/assets/admin')}}/svg/components/placeholder-csv-format.svg"
-                                    alt="Image Description">
-                            .{{translate('messages.csv')}}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Table -->
-        <div class="table-responsive datatable-custom">
-            <table id="datatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table fz--14px">
-                <thead class="thead-light">
-                <tr>
-                    <th class="border-0">sl</th>
-                    <th class="border-0">Income Source</th>
-                    <th class="border-0">Total Income</th>
-                    <th class="border-0">Tax Amount</th>
-                    <th class="border-0 text-center">Action</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                    <tr>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            Vendor Subscription
-                        </td>
-                        <td>
-                            $ 1,030.25
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    <span class="min-w-120px">Total Tax (12%)</span>  <span>$ 160.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    <span class="min-w-120px">VAT (5%)</span> <span>$ 50.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    <span class="min-w-120px">GST (7%)</span> <span>$ 110.00</span>
-                                </div>
-                           </div>
-                        </td>
-                        <td class="text-center">
-                            <div class="d-flex gap-2 justify-content-center">
-                                <a class="btn btn-sm theme-border action-btn theme-hover theme-clr" href="#0">
-                                    <i class="tio-invisible"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            2
-                        </td>
-                        <td>
-                            Service Charge
-                        </td>
-                        <td>
-                            $ 830.25
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    <span class="min-w-120px">Total Tax (12%)</span>  <span>$ 160.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    <span class="min-w-120px">VAT (5%)</span> <span>$ 50.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    <span class="min-w-120px">GST (7%)</span> <span>$ 110.00</span>
-                                </div>
-                           </div>
-                        </td>
-                        <td class="text-center">
-                            <div class="d-flex gap-2 justify-content-center">
-                                <a class="btn btn-sm theme-border action-btn theme-hover theme-clr" href="#0">
-                                    <i class="tio-invisible"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            3
-                        </td>
-                        <td>
-                            Delivery Commission
-                        </td>
-                        <td>
-                            $ 230.25
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    <span class="min-w-120px">Total Tax (12%)</span>  <span>$ 160.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    <span class="min-w-120px">VAT (5%)</span> <span>$ 50.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    <span class="min-w-120px">GST (7%)</span> <span>$ 110.00</span>
-                                </div>
-                           </div>
-                        </td>
-                        <td class="text-center">
-                            <div class="d-flex gap-2 justify-content-center">
-                                <a class="btn btn-sm theme-border action-btn theme-hover theme-clr" href="#0">
-                                    <i class="tio-invisible"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            4
-                        </td>
-                        <td>
-                            Vendor Subscription
-                        </td>
-                        <td>
-                            $ 1,030.25
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    <span class="min-w-120px">Total Tax (12%)</span>  <span>$ 160.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    <span class="min-w-120px">VAT (5%)</span> <span>$ 50.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    <span class="min-w-120px">GST (7%)</span> <span>$ 110.00</span>
-                                </div>
-                           </div>
-                        </td>
-                        <td class="text-center">
-                            <div class="d-flex gap-2 justify-content-center">
-                                <a class="btn btn-sm theme-border action-btn theme-hover theme-clr" href="#0">
-                                    <i class="tio-invisible"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Error Tax Report List Table -->
-    <div class="card p-20">
-        <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap mb-20">
-            <h4 class="mb-0">Tax Report List</h4>
-            <div class="search--button-wrapper justify-content-end">
-                <form class="search-form min--260">
-                    <div class="input-group input--group">
-                        <input id="datatableSearch_" type="search" name="search" class="form-control h--40px"
-                                placeholder="{{ translate('messages.Ex:') }} 10010" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search')}}">
-                                
-                                <input type="hidden" name="parcel_order" value="">
-                                
-                        <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
-                    </div>
-                </form>
-                @if(request()->get('search'))
-                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
-                @endif
-                <!-- Datatable Info -->
-                <div id="datatableCounterInfo" class="mr-2 mb-2 mb-sm-0 initial-hidden">
-                    <div class="d-flex align-items-center">
-                        <span class="font-size-sm mr-3">
-                        <span id="datatableCounter">0</span>
-                        {{translate('messages.selected')}}
-                        </span>
-                    </div>
-                </div>
-                <div class="hs-unfold mr-2">
-                    <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle h--40px" href="javascript:;"
-                        data-hs-unfold-options='{
-                            "target": "#usersExportDropdown__admin3", "type": "css-animation" }'>
-                        <i class="tio-download-to mr-1"></i> {{translate('messages.export')}}
-                    </a>
-                    <div id="usersExportDropdown__admin3" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                        <span class="dropdown-header">{{translate('messages.download_options')}}</span>
-                        <a id="export-excel" class="dropdown-item" href="javascript:;">
-                            <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{asset('public/assets/admin')}}/svg/components/excel.svg"
-                                    alt="Image Description">
-                            {{translate('messages.excel')}}
-                        </a>
-                        <a id="export-csv" class="dropdown-item" href="javascript:;">
-                            <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{asset('public/assets/admin')}}/svg/components/placeholder-csv-format.svg"
-                                    alt="Image Description">
-                            .{{translate('messages.csv')}}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="table-responsive datatable-custom">
-            <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table fz--14px">
-                <thead class="thead-light">
-                <tr>
-                    <th class="border-0">sl</th>
-                    <th class="border-0">Income Source</th>
-                    <th class="border-0">Total Income</th>
-                    <th class="border-0">Tax Amount</th>
-                    <th class="border-0 text-center">Action</th>
-                </tr>
-                </thead>
     
-                <tbody>
-                    <tr>
-                        <td colspan="5" class="py-5">
-                            <div class="text-center max-w-700 mx-auto py-5">
-                            <img src="{{asset('/public/assets/admin/img/tax-error.png')}}" alt="img" class="mb-20">
-                                <h4 class="mb-2">No Tax Report Generated</h4>
-                                <p class="mb-0 fz-12px">To generate your tax report please select & input above field and submit for the result.</p>
+
+</div>
+
+<a class="btn btn-primary offcanvas-trigger" data-target="#offcanvas__customBtn" href="#" role="button">
+    Open Offcanvas 1
+</a>
+
+<a class="btn btn-secondary offcanvas-trigger" data-target="#offcanvas__customBtn2" href="#" role="button">
+    Open Offcanvas 2
+</a>
+
+<!--  Offcanvas -->
+<div id="offcanvas__customBtn" class="custom-offcanvas">
+    <div class="custom-offcanvas-header bg--secondary d-flex justify-content-between align-items-center px-3 py-3">
+        <h3 class="mb-0">How Addon Activation Works</h2>
+        <button type="button" class="btn-close w-25px h-25px rounded-circle d-center bg--secondary text-dark offcanvas-close fz-15px p-0" aria-label="Close">&times;</button>
+    </div>
+    <div class="custom-offcanvas-body p-20">
+        <div class="accordion mx-450" id="accordionExample">
+            <div class="accordion-item mb-15 custom-accordion-style bg--secondary rounded">
+                <h5 class="accordion-header mb-0">
+                    <button class="accordion-button border w-100 p-15 d-flex align-items-center bg-transparent gap-xl-3 gap-2 border-0 fz-15 font-semibold" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <span class="btn p-2 d-center border w-35px h-35px rounded-circle bg-white-n theme-hover"><i class="tio-chevron-down"></i></span> Our Addons
+                    </button>
+                </h5>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-parent="#accordionExample">
+                    <div class="accordion-body bg--secondary-n pt-0 p-15">
+                        <div class="bg-white-n rounded p-15">
+                            <div class="mb-15">
+                                <h5 class="black-color mb-mb-0 font-normal d-block">Vendor App</h5>
+                                <p class="fz-12 text-c mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam odio tellus, laoreet pharetra auctor eget, fringilla nec lectus. Nullam in feugiat est. Nam in interdum ligula, non elementum purus. Aenean eu lectus diam. To get the Vendor App <a href="#0" class="text-primary text-decoration-underline">Visit Here.</a></p>
                             </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-
-
-    <!--- Tax Details Page -->
-    <h2 class="mb-20 mt-5">Tax Details</h3>
-    <div class="bg--secondary rounded p-20">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-15">
-            <div>
-                <h5 class="mb-1">Vendor Commission Taxes</h3>
-                <p class="fz-12px mb-0">Date: 25 Feb, 2024 - 25 Apr, 2024</p>
-            </div>
-            <div class="hs-unfold mr-2 hungar-export">
-                <a class="js-hs-unfold-invoker btn btn-sm btn-primary dropdown-toggle h--40px" href="javascript:;"
-                    data-hs-unfold-options='{
-                        "target": "#usersExportDropdown4", "type": "css-animation" }'>
-                    <i class="tio-download-to mr-1"></i> {{translate('messages.export')}}
-                </a>
-                <div id="usersExportDropdown4" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                    <span class="dropdown-header">{{translate('messages.download_options')}}</span>
-                    <a id="export-excel" class="dropdown-item" href="javascript:;">
-                        <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                src="{{asset('public/assets/admin')}}/svg/components/excel.svg"
-                                alt="Image Description">
-                        {{translate('messages.excel')}}
-                    </a>
-                    <a id="export-csv" class="dropdown-item" href="javascript:;">
-                        <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                src="{{asset('public/assets/admin')}}/svg/components/placeholder-csv-format.svg"
-                                alt="Image Description">
-                        .{{translate('messages.csv')}}
-                    </a>
+                            <div class="position-relative">
+                                <div class="single-item-slider2 dots-style2 owl-carousel bg--secondary p-15">
+                                    <div class="item mb-10px">
+                                        <div class="text-center">
+                                            <img src="{{asset('/public/assets/admin/img/map-img.png')}}" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="item mb-10px">
+                                        <div class="text-center">
+                                            <img src="{{asset('/public/assets/admin/img/map-img.png')}}" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="item mb-10px">
+                                        <div class="text-center">
+                                            <img src="{{asset('/public/assets/admin/img/map-img.png')}}" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="item mb-10px">
+                                        <div class="text-center">
+                                            <img src="{{asset('/public/assets/admin/img/map-img.png')}}" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="custom-nav w-100 z-999 d-flex align-items-center justify-content-between top-50 position-absolute gap-3 mt-3">
+                                    <button class="custom-prev btn p-2 bg-white-n d-center border min-w-25px h-35px rounded-circle theme-hover"><i class="tio-chevron-left"></i></button>
+                                    <button class="custom-next btn p-2 bg-white-n d-center border min-w-25px h-35px rounded-circle theme-hover"><i class="tio-chevron-right"></i></button></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-nav d-flex align-items-center justify-content-center gap-3 mt-3">
+                            <button class="custom-prev btn p-2 d-center border bg-white-n w-35px h-35px rounded theme-hover"><i class="tio-chevron-left"></i></button>
+                            <div class="slide-counter slide-counter2"></div>
+                            <button class="custom-next btn p-2 d-center border bg-white-n w-35px h-35px rounded theme-hover"><i class="tio-chevron-right"></i></button></button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="bg-white p-12 w-100 rounded d-flex align-items-center justify-content-between">
-                    Total Order <h4 class="theme-clr fw-bold mb-0">$ 12,345.25</h4>
+            <div class="accordion-item mb-15 custom-accordion-style bg--secondary rounded">
+                <h5 class="accordion-header mb-0">
+                    <button class="accordion-button border w-100 p-15 d-flex align-items-center bg-transparent gap-xl-3 gap-2 border-0 fz-15 font-semibold collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <span class="btn p-2 d-center border w-35px h-35px rounded-circle bg-white-n theme-hover"><i class="tio-chevron-down"></i></span> How To Active Addons
+                    </button>
+                </h5>
+                <div id="collapseTwo" class="accordion-collapse collapse" data-parent="#accordionExample">
+                    <div class="accordion-body bg--secondary-n pt-0 p-15">
+                        <div class="bg-white-n rounded p-15">
+                            <div class="mb-15">
+                                <h5 class="black-color mb-mb-0 font-normal d-block">Vendor App</h5>
+                                <p class="fz-12 text-c mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam odio tellus, laoreet pharetra auctor eget, fringilla nec lectus. Nullam in feugiat est. Nam in interdum ligula, non elementum purus. Aenean eu lectus diam. To get the Vendor App <a href="#0" class="text-primary text-decoration-underline">Visit Here.</a></p>
+                            </div>
+                            <div class="position-relative">
+                                <div class="single-item-slider2 dots-style2 owl-carousel bg--secondary p-15">
+                                    <div class="item mb-10px">
+                                        <div class="text-center">
+                                            <img src="{{asset('/public/assets/admin/img/map-img.png')}}" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="item mb-10px">
+                                        <div class="text-center">
+                                            <img src="{{asset('/public/assets/admin/img/map-img.png')}}" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="item mb-10px">
+                                        <div class="text-center">
+                                            <img src="{{asset('/public/assets/admin/img/map-img.png')}}" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="item mb-10px">
+                                        <div class="text-center">
+                                            <img src="{{asset('/public/assets/admin/img/map-img.png')}}" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="custom-nav w-100 z-999 d-flex align-items-center justify-content-between top-50 position-absolute gap-3 mt-3">
+                                    <button class="custom-prev btn p-2 bg-white-n d-center border min-w-25px h-35px rounded-circle theme-hover"><i class="tio-chevron-left"></i></button>
+                                    <button class="custom-next btn p-2 bg-white-n d-center border min-w-25px h-35px rounded-circle theme-hover"><i class="tio-chevron-right"></i></button></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-nav d-flex align-items-center justify-content-center gap-3 mt-3">
+                            <button class="custom-prev btn p-2 d-center border bg-white-n w-35px h-35px rounded theme-hover"><i class="tio-chevron-left"></i></button>
+                            <div class="slide-counter slide-counter2"></div>
+                            <button class="custom-next btn p-2 d-center border bg-white-n w-35px h-35px rounded theme-hover"><i class="tio-chevron-right"></i></button></button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="bg-white p-12 w-100 rounded d-flex align-items-center justify-content-between">
-                    Total Order Amount <h4 class="theme-clr fw-bold mb-0">$12,345.25</h4>
+            <div class="accordion-item custom-accordion-style bg--secondary rounded">
+                <h5 class="accordion-header mb-0">
+                    <button class="accordion-button border w-100 p-15 d-flex align-items-center bg-transparent gap-xl-3 gap-2 border-0 fz-15 font-semibold collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <span class="btn p-2 d-center border w-35px h-35px rounded-circle bg-white-n theme-hover"><i class="tio-chevron-down"></i></span> Why You Need to Active The Addons
+                    </button>
+                </h5>
+                <div id="collapseThree" class="accordion-collapse collapse" data-parent="#accordionExample">
+                    <div class="accordion-body bg--secondary-n pt-0 p-15">
+                        <div class="bg-white-n rounded p-15">
+                            <div class="position-relative">
+                                <div class="single-item-slider2 dots-style2 owl-carousel">
+                                    <div class="item mb-10px">
+                                        <div class="text-start">
+                                            <h5 class="black-color font-normal mb-15 d-block">Vendor App</h5>
+                                            <ol class="p-0 ps-20 d-flex flex-column gap-2">
+                                                <li class="fz-12px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam odio tellus, laoreet pharetra auctor eget, fringilla nec lectus.</li>
+                                                <li class="fz-12px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam odio.</li>
+                                                <li class="fz-12px">Laoreet pharetra auctor eget, fringilla nec lectus. Nullam.</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                    <div class="item mb-10px">
+                                        <div class="text-start">
+                                            <h5 class="black-color font-normal mb-15 d-block">Vendor App</h5>
+                                            <ol class="p-0 ps-20 d-flex flex-column gap-2">
+                                                <li class="fz-12px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam odio tellus, laoreet pharetra auctor eget, fringilla nec lectus.</li>
+                                                <li class="fz-12px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam odio.</li>
+                                                <li class="fz-12px">Laoreet pharetra auctor eget, fringilla nec lectus. Nullam.</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                    <div class="item mb-10px">
+                                        <div class="text-start">
+                                            <h5 class="black-color font-normal mb-15 d-block">Vendor App</h5>
+                                            <ol class="p-0 ps-20 d-flex flex-column gap-2">
+                                                <li class="fz-12px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam odio tellus, laoreet pharetra auctor eget, fringilla nec lectus.</li>
+                                                <li class="fz-12px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam odio.</li>
+                                                <li class="fz-12px">Laoreet pharetra auctor eget, fringilla nec lectus. Nullam.</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-nav d-flex align-items-center justify-content-center gap-3 mt-3">
+                            <button class="custom-prev btn p-2 d-center border bg-white-n w-35px h-35px rounded theme-hover"><i class="tio-chevron-left"></i></button>
+                            <div class="slide-counter slide-counter2"></div>
+                            <button class="custom-next btn p-2 d-center border bg-white-n w-35px h-35px rounded theme-hover"><i class="tio-chevron-right"></i></button></button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="bg-white p-12 w-100 rounded d-flex align-items-center justify-content-between">
-                    Total Commission <h4 class="cus-warning-light-clr fw-bold mb-0">$325.00</h4>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="bg-white p-12 w-100 rounded d-flex align-items-center justify-content-between">
-                    Total Tax Amount <h4 class="cus-warning-clr fw-bold mb-0">$325.00</h4>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card p-20 mt-5">
-        <div class="table-responsive datatable-custom">
-            <table id="datatable" class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table fz--14px">
-                <thead class="thead-light">
-                <tr>
-                    <th class="border-0">SL</th>
-                    <th class="border-0">Order ID</th>
-                    <th class="border-0">Order Amount</th>
-                    <th class="border-0">Tax Type</th>
-                    <th class="border-0">Tax Amount</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                    <tr>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            #100124
-                        </td>
-                        <td>
-                            $ 30.25
-                        </td>
-                        <td>
-                            Order Wise
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            2
-                        </td>
-                        <td>
-                            #100124
-                        </td>
-                        <td>
-                            $ 30.25
-                        </td>
-                        <td>
-                            Order Wise
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            3
-                        </td>
-                        <td>
-                            #100124
-                        </td>
-                        <td>
-                            $ 30.25
-                        </td>
-                        <td>
-                            Order Wise
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            4
-                        </td>
-                        <td>
-                            #100124
-                        </td>
-                        <td>
-                            $ 30.25
-                        </td>
-                        <td>
-                            Order Wise
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            5
-                        </td>
-                        <td>
-                            #100124
-                        </td>
-                        <td>
-                            $ 30.25
-                        </td>
-                        <td>
-                            Order Wise
-                        </td>
-                        <td>
-                           <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    Total: <span>$6.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    VAT: <span>$ 3.00</span>
-                                </div>
-                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                    GST: <span>$3.00</span>
-                                </div>
-                           </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <!-- End Table -->
+        </div>   
     </div>
 </div>
 
-
-
-
-<!--  Offcanvas -->
-<form action="" method="post" id="">
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="tax-management__edit" aria-labelledby="tax-management__editLabel">
-        <div class="offcanvas-header ">
-            <h2 class="mb-0">Create Tax</h2>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex, neque! Voluptatibus facere enim obcaecati, quos dolorum blanditiis voluptatum fugiat reiciendis.</p>
-        </div>
-        <div class="offcanvas-footer">
-            <div class="d-flex justify-content-center gap-2 px-3 py-sm-3 py-2">
-                <button type="button" class="btn btn--primary w-100 btn-outline-primary">Reset</button>
-                <button type="button" class="btn btn--primary w-100">Submit</button>
-            </div>
+<div id="offcanvas__customBtn2" class="custom-offcanvas">
+    <div class="custom-offcanvas-header d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
+        <h2 class="mb-0">2222</h2>
+        <button type="button" class="btn-close offcanvas-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="custom-offcanvas-body p-3">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex, neque! Voluptatibus facere enim obcaecati, quos dolorum blanditiis voluptatum fugiat reiciendis.</p>
+    </div>
+    <div class="custom-offcanvas-footer p-3 border-top">
+        <div class="d-flex justify-content-center gap-2">
+            <button type="button" class="btn btn-outline-primary w-100">Reset</button>
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
         </div>
     </div>
-</form>
+</div>
+<div id="offcanvasOverlay" class="offcanvas-overlay"></div>
 @endsection
 
 @push('script_2')
+
 @endpush
