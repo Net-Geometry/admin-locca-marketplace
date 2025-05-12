@@ -166,7 +166,44 @@ class VehicleController extends Controller
             'fuel_type' => 'required|string|max:50',
             'transmission_type' => 'required|string|max:50',
             'hourly_price' => 'nullable|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0',
+            'discount_price' => [
+                'nullable',
+                'numeric',
+                function ($attribute, $value, $fail) use ($request) {
+                    $prices = [];
+
+                    if ($request->trip_hourly) {
+                        $hourlyPrice = floatval($request->hourly_price ?? 0);
+                        if ($hourlyPrice > 0) {
+                            $prices[] = $hourlyPrice;
+                        }
+                    }
+
+                    if ($request->trip_distance) {
+                        $distancePrice = floatval($request->distance_price ?? 0);
+                        if ($distancePrice > 0) {
+                            $prices[] = $distancePrice;
+                        }
+                    }
+
+                    if ($request->trip_day_wise) {
+                        $dayWisePrice = floatval($request->day_wise_price ?? 0);
+                        if ($dayWisePrice > 0) {
+                            $prices[] = $dayWisePrice;
+                        }
+                    }
+
+                    $applicablePrice = count($prices) ? min($prices) : 0;
+
+                    if ($request->discount_type === 'percent' && $value >= 100) {
+                        $fail(translate('messages.discount_cannot_exceed_100_percent'));
+                    }
+
+                    if ($request->discount_type === 'amount' && $value > $applicablePrice) {
+                        $fail(translate('messages.discount_cannot_exceed_price'));
+                    }
+                },
+            ],
             'discount_type' => 'nullable|string|max:50',
             'tag' => 'nullable|array',
             'tag.*' => 'string|max:50',
@@ -231,6 +268,8 @@ class VehicleController extends Controller
         $vehicle->trip_hourly = $request->trip_hourly ? 1 : 0;
         $vehicle->trip_distance = $request->trip_distance ? 1 : 0;
         $vehicle->hourly_price = $request->hourly_price ?? 0.00;
+        $vehicle->trip_day_wise = $request->trip_day_wise ? 1 : 0;
+        $vehicle->day_wise_price = $request->day_wise_price ?? 0;
         $vehicle->discount_price = $request->discount_price ?? 0.00;
         $vehicle->distance_price = $request->distance_price ?? 0;
         $vehicle->discount_type = $request->discount_type;
@@ -298,7 +337,44 @@ class VehicleController extends Controller
             'fuel_type' => 'required|string|max:50',
             'transmission_type' => 'required|string|max:50',
             'hourly_price' => 'nullable|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0',
+            'discount_price' => [
+                'nullable',
+                'numeric',
+                function ($attribute, $value, $fail) use ($request) {
+                    $prices = [];
+
+                    if ($request->trip_hourly) {
+                        $hourlyPrice = floatval($request->hourly_price ?? 0);
+                        if ($hourlyPrice > 0) {
+                            $prices[] = $hourlyPrice;
+                        }
+                    }
+
+                    if ($request->trip_distance) {
+                        $distancePrice = floatval($request->distance_price ?? 0);
+                        if ($distancePrice > 0) {
+                            $prices[] = $distancePrice;
+                        }
+                    }
+
+                    if ($request->trip_day_wise) {
+                        $dayWisePrice = floatval($request->day_wise_price ?? 0);
+                        if ($dayWisePrice > 0) {
+                            $prices[] = $dayWisePrice;
+                        }
+                    }
+
+                    $applicablePrice = count($prices) ? min($prices) : 0;
+
+                    if ($request->discount_type === 'percent' && $value >= 100) {
+                        $fail(translate('messages.discount_cannot_exceed_100_percent'));
+                    }
+
+                    if ($request->discount_type === 'amount' && $value > $applicablePrice) {
+                        $fail(translate('messages.discount_cannot_exceed_price'));
+                    }
+                },
+            ],
             'discount_type' => 'nullable|string|max:50',
             'tag' => 'nullable|array',
             'tag.*' => 'string|max:50',
@@ -395,6 +471,8 @@ class VehicleController extends Controller
         $vehicle->trip_hourly = $request->trip_hourly ? 1 : 0;
         $vehicle->trip_distance = $request->trip_distance ? 1 : 0;
         $vehicle->hourly_price = $request->hourly_price ?? 0.00;
+        $vehicle->trip_day_wise = $request->trip_day_wise ? 1 : 0;
+        $vehicle->day_wise_price = $request->day_wise_price ?? 0;
         $vehicle->discount_price = $request->discount_price ?? 0.00;
         $vehicle->distance_price = $request->distance_price ?? 0.00;
         $vehicle->discount_type = $request->discount_type;
@@ -737,6 +815,8 @@ class VehicleController extends Controller
                         'distance_price' => $collection['DistancePrice'] ?? 0.00,
                         'discount_type' => $collection['DiscountType'] ?? null,
                         'discount_price' => $collection['DiscountPrice'] ?? 0.00,
+                        'trip_day_wise' => $collection['TripDayWise'] ?? 0,
+                        'day_wise_price' => $collection['DayWisePrice'] ?? 0.00,
                         'tag' => $collection['Tag'] ?? null,
                         'documents' => $collection['Documents'] ?? null,
                         'status' => $collection['Status'] ?? 1,
@@ -804,6 +884,8 @@ class VehicleController extends Controller
                     'distance_price' => $collection['DistancePrice'] ?? 0.00,
                     'discount_type' => $collection['DiscountType'] ?? null,
                     'discount_price' => $collection['DiscountPrice'] ?? 0.00,
+                    'trip_day_wise' => $collection['TripDayWise'] ?? 0,
+                    'day_wise_price' => $collection['DayWisePrice'] ?? 0.00,
                     'tag' => $collection['Tag'] ?? null,
                     'documents' => $collection['Documents'] ?? null,
                     'status' => $collection['Status'] ?? 1,

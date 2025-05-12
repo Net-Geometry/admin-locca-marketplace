@@ -394,55 +394,109 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="card-body">
+                            <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="fz--14px mb-1">
+                            {{ translate('messages.Trip Type') }}
+                        </h6>
+                        <p class="fs-12 mb-0">
+                            {{ translate('messages.Choose the trip type you prefer.') }}
+                        </p>
+                    </div>
+                    <div class="bg--secondary rounded p-20 mobile-space-0">
+                        <div class="bg-white rounded p-15 border">
                             <div class="row g-3">
-                                <div class="col-lg-4">
+
+                                <div class="col-md-6 col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="">{{ translate('messages.Distance Wise Price ($)') }}<span class="text-danger">*</span></label>
-                                        <div class="border resturant-type-group">
-                                            <label class="align-items-center d-flex form-check item">
+                                        <div class="p-0 resturant-type-group">
+                                            <label class="d-flex mb-0 form-check item">
                                                 <input class="form-check-input single-select" type="checkbox" name="trip_hourly"
-                                                       value="hourly" {{ old('trip_hourly') == 'hourly' ? 'checked' : '' }}>
+                                                        value="hourly" {{ old('trip_hourly') == 'hourly' ? 'checked' : '' }}>
                                                 <span class="form-check-label ml-2 mt-1">
-                                                    {{ translate('messages.hourly') }}
-                                                </span>
-                                            </label>
-                                            <label class="align-items-center d-flex form-check item">
-                                                <input class="form-check-input single-select" type="checkbox" name="trip_distance"
-                                                       value="distance_wise" {{ old('trip_distance') == 'distance_wise' ? 'checked' : '' }}>
-                                                <span class="form-check-label ml-2 mt-1">
-                                                    {{ translate('messages.Distance Wise') }}
+                                                    <span class="title-clr d-block fz--14px">{{translate('Hourly')}}</span>
+                                                    <p class="fz-12px mb-0 text-wrap">{{translate('Set your hourly rental price.')}}</p>
                                                 </span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
+
+                                <div class="col-md-6 col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="">{{ translate('messages.Hourly Wise Price ($/per hour)') }}<span class="text-danger">*</span></label>
-                                        <input type="number" name="hourly_price" class="form-control"
-                                               placeholder="Ex: 35.25" min="0.01" step="0.01" value="{{ old('hourly_price') }}" required>
+                                        <div class="p-0 resturant-type-group">
+                                            <label class="d-flex mb-0 form-check item">
+                                                <input class="form-check-input single-select" type="checkbox" name="trip_day_wise" value="trip_day_wise">
+                                                <span class="form-check-label ml-2 mt-1">
+                                                    <span class="title-clr d-block fz--14px">{{ translate('Per Day') }}</span>
+                                                    <p class="fz-12px mb-0 text-wrap">{{translate('Set your Per Day rental price.')}}</p>
+                                                </span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
+
+                                   <div class="col-md-6 col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="">{{ translate('messages.Distance Wise Price ($/per km)') }}<span class="text-danger">*</span></label>
-                                        <input type="number" name="distance_price" class="form-control"
-                                               placeholder="Ex: 35.25" min="0.01" step="0.01" value="{{ old('distance_price') }}" required>
+                                        <div class="p-0 resturant-type-group">
+                                            <label class="d-flex mb-0 form-check item">
+                                                <input class="form-check-input single-select" type="checkbox" name="trip_distance"
+                                                        value="distance_wise" {{ old('trip_distance') == 'distance_wise' ? 'checked' : '' }}>
+                                                <span class="form-check-label ml-2 mt-1">
+                                                    <span class="title-clr d-block fz--14px">{{translate('Distance Wise')}}</span>
+                                                    <p class="fz-12px mb-0 text-wrap">{{translate('Set your distance wise rental price.')}}</p>
+                                                </span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+
+                            <div class="col-hide">
+                                <div class="form-group mb-0">
+                                    <label class="input-label" for="">{{ translate('messages.Hourly Wise Price ($/per hour)') }}<span class="text-danger">*</span></label>
+                                    <input type="number" name="hourly_price" class="form-control"
+                                            placeholder="Ex: 35.25" min="0.01" step="0.01" value="{{ old('hourly_price') }}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-hide">
+                                <div class="form-group mb-0">
+                                    <label class="input-label" for="">{{translate('messages.Per Day Price ($/per day)')}}<span class="text-danger">*</span></label>
+                                    <input type="number" name="day_wise_price" class="form-control"
+                                            placeholder="Ex: 35.25" min="0.01" step="0.01" value="{{ old('day_wise_price') }}" required>
+                                </div>
+                            </div>
+                            <div class="col-hide">
+                                <div class="form-group mb-0">
+                                    <label class="input-label" for="">{{ translate('messages.Distance Wise Price ($/per km)') }}<span class="text-danger">*</span></label>
+                                    <input type="number" name="distance_price" class="form-control"
+                                            placeholder="Ex: 35.25" min="0.01" step="0.01" value="{{ old('distance_price') }}" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-20 bg--secondary rounded p-20 mobile-space-0">
+                        <div class="row g-3">
+                            <div class="col-xxl-3 col-md-4">
+                                <div class="mb-0">
+                                    <h6 class="fz--14px mb-1">
+                                        {{ translate('messages.Give Discount') }}
+                                    </h6>
+                                    <p class="fz-12px mb-0">
+                                        {{ translate('messages.Set a discount that applies to all pricing types—hourly, daily, and distance-based') }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-xxl-9 col-md-8">
+                                <div class="bg-white rounded p-20 mobile-space-0">
                                     <div class="form-group mb-0">
-                                        <label class="input-label font-semibold" for="">{{ translate('messages.Discount') }}
-                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                  data-original-title="{{ translate('messages.The discount value should not be higher than the hourly price or distance-wise price') }}">
-                                                <i class="tio-info text--title opacity-60"></i>
-                                            </span>
-                                        </label>
                                         <div class="custom-group-btn border">
                                             <div class="flex-sm-grow-1">
                                                 <input id="discount_input" type="number" name="discount_price" class="form-control h--45px border-0 pl-unset"
-                                                       placeholder="Ex: 10" min="0" step="0.001" value="{{ old('discount_price') }}">
+                                                        placeholder="Ex: 10" min="0" step="0.001" value="{{ old('discount_price') }}">
                                             </div>
                                             <div class="flex-shrink-0">
                                                 <select name="discount_type" id="discount_type" class="custom-select ltr border-0">
@@ -458,6 +512,8 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
                 </div>
                 <div class="col-lg-12">
                     <div class="card">

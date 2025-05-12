@@ -135,17 +135,30 @@ class VehicleController extends Controller
                 'nullable',
                 'numeric',
                 function ($attribute, $value, $fail) use ($request) {
-                    $hourlyPrice = floatval($request->hourly_price ?? 0);
-                    $distancePrice = floatval($request->distance_price ?? 0);
-                    $applicablePrice = 0;
+                    $prices = [];
 
-                    if ($request->trip_hourly && $request->trip_distance) {
-                        $applicablePrice = min($hourlyPrice, $distancePrice);
-                    } elseif ($request->trip_hourly) {
-                        $applicablePrice = $hourlyPrice;
-                    } elseif ($request->trip_distance) {
-                        $applicablePrice = $distancePrice;
+                    if ($request->trip_hourly) {
+                        $hourlyPrice = floatval($request->hourly_price ?? 0);
+                        if ($hourlyPrice > 0) {
+                            $prices[] = $hourlyPrice;
+                        }
                     }
+
+                    if ($request->trip_distance) {
+                        $distancePrice = floatval($request->distance_price ?? 0);
+                        if ($distancePrice > 0) {
+                            $prices[] = $distancePrice;
+                        }
+                    }
+
+                    if ($request->trip_day_wise) {
+                        $dayWisePrice = floatval($request->day_wise_price ?? 0);
+                        if ($dayWisePrice > 0) {
+                            $prices[] = $dayWisePrice;
+                        }
+                    }
+
+                    $applicablePrice = count($prices) ? min($prices) : 0;
 
                     if ($request->discount_type === 'percent' && $value >= 100) {
                         $fail(translate('messages.discount_cannot_exceed_100_percent'));
@@ -222,6 +235,8 @@ class VehicleController extends Controller
         $vehicle->fuel_type = $request->fuel_type;
         $vehicle->transmission_type = $request->transmission_type;
         $vehicle->trip_hourly = $request->trip_hourly ? 1 : 0;
+        $vehicle->trip_day_wise = $request->trip_day_wise ? 1 : 0;
+        $vehicle->day_wise_price = $request->day_wise_price ?? 0;
         $vehicle->trip_distance = $request->trip_distance ? 1 : 0;
         $vehicle->hourly_price = $request->hourly_price ?? 0;
         $vehicle->distance_price = $request->distance_price ?? 0;
@@ -315,17 +330,30 @@ class VehicleController extends Controller
                 'nullable',
                 'numeric',
                 function ($attribute, $value, $fail) use ($request) {
-                    $hourlyPrice = floatval($request->hourly_price ?? 0);
-                    $distancePrice = floatval($request->distance_price ?? 0);
-                    $applicablePrice = 0;
+                    $prices = [];
 
-                    if ($request->trip_hourly && $request->trip_distance) {
-                        $applicablePrice = min($hourlyPrice, $distancePrice);
-                    } elseif ($request->trip_hourly) {
-                        $applicablePrice = $hourlyPrice;
-                    } elseif ($request->trip_distance) {
-                        $applicablePrice = $distancePrice;
+                    if ($request->trip_hourly) {
+                        $hourlyPrice = floatval($request->hourly_price ?? 0);
+                        if ($hourlyPrice > 0) {
+                            $prices[] = $hourlyPrice;
+                        }
                     }
+
+                    if ($request->trip_distance) {
+                        $distancePrice = floatval($request->distance_price ?? 0);
+                        if ($distancePrice > 0) {
+                            $prices[] = $distancePrice;
+                        }
+                    }
+
+                    if ($request->trip_day_wise) {
+                        $dayWisePrice = floatval($request->day_wise_price ?? 0);
+                        if ($dayWisePrice > 0) {
+                            $prices[] = $dayWisePrice;
+                        }
+                    }
+
+                    $applicablePrice = count($prices) ? min($prices) : 0;
 
                     if ($request->discount_type === 'percent' && $value >= 100) {
                         $fail(translate('messages.discount_cannot_exceed_100_percent'));
@@ -433,6 +461,8 @@ class VehicleController extends Controller
         $vehicle->trip_hourly = $request->trip_hourly ? 1 : 0;
         $vehicle->trip_distance = $request->trip_distance ? 1 : 0;
         $vehicle->hourly_price = $request->hourly_price ?? 0;
+        $vehicle->trip_day_wise = $request->trip_day_wise ? 1 : 0;
+        $vehicle->day_wise_price = $request->day_wise_price ?? 0;
         $vehicle->distance_price = $request->distance_price ?? 0;
         $vehicle->discount_price = $request->discount_price ?? 0;
         $vehicle->discount_type = $request->discount_type;
@@ -798,6 +828,8 @@ class VehicleController extends Controller
                         'trip_hourly' => $collection['TripHourly'] ?? 0,
                         'trip_distance' => $collection['TripDistance'] ?? 0,
                         'hourly_price' => $collection['HourlyPrice'] ?? 0.00,
+                        'trip_day_wise' => $collection['TripDayWise'] ?? 0,
+                        'day_wise_price' => $collection['DayWisePrice'] ?? 0.00,
                         'distance_price' => $collection['DistancePrice'] ?? 0.00,
                         'discount_type' => $collection['DiscountType'] ?? null,
                         'discount_price' => $collection['DiscountPrice'] ?? 0.00,
@@ -865,6 +897,8 @@ class VehicleController extends Controller
                     'trip_hourly' => $collection['TripHourly'] ?? 0,
                     'trip_distance' => $collection['TripDistance'] ?? 0,
                     'hourly_price' => $collection['HourlyPrice'] ?? 0.00,
+                    'trip_day_wise' => $collection['TripDayWise'] ?? 0,
+                    'day_wise_price' => $collection['DayWisePrice'] ?? 0.00,
                     'distance_price' => $collection['DistancePrice'] ?? 0.00,
                     'discount_type' => $collection['DiscountType'] ?? null,
                     'discount_price' => $collection['DiscountPrice'] ?? 0.00,

@@ -158,18 +158,30 @@ class VehicleController extends Controller
                 'nullable',
                 'numeric',
                 function ($attribute, $value, $fail) use ($request) {
-                    $hourlyPrice = floatval($request->hourly_price ?? 0);
-                    $distancePrice = floatval($request->distance_price ?? 0);
-                    $applicablePrice = 0;
+                    $prices = [];
 
-                    if ($request->trip_hourly && $request->trip_distance) {
-                        $applicablePrice = min($hourlyPrice, $distancePrice);
-                    } elseif ($request->trip_hourly) {
-                        $applicablePrice = $hourlyPrice;
-                    } elseif ($request->trip_distance) {
-                        $applicablePrice = $distancePrice;
+                    if ($request->trip_hourly) {
+                        $hourlyPrice = floatval($request->hourly_price ?? 0);
+                        if ($hourlyPrice > 0) {
+                            $prices[] = $hourlyPrice;
+                        }
                     }
 
+                    if ($request->trip_distance) {
+                        $distancePrice = floatval($request->distance_price ?? 0);
+                        if ($distancePrice > 0) {
+                            $prices[] = $distancePrice;
+                        }
+                    }
+
+                    if ($request->trip_day_wise) {
+                        $dayWisePrice = floatval($request->day_wise_price ?? 0);
+                        if ($dayWisePrice > 0) {
+                            $prices[] = $dayWisePrice;
+                        }
+                    }
+
+                    $applicablePrice = count($prices) ? min($prices) : 0;
                     if ($request->discount_type === 'percent' && $value >= 100) {
                         $fail(translate('messages.discount_cannot_exceed_100_percent'));
                     }
@@ -258,6 +270,8 @@ class VehicleController extends Controller
             $vehicle->discount_price = $request->discount_price ?? 0.00;
             $vehicle->distance_price = $request->distance_price ?? 0.00;
             $vehicle->discount_type = $request->discount_type;
+            $vehicle->trip_day_wise = $request->trip_day_wise ? 1 : 0;
+            $vehicle->day_wise_price = $request->day_wise_price ?? 0;
             $vehicle->tag = json_encode($request->tag);
             $vehicle->thumbnail = $thumbnailName;
             $vehicle->images = $image;
@@ -312,17 +326,30 @@ class VehicleController extends Controller
                 'nullable',
                 'numeric',
                 function ($attribute, $value, $fail) use ($request) {
-                    $hourlyPrice = floatval($request->hourly_price ?? 0);
-                    $distancePrice = floatval($request->distance_price ?? 0);
-                    $applicablePrice = 0;
+                    $prices = [];
 
-                    if ($request->trip_hourly && $request->trip_distance) {
-                        $applicablePrice = min($hourlyPrice, $distancePrice);
-                    } elseif ($request->trip_hourly) {
-                        $applicablePrice = $hourlyPrice;
-                    } elseif ($request->trip_distance) {
-                        $applicablePrice = $distancePrice;
+                    if ($request->trip_hourly) {
+                        $hourlyPrice = floatval($request->hourly_price ?? 0);
+                        if ($hourlyPrice > 0) {
+                            $prices[] = $hourlyPrice;
+                        }
                     }
+
+                    if ($request->trip_distance) {
+                        $distancePrice = floatval($request->distance_price ?? 0);
+                        if ($distancePrice > 0) {
+                            $prices[] = $distancePrice;
+                        }
+                    }
+
+                    if ($request->trip_day_wise) {
+                        $dayWisePrice = floatval($request->day_wise_price ?? 0);
+                        if ($dayWisePrice > 0) {
+                            $prices[] = $dayWisePrice;
+                        }
+                    }
+
+                    $applicablePrice = count($prices) ? min($prices) : 0;
 
                     if ($request->discount_type === 'percent' && $value >= 100) {
                         $fail(translate('messages.discount_cannot_exceed_100_percent'));
@@ -439,6 +466,8 @@ class VehicleController extends Controller
             $vehicle->trip_hourly = $request->trip_hourly ? 1 : 0;
             $vehicle->trip_distance = $request->trip_distance ? 1 : 0;
             $vehicle->hourly_price = $request->hourly_price ?? 0.00;
+            $vehicle->trip_day_wise = $request->trip_day_wise ? 1 : 0;
+            $vehicle->day_wise_price = $request->day_wise_price ?? 0;
             $vehicle->discount_price = $request->discount_price ?? 0.00;
             $vehicle->distance_price = $request->distance_price ?? 0.00;
             $vehicle->discount_type = $request->discount_type;

@@ -7,21 +7,27 @@ $(document).on('reset', 'form', function() {
 });
 
 $(document).ready(function () {
-    function getApplicablePrice() {
-        let hourlyChecked = $('input[name="trip_hourly"]').is(':checked');
-        let distanceChecked = $('input[name="trip_distance"]').is(':checked');
-        let hourlyPrice = parseFloat($('input[name="hourly_price"]').val()) || 0;
-        let distancePrice = parseFloat($('input[name="distance_price"]').val()) || 0;
+ function getApplicablePrice() {
+    let prices = [];
 
-        if (hourlyChecked && distanceChecked) {
-            return Math.min(hourlyPrice, distancePrice);
-        } else if (hourlyChecked) {
-            return hourlyPrice;
-        } else if (distanceChecked) {
-            return distancePrice;
-        }
-        return 0;
+    if ($('input[name="trip_hourly"]').is(':checked')) {
+        let price = parseFloat($('input[name="hourly_price"]').val());
+        if (!isNaN(price)) prices.push(price);
     }
+
+    if ($('input[name="trip_distance"]').is(':checked')) {
+        let price = parseFloat($('input[name="distance_price"]').val());
+        if (!isNaN(price)) prices.push(price);
+    }
+
+    if ($('input[name="trip_day_wise"]').is(':checked')) {
+        let price = parseFloat($('input[name="day_wise_price"]').val());
+        if (!isNaN(price)) prices.push(price);
+    }
+
+    return prices.length ? Math.min(...prices) : 0;
+}
+
 
     $('#discount_input').on('input', function () {
         let discountType = $('#discount_type').val();
@@ -35,7 +41,7 @@ $(document).ready(function () {
         }
     });
 
-    $('input[name="trip_hourly"], input[name="trip_distance"], input[name="hourly_price"], input[name="distance_price"]').on('change input', function () {
+    $('input[name="trip_hourly"], input[name="trip_day_wise"], input[name="day_wise_price"], input[name="trip_distance"], input[name="hourly_price"], input[name="distance_price"]').on('change input', function () {
         $('#discount_input').trigger('input');
     });
 
@@ -143,30 +149,43 @@ $(document).on('click', '.add-btn', function() {
 $(document).ready(function () {
     const $tripHourly = $('input[name="trip_hourly"]');
     const $tripDistance = $('input[name="trip_distance"]');
+    const $tripDayWise = $('input[name="trip_day_wise"]');
     const $hourlyPrice = $('input[name="hourly_price"]');
     const $distancePrice = $('input[name="distance_price"]');
+    const $dayWisePrice = $('input[name="day_wise_price"]');
 
     function updateInputs() {
-        if (!$tripHourly.is(':checked')) {
-            $hourlyPrice.prop('disabled', true).val('');
-        } else {
-            $hourlyPrice.prop('disabled', false);
-        }
+    const inputs = [
+        { checkbox: $tripHourly, input: $hourlyPrice },
+        { checkbox: $tripDayWise, input: $dayWisePrice },
+        { checkbox: $tripDistance, input: $distancePrice }
+    ];
+    const checkedItems = inputs.filter(i => i.checkbox.is(':checked'));
 
-        if (!$tripDistance.is(':checked')) {
-            $distancePrice.prop('disabled', true).val('');
-        } else {
-            $distancePrice.prop('disabled', false);
-        }
+    if (checkedItems.length === 0) {
+        $tripHourly.prop('checked', true);
+        $hourlyPrice.prop('disabled', false);
+        checkedItems.push({ checkbox: $tripHourly, input: $hourlyPrice });
+    }
+    let colClass = 'col-12';
+    if (checkedItems.length === 2) colClass = 'col-6';
+    if (checkedItems.length === 3) colClass = 'col-4';
 
-        if (!$tripHourly.is(':checked') && !$tripDistance.is(':checked')) {
-            $tripHourly.prop('checked', true);
-            $hourlyPrice.prop('disabled', false);
+    inputs.forEach(({ checkbox, input }) => {
+        const parentDiv = input.closest('.col-hide');
+        if (checkbox.is(':checked')) {
+            input.prop('disabled', false);
+            parentDiv.removeClass('col-12 col-6 col-4').addClass(colClass).show();
+        } else {
+            input.prop('disabled', true).val('');
+            parentDiv.hide();
         }
+    });
     }
 
     $tripHourly.change(updateInputs);
     $tripDistance.change(updateInputs);
+    $tripDayWise.change(updateInputs);
 
     updateInputs();
 
