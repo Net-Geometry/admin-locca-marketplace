@@ -41,6 +41,84 @@ $(function () {
     }
 });
 
+//slider inside arrow
+$(function () {
+    let owl = $(".single-item-slider2");
+    owl.owlCarousel({
+        autoplay: false,
+        items: 1,
+        onInitialized: counter,
+        onTranslated: counter,
+        autoHeight: true,
+        dots: true,
+        nav: false,
+    });
+
+    // Custom nav buttons
+    $(".custom-next").click(function () {
+        owl.trigger("next.owl.carousel");
+    });
+    $(".custom-prev").click(function () {
+        owl.trigger("prev.owl.carousel");
+    });
+    function counter(event) {
+        let element = event.target;
+        let items = event.item.count; 
+        let item = event.item.index + 1; 
+        if (item > items) {
+            item = item - items;
+        }
+        $(".slide-counter").html(+item + "/" + items);
+    }
+});
+
+// Open offcanvas
+$(document).ready(function () {
+    $('.offcanvas-trigger').on('click', function (e) {
+        e.preventDefault();
+        var target = $(this).data('target');
+        $(target).addClass('open');
+        $('#offcanvasOverlay').addClass('show');
+    });
+
+    // Close offcanvas on close button or overlay click
+    $('.offcanvas-close, #offcanvasOverlay').on('click', function () {
+        $('.custom-offcanvas').removeClass('open');
+        $('#offcanvasOverlay').removeClass('show');
+    });
+});
+
+//View Details 
+$(".view-btn").on("click", function () {
+    var container = $(this).closest(".view-details-container");
+    var details = container.find(".view-details");
+    var icon = $(this).find("i");
+
+    $(this).toggleClass("active");
+    details.slideToggle(300);
+    icon.toggleClass("rotate-180deg");
+});
+$(".section-toggle").on("change", function () {
+    if ($(this).is(':checked')) {
+        $(this).closest(".view-details-container").find(".view-details").slideDown(300);
+    } else {
+        $(this).closest(".view-details-container").find(".view-details").slideUp(300);
+    }
+});
+
+//Select2 Data Add
+$(document).ready(function() {
+    $('#tax__rate').select2({
+        placeholder: 'Select tax rate',
+        allowClear: true // Optional: adds a clear (×) button
+    });
+    $('#service__charge').select2({
+        placeholder: 'Select Service Charge',
+        allowClear: true // Optional: adds a clear (×) button
+    });
+});
+
+
 $(document).on("ready", function () {
     // ONLY DEV
     // =======================================================
