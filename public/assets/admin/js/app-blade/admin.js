@@ -112,6 +112,10 @@ $(document).ready(function() {
         placeholder: 'Select tax rate',
         allowClear: true // Optional: adds a clear (×) button
     });
+    $('#service__charge').select2({
+        placeholder: 'Select Service Charge',
+        allowClear: true // Optional: adds a clear (×) button
+    });
 });
 
 

@@ -13300,7 +13300,7 @@ video#VisaChipCardVideo {
 }
 
 .bg--secondary {
-    background-color: rgba(117, 133, 144, 0.1) !important;
+    background-color: #F7F8FA !important;
 }
 
 .h-200 {
@@ -14017,6 +14017,7 @@ ul.address-info .label {
 }
 .js-select2-custom + .select2 .select2-selection__rendered .select2-selection__choice{
     background-color: #F0F2F5 !important;
+    margin: 0.39rem 0.25rem 0.25rem 0;
 }
 .js-select2-custom + .select2 .select2-selection__rendered .select2-selection__choice .select2-selection__choice__remove{
     background-color: #C8C8C8 !important;
@@ -15338,7 +15339,7 @@ ul.address-info .label {
     background-color: #fff;
     box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1050;
-    transition: right 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
     overflow-y: auto;
 }
 .custom-offcanvas.open {
