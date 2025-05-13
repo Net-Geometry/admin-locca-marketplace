@@ -118,6 +118,108 @@ $(document).ready(function() {
     });
 });
 
+//Custom Slider Menu
+function checkNavOverflow() {
+    try {
+        $(".step-integration-inner").each(function () {
+            let $nav = $(this);
+            let $btnNext = $nav
+                .closest(".position-relative")
+                .find(".slide-cus__next");
+            let $btnPrev = $nav
+                .closest(".position-relative")
+                .find(".slide-cus__prev");
+            let isRTL = $("html").attr("dir") === "rtl";
+            let navScrollWidth = $nav[0].scrollWidth;
+            let navClientWidth = $nav[0].clientWidth;
+            let scrollLeft = Math.abs($nav.scrollLeft());
+
+            if (isRTL) {
+                let maxScrollLeft = navScrollWidth - navClientWidth;
+                let scrollRight = maxScrollLeft - scrollLeft;
+
+                $btnNext.toggle(scrollRight > 1);
+                $btnPrev.toggle(scrollLeft > 1);
+            } else {
+                $btnNext.toggle(
+                    navScrollWidth > navClientWidth &&
+                        scrollLeft + navClientWidth < navScrollWidth
+                );
+                $btnPrev.toggle(scrollLeft > 1);
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+$(".step-integration-inner").each(function () {
+    let $nav = $(this);
+    checkNavOverflow($nav);
+    $(window).on("resize", function () {
+        checkNavOverflow($nav);
+    });
+    $nav.on("scroll", function () {
+        checkNavOverflow($nav);
+    });
+    $nav.siblings(".slide-cus__next").on("click", function () {
+        let scrollWidth = $nav.find("li").outerWidth(true);
+        let isRTL = $("html").attr("dir") === "rtl";
+        if (isRTL) {
+            $nav.animate(
+                { scrollLeft: $nav.scrollLeft() - scrollWidth },
+                300,
+                function () {
+                    checkNavOverflow($nav);
+                }
+            );
+        } else {
+            $nav.animate(
+                { scrollLeft: $nav.scrollLeft() + scrollWidth },
+                300,
+                function () {
+                    checkNavOverflow($nav);
+                }
+            );
+        }
+    });
+    $nav.siblings(".slide-cus__prev").on("click", function () {
+        let scrollWidth = $nav.find("li").outerWidth(true);
+        let isRTL = $("html").attr("dir") === "rtl";
+
+        if (isRTL) {
+            $nav.animate(
+                { scrollLeft: $nav.scrollLeft() + scrollWidth },
+                300,
+                function () {
+                    checkNavOverflow($nav);
+                }
+            );
+        } else {
+            $nav.animate(
+                { scrollLeft: $nav.scrollLeft() - scrollWidth },
+                300,
+                function () {
+                    checkNavOverflow($nav);
+                }
+            );
+        }
+    });
+});
+
+//Custom Copy Text
+let copyText = document.querySelector(".custom-copy-text");
+copyText.querySelector(".copy-btn").addEventListener("click", function () {
+	let input = copyText.querySelector("input.text-inside");
+	input.select();
+	document.execCommand("copy");
+	copyText.classList.add("active");
+	window.getSelection().removeAllRanges();
+	setTimeout(function () {
+		copyText.classList.remove("active");
+	}, 2500);
+});
+
+
 
 $(document).on("ready", function () {
     // ONLY DEV
@@ -182,7 +284,6 @@ $(document).on("ready", function () {
     // INITIALIZATION OF DATERANGEPICKER
     // =======================================================
     $(".js-daterangepicker").daterangepicker();
-
     $(".js-daterangepicker-times").daterangepicker({
         timePicker: true,
         startDate: moment().startOf("hour"),
@@ -191,7 +292,6 @@ $(document).on("ready", function () {
             format: "M/DD hh:mm A",
         },
     });
-
     let start = moment();
     let end = moment();
 

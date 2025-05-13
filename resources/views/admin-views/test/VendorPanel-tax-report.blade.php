@@ -43,7 +43,7 @@
                     <span class="font-medium mb-0">Total Order Amount</span>
                 </div>
             </div>
-            <div class="col-md-612 col-xl-6">
+            <div class="col-lg-12 col-xl-6">
                 <div class="bg-opacity-warning-5 h-100 rounded p-24 d-flex flex-sm-nowrap flex-wrap gap-3">
                     <div class="w-xxl-100 w-sm-50">
                         <img src="{{asset('/public/assets/admin/img/tax-report-pen.png')}}" alt="img" class="mb-20">
