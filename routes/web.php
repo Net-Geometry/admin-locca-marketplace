@@ -216,3 +216,18 @@ Route::group(['prefix' => 'deliveryman', 'as' => 'deliveryman.'], function () {
     Route::post('apply', 'DeliveryManController@store')->name('store');
 
 });
+
+Route::get('/image-proxy', function () {
+    $url = request('url');
+    if (!$url) {
+        abort(400, 'Missing url parameter');
+    }
+
+    $response = Http::withHeaders([
+        'User-Agent' => 'Laravel-Image-Proxy'
+    ])->get($url);
+
+    return response($response->body(), $response->status())
+        ->header('Content-Type', $response->header('Content-Type'))
+        ->header('Access-Control-Allow-Origin', '*');
+});
