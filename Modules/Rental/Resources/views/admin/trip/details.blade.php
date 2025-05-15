@@ -281,7 +281,7 @@
                                                 $getType=translate('Hr');
                                             }elseif ($detail->rental_type == 'day_wise') {
                                                 $getPrice=$detail->vehicle_details['day_wise_price'];
-                                                $getType=translate('Daily');
+                                                $getType=translate('Day');
                                             } else{
                                                 $getPrice=$detail->vehicle_details['distance_price'];
                                                 $getType=translate('KM');
@@ -993,7 +993,7 @@
                                                         <span class="eta_amount  d-none"> </span>
                                                         @if ($trip->trip_type == 'hourly')
                                                         <span> {{ $trip->estimated_hours }} {{ translate('hrs') }}</span>
-                                                        @if ($trip->trip_type == 'day_wise')
+                                                        @elseif ($trip->trip_type == 'day_wise')
                                                         <span> {{(int) (round($trip->estimated_hours/24)) }} {{ translate('days') }}</span>
                                                         @else
                                                         <span class="distance-input">  {{ $trip->distance }} {{  translate('KM')  }}</span>

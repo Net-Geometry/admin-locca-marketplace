@@ -123,7 +123,7 @@ function fetch_data_zone_wise(zone_id) {
             $('#trip-overview-board').html(data.by_trip_type)
             $('#zoneName').html(data.zoneName);
             $('.gross-earning').text(formatCurrency(data.grossEarning));
-            initializeDonutChart(data.hourlyCount, data.distanceWiseCount);
+            initializeDonutChart(data.hourlyCount, data.distanceWiseCount, data.daywiseCount);
             initializeAreaChart(data.total_sell,  data.commission,  data.total_subs,  data.labels );
 
         },

@@ -230,7 +230,7 @@ class VehicleController extends Controller
             } elseif($request->trip_type == 'hourly'){
                 $price_column ='hourly_price';
             } elseif($request->trip_type == 'day_wise'){
-                $price_column ='hourly_price';
+                $price_column ='day_wise_price';
             } else{
                 $price_column = null;
             }

@@ -266,7 +266,7 @@ active
                                                     $getType=translate('Hr');
                                                 }elseif ($detail->rental_type == 'day_wise') {
                                                     $getPrice=$detail->vehicle_details['day_wise_price'];
-                                                    $getType=translate('Daily');
+                                                    $getType=translate('Day');
                                                 } else{
                                                     $getPrice=$detail->vehicle_details['distance_price'];
                                                     $getType=translate('KM');
@@ -930,7 +930,7 @@ active
                                                                 $getType=translate('Hr');
                                                             }elseif ($editDetail->rental_type == 'day_wise') {
                                                                 $getPrice=$editDetail->vehicle_details['day_wise_price'];
-                                                                $getType=translate('Daily');
+                                                                $getType=translate('Day');
                                                             } else{
                                                                 $getPrice=$editDetail->vehicle_details['distance_price'];
                                                                 $getType=translate('KM');

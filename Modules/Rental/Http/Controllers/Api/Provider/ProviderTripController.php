@@ -247,7 +247,7 @@ class ProviderTripController extends Controller
                 'vehicle_identity.vehicle_identity_data:id,vin_number,license_plate_number',
                 'vehicle_identity.vehicles:id,name,thumbnail',
                 'trip_details.vehicle' => function($query) {
-                    $query->select('id', 'hourly_price', 'distance_price', 'discount_type', 'discount_price')
+                    $query->select('id', 'hourly_price', 'distance_price','day_wise_price', 'discount_type', 'discount_price')
                                     ->withCount('vehicleIdentities as total_vehicle_count');
                 }])->first();
 
