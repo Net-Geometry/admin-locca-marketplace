@@ -69,6 +69,9 @@ active
                                         @if ($trip->trip_type == 'hourly')
                                         <span>{{translate('Total ')}} {{ translate('Hour')}}</span> <span>:</span>
                                         <span class="font-bold">{{ $trip->estimated_hours }} {{ translate('hrs') }}</span>
+                                        @elseif ($trip->trip_type == 'hourly')
+                                        <span>{{translate('Total ')}} {{ translate('Days')}}</span> <span>:</span>
+                                        <span class="font-bold">{{ (int) (round($trip->estimated_hours/24)) }} {{ translate('days') }}</span>
                                         @else
                                         <span>{{translate('Total ')}} {{ translate('KM') }}</span> <span>:</span>
                                         <span class="font-bold">{{ $trip->distance }} {{  translate('KM')  }}</span>
@@ -283,6 +286,8 @@ active
                                             <div class="fs-14 text--title">
                                                 @if ($trip->trip_type == 'hourly')
                                                 {{ $trip->estimated_hours }} {{ translate('hrs') }}
+                                                @elseif ($trip->trip_type == 'day_wise')
+                                                {{ (int) (round($trip->estimated_hours/24)) }} {{ translate('days') }}
                                                 @else
                                                 {{ $trip->distance }} {{  translate('KM')  }}
                                                 @endif
@@ -950,6 +955,8 @@ active
                                                     <span class="eta_amount  d-none"> </span>
                                                     @if ($trip->trip_type == 'hourly')
                                                     <span> {{ $trip->estimated_hours }} {{ translate('hrs') }}</span>
+                                                    @elseif ($trip->trip_type == 'day_wise')
+                                                    <span> {{ (int) (round($trip->estimated_hours/24)) }} {{ translate('days') }}</span>
                                                     @else
                                                     <span class="distance-input">  {{ $trip->distance }} {{  translate('KM')  }}</span>
                                                     @endif

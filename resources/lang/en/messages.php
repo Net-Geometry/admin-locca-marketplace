@@ -7551,4 +7551,5 @@ Smartly or Earn. ',
   'demo.pdf' => 'Demo.pdf',
   'RideMaster Taxis' => 'RideMaster Taxis',
   'Day Wise' => 'Day Wise',
+  'Day_Wise_Trip' => 'Day Wise Trip',
 );

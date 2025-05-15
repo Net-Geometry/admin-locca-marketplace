@@ -61,6 +61,7 @@ class DashboardController extends Controller
 
         $distanceWiseCount = (clone $tripQuery)->where('trip_type', 'distance_wise')->count();
         $hourlyCount = (clone $tripQuery)->where('trip_type', 'hourly')->count();
+        $daywiseCount =  (clone $tripQuery)->where('trip_type', 'day_wise')->count();
 
         $totalCount = (clone $tripQuery)->count();
         $pendingCount = (clone $tripQuery)->pending()->count();
@@ -89,8 +90,9 @@ class DashboardController extends Controller
                 'top_providers' => view('rental::admin.partials.top-providers', compact('topProviders'))->render(),
                 'top_customers' => view('rental::admin.partials.top-customers', compact('topCustomers'))->render(),
                 'sale_chart' => view('rental::admin.partials.sale-chart', compact('total_sell', 'commission', 'total_subs','label'))->render(),
-                'by_trip_type' => view('rental::admin.partials.by-trip-type', compact('hourlyCount', 'distanceWiseCount', 'totalCount'))->render(),
+                'by_trip_type' => view('rental::admin.partials.by-trip-type', compact('hourlyCount', 'distanceWiseCount', 'totalCount','daywiseCount'))->render(),
                 'zoneName' => $zoneName,
+                'daywiseCount' => $daywiseCount,
                 'hourlyCount' => $hourlyCount,
                 'distanceWiseCount' => $distanceWiseCount,
                 'totalCount' => $totalCount,
@@ -118,7 +120,7 @@ class DashboardController extends Controller
             'canceledCount',
             'totalCount',
             'zoneName',
-            'total_sell', 'commission', 'total_subs', 'topCustomers', 'topProviders', 'label', 'distanceWiseCount', 'hourlyCount'
+            'total_sell', 'commission', 'total_subs', 'topCustomers', 'topProviders', 'label', 'distanceWiseCount', 'hourlyCount','daywiseCount'
         ));
     }
 
@@ -147,10 +149,12 @@ class DashboardController extends Controller
         $totalCount = $tripQuery->count();
         $distanceWiseCount = (clone $tripQuery)->where('trip_type', 'distance_wise')->count();
         $hourlyCount = (clone $tripQuery)->where('trip_type', 'hourly')->count();
+        $daywiseCount =  (clone $tripQuery)->where('trip_type', 'day_wise')->count() ;
 
         return response()->json([
-            'view' => view('rental::admin.partials.by-trip-type', compact('hourlyCount', 'distanceWiseCount', 'totalCount'))->render(),
+            'view' => view('rental::admin.partials.by-trip-type', compact('hourlyCount', 'distanceWiseCount','daywiseCount' ,'totalCount'))->render(),
             'hourlyCount' => $hourlyCount,
+            'daywiseCount' => $daywiseCount,
             'distanceWiseCount' => $distanceWiseCount,
             'totalCount' => $totalCount
         ], 200);

@@ -206,9 +206,10 @@ show active
 
         const hourlyCount = {{ $hourlyCount }};
         const distanceWiseCount = {{ $distanceWiseCount }};
+        const daywiseCount = {{ $daywiseCount }};
 
         document.addEventListener('DOMContentLoaded', function() {
-            initializeDonutChart(hourlyCount, distanceWiseCount);
+            initializeDonutChart(hourlyCount, distanceWiseCount, daywiseCount);
             const initialTotalSell = [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $total_sell)) }}];
             const initialCommission = [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $commission)) }}];
             const initialTotalSubs = [{{ implode(",", array_map(fn($val) => number_format($val, 2, '.', ''), $total_subs)) }}];

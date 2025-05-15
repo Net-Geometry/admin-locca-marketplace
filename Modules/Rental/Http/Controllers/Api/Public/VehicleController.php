@@ -225,8 +225,15 @@ class VehicleController extends Controller
         $max_price = 999999999;
         $min_price = 1;
 
-
-        $price_column = $request->trip_type == 'distance_wise' ? 'distance_price' : ($request->trip_type == 'hourly' ? 'hourly_price' : null);
+            if($request->trip_type == 'distance_wise'){
+                $price_column ='distance_price';
+            } elseif($request->trip_type == 'hourly'){
+                $price_column ='hourly_price';
+            } elseif($request->trip_type == 'day_wise'){
+                $price_column ='hourly_price';
+            } else{
+                $price_column = null;
+            }
 
         if ($price_column) {
             $cache_key_max = "vehicle_max_price_{$price_column}";
@@ -245,6 +252,9 @@ class VehicleController extends Controller
             $cache_dis_key_min = "vehicle_dis_min_price_{$request?->provider_id}";
             $cache_hour_key_min = "vehicle_hour_min_price_{$request?->provider_id}";
 
+            $cache_day_key_max = "vehicle_day_max_price_{$request?->provider_id}";
+            $cache_day_key_min = "vehicle_day_min_price_{$request?->provider_id}";
+
             $max_dis_price = Cache::rememberForever($cache_dis_key_max, function () use ($request) {
                 return $this->vehicle->when($request->provider_id,function($query) use($request){
                     $query->where('provider_id' , $request->provider_id);
@@ -255,8 +265,13 @@ class VehicleController extends Controller
                     $query->where('provider_id' , $request->provider_id);
                 })->max('hourly_price');
             });
+            $max_day_price = Cache::rememberForever($cache_day_key_max, function () use ($request) {
+                return $this->vehicle->when($request->provider_id,function($query) use($request){
+                    $query->where('provider_id' , $request->provider_id);
+                })->max('day_wise_price');
+            });
 
-            $max_price = max($max_dis_price, $max_hour_price);
+            $max_price = max($max_dis_price, $max_hour_price,$max_day_price);
 
             $min_dis_price = Cache::rememberForever($cache_dis_key_min, function () use ($request) {
                 return $this->vehicle->when($request->provider_id,function($query) use($request){
@@ -268,8 +283,13 @@ class VehicleController extends Controller
                     $query->where('provider_id' , $request->provider_id);
                 })->where('hourly_price' ,'>','0')->min('hourly_price');
             });
+            $min_day_price = Cache::rememberForever($cache_day_key_min, function () use ($request) {
+                return $this->vehicle->when($request->provider_id,function($query) use($request){
+                    $query->where('provider_id' , $request->provider_id);
+                })->where('day_wise_price' ,'>','0')->min('day_wise_price');
+            });
 
-            $min_price = min($min_dis_price,$min_hour_price);
+            $min_price = min($min_dis_price,$min_hour_price,$min_day_price);
 
         }
 
@@ -310,6 +330,12 @@ class VehicleController extends Controller
             })
             ->when($request->trip_type == 'distance_wise', function ($query) {
                 $query->where('trip_distance', 1);
+            })
+            ->when($request->trip_type == 'day_wise', function ($query) {
+                $query->where('trip_day_wise', 1);
+            })
+            ->when($request->trip_type == 'day_wise'  && $request->min_price > 0 && $request->max_price > 0, function ($query) use ($request) {
+                $query->wherebetween('day_wise_price', [$request->min_price, $request->max_price]);
             })
             ->when($request->trip_type == 'distance_wise'  && $request->min_price > 0 && $request->max_price > 0, function ($query) use ($request) {
                 $query->wherebetween('distance_price', [$request->min_price, $request->max_price]);
@@ -370,13 +396,16 @@ class VehicleController extends Controller
         $vehicles = $vehicles->when(in_array($request->sortby_price, ['asc', 'desc']), function ($query) use ($request) {
             if ($request->trip_type == 'distance_wise') {
                 return  $query->orderBy('distance_price', $request->sortby_price);
+            } elseif ($request->trip_type == 'day_wise') {
+                return  $query->orderBy('day_wise_price', $request->sortby_price);
             } elseif ($request->trip_type == 'hourly') {
                 return  $query->orderBy('hourly_price', $request->sortby_price);
             }elseif($request->trip_type == 'provider_wise'){
                 return $query->select('*')
                     ->selectRaw('LEAST(
                         CASE WHEN hourly_price IS NULL OR hourly_price = 0 THEN 999999999 ELSE hourly_price END,
-                        CASE WHEN distance_price IS NULL OR distance_price = 0 THEN 999999999 ELSE distance_price END
+                        CASE WHEN distance_price IS NULL OR distance_price = 0 THEN 999999999 ELSE distance_price END,
+                        CASE WHEN day_wise_price IS NULL OR day_wise_price = 0 THEN 999999999 ELSE day_wise_price END
                     ) as min_price')
                     ->orderBy('min_price', $request->sortby_price);
             }

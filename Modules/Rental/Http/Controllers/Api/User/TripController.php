@@ -54,7 +54,7 @@ class TripController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'trip_amount' => 'required|numeric',
-            'trip_type' => 'required|in:hourly,distance_wise',
+            'trip_type' => 'required|in:hourly,distance_wise,day_wise',
             'provider_id' => 'required|numeric',
             'contact_person_name' => $request->user ? 'nullable' : 'required',
             'contact_person_number' => $request->user ? 'nullable' : 'required',
