@@ -256,9 +256,22 @@ active
                                         </td>
 
                                         <td>
+
+                                                @php
+                                                if($detail->rental_type == 'hourly'){
+                                                    $getPrice=$detail->vehicle_details['hourly_price'];
+                                                    $getType=translate('Hr');
+                                                }elseif ($detail->rental_type == 'day_wise') {
+                                                    $getPrice=$detail->vehicle_details['day_wise_price'];
+                                                    $getType=translate('Daily');
+                                                } else{
+                                                    $getPrice=$detail->vehicle_details['distance_price'];
+                                                    $getType=translate('KM');
+                                                }
+                                                @endphp
+
                                             <div class="fs-14 text--title">
-                                                {{ \App\CentralLogics\Helpers::format_currency($detail->rental_type == 'hourly' ? $detail->vehicle_details['hourly_price'] : $detail->vehicle_details['distance_price']) }}
-                                               /{{ $detail->rental_type ==  'hourly' ? translate('Hr') : translate('messages.KM')  }}
+                                                {{ \App\CentralLogics\Helpers::format_currency($getPrice) }}  /{{$getType }}
                                             </div>
                                         </td>
                                         <td class="text-center">
@@ -906,9 +919,20 @@ active
                                             </td>
                                             <td>
                                                 <div class="fs-14 eta_amount text--title">
-
-                                                    {{ \App\CentralLogics\Helpers::format_currency($editDetail->rental_type == 'hourly' ? $editDetail->vehicle_details['hourly_price'] : $editDetail->vehicle_details['distance_price']) }}
-                                                    /{{ $detail->rental_type ==  'hourly' ? translate('Hr') : translate('messages.KM')  }}
+                                                      @php
+                                                            if($editDetail->rental_type == 'hourly'){
+                                                                $getPrice=$editDetail->vehicle_details['hourly_price'];
+                                                                $getType=translate('Hr');
+                                                            }elseif ($editDetail->rental_type == 'day_wise') {
+                                                                $getPrice=$editDetail->vehicle_details['day_wise_price'];
+                                                                $getType=translate('Daily');
+                                                            } else{
+                                                                $getPrice=$editDetail->vehicle_details['distance_price'];
+                                                                $getType=translate('KM');
+                                                            }
+                                                            @endphp
+                                                    {{ \App\CentralLogics\Helpers::format_currency($getPrice) }}
+                                                    /{{ $getType }}
                                                 </div>
                                             </td>
 

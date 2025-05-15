@@ -117,7 +117,22 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                         <span>x {{ $details->quantity }}</span>
                                                                     </td>
                                                                     <td class=" p-2 px-3">
-                                                                        {{ \App\CentralLogics\Helpers::format_currency($details->rental_type == 'hourly' ? $details->vehicle_details['hourly_price']   : $details->vehicle_details['distance_price']) }}  x   {{ $details->rental_type == 'hourly' ?  $trip->estimated_hours .' '. translate('hrs') : $trip->distance .' '. translate('KM') }}
+
+
+                                                                        <?php
+                                                                            if($details->rental_type == 'hourly'){
+                                                                                $getPrice=$details->vehicle_details['hourly_price'];
+                                                                                $getType=$trip->estimated_hours.' '.translate('Hrs');
+                                                                            }elseif ($details->rental_type == 'day_wise') {
+                                                                                $getPrice=$details->vehicle_details['day_wise_price'];
+                                                                                $getType=( (int) round($details->estimated_hours/ 24) ).' '.translate('Days');
+                                                                            } else{
+                                                                                $getPrice=$details->vehicle_details['distance_price'];
+                                                                                $getType= $trip->distance .' '.translate('KM');
+                                                                            }
+                                                                        ?>
+
+                                                                        {{ \App\CentralLogics\Helpers::format_currency($getPrice) }}  x   {{ $getType }}
                                                                     </td>
                                                                     <td class="text-right p-2 px-3">
                                                                         <h4>

@@ -92,7 +92,7 @@ class TripController extends Controller
             ], 403);
         }
         $estimated_trip_end_time = $schedule_at->copy()->addHours(
-            ceil($user_data->rental_type == 'hourly' ? $user_data->estimated_hours ?? 1 : $user_data->destination_time ?? 1));
+            ceil(in_array($user_data->rental_type, ['hourly', 'day_wise']) ? $user_data->estimated_hours ?? 1 : $user_data->destination_time ?? 1));
 
         $trip_validation_check =  $this->tripValidationCheck($request, $schedule_at,$user_data);
 
@@ -411,7 +411,15 @@ class TripController extends Controller
             }
 
 
-            $discount_data = $this->getDiscount(price: $user_data->rental_type == 'hourly' ? $cart->vehicle->hourly_price *  $user_data->estimated_hours : $cart->vehicle->distance_price *  $user_data->distance, discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
+            if($user_data->rental_type == 'hourly'){
+                $getPrice= $cart->vehicle->hourly_price *  $user_data->estimated_hours ;
+            } elseif($user_data->rental_type == 'day_wise'){
+                $getPrice=$cart->vehicle->day_wise_price * ( (int) round($user_data->estimated_hours/ 24)  )  ;
+            } else{
+                $getPrice= $cart->vehicle->distance_price *  $user_data->distance;
+            }
+
+            $discount_data = $this->getDiscount(price: $getPrice , discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
 
             $trip_details_data = [
                 'vehicle_id' => $cart->vehicle_id,

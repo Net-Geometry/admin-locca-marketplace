@@ -97,9 +97,18 @@
                                                 <div class="opacity-70">
                                                     <strong class="d-block mb-1">{{ $details?->vehicle_details['name'] }}</strong>
                                                     <span class="fs-9">
-                                                        {{ \App\CentralLogics\Helpers::format_currency($details['price']) }}/{{ $details?->rental_type }},
+                                                        {{ \App\CentralLogics\Helpers::format_currency($details['price']) }}/{{ translate($details?->rental_type) }},
                                                         {{ $details->quantity }} {{ translate('Vehicle') }},
-                                                        {{ $details->rental_type == 'hourly' ? $details->estimated_hours . ' Hours' : $details->distance . ' Km' }}
+                                                        <?php
+                                                           if( $details->rental_type == 'hourly'){
+                                                            $getTime= $details->estimated_hours .' Hours';
+                                                        } elseif( $details->rental_type == 'day_wise'){
+                                                            $getTime=( (int) round($details->estimated_hours/ 24)  ) .'Days'; ;
+                                                        } else{
+                                                            $getTime=  $details->distance .' Km';
+                                                        }
+                                                        ?>
+                                                        {{ $getTime }}
                                                     </span><br>
                                                     @php($licensePlates = $details?->tripVehicleDetails->map(function($vehicleDetails) {
                                                             return $vehicleDetails?->vehicle_identity_data?->license_plate_number ?? translate('vehicle not found');

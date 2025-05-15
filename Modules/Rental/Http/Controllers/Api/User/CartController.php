@@ -57,8 +57,8 @@ class CartController extends Controller
         $validator = Validator::make($request->all(), [
             'guest_id' => $request->user ? 'nullable' : 'required',
             'vehicle_id' => 'required',
-            'rental_type' => 'required|in:hourly,distance_wise',
-            'estimated_hours' => 'required_if:rental_type,hourly',
+            'rental_type' => 'required|in:hourly,distance_wise,day_wise',
+            'estimated_hours' => 'required_if:rental_type,hourly|required_if:rental_type,day_wise',
             'distance' => 'required_if:rental_type,distance_wise',
             'destination_time' => 'required_if:rental_type,distance_wise',
         ], [
@@ -96,9 +96,14 @@ class CartController extends Controller
                 ]
             ], data_get($validation_check, 'status_code'));
         }
-
-
-        $price = $this->getDiscount(price: $request->rental_type == 'hourly' ? $vehicle->hourly_price *  $request->estimated_hours : $vehicle->distance_price *  $request->distance, discount_type: $vehicle->discount_type, discount: $vehicle->discount_price);
+        if($request->rental_type == 'hourly'){
+            $getPrice=$vehicle->hourly_price *  $request->estimated_hours ;
+        } elseif($request->rental_type == 'day_wise'){
+            $getPrice=$vehicle->day_wise_price * ( (int) round($request->estimated_hours/ 24)  )  ;
+        } else{
+            $getPrice=$vehicle->distance_price *  $request->distance;
+        }
+        $price = $this->getDiscount(price: $getPrice, discount_type: $vehicle->discount_type, discount: $vehicle->discount_price);
 
         $carts = $this->cart;
         $carts->user_id = $user_id;
@@ -199,6 +204,11 @@ class CartController extends Controller
                     'message' =>  $vehicle->name . ' ' . 'Does_not_Distance-wise rental type.You cannot add a vehicle with a different rental type',
                     'status' => 403
                 ],
+                $request->rental_type ==  'day_wise' && $vehicle->trip_day_wise != 1 => [
+                    'code' => 'cart_item',
+                    'message' =>  $vehicle->name . ' ' . 'Does_not_day_wise rental type.You cannot add a vehicle with a different rental type',
+                    'status' => 403
+                ],
                 $provider_check && $provider_id && $user_data?->rental_type && $user_data?->rental_type != $request->rental_type => [
                     'code' => 'cart_item',
                     'message' =>  $vehicle->name . ' ' . translate('does_not_support') . ' ' . translate($user_data?->rental_type) . ' ' . translate('messages.You cannot add a vehicle with a different rental type'),
@@ -276,7 +286,17 @@ class CartController extends Controller
                 ]
             ], 403);
         }
-        $price = $this->getDiscount(price: $user_data->rental_type == 'hourly' ? $cart->vehicle->hourly_price *  $user_data->estimated_hours : $cart->vehicle->distance_price *  $user_data->distance, discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
+
+
+        if($user_data->rental_type == 'hourly'){
+            $getPrice= $cart->vehicle->hourly_price *  $user_data->estimated_hours ;
+        } elseif($user_data->rental_type == 'day_wise'){
+            $getPrice=$cart->vehicle->day_wise_price * ( (int) round($user_data->estimated_hours/ 24)  )  ;
+        } else{
+            $getPrice= $cart->vehicle->distance_price *  $user_data->distance;
+        }
+
+        $price = $this->getDiscount(price: $getPrice, discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
         $cart->user_id = $user_id;
         $cart->is_guest = $is_guest;
         $cart->quantity = $request->quantity ?? 1;
@@ -404,8 +424,8 @@ class CartController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'guest_id' => $request->user ? 'nullable' : 'required',
-            'rental_type' => 'required|in:hourly,distance_wise',
-            'estimated_hours' => 'required_if:rental_type,hourly',
+            'rental_type' => 'required|in:hourly,distance_wise,day_wise',
+            'estimated_hours' => 'required_if:rental_type,hourly|required_if:rental_type,day_wise',
             'distance' => 'required_if:rental_type,distance_wise',
             'destination_time' => 'required_if:rental_type,distance_wise',
         ]);
@@ -440,6 +460,9 @@ class CartController extends Controller
                 }
 
                 if ($request->rental_type ==  'distance_wise' && $cart?->vehicle->trip_distance != 1) {
+                    $unsupported_vehicle_ids[] = $cart?->id;
+                }
+                if ($request->rental_type ==  'day_wise' && $cart?->vehicle->trip_day_wise != 1) {
                     $unsupported_vehicle_ids[] = $cart?->id;
                 }
 
@@ -508,7 +531,16 @@ class CartController extends Controller
         $total_cart_price = 0;
         foreach ($carts as $cart) {
             if ($cart->vehicle &&  $cart->vehicle->status == 1) {
-                $price = $this->getDiscount(price: ($request->rental_type ?? $user_data?->rental_type) == 'hourly' ? $cart->vehicle->hourly_price *   ($request->estimated_hours ?? $user_data?->estimated_hours) : $cart->vehicle?->distance_price *  ($request->distance ?? $user_data?->distance), discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
+
+                if(($request->rental_type ?? $user_data?->rental_type) == 'hourly'){
+                    $getPrice=$cart->vehicle->hourly_price *   ($request->estimated_hours ?? $user_data?->estimated_hours) ;
+                } elseif(($request->rental_type ?? $user_data?->rental_type) == 'day_wise'){
+                    $getPrice=$cart->vehicle->day_wise_price * ( (int) round(($request->estimated_hours ?? $user_data?->estimated_hours)/ 24)) ;
+                } else{
+                    $getPrice=$cart->vehicle?->distance_price *  ($request->distance ?? $user_data?->distance);
+                }
+
+                $price = $this->getDiscount(price: $getPrice, discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
                 $cart->user_id = $user_id;
                 $cart->is_guest = $is_guest;
                 $cart->price = $price * $cart->quantity;
