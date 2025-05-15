@@ -302,6 +302,11 @@
                                                 <span class="font-semibold">:{{\App\CentralLogics\Helpers::format_currency($vehicle['distance_price'])}}</span>
                                             </div>
                                         @endif
+                                         @if($vehicle->trip_day_wise)
+                                        <div class="d-flex"><span class="min-w-110px">{{ translate('Day Wise')}}</span>
+                                            <span class="font-semibold">:{{\App\CentralLogics\Helpers::format_currency($vehicle['day_wise_price'])}}</span>
+                                        </div>
+                                        @endif
                                         <div class="d-flex"><span class="min-w-110px">{{translate('Discount')}}</span><span
                                                 class="font-semibold">: {{ $vehicle->discount_price }} {{ $vehicle->discount_type == 'percent' ? '%' : '$' }}</span></div>
                                     </div>

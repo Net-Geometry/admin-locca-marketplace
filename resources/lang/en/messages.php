@@ -7550,4 +7550,5 @@ Smartly or Earn. ',
   'Set a discount that applies to all pricing types—hourly, daily, and distance-based' => 'Set a discount that applies to all pricing types—hourly, daily, and distance-based',
   'demo.pdf' => 'Demo.pdf',
   'RideMaster Taxis' => 'RideMaster Taxis',
+  'Day Wise' => 'Day Wise',
 );

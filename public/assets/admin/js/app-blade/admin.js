@@ -63,8 +63,8 @@ $(function () {
     });
     function counter(event) {
         let element = event.target;
-        let items = event.item.count; 
-        let item = event.item.index + 1; 
+        let items = event.item.count;
+        let item = event.item.index + 1;
         if (item > items) {
             item = item - items;
         }
@@ -88,7 +88,7 @@ $(document).ready(function () {
     });
 });
 
-//View Details 
+//View Details
 $(".view-btn").on("click", function () {
     var container = $(this).closest(".view-details-container");
     var details = container.find(".view-details");
@@ -208,16 +208,18 @@ $(".step-integration-inner").each(function () {
 
 //Custom Copy Text
 let copyText = document.querySelector(".custom-copy-text");
-copyText.querySelector(".copy-btn").addEventListener("click", function () {
-	let input = copyText.querySelector("input.text-inside");
-	input.select();
-	document.execCommand("copy");
-	copyText.classList.add("active");
-	window.getSelection().removeAllRanges();
-	setTimeout(function () {
-		copyText.classList.remove("active");
-	}, 2500);
-});
+if(copyText){
+    copyText.querySelector(".copy-btn").addEventListener("click", function () {
+        let input = copyText.querySelector("input.text-inside");
+        input.select();
+        document.execCommand("copy");
+        copyText.classList.add("active");
+        window.getSelection().removeAllRanges();
+        setTimeout(function () {
+            copyText.classList.remove("active");
+        }, 2500);
+    });
+}
 
 
 
