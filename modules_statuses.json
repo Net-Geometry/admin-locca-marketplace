@@ -2,5 +2,6 @@
     "Gateways": true,
     "Rental": true,
     "Controller": true,
-    "DashboardController": true
+    "DashboardController": true,
+    "TaxVat": true
 }

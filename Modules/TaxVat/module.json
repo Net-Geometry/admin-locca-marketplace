@@ -1,0 +1,13 @@
+{
+    "name": "TaxVat",
+    "alias": "taxvat",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\TaxVat\\Providers\\TaxVatServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
