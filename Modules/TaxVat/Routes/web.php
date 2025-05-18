@@ -1,4 +1,7 @@
 <?php
+use Illuminate\Support\Facades\Route;
+use Modules\TaxVat\Http\Controllers\TaxVatController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -11,6 +14,9 @@
 |
 */
 
-Route::prefix('taxvat')->group(function() {
-    Route::get('get-taxvat-data/', 'TaxVatController@index');
+Route::group(['prefix' => 'taxvat', 'as' => 'taxvat.','middleware' =>['admin','current-module']], function () {
+        Route::get('get-taxvat-data', 'TaxVatController@index')->name('index');
+        Route::post('add-taxvat-data', 'TaxVatController@store')->name('store');
+        Route::put('update-taxvat-data/{taxVat} ', 'TaxVatController@update')->name('update');
+        Route::get('update-taxvat-status/{taxVat} ', 'TaxVatController@status')->name('status');
 });

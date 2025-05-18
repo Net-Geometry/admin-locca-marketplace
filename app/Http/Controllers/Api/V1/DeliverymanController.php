@@ -222,7 +222,7 @@ class DeliverymanController extends Controller
             $orders = $orders->where(function ($query) {
                 return $query->whereIn('order_status', ['confirmed', 'processing', 'handover'])
                     ->orWhere(function ($subQuery) {
-                        return  $subQuery->where('order_type', 'parcel')->whereIn('order_status', ['confirmed', 'processing', 'handover']);
+                        return  $subQuery->where('order_type', 'parcel')->whereIn('order_status', ['pending','confirmed', 'processing', 'handover']);
                     });
             });
         }
@@ -481,14 +481,14 @@ class DeliverymanController extends Controller
             ], 403);
         }
 
-        if(Config::get('order_delivery_verification')==1  && $order->charge_payer=='sender' && $request['status']=='picked_up' && $order->otp != $request['otp'])
+   /*      if(Config::get('order_delivery_verification')==1  && $order->charge_payer=='sender' && $request['status']=='picked_up' && $order->otp != $request['otp'])
         {
             return response()->json([
                 'errors' => [
                     ['code' => 'otp', 'message' => translate('Not matched')]
                 ]
             ], 406);
-        }
+        } */
 
         if(Config::get('order_delivery_verification')==1 &&  $request['status']=='delivered' && $order->otp != $request['otp'])
         {

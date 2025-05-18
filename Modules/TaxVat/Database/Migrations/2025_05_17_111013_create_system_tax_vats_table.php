@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateSystemTaxVatsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('system_tax_vats', function (Blueprint $table) {
+            $table->id();
+            $table->string('tax_type',100);
+            $table->string('country_code',20)->nullable();
+            $table->string('tax_payer',20)->nullable()->default('vendor');
+            $table->tinyText('tax_vat_ids',255)->nullable();
+            $table->boolean('is_default')->default(false);
+            $table->boolean('is_active')->default(true);
+            $table->boolean('is_included')->default(false);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('system_tax_vats');
+    }
+}
