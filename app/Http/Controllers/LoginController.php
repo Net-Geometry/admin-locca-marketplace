@@ -354,8 +354,6 @@ class LoginController extends Controller
             ]);
             $url = url('/') . '/password-reset?token=' . $token;
 
-            dd($url);
-
             try {
                 if (config('mail.status') && $vendor['email']) {
                     Mail::to($vendor['email'])->send(new PasswordResetRequestMail($url, $vendor['f_name']));
