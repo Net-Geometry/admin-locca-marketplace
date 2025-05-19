@@ -9,7 +9,9 @@ use Modules\TaxVat\Entities\TaxVat;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-
+use Maatwebsite\Excel\Facades\Excel;
+use Modules\TaxVat\Exports\TaxVatExport;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class TaxVatController extends Controller
 {
@@ -30,9 +32,9 @@ class TaxVatController extends Controller
      *
      * @return Renderable
      */
-    public function index(): Renderable
+    public function index(Request $request): Renderable
     {
-        $taxVats = $this->taxVat->latest()->paginate(11);
+       $taxVats = $this->getData($request)->paginate(10);
         return view('taxvat::index', compact('taxVats'));
     }
 
@@ -83,5 +85,32 @@ class TaxVatController extends Controller
     {
         $taxVat->update(['is_active' => !$taxVat->is_active]);
         return response()->json(['id' => $taxVat->id ,'status' =>  $taxVat->is_active , 'message' => translate('messages.tax_status_updated')]);
+    }
+
+    public function export(Request $request): BinaryFileResponse
+    {
+            $data = [
+            'data' => $this->getData($request)->get(),
+            'search' => $request['search'] ?? null,
+        ];
+
+        if ($request['type'] == 'csv') {
+            return Excel::download(new TaxVatExport($data), 'TaxVats.csv');
+        }
+        return Excel::download(new TaxVatExport($data), 'TaxVats.xlsx');
+    }
+
+
+    private function getData($request): object
+    {
+        $taxVats = $this->taxVat
+        ->when($request->has('search'), function ($query) use ($request) {
+                $keys = explode(' ', $request['search']);
+                foreach ($keys as $key) {
+                    $query->orWhere('name', 'LIKE', '%' . $key . '%')->orWhere('tax_rate', 'LIKE', '%' . $key . '%');
+                }
+            })
+        ->latest()->select(['id', 'name', 'tax_rate', 'is_active']);
+        return $taxVats;
     }
 }

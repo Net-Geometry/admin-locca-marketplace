@@ -19,4 +19,5 @@ Route::group(['prefix' => 'taxvat', 'as' => 'taxvat.','middleware' =>['admin','c
         Route::post('add-taxvat-data', 'TaxVatController@store')->name('store');
         Route::put('update-taxvat-data/{taxVat} ', 'TaxVatController@update')->name('update');
         Route::get('update-taxvat-status/{taxVat} ', 'TaxVatController@status')->name('status');
+        Route::get('export-taxvat', 'TaxVatController@export')->name('export');
 });

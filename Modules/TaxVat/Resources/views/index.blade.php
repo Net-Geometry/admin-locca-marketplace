@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Add_new_tax'))
+@section('title', translate('messages.Tax_Vat'))
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -25,7 +25,7 @@
                                     placeholder="{{ translate('messages.Ex:') }} 10010"
                                     value="{{ request()?->search ?? null }}"
                                     aria-label="{{ translate('messages.search') }}">
-                                <input type="hidden" name="parcel_order" value="">
+
                                 <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                             </div>
                         </form>
@@ -40,22 +40,24 @@
                             <div id="usersExportDropdown"
                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
                                 <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
-                                <a id="export-excel" class="dropdown-item" href="javascript:;">
+                                <a id="export-excel" class="dropdown-item"
+                                    href="{{ route('taxvat.export', ['type' => 'excel', request()->getQueryString()]) }}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
+                                        src="{{ asset('Modules/TaxVat/public/assets/admin/img/excel.svg') }}"
                                         alt="Image Description">
                                     {{ translate('messages.excel') }}
                                 </a>
-                                <a id="export-csv" class="dropdown-item" href="javascript:;">
+                                <a id="export-csv" class="dropdown-item"
+                                    href="{{ route('taxvat.export', ['type' => 'csv', request()->getQueryString()]) }}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                        src="{{ asset('Modules/TaxVat/public/assets/admin/img/placeholder-csv-format.svg') }}"
                                         alt="Image Description">
                                     .{{ translate('messages.csv') }}
                                 </a>
                             </div>
                         </div>
-                        <button type="button"
-                            class="btn btn--primary btn-outline-primary">{{ translate('messages.import') }}</button>
+                        {{-- <button type="button"
+                            class="btn btn--primary btn-outline-primary">{{ translate('messages.import') }}</button> --}}
                         <button type="button" class="btn btn--primary offcanvas-trigger"
                             data-target="#offcanvas__customBtn">{{ translate('messages.create_tax') }}</button>
                     </div>
@@ -129,8 +131,8 @@
                         </p>
                         <div class="d-flex align-items-center justify-content-center gap-md-3 gap-2">
 
-                            <button type="button"
-                                class="btn btn--primary btn-outline-primary">{{ translate('messages.import') }}</button>
+                            {{-- <button type="button"
+                                class="btn btn--primary btn-outline-primary">{{ translate('messages.import') }}</button> --}}
                             <button type="button" class="btn btn--primary offcanvas-trigger"
                                 data-target="#offcanvas__customBtn">{{ translate('messages.create_tax') }}</button>
                         </div>
@@ -301,7 +303,8 @@
                     </button>
                 </div>
                 <div class="modal-body text-center">
-                    <img src="{{ asset('Modules/TaxVat/public/assets/admin/img/status-ons.png') }}" class="mb-20" alt="">
+                    <img src="{{ asset('Modules/TaxVat/public/assets/admin/img/status-ons.png') }}" class="mb-20"
+                        alt="">
                     <h3 class="title-clr mb-2" id="confirmationTitle"></h3>
                     <p class="fz--14px" id="confirmationMessage"></p>
                 </div>

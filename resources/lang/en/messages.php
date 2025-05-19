@@ -7579,4 +7579,5 @@ Smartly or Earn. ',
   'Are you sure, do you want to turn off the VAT status from your system. It will  effect on tax calculation & report' => 'Are you sure, do you want to turn off the VAT status from your system. It will  effect on tax calculation & report',
   'NO' => 'NO',
   'tax_status_updated' => 'Tax status updated',
+  'TaxVat_List' => 'TaxVat List',
 );
