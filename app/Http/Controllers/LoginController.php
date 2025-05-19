@@ -30,6 +30,9 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
 use Modules\Gateways\Traits\SmsGateway;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class LoginController extends Controller
 {
@@ -94,26 +97,25 @@ class LoginController extends Controller
         return view('auth.login', compact('custome_recaptcha', 'email', 'password', 'role', 'site_direction', 'locale'));
     }
 
-    public function login_attemp($role, $email, $password, $remember = false)
+    public function login_attemp($role, $email, $password, $ip, $remember = false)
     {
         $auth = ($role == 'admin_employee' ? 'admin' : $role);
         if (auth($auth)->attempt(['email' => $email, 'password' => $password], $remember)) {
+            $user = auth($auth)->user();
+            $newToken = Str::random(60);
+            $user->remember_token = $newToken;
+            $user->save();
+            session(['remember_token' => $newToken]);
             if ($remember) {
                 Cookie::queue('role', $role, 120);
                 Cookie::queue('e_token', Crypt::encryptString($email), 120);
                 Cookie::queue('p_token', Crypt::encryptString($password), 120);
-            } else {
-                $user = auth($auth)?->user();
-                $user?->update([
-                    'remember_token' => null
-                ]);
-                Cookie::forget('role');
-                Cookie::forget('e_token');
-                Cookie::forget('p_token');
             }
             if ($auth == 'admin') {
+                RateLimiter::clear('login-attempts:' . $ip);
                 return 'admin';
             } else {
+                RateLimiter::clear('login-attempts:' . $ip);
                 return 'vendor';
             }
         }
@@ -172,18 +174,37 @@ class LoginController extends Controller
             return back();
         }
 
+        $ip = $request->ip();
+        $key = 'login-attempts:' . $ip;
+        $maxAttempts = 5;
+        $decayMinutes = 2;
+
+        if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
+            $seconds = RateLimiter::availableIn($key);
+            $time = $seconds > 60
+                ? ceil($seconds / 60) . ' minutes'
+                : $seconds . ' seconds';
+
+            return redirect()->back()
+                ->withInput($request->only('email', 'remember'))
+                ->withErrors(['Too many login attempts. Try again in ' . $time . '.']);
+        }
+
+
         if ($request->role == 'admin_employee') {
             $data = Admin::where('email', $request->email)->where('role_id', 1)->exists();
             if ($data) {
+                RateLimiter::hit($key, $decayMinutes * 60);
                 return redirect()->back()->withInput($request->only('email', 'remember'))
-                    ->withErrors(['Credentials does not match.']);
+                    ->withErrors(['Email does not match.']);
             }
         }
         elseif ($request->role == 'admin') {
             $data = Admin::where('email', $request->email)->where('role_id', 1)->exists();
             if (!$data) {
+                RateLimiter::hit($key, $decayMinutes * 60);
                 return redirect()->back()->withInput($request->only('email', 'remember'))
-                    ->withErrors(['Credentials does not match.']);
+                    ->withErrors(['Email does not match.']);
             }
         }
         elseif ($request->role == 'vendor') {
@@ -211,6 +232,10 @@ class LoginController extends Controller
                     return redirect()->back()->withInput($request->only('email', 'remember'))
                         ->withErrors([translate('messages.Admin_did_not_approve_your_registration_yet.')]);
                 }
+            }else{
+                RateLimiter::hit($key, $decayMinutes * 60);
+                return redirect()->back()->withInput($request->only('email', 'remember'))
+                ->withErrors(['Email does not match.']);
             }
         } elseif ($request->role == 'vendor_employee') {
             $employee = VendorEmployee::where('email', $request->email)->first();
@@ -224,9 +249,25 @@ class LoginController extends Controller
                     return redirect()->back()->withInput($request->only('email', 'remember'))
                         ->withErrors([translate('messages.store_is_inactive')]);
                 }
+                if (!$employee) {
+                    RateLimiter::hit($key, $decayMinutes * 60);
+                    return redirect()->back()->withInput($request->only('email', 'remember'))
+                        ->withErrors(['Email does not match.']);
+                }
         }
 
-        $data = $this->login_attemp($request->role, $request->email, $request->password, $request->remember);
+        $data = $this->login_attemp($request->role, $request->email, $request->password, $request->ip(), $request->remember);
+
+        if($request->remember){
+            $forgetCookies = [];
+        }else{
+            $forgetCookies = [
+                Cookie::forget('role'),
+                Cookie::forget('e_token'),
+                Cookie::forget('p_token'),
+            ];
+        }
+
 
         if ($data == 'admin') {
             $admin = Admin::find(auth('admin')->id());
@@ -235,9 +276,9 @@ class LoginController extends Controller
             $modules = Module::Active()->get();
             if (isset($modules) && ($modules->count() > 0)) {
 
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.dashboard')->withCookies($forgetCookies);
             }
-            return redirect()->route('admin.business-settings.business-setup');
+            return redirect()->route('admin.business-settings.business-setup')->withCookies($forgetCookies);
         }
         if ($data == 'vendor') {
             if ($request->role === 'vendor_employee') {
@@ -246,13 +287,13 @@ class LoginController extends Controller
                 $employee->save();
             }
             if(Helpers::get_store_data()?->module_type == 'rental' && addon_published_status('Rental')){
-                return redirect()->route('vendor.providerDashboard');
+                return redirect()->route('vendor.providerDashboard')->withCookies($forgetCookies);
             }
-            return redirect()->route('vendor.dashboard');
+            return redirect()->route('vendor.dashboard')->withCookies($forgetCookies);
         }
-
+        RateLimiter::hit($key, $decayMinutes * 60);
         return redirect()->back()->withInput($request->only('email', 'remember'))
-            ->withErrors(['Credentials does not match.']);
+            ->withErrors(['Password does not match.']);
     }
 
     public function reloadCaptcha()
@@ -312,6 +353,8 @@ class LoginController extends Controller
                 'created_at' => now(),
             ]);
             $url = url('/') . '/password-reset?token=' . $token;
+
+            dd($url);
 
             try {
                 if (config('mail.status') && $vendor['email']) {
@@ -431,14 +474,17 @@ class LoginController extends Controller
         $data = DB::table('password_resets')->where(['token' => $request['reset_token']])->first();
         if (isset($data)) {
             if ($request['password'] == $request['confirm_password']) {
+                $newRememberToken = Str::random(60);
                 if ($data->created_by == 'admin') {
                     DB::table('admins')->where(['email' => $data->email])->update([
-                        'password' => bcrypt($request['confirm_password'])
+                        'password' => bcrypt($request['confirm_password']),
+                        'remember_token' => $newRememberToken,
                     ]);
                     $user_link = Helpers::get_login_url('admin_login_url');
                 } else {
                     DB::table('vendors')->where(['email' => $data->email])->update([
-                        'password' => bcrypt($request['confirm_password'])
+                        'password' => bcrypt($request['confirm_password']),
+                        'remember_token' => $newRememberToken,
                     ]);
                     $user_link = Helpers::get_login_url('store_login_url');
                 }

@@ -52,7 +52,7 @@
                     <input type="hidden" name="role" value="{{  $role ?? null }}">
                     <div class="auth-header">
                         <div class="mb-5">
-                            <h2 class="title">{{ translate($role) }} {{translate('messages.signin')}}</h2>
+                            <h2 class="title">{{ translate($role) }} {{translate('messages.login')}}</h2>
                             <div>{{translate('messages.welcome_back_login_to_your_panel') }}.</div>
                         </div>
                     </div>
@@ -267,6 +267,9 @@
               <p>
                 {{ translate('Click the link in the mail description to change password') }}
               </p>
+              <button class="btn btn-lg btn-block btn--primary mt-3" data-dismiss="modal">
+                {{ translate('Got_It') }}
+              </button>
           </div>
         </div>
       </div>

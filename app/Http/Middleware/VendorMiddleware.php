@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\CentralLogics\Helpers;
 
 class VendorMiddleware
 {
@@ -24,6 +25,16 @@ class VendorMiddleware
                 return redirect()->route('home');
                 // return redirect()->route('vendor.auth.login');
             }
+
+            if (session('remember_token') !== auth('vendor')->user()->getRememberToken()) {
+                auth()->guard('vendor')->logout();
+                session()->invalidate();
+                session()->regenerateToken();
+                $user_link = Helpers::get_login_url('store_login_url');
+                return redirect()->route('login', [$user_link])
+                    ->withErrors(['Your session has expired. Please log in again.']);
+            }
+
             return $next($request);
         }
         else if (Auth::guard('vendor_employee')->check()) {
@@ -38,6 +49,15 @@ class VendorMiddleware
                 auth()->guard('vendor_employee')->logout();
                 return redirect()->route('home');
                 // return redirect()->route('vendor.auth.login');
+            }
+
+            if (session('remember_token') !== Auth::guard('vendor_employee')->user()->getRememberToken()) {
+                auth()->guard('vendor_employee')->logout();
+                session()->invalidate();
+                session()->regenerateToken();
+                $user_link = Helpers::get_login_url('store_employee_login_url');
+                return redirect()->route('login', [$user_link])
+                    ->withErrors(['Your session has expired. Please log in again.']);
             }
             return $next($request);
         }
