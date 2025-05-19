@@ -21,6 +21,12 @@
             {{ translate('messages.Distance_Wise_Trip') }} {{ $distanceWiseCount }}
         </span>
     </div>
+    <div class="chart--label">
+        <span class="indicator chart-bg-4"></span>
+        <span class="info">
+            {{ translate('messages.Day_Wise_Trip') }} {{ $daywiseCount }}
+        </span>
+    </div>
 </div>
 
 

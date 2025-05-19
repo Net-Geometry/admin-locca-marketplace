@@ -387,16 +387,24 @@ trait TripLogicTrait
     public static function calculateTripDetailPricing($tripDetail, $vehicleQuantities, $modifiedPrices, $estimatedHours, $distance, $rentalType, $taxPercentage,$quantityUpdate=false,$updateDistance=false): array
     {
         $quantity = $vehicleQuantities[$tripDetail->vehicle_id] ?? $tripDetail->quantity;
-        $originalPrice = $rentalType === 'hourly'
-            ? $tripDetail->vehicle->hourly_price * $estimatedHours
-            : $tripDetail->vehicle->distance_price * $distance;
+
+
+        if($rentalType === 'hourly'){
+            $originalPrice=$tripDetail->vehicle->hourly_price * $estimatedHours;
+        } elseif($rentalType === 'day_wise'){
+            $originalPrice=$tripDetail->vehicle->day_wise_price * ((int) round($estimatedHours/ 24));
+        }else{
+            $originalPrice=$tripDetail->vehicle->distance_price * $distance;
+        }
+
+
 
             if($updateDistance == 1){
                 $price = $originalPrice* $quantity;
             } else{
                 $price = $modifiedPrices[$tripDetail->vehicle_id] ?? $originalPrice* $quantity;
                 $price = ($tripDetail->vehicle_id ==  $quantityUpdate) ? $originalPrice *$quantity : $price;
-                    if($rentalType != 'hourly' &&  $tripDetail->distance != $distance){
+                    if(!in_array($rentalType ,['hourly','day_wise']) &&  $tripDetail->distance != $distance){
                         if($modifiedPrices[$tripDetail->vehicle_id] ==  $originalPrice* $quantity){
                             $price = $originalPrice* $quantity;
                         } else{

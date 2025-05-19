@@ -49,6 +49,12 @@
                             <span class="font-semibold">{{\App\CentralLogics\Helpers::format_currency($vehicle['distance_price'])}}</span>
                         </div>
                     @endif
+                    @if($vehicle->trip_day_wise)
+                        <div>
+                            <span class="opacity-lg">{{translate('Day Wise')}}: </span>
+                            <span class="font-semibold">{{\App\CentralLogics\Helpers::format_currency($vehicle['day_wise_price'])}}</span>
+                        </div>
+                    @endif
                 </td>
                 <td>{{ $vehicle->new_tag == 1 ? translate('messages.Yes') : translate('messages.No')  }}</td>
                 <td>{{ $vehicle->status == 1 ? translate('messages.Active') : translate('messages.Inactive')  }}</td>

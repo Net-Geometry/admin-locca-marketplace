@@ -45,6 +45,7 @@ class ConfigController extends Controller
 
         $vehicle_distance_min=0;
         $vehicle_hourly_min=0;
+        $vehicle_day_wise_min=0;
 
         $drivemondExternalSetting = false;
 
@@ -166,6 +167,10 @@ class ConfigController extends Controller
             $cache_hour_key_min = "vehicle_hour_min_price_conf";
             $vehicle_hourly_min = Cache::rememberForever($cache_hour_key_min, function () {
                 return Vehicle::where('hourly_price' ,'>','0')->min('hourly_price');
+            });
+            $cache_day_wise_key_min = "vehicle_day_wise_min_price_conf";
+            $vehicle_day_wise_min = Cache::rememberForever($cache_day_wise_key_min, function () {
+                return Vehicle::where('day_wise_price' ,'>','0')->min('day_wise_price');
             });
         }
         return response()->json([
@@ -294,6 +299,7 @@ class ConfigController extends Controller
 
             'vehicle_distance_min' =>(float) $vehicle_distance_min?? 0,
             'vehicle_hourly_min' => (float) $vehicle_hourly_min?? 0,
+            'vehicle_day_wise_min' => (float) $vehicle_day_wise_min?? 0,
             'admin_free_delivery' =>$admin_free_delivery,
             'is_sms_active' =>  (boolean)  Setting::whereJsonContains('live_values->status','1')->where('settings_type', 'sms_config')->exists(),
             'is_mail_active' =>  (boolean)config('mail.status'),

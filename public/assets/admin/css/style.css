@@ -3819,6 +3819,9 @@ td .amount--input {
 .chart-bg-3 {
     background: #b9e0e0;
 }
+.chart-bg-4 {
+    background: #91d9eb;
+}
 
 .w--30 {
     width: 30px !important;
@@ -15387,7 +15390,7 @@ img{
 }
 
 /*custom-accordion-style*/
-.custom-accordion-style .accordion-button:not(.collapsed) i{ 
+.custom-accordion-style .accordion-button:not(.collapsed) i{
     transform: rotate(180deg);
 }
 

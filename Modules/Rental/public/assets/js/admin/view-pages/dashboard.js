@@ -1,20 +1,20 @@
 "use strict";
-function initializeDonutChart(hourlyCount, distanceWiseCount) {
+function initializeDonutChart(hourlyCount, distanceWiseCount ,daywiseCount) {
     let options;
     let chart;
     let ApexChart;
 
     options = {
-        series: [hourlyCount, distanceWiseCount],
+        series: [hourlyCount, distanceWiseCount,daywiseCount],
         chart: {
             width: 320,
             type: 'donut',
         },
-        labels: ['Hourly Trip', 'Distance Wise Trip'],
+        labels: ['Hourly Trip', 'Distance Wise Trip','Daywise Trip'],
         dataLabels: {
             enabled: false,
             style: {
-                colors: ['#005555', '#b9e0e0']
+                colors: ['#005555', '#b9e0e0' ,'#91d9eb']
             }
         },
         responsive: [{
@@ -25,9 +25,9 @@ function initializeDonutChart(hourlyCount, distanceWiseCount) {
                 },
             }
         }],
-        colors: ['#005555', '#111'],
+        colors: ['#005555', '#111' ,'#91d9eb'],
         fill: {
-            colors: ['#005555', '#b9e0e0']
+            colors: ['#005555', '#b9e0e0' ,'#91d9eb']
         },
         legend: {
             show: false
@@ -123,7 +123,7 @@ function fetch_data_zone_wise(zone_id) {
             $('#trip-overview-board').html(data.by_trip_type)
             $('#zoneName').html(data.zoneName);
             $('.gross-earning').text(formatCurrency(data.grossEarning));
-            initializeDonutChart(data.hourlyCount, data.distanceWiseCount);
+            initializeDonutChart(data.hourlyCount, data.distanceWiseCount, data.daywiseCount);
             initializeAreaChart(data.total_sell,  data.commission,  data.total_subs,  data.labels );
 
         },
@@ -189,7 +189,8 @@ function user_overview_stats_update(type, zone_id) {
             $('#trip-overview-board').html(data.view);
             const hourlyCount = data.hourlyCount;
             const distanceWiseCount = data.distanceWiseCount;
-            initializeDonutChart(hourlyCount, distanceWiseCount);
+            const daywiseCount = data.daywiseCount;
+            initializeDonutChart(hourlyCount, distanceWiseCount,daywiseCount );
         },
         complete: function() {
             $('#loading').hide()
