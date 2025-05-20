@@ -7,7 +7,7 @@ $(document).ready(function () {
             action: $(this).data('action'),
             name: $(this).data('name'),
             tax_rate: $(this).data('tax_rate'),
-            is_active: $(this).data('is_active')
+            is_active: $('#status_' +  $(this).data('id')).is(':checked'),
         };
         setDataOnModal(originalData)
     });

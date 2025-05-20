@@ -1,4 +1,4 @@
-@extends('layouts.admin.app')
+{{-- @extends('layouts.admin.app')
 
 @section('title',translate('messages.new_page'))
 
@@ -29,9 +29,9 @@
                     <div class="input-group input--group">
                         <input id="datatableSearch_" type="search" name="search" class="form-control h--40px"
                                 placeholder="{{ translate('messages.Ex:') }} 10010" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search')}}">
-                                
+
                                 <input type="hidden" name="parcel_order" value="">
-                                
+
                         <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                     </div>
                 </form>
@@ -228,14 +228,14 @@
                     <p class="fz-12px">If you turn off this status your tax calculation will effect.</p>
                 </div>
                 <label class="border d-flex align-items-center bg-white-n justify-content-between rounded p-10px px-3">
-                    Status 
+                    Status
                     <div class="toggle-switch ml-auto justify-content-end toggle-switch-sm" for="status">
                         <input type="checkbox" class="toggle-switch-input" id="status">
                             <span class="toggle-switch-label">
                             <span class="toggle-switch-indicator"></span>
                         </span>
                     </div>
-                </label> 
+                </label>
             </div>
             <div class="bg--secondary rounded p-20 mb-20">
                 <div class="form-group">
@@ -280,14 +280,14 @@
                     <p class="fz-12px">If you turn off this status your tax calculation will effect.</p>
                 </div>
                 <label class="border d-flex align-items-center bg-white-n justify-content-between rounded p-10px px-3">
-                    Status 
+                    Status
                     <div class="toggle-switch ml-auto justify-content-end toggle-switch-sm" for="status">
                         <input type="checkbox" class="toggle-switch-input" id="status">
                             <span class="toggle-switch-label">
                             <span class="toggle-switch-indicator"></span>
                         </span>
                     </div>
-                </label> 
+                </label>
             </div>
             <div class="bg--secondary rounded p-20 mb-20">
                 <div class="form-group">
@@ -359,3 +359,4 @@
 
 @push('script_2')
 @endpush
+ --}}

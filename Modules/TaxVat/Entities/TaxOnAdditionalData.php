@@ -4,21 +4,23 @@ namespace Modules\TaxVat\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use MercadoPago\Resources\Preference\Tax;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use PHPUnit\Event\Telemetry\System;
 
-class SystemTaxVat extends Model
+class TaxOnAdditionalData extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
 
-  protected $casts = [
+    protected $guarded = ['id'];
+    protected $casts = [
         'is_default' => 'integer',
         'is_active' => 'integer',
         'is_included' => 'integer',
+        'system_tax_vat_id' => 'integer',
         'tax_vat_ids' => 'array',
     ];
+
 //  public function getTaxVatIdsAttribute($value)
 //     {
 //         if ($value) {
@@ -27,8 +29,9 @@ class SystemTaxVat extends Model
 //         return $value;
 //     }
 
-     public function additionalData(): HasMany
+  public function systemTaxVat():BelongsTo
     {
-        return $this->hasMany(TaxOnAdditionalData::class, 'system_tax_vat_id');
+        return $this->belongsTo(SystemTaxVat::class);
     }
+
 }

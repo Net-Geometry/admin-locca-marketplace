@@ -34,7 +34,7 @@ class TaxVatController extends Controller
      */
     public function index(Request $request): Renderable
     {
-       $taxVats = $this->getData($request)->paginate(10);
+       $taxVats = $this->getData($request)->paginate(config('taxvat.pagination'));
         return view('taxvat::index', compact('taxVats'));
     }
 
@@ -60,6 +60,7 @@ class TaxVatController extends Controller
         $request->validate(
             [
                 'name' => 'required|max:50|unique:tax_vats,name' . ($id ? ',' . $id : ''),
+                'country_code' => 'nullable|max:20|unique:tax_vats,country_code' . ($id ? ',' . $id : ''),
                 'tax_rate' => 'required|numeric|max:100|min:0.001',
 
             ]
@@ -76,6 +77,11 @@ class TaxVatController extends Controller
     {
         $taxVat->name = $request->name;
         $taxVat->tax_rate = $request->tax_rate;
+        $taxVat->is_default = true;
+        if(config('taxvat.country_type') == 'multi'){
+            $taxVat->country_code = $request->country_code ?? $taxVat?->country_code;
+            $taxVat->is_default = false;
+        }
         $taxVat->is_active = $request->status ?? 0;
         $taxVat->save();
         return $taxVat;
@@ -109,6 +115,11 @@ class TaxVatController extends Controller
                 foreach ($keys as $key) {
                     $query->orWhere('name', 'LIKE', '%' . $key . '%')->orWhere('tax_rate', 'LIKE', '%' . $key . '%');
                 }
+            })
+            ->when(config('taxvat.country_type') == 'single', function ($query) {
+                $query->where('is_default',true);
+            },function ($query) use($request) {
+                $query->where('country_code', $request->country_code);
             })
         ->latest()->select(['id', 'name', 'tax_rate', 'is_active']);
         return $taxVats;

@@ -11,5 +11,12 @@ class TaxVat extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'is_default' => 'integer',
+        'is_active' => 'integer',
+        'tax_rate' => 'float',
+
+    ];
+
 
 }

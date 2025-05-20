@@ -15,8 +15,8 @@ class CreateSystemTaxVatsTable extends Migration
     {
         Schema::create('system_tax_vats', function (Blueprint $table) {
             $table->id();
-            $table->string('tax_type',100);
-            $table->string('country_code',20)->nullable();
+            $table->string('tax_type',100)->default('order_wise');
+            $table->string('country_code',20)->nullable()->index();
             $table->string('tax_payer',20)->nullable()->default('vendor');
             $table->tinyText('tax_vat_ids',255)->nullable();
             $table->boolean('is_default')->default(false);

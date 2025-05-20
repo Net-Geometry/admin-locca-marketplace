@@ -1,4 +1,4 @@
-@extends('layouts.admin.app')
+{{-- @extends('layouts.admin.app')
 
 @section('title',translate('messages.new_page'))
 
@@ -146,3 +146,4 @@
 @push('script_2')
 
 @endpush
+ --}}

@@ -1,0 +1,104 @@
+ "use strict";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll(".confirmStatus").forEach(checkbox => {
+                checkbox.addEventListener("click", e => {
+                    e.preventDefault();
+
+                    const input = checkbox.querySelector(".toggle-switch-sm input");
+                    const isChecked = input.checked;
+                    const url = checkbox.dataset.url;
+
+                    const title = checkbox.dataset[isChecked ? "off_title" : "on_title"];
+                    const message = checkbox.dataset[isChecked ? "off_message" : "on_message"];
+
+                    $('#confirmationTitle').text(title);
+                    $('#confirmationMessage').text(message);
+                    document.getElementById('seturl').dataset.url = url;
+                    $('#exampleModal').modal('show');
+                });
+            });
+
+            document.querySelectorAll(".check_additional_data").forEach(checkbox => {
+                checkbox.addEventListener("change", () => {
+                    const id = checkbox.dataset.id;
+                    const select = document.getElementById('additional_charge_' + id);
+
+                    if (checkbox.checked) {
+                        select.removeAttribute('disabled');
+                        select.setAttribute('required', 'required');
+                    } else {
+                        select.setAttribute('disabled', 'disabled');
+                        select.removeAttribute('required');
+                    }
+
+                });
+                checkbox.dispatchEvent(new Event('change'));
+            });
+        });
+
+
+        document.getElementById('seturl').addEventListener('click', function() {
+            const url = this.dataset.url;
+            const is_active = this.dataset.is_active;
+
+            if (!url) return console.error("No URL found for status change");
+
+            $.get(url, {
+                is_active
+            }, function(response) {
+
+                $('#exampleModal').modal('hide');
+                $('#vendor_tax_status').prop('checked', response.status);
+                $('#tax_settings').toggleClass('disabled', response.status != 1);
+
+                toastr.success(response.message, {
+                    CloseButton: true,
+                    ProgressBar: true
+                });
+
+            }).fail(function(xhr) {
+                console.error("Error updating status:", xhr.responseText);
+
+            });
+        });
+
+        $(document).ready(function() {
+            $('input[name="tax_status"]').on('change', function() {
+                if (this.value === 'include') {
+                    $('#tax_rate_setup').addClass('disabled');
+                } else if (this.value === 'exclude') {
+                    $('#tax_rate_setup').removeClass('disabled');
+                }
+            });
+            $('#tax_type').on('change', function() {
+                if (this.value == this.dataset.current_seclected) {
+                    $('#tax_type_change_alert').removeClass('d-flex').addClass('d-none');
+                } else {
+                    $('#tax_type_change_alert').removeClass('d-none').addClass('d-flex');
+                }
+
+
+                if ($('input[name="tax_status"]:checked').val() == 'exclude') {
+                    if (this.value === 'product_wise') {
+                        $('#info_notes').removeClass('d-none').addClass('d-flex');
+                        $('#info_for_item').removeClass('d-none');
+                        $('#info_for_category').addClass('d-none');
+                        $('#tax_rate_div').addClass('d-none');
+                        $('#tax__rate').attr('required', false);
+                    } else if (this.value === 'category_wise') {
+                        $('#tax_rate_div').addClass('d-none');
+                        $('#info_notes').removeClass('d-none').addClass('d-flex');
+                        $('#info_for_category').removeClass('d-none');
+                        $('#info_for_item').addClass('d-none');
+                        $('#tax__rate').attr('required', false);
+                    } else {
+                        $('#info_notes').addClass('d-none').removeClass('d-flex');
+                        $('#info_for_item').addClass('d-none');
+                        $('#info_for_category').addClass('d-none');
+                        $('#tax_rate_div').removeClass('d-none');
+                        $('#tax__rate').attr('required', true);
+                    }
+                }
+            }).trigger('change');
+        });

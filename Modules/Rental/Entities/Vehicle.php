@@ -43,6 +43,7 @@ class Vehicle extends Model
         'total_trip' => 'integer',
         'total_reviews' => 'integer',
         'zone_id' => 'integer',
+        'total_vehicle_count' => 'integer',
     ];
 
     /**

@@ -481,7 +481,7 @@ class DeliverymanController extends Controller
             ], 403);
         }
 
-   /*      if(Config::get('order_delivery_verification')==1  && $order->charge_payer=='sender' && $request['status']=='picked_up' && $order->otp != $request['otp'])
+    /*     if(Config::get('order_delivery_verification')==1  && $order->charge_payer=='sender' && $request['status']=='picked_up' && $order->otp != $request['otp'])
         {
             return response()->json([
                 'errors' => [

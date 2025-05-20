@@ -20,4 +20,8 @@ Route::group(['prefix' => 'taxvat', 'as' => 'taxvat.','middleware' =>['admin','c
         Route::put('update-taxvat-data/{taxVat} ', 'TaxVatController@update')->name('update');
         Route::get('update-taxvat-status/{taxVat} ', 'TaxVatController@status')->name('status');
         Route::get('export-taxvat', 'TaxVatController@export')->name('export');
+
+        Route::get('system-taxvat', 'SystemTaxVatSetupController@index')->name('systemTaxvat');
+        Route::put('system-taxvat', 'SystemTaxVatSetupController@systemTaxVatStore')->name('systemTaxVatStore');
+        Route::get('system-taxvat-vendor-status', 'SystemTaxVatSetupController@vendorStatus')->name('systemTaxVatVendorStatus');
 });

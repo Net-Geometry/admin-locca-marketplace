@@ -113,7 +113,11 @@ $(document).ready(function() {
         allowClear: true // Optional: adds a clear (×) button
     });
     $('#service__charge').select2({
-        placeholder: 'Select Service Charge',
+        placeholder: 'Select tax rate',
+        allowClear: true // Optional: adds a clear (×) button
+    });
+    $('.service__charge').select2({
+        placeholder: 'Select tax rate',
         allowClear: true // Optional: adds a clear (×) button
     });
 });
