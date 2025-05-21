@@ -125,7 +125,7 @@
                                                     class="custom-select custom-select-color border rounded w-100"
                                                     name="tax_type"
                                                     data-current_seclected="{{ $systemTaxVat?->tax_type }}">
-                                                    @foreach (config('taxvat.' . config('taxvat.project') . '.tax_calculate_on') ?? ['order_wise', 'product_wise', 'category_wise'] as $item)
+                                                    @foreach (data_get($systemData,'tax_calculate_on',['order_wise', 'product_wise', 'category_wise'])   as $item)
                                                         <option {{ $systemTaxVat?->tax_type == $item ? 'selected' : '' }}
                                                             value="{{ $item }}"> {{ translate($item) }} </option>
                                                     @endforeach
@@ -210,7 +210,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (config('taxvat.' . config('taxvat.project') . '.additional_tax'))
+                            @if ( data_get($systemData,'additional_tax',null) )
 
                                 <div class="bg--secondary rounded p-20">
                                     <div class="row g-lg-4 g-md-3 g-2">
@@ -220,7 +220,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="d-flex flex-column gap-lg-4 gap-3">
-                                                @foreach (config('taxvat.' . config('taxvat.project') . '.additional_tax') ?? [] as $item)
+                                                @foreach ($systemData['additional_tax'] as $item)
                                                     @php($additionalData = $systemTaxVat?->additionalData?->where('name', $item)->first())
                                                     <div>
                                                         <div
@@ -299,6 +299,7 @@
 
 
 @push('script_2')
+    <script src="{{ asset('Modules/TaxVat/public/assets/js/admin/toastr_notification.js') }}"></script>
     <script src="{{ asset('Modules/TaxVat/public/assets/js/admin/system_taxvat.js') }}"></script>
 @endpush
 

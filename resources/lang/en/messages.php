@@ -7614,4 +7614,5 @@ Smartly or Earn. ',
   'Items List' => 'Items List',
   'If you already created Items without tax then go to edit Item and update tax.' => 'If you already created Items without tax then go to edit Item and update tax.',
   'Tax_Settings_Updated_Successfully' => 'Tax Settings Updated Successfully',
+  'tax_on_delivery_charge' => 'Tax on delivery charge',
 );

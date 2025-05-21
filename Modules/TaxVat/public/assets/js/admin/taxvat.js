@@ -55,16 +55,9 @@ $(document).ready(function () {
             $.get(url, {
                 is_active
             }, function(response) {
-
                 $('#exampleModal').modal('hide');
-
                 $('#status_' + response.id).prop('checked', response.status);
-
-                toastr.success(response.message, {
-                    CloseButton: true,
-                    ProgressBar: true
-                });
-
+                    sent_notification('successMessage' , response.message);
             }).fail(function(xhr) {
                 console.error("Error updating status:", xhr.responseText);
 

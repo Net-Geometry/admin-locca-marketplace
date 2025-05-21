@@ -320,5 +320,6 @@
 @endsection
 
 @push('script_2')
+    <script src="{{ asset('Modules/TaxVat/public/assets/js/admin/toastr_notification.js') }}"></script>
     <script src="{{ asset('Modules/TaxVat/public/assets/js/admin/taxvat.js') }}"></script>
 @endpush

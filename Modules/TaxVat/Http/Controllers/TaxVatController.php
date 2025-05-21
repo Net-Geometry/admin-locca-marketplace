@@ -6,16 +6,18 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\TaxVat\Entities\TaxVat;
-use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\TaxVat\Exports\TaxVatExport;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Modules\TaxVat\Traits\VatTaxConfiguration;
 
 class TaxVatController extends Controller
 {
+    use VatTaxConfiguration;
     private TaxVat $taxVat;
+
 
     /**
      * Constructor for injecting TaxVat model dependency.
@@ -34,8 +36,8 @@ class TaxVatController extends Controller
      */
     public function index(Request $request): Renderable
     {
-       $taxVats = $this->getData($request)->paginate(config('taxvat.pagination'));
-        return view('taxvat::index', compact('taxVats'));
+       $taxVats = $this->getData($request)->paginate($this->getpagination());
+        return view($this->getProjectWiseViewPath('TaxVatController','index'), compact('taxVats'));
     }
 
 
@@ -43,7 +45,7 @@ class TaxVatController extends Controller
     {
         $this->validateRequest($request);
         $this->createTaxVatData($request);
-        Toastr::success(translate('messages.New_Tax_Added_Successfully'));
+        $this->showNotification('successMessage', translate('messages.New_Tax_Added_Successfully'));
         return back();
     }
 
@@ -51,7 +53,7 @@ class TaxVatController extends Controller
     {
         $this->validateRequest($request, $taxVat->id);
         $this->updatetaxVat($request, $taxVat);
-        Toastr::success($taxVat->name . ' ' . translate('messages.updated_successfully'));
+        $this->showNotification('successMessage',$taxVat->name . ' ' . translate('messages.updated_successfully'));
         return to_route('taxvat.index');
     }
 
@@ -78,7 +80,7 @@ class TaxVatController extends Controller
         $taxVat->name = $request->name;
         $taxVat->tax_rate = $request->tax_rate;
         $taxVat->is_default = true;
-        if(config('taxvat.country_type') == 'multi'){
+        if($this->getCountryType() != 'single'){
             $taxVat->country_code = $request->country_code ?? $taxVat?->country_code;
             $taxVat->is_default = false;
         }
@@ -116,7 +118,7 @@ class TaxVatController extends Controller
                     $query->orWhere('name', 'LIKE', '%' . $key . '%')->orWhere('tax_rate', 'LIKE', '%' . $key . '%');
                 }
             })
-            ->when(config('taxvat.country_type') == 'single', function ($query) {
+            ->when($this->getCountryType() == 'single', function ($query) {
                 $query->where('is_default',true);
             },function ($query) use($request) {
                 $query->where('country_code', $request->country_code);

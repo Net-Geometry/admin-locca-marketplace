@@ -51,12 +51,7 @@
                 $('#exampleModal').modal('hide');
                 $('#vendor_tax_status').prop('checked', response.status);
                 $('#tax_settings').toggleClass('disabled', response.status != 1);
-
-                toastr.success(response.message, {
-                    CloseButton: true,
-                    ProgressBar: true
-                });
-
+                    sent_notification('successMessage' , response.message);
             }).fail(function(xhr) {
                 console.error("Error updating status:", xhr.responseText);
 

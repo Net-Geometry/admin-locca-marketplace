@@ -6,17 +6,15 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\TaxVat\Entities\TaxVat;
-use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Maatwebsite\Excel\Facades\Excel;
 use Modules\TaxVat\Entities\SystemTaxVat;
 use Modules\TaxVat\Entities\TaxOnAdditionalData;
-use Modules\TaxVat\Exports\TaxVatExport;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Modules\TaxVat\Traits\VatTaxConfiguration;
 
 class SystemTaxVatSetupController extends Controller
 {
+    use VatTaxConfiguration;
     private TaxVat $taxVat;
     private SystemTaxVat $systemTaxVat;
     private TaxOnAdditionalData $taxOnAdditionalData;
@@ -42,7 +40,7 @@ class SystemTaxVatSetupController extends Controller
 
     public function index(Request $request): Renderable
     {
-        $systemTaxVat = $this->systemTaxVat->with('additionalData')->when(config('taxvat.country_type') == 'single', function ($query) {
+        $systemTaxVat = $this->systemTaxVat->with('additionalData')->when($this->getCountryType() == 'single', function ($query) {
             $query->where('is_default', true);
         }, function ($query) use ($request) {
             $query->where('country_code', $request->country_code);
@@ -50,14 +48,17 @@ class SystemTaxVatSetupController extends Controller
 
 
         $taxVats = $this->taxVat->where('is_active', 1)
-            ->when(config('taxvat.country_type') == 'single', function ($query) {
+            ->when($this->getCountryType() == 'single', function ($query) {
                 $query->where('is_default', true);
             }, function ($query) use ($request) {
                 $query->where('country_code', $request->country_code);
             })
             ->latest()->get(['id', 'name', 'tax_rate']);
         $country_code = null;
-        return view('taxvat::system_tax_setup', compact('taxVats', 'systemTaxVat', 'country_code'));
+
+        $systemData =$this->getPorjectWiseSystemData();
+
+        return view($this->getProjectWiseViewPath('SystemTaxVatSetupController','index'), compact('taxVats', 'systemTaxVat', 'country_code' ,'systemData'));
     }
 
 
@@ -67,19 +68,19 @@ class SystemTaxVatSetupController extends Controller
         $systemTaxVat->tax_type = $request->tax_type ?? 'order_wise';
         $systemTaxVat->tax_payer = $request->tax_payer ??  'vendor';
         $systemTaxVat->tax_vat_ids = $request->tax_vat_ids;
-        if (config('taxvat.country_type') == 'multi') {
+        if ($this->getCountryType() !== 'single') {
             $systemTaxVat->country_code = $request->country_code ?? $systemTaxVat?->country_code;
         }
         $systemTaxVat->is_included = $request->tax_status == 'include' ? 1 : 0;
         $systemTaxVat->save();
-        foreach (config('taxvat.' . config('taxvat.project') . '.additional_tax') ?? [] as $item) {
+        foreach ($this->getPorjectWiseSystemData('additional_tax') ?? [] as $item) {
             $taxOnAdditionalData = $this->taxOnAdditionalData->where('system_tax_vat_id', $systemTaxVat->id)->where('name', $item)->firstOrNew();
             $taxOnAdditionalData->name = $item;
             $taxOnAdditionalData->system_tax_vat_id = $systemTaxVat->id;
             $taxOnAdditionalData->tax_payer = $systemTaxVat->tax_payer;
             $taxOnAdditionalData->is_default =  $systemTaxVat->is_default;
             $taxOnAdditionalData->is_included =  $systemTaxVat->is_included;
-            if (config('taxvat.country_type') == 'multi') {
+            if ($this->getCountryType() !== 'single') {
                 $taxOnAdditionalData->country_code = $request->country_code ?? $systemTaxVat?->country_code;
             }
             $taxOnAdditionalData->is_active = isset($request->additional_status[$item]) && array_key_exists($item, $request->additional_status) ? 1 : 0;
@@ -87,8 +88,7 @@ class SystemTaxVatSetupController extends Controller
             $taxOnAdditionalData->tax_vat_ids = $request->additional[$item] ?? $taxOnAdditionalData->tax_vat_ids ?? [];
             $taxOnAdditionalData->save();
         }
-
-        Toastr::success(translate('messages.Tax_Settings_Updated_Successfully'));
+        $this->showNotification('successMessage', translate('messages.Tax_Settings_Updated_Successfully'));
         return back();
     }
 
@@ -100,7 +100,7 @@ class SystemTaxVatSetupController extends Controller
             $systemTaxVat = $this->systemTaxVat;
             $systemTaxVat->is_default = true;
             $systemTaxVat->is_included = true;
-            if (config('taxvat.country_type') == 'multi') {
+            if ($this->getCountryType() !== 'single') {
                 $systemTaxVat->country_code = $request->country_code ?? $systemTaxVat?->country_code;
                 $systemTaxVat->is_default = false;
             }
