@@ -44,7 +44,17 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         $categories = Category::where(['position' => 0])->get();
-        return view('admin-views.product.index', compact('categories'));
+
+        $productWiseTax= false;
+        $taxVats= [];
+        if(addon_published_status('TaxVat')){
+            $SystemTaxVat= \Modules\TaxVat\Entities\SystemTaxVat::where('is_active',1)->where('is_default',1)->first();
+            if($SystemTaxVat?->tax_type == 'product_wise'){
+                $productWiseTax= true;
+                $taxVats=  \Modules\TaxVat\Entities\TaxVat::where('is_active',1)->where('is_default',1)->get(['id','name','tax_rate']);
+            }
+        }
+        return view('admin-views.product.index', compact('categories' ,'productWiseTax','taxVats'));
     }
 
     public function store(Request $request)
@@ -355,6 +365,23 @@ class ItemController extends Controller
             $item_details->save();
         }
 
+            if(addon_published_status('TaxVat')){
+                $SystemTaxVat= \Modules\TaxVat\Entities\SystemTaxVat::where('is_active',1)->where('is_default',1)->first();
+                if($SystemTaxVat?->tax_type == 'product_wise'){
+                    foreach($request['tax_vat_ids'] ?? [] as $tax_id){
+                        \Modules\TaxVat\Entities\TaxOnMultiData::create(
+                                    [
+                                        'data_type' => Item::class,
+                                        'data_id' => $item->id,
+                                        'system_tax_vat_id' => $SystemTaxVat->id
+                                        ,'tax_vat_id' => $tax_id
+                                    ],
+                                );
+                    }
+
+                }
+            }
+
         Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Item', data_id: $item->id, data_value: $item->name);
         Helpers::add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: 'Item', data_id: $item->id, data_value: $item->description);
 
@@ -390,7 +417,20 @@ class ItemController extends Controller
             $sub_category = null;
         }
 
-        return view('admin-views.product.edit', compact('product', 'sub_category', 'category','temp_product'));
+        $productWiseTax= false;
+        $taxVats= [];
+        $taxVatIds= [];
+
+        if(addon_published_status('TaxVat')){
+           $taxVatIds = $product->taxVats()->pluck('tax_vat_id')->toArray();
+            $SystemTaxVat= \Modules\TaxVat\Entities\SystemTaxVat::where('is_active',1)->where('is_default',1)->first();
+            if($SystemTaxVat?->tax_type == 'product_wise'){
+                $productWiseTax= true;
+                $taxVats=  \Modules\TaxVat\Entities\TaxVat::where('is_active',1)->where('is_default',1)->get(['id','name','tax_rate']);
+            }
+        }
+
+        return view('admin-views.product.edit', compact('product', 'sub_category', 'category','temp_product','productWiseTax','taxVats','taxVatIds'));
     }
 
     public function status(Request $request)
@@ -754,6 +794,33 @@ class ItemController extends Controller
                     ]
                 );
         }
+
+
+        if(addon_published_status('TaxVat') ){
+            $taxVatIds = $item->taxVats()->pluck('tax_vat_id')->toArray() ?? [];
+            $newTaxVatIds =  array_map('intval', $request['tax_vat_ids'] ?? []);
+            sort($newTaxVatIds);
+            sort($taxVatIds);
+                if( $newTaxVatIds != $taxVatIds ){
+                    $item->taxVats()->delete();
+                    $SystemTaxVat= \Modules\TaxVat\Entities\SystemTaxVat::where('is_active',1)->where('is_default',1)->first();
+                    if($SystemTaxVat?->tax_type == 'product_wise'){
+                        foreach($request['tax_vat_ids'] ?? [] as $tax_id){
+                            \Modules\TaxVat\Entities\TaxOnMultiData::create(
+                                        [
+                                            'data_type' => Item::class,
+                                            'data_id' => $item->id,
+                                            'system_tax_vat_id' => $SystemTaxVat->id
+                                            ,'tax_vat_id' => $tax_id
+                                        ],
+                                    );
+                        }
+
+                    }
+                }
+            }
+
+
         Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Item', data_id: $item->id, data_value: $item->name);
         Helpers::add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: 'Item', data_id: $item->id, data_value: $item->description);
 
@@ -781,6 +848,8 @@ class ItemController extends Controller
             Helpers::check_and_delete('product/' , $value['img']);
         }
         $product?->translations()->delete();
+        $product?->taxVats()->delete();
+
         $product->delete();
         Toastr::success(translate('messages.product_deleted_successfully'));
         return back();
@@ -1970,6 +2039,15 @@ class ItemController extends Controller
         }
 
         $item?->translations()?->delete();
+        $item?->taxVats()?->delete();
+         if(addon_published_status('TaxVat')){
+                $SystemTaxVat= \Modules\TaxVat\Entities\SystemTaxVat::where('is_active',1)->where('is_default',1)->first();
+                if($SystemTaxVat?->tax_type == 'product_wise'){
+                    \Modules\TaxVat\Entities\TaxOnMultiData::where('data_type' , 'App\Models\TempProduct')->where('data_id' , $data->id)
+                    ->update(['data_type' => 'App\Models\Item','data_id' => $item->id ]);
+                }
+            }
+
         Translation::where('translationable_type' , 'App\Models\TempProduct')->where('translationable_id' , $data->id)->update([
             'translationable_type' => 'App\Models\Item',
             'translationable_id' => $item->id

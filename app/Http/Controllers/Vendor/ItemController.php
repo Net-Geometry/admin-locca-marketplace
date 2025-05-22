@@ -48,6 +48,7 @@ class ItemController extends Controller
             $query->where('module_id' , Helpers::get_store_data()->module_id)->orWhere('module_id' , null);
         })->get();
         $module_data = config('module.'. Helpers::get_store_data()->module->module_type);
+        
         return view('vendor-views.product.index', compact('categories','module_data','conditions','brands'));
     }
 

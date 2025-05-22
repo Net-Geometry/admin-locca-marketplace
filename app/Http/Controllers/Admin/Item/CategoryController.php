@@ -64,8 +64,17 @@ class CategoryController extends BaseController
         );
 
         $language = getWebConfig('language');
-        $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view($this->categoryService->getViewByPosition($request['position']), compact('categories','language','defaultLang','mainCategories'));
+        $categoryWiseTax= false;
+        $taxVats= [];
+        if(addon_published_status('TaxVat')){
+            $SystemTaxVat= \Modules\TaxVat\Entities\SystemTaxVat::where('is_active',1)->where('is_default',1)->first();
+            if($SystemTaxVat?->tax_type == 'category_wise'){
+                $categoryWiseTax= true;
+                $taxVats=  \Modules\TaxVat\Entities\TaxVat::where('is_active',1)->where('is_default',1)->get(['id','name','tax_rate']);
+            }
+        }
+
+        return view($this->categoryService->getViewByPosition($request['position']), compact('categories','language','mainCategories','categoryWiseTax','taxVats'));
     }
 
     public function add(CategoryAddRequest $request): RedirectResponse
@@ -78,6 +87,25 @@ class CategoryController extends BaseController
             )
         );
         $this->translationRepo->addByModel(request: $request, model: $category, modelPath: 'App\Models\Category', attribute: 'name');
+
+            if(addon_published_status('TaxVat')){
+                $SystemTaxVat= \Modules\TaxVat\Entities\SystemTaxVat::where('is_active',1)->where('is_default',1)->first();
+                if($SystemTaxVat?->tax_type == 'category_wise'){
+
+                    foreach($request['tax_vat_ids'] ?? [] as $tax_ids){
+                        \Modules\TaxVat\Entities\TaxOnMultiData::create(
+                                    [
+                                        'data_type' => 'App\Models\Category',
+                                        'data_id' => $category->id,
+                                        'system_tax_vat_id' => $SystemTaxVat->id
+                                        ,'tax_vat_id' => $tax_ids
+                                    ],
+                                );
+                    }
+
+                }
+            }
+
         Toastr::success( $request['position'] == 0 ?    translate('messages.category_added_successfully') : translate('messages.Sub_category_added_successfully'));
         return back();
     }
@@ -86,8 +114,20 @@ class CategoryController extends BaseController
     {
         $category = $this->categoryRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
         $language = getWebConfig('language');
-        $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view(CategoryViewPath::UPDATE['view'], compact('category','language','defaultLang'));
+        $categoryWiseTax= false;
+        $taxVats= [];
+        $taxVatIds= [];
+
+        if(addon_published_status('TaxVat')){
+           $taxVatIds = $category->taxVats()->pluck('tax_vat_id')->toArray();
+            $SystemTaxVat= \Modules\TaxVat\Entities\SystemTaxVat::where('is_active',1)->where('is_default',1)->first();
+            if($SystemTaxVat?->tax_type == 'category_wise'){
+                $categoryWiseTax= true;
+                $taxVats=  \Modules\TaxVat\Entities\TaxVat::where('is_active',1)->where('is_default',1)->get(['id','name','tax_rate']);
+            }
+        }
+
+        return view(CategoryViewPath::UPDATE['view'], compact('category','language','categoryWiseTax','taxVats','taxVatIds'));
     }
 
     public function updateStatus(Request $request): RedirectResponse
@@ -109,12 +149,40 @@ class CategoryController extends BaseController
         $mainCategory = $this->categoryRepo->getFirstWhere(params: ['id' => $id]);
         $category = $this->categoryRepo->update(id: $id, data: $this->categoryService->getUpdateData(request: $request, object: $mainCategory));
         $this->translationRepo->updateByModel(request: $request, model: $category, modelPath: 'App\Models\Category', attribute: 'name');
+
+
+        if(addon_published_status('TaxVat') && $category['position'] == 0){
+            $taxVatIds = $category->taxVats()->pluck('tax_vat_id')->toArray() ?? [];
+            $newTaxVatIds =  array_map('intval', $request['tax_vat_ids'] ?? []);
+            sort($newTaxVatIds);
+            sort($taxVatIds);
+                if( $newTaxVatIds != $taxVatIds ){
+                    $category->taxVats()->delete();
+                    $SystemTaxVat= \Modules\TaxVat\Entities\SystemTaxVat::where('is_active',1)->where('is_default',1)->first();
+                    if($SystemTaxVat?->tax_type == 'category_wise'){
+                        foreach($request['tax_vat_ids'] ?? [] as $tax_ids){
+                            \Modules\TaxVat\Entities\TaxOnMultiData::create(
+                                        [
+                                            'data_type' => 'App\Models\Category',
+                                            'data_id' => $category->id,
+                                            'system_tax_vat_id' => $SystemTaxVat->id
+                                            ,'tax_vat_id' => $tax_ids
+                                        ],
+                                    );
+                        }
+
+                    }
+                }
+            }
+
+
         Toastr::success( $category['position'] == 0 ?    translate('messages.category_updated_successfully') : translate('messages.Sub_category_updated_successfully'));
         return redirect()->route('admin.category.add',['position' => $mainCategory->position]);
     }
 
     public function delete(Request $request): RedirectResponse
     {
+        
         if ($this->categoryRepo->delete(id: $request['id'])) {
             Toastr::success('Category removed!');
         } else {

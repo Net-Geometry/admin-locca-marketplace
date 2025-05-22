@@ -295,12 +295,6 @@ if (!function_exists('config_settings')) {
         }
     }
 
-    if (! function_exists('getPaginationConfig')) {
-        function getPaginationConfig()
-        {
-            return config('default_pagination');
-        }
-    }
 
 
 }

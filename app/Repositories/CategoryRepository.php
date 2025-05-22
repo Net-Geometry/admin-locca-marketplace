@@ -163,6 +163,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $category = $this->category->find($id);
         if ($category->childes->count() == 0) {
+            $category?->taxVats()->delete();
             $category->translations()->delete();
             $category->delete();
         } else {
