@@ -173,6 +173,11 @@ class ConfigController extends Controller
                 return Vehicle::where('day_wise_price' ,'>','0')->min('day_wise_price');
             });
         }
+        if(addon_published_status('TaxVat')){
+          $systemTax=  \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+        }
+
+
         return response()->json([
             'business_name' => $settings['business_name'],
             'logo' => $settings['logo'],
@@ -303,6 +308,8 @@ class ConfigController extends Controller
             'admin_free_delivery' =>$admin_free_delivery,
             'is_sms_active' =>  (boolean)  Setting::whereJsonContains('live_values->status','1')->where('settings_type', 'sms_config')->exists(),
             'is_mail_active' =>  (boolean)config('mail.status'),
+            'system_tax_type' => $systemTax?->tax_type ?? null,
+            'system_tax_include_status' => (int) $systemTax?->is_included,
         ]);
     }
 
@@ -313,6 +320,11 @@ class ConfigController extends Controller
         });
 
         return $data ?? 0;
+    }
+    public function getTaxVatList()
+    {
+        $data = \Modules\TaxVat\Entities\TaxVat::where('is_active', 1)->select('id', 'name','tax_rate')->get();
+        return response()->json($data, 200);
     }
 
     public function get_zone(Request $request)

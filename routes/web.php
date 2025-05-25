@@ -15,6 +15,7 @@ use App\Http\Controllers\FlutterwaveV3Controller;
 use App\Http\Controllers\PaypalPaymentController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\SslCommerzPaymentController;
+use Illuminate\Support\Facades\Http;
 
 /*
 |--------------------------------------------------------------------------

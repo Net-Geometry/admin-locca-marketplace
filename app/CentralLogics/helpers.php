@@ -526,6 +526,9 @@ class Helpers
                 $item['allergies_name']= $item?->allergies ?Allergy::whereIn('id',$item?->allergies->pluck('id') )->pluck('allergy') : null;
                 $item['generic_name']= $item?->generic ? GenericName::whereIn('id',$item?->generic->pluck('id') )->pluck('generic_name'): null ;
 
+                $item['tax_vat_name']= $item?->taxVats ? \Modules\TaxVat\Entities\TaxVat::whereIn('id',$item?->taxVats()->pluck('tax_vat_id')->toArray())->pluck('name', 'id')->toArray(): [] ;
+
+                unset($item['taxVats']);
                 unset($item['nutritions']);
                 unset($item['allergies']);
                 unset($item['generic']);
@@ -638,6 +641,9 @@ class Helpers
             $data['allergies_name']= $data?->allergies ?Allergy::whereIn('id',$data?->allergies->pluck('id') )->pluck('allergy') : null;
             $data['generic_name']= $data?->generic ? GenericName::whereIn('id',$data?->generic->pluck('id') )->pluck('generic_name'): null ;
 
+            $data['tax_vat_name']= $data?->taxVats ? \Modules\TaxVat\Entities\TaxVat::whereIn('id',$data?->taxVats()->pluck('tax_vat_id')->toArray())->pluck('name', 'id')->toArray(): [] ;
+
+            unset($data['taxVats']);
 
             if (!$trans) {
                 unset($data['translations']);
@@ -4528,6 +4534,7 @@ class Helpers
         }
         return null;
     }
+
 
     public static function deleteCacheData($prefix)
     {

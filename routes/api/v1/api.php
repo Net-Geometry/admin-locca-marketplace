@@ -304,6 +304,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         Route::get('place-api-details', 'ConfigController@place_api_details');
         Route::get('geocode-api', 'ConfigController@geocode_api');
         Route::get('get-PaymentMethods', 'ConfigController@getPaymentMethods');
+        Route::get('get-taxVat-list', 'ConfigController@getTaxVatList');
     });
 
     Route::group(['prefix' => 'testimonial'], function () {
