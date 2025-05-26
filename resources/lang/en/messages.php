@@ -7620,4 +7620,5 @@ Smartly or Earn. ',
   'The price must be between .01 and 999999999999.99.' => 'The price must be between .01 and 999999999999.99.',
   'The store id field is required.' => 'The store id field is required.',
   'Discount amount can t be greater than 100%' => 'Discount amount can t be greater than 100%',
+  'This_amount_must_grater_then_order_amount' => 'This amount must grater then order amount',
 );

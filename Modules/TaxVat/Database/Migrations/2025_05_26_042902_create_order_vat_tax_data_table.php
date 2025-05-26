@@ -1,0 +1,45 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateOrderVatTaxDataTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('order_vat_tax_data', function (Blueprint $table) {
+            $table->id();
+            $table->string('tax_name');
+            $table->string('tax_type');
+            $table->string('tax_from');
+            $table->double('tax_percentage', 23, 8)->default(0);
+            $table->double('tax_amount', 23, 8)->default(0);
+            $table->double('before_tax_amount', 23, 8)->default(0);
+            $table->double('after_tax_amount', 23, 8)->default(0);
+            $table->string('tax_payer')->nullable();
+            $table->string('country_code',20)->nullable()->index();
+            $table->foreignId('order_id')->nullable();
+            $table->foreignId('tax_vat_id');
+            $table->foreignId('data_id')->nullable();
+            $table->string('data_type')->nullable();
+            $table->foreignId('system_tax_vat_id');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('order_vat_tax_data');
+    }
+}
