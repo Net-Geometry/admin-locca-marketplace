@@ -95,8 +95,8 @@ class CategoryController extends BaseController
                     foreach($request['tax_ids'] ?? [] as $tax_ids){
                         \Modules\TaxManager\Entities\Taxable::create(
                                     [
-                                        'data_type' => 'App\Models\Category',
-                                        'data_id' => $category->id,
+                                        'taxable_type' => 'App\Models\Category',
+                                        'taxable_id' => $category->id,
                                         'system_tax_setup_id' => $SystemTaxVat->id
                                         ,'tax_id' => $tax_ids
                                     ],
@@ -163,8 +163,8 @@ class CategoryController extends BaseController
                         foreach($request['tax_ids'] ?? [] as $tax_ids){
                             \Modules\TaxManager\Entities\Taxable::create(
                                         [
-                                            'data_type' => 'App\Models\Category',
-                                            'data_id' => $category->id,
+                                            'taxable_type' => 'App\Models\Category',
+                                            'taxable_id' => $category->id,
                                             'system_tax_setup_id' => $SystemTaxVat->id
                                             ,'tax_id' => $tax_ids
                                         ],

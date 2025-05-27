@@ -21,7 +21,6 @@ trait VatTaxConfiguration
 
     public static function getPorjectWiseSystemData($key = null)
     {
-        $project = self::getProjectName();
         $allProjects = [
             '6ammart' => [
                 'tax_claculate_from' => ['Calculate_Tax_on_Billing_Address_Location'],
@@ -35,16 +34,11 @@ trait VatTaxConfiguration
             ]
         ];
 
-
-        if ($project && array_key_exists($project, $allProjects)) {
-            return $key ? data_get($allProjects[$project], $key, []) : $allProjects[$project];
-        }
-        return $allProjects;
+        return self::getData($allProjects, $key);
     }
 
     public static function getProjectWiseViewPath($name)
     {
-        $project = self::getProjectName();
         $allProjects = [
             '6ammart' => [
                 'tax_list_export' =>  'taxmanager::file-exports.tax_list_export',
@@ -59,14 +53,37 @@ trait VatTaxConfiguration
 
         ];
 
+        return self::getData($allProjects, $name);
+    }
+    public static function getClassNames($model)
+    {
+        $allProjects = [
+            '6ammart' => [
+                'product' => 'App/Models/Item',
+                'category' =>  'App/Models/Category',
+            ],
+            'stackfood' => [
+                'product' => 'App/Models/Food',
+                'category' =>  'App/Models/Category',
+            ],
+            '6valley' => [
+                'product' => 'App/Models/Product',
+                'category' =>  'App/Models/Category',
+            ],
+        ];
 
-        if ($project && array_key_exists($project, $allProjects)) {
-            return $name ? data_get($allProjects[$project], $name, []) : $allProjects[$project];
-        }
-        return $allProjects;
+        return self::getData($allProjects, $model);
     }
 
 
+    private static function getData($array, $key = null)
+    {
+        $project = self::getProjectName();
+        if ($project && array_key_exists($project, $array)) {
+            return $key ? data_get($array[$project], $key, []) : $array[$project];
+        }
+        return $array;
+    }
 
 
     public function showNotification($type, $message)

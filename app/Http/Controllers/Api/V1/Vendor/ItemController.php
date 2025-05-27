@@ -378,8 +378,8 @@ class ItemController extends Controller
                 foreach (json_decode($request->tax_ids??'[]', true) ?? [] as $tax_id) {
                     \Modules\TaxManager\Entities\Taxable::create(
                         [
-                            'data_type' => Item::class,
-                            'data_id' => $item->id,
+                            'taxable_type' => Item::class,
+                            'taxable_id' => $item->id,
                             'system_tax_setup_id' => $SystemTaxVat->id,
                             'tax_id' => $tax_id
                         ],
@@ -756,8 +756,8 @@ class ItemController extends Controller
                     foreach ($taxIds ?? [] as $tax_id) {
                         \Modules\TaxManager\Entities\Taxable::create(
                             [
-                                'data_type' => Item::class,
-                                'data_id' => $p->id,
+                                'taxable_type' => Item::class,
+                                'taxable_id' => $p->id,
                                 'system_tax_setup_id' => $SystemTaxVat->id,
                                 'tax_id' => $tax_id
                             ],
@@ -1152,8 +1152,8 @@ class ItemController extends Controller
                 foreach ($taxIds ?? [] as $tax_id) {
                     \Modules\TaxManager\Entities\Taxable::create(
                         [
-                            'data_type' => TempProduct::class,
-                            'data_id' => $item->id,
+                            'taxable_type' => TempProduct::class,
+                            'taxable_id' => $item->id,
                             'system_tax_setup_id' => $SystemTaxVat->id,
                             'tax_id' => $tax_id
                         ],

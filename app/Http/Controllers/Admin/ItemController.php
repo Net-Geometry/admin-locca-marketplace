@@ -370,8 +370,8 @@ class ItemController extends Controller
                 foreach ($request['tax_ids'] ?? [] as $tax_id) {
                     \Modules\TaxManager\Entities\Taxable::create(
                         [
-                            'data_type' => Item::class,
-                            'data_id' => $item->id,
+                            'taxable_type' => Item::class,
+                            'taxable_id' => $item->id,
                             'system_tax_setup_id' => $SystemTaxVat->id,
                             'tax_id' => $tax_id
                         ],
@@ -802,8 +802,8 @@ class ItemController extends Controller
                     foreach ($request['tax_ids'] ?? [] as $tax_id) {
                         \Modules\TaxManager\Entities\Taxable::create(
                             [
-                                'data_type' => Item::class,
-                                'data_id' => $item->id,
+                                'taxable_type' => Item::class,
+                                'taxable_id' => $item->id,
                                 'system_tax_setup_id' => $SystemTaxVat->id,
                                 'tax_id' => $tax_id
                             ],
