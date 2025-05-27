@@ -31,7 +31,6 @@ use App\Models\PharmacyItemDetails;
 use App\Http\Controllers\Controller;
 use App\Models\EcommerceItemDetails;
 use Brian2694\Toastr\Facades\Toastr;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -47,11 +46,11 @@ class ItemController extends Controller
 
         $productWiseTax = false;
         $taxVats = [];
-        if (addon_published_status('TaxVat')) {
-            $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+        if (addon_published_status('TaxManager')) {
+            $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
             if ($SystemTaxVat?->tax_type == 'product_wise') {
                 $productWiseTax = true;
-                $taxVats =  \Modules\TaxVat\Entities\TaxVat::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
+                $taxVats =  \Modules\TaxManager\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
             }
         }
         return view('admin-views.product.index', compact('categories', 'productWiseTax', 'taxVats'));
@@ -365,16 +364,16 @@ class ItemController extends Controller
             $item_details->save();
         }
 
-        if (addon_published_status('TaxVat')) {
-            $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+        if (addon_published_status('TaxManager')) {
+            $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
             if ($SystemTaxVat?->tax_type == 'product_wise') {
-                foreach ($request['tax_vat_ids'] ?? [] as $tax_id) {
-                    \Modules\TaxVat\Entities\TaxOnMultiData::create(
+                foreach ($request['tax_ids'] ?? [] as $tax_id) {
+                    \Modules\TaxManager\Entities\Taxable::create(
                         [
                             'data_type' => Item::class,
                             'data_id' => $item->id,
-                            'system_tax_vat_id' => $SystemTaxVat->id,
-                            'tax_vat_id' => $tax_id
+                            'system_tax_setup_id' => $SystemTaxVat->id,
+                            'tax_id' => $tax_id
                         ],
                     );
                 }
@@ -420,12 +419,12 @@ class ItemController extends Controller
         $taxVats = [];
         $taxVatIds = [];
 
-        if (addon_published_status('TaxVat')) {
-            $taxVatIds = $product->taxVats()->pluck('tax_vat_id')->toArray();
-            $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+        if (addon_published_status('TaxManager')) {
+            $taxVatIds = $product->taxVats()->pluck('tax_id')->toArray();
+            $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
             if ($SystemTaxVat?->tax_type == 'product_wise') {
                 $productWiseTax = true;
-                $taxVats =  \Modules\TaxVat\Entities\TaxVat::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
+                $taxVats =  \Modules\TaxManager\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
             }
         }
 
@@ -791,22 +790,22 @@ class ItemController extends Controller
         }
 
 
-        if (addon_published_status('TaxVat')) {
-            $taxVatIds = $item->taxVats()->pluck('tax_vat_id')->toArray() ?? [];
-            $newTaxVatIds =  array_map('intval', $request['tax_vat_ids'] ?? []);
+        if (addon_published_status('TaxManager')) {
+            $taxVatIds = $item->taxVats()->pluck('tax_id')->toArray() ?? [];
+            $newTaxVatIds =  array_map('intval', $request['tax_ids'] ?? []);
             sort($newTaxVatIds);
             sort($taxVatIds);
             if ($newTaxVatIds != $taxVatIds) {
                 $item->taxVats()->delete();
-                $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+                $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
                 if ($SystemTaxVat?->tax_type == 'product_wise') {
-                    foreach ($request['tax_vat_ids'] ?? [] as $tax_id) {
-                        \Modules\TaxVat\Entities\TaxOnMultiData::create(
+                    foreach ($request['tax_ids'] ?? [] as $tax_id) {
+                        \Modules\TaxManager\Entities\Taxable::create(
                             [
                                 'data_type' => Item::class,
                                 'data_id' => $item->id,
-                                'system_tax_vat_id' => $SystemTaxVat->id,
-                                'tax_vat_id' => $tax_id
+                                'system_tax_setup_id' => $SystemTaxVat->id,
+                                'tax_id' => $tax_id
                             ],
                         );
                     }
@@ -2027,10 +2026,10 @@ class ItemController extends Controller
 
         $item?->translations()?->delete();
         $item?->taxVats()?->delete();
-        if (addon_published_status('TaxVat')) {
-            $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+        if (addon_published_status('TaxManager')) {
+            $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
             if ($SystemTaxVat?->tax_type == 'product_wise') {
-                \Modules\TaxVat\Entities\TaxOnMultiData::where('data_type', 'App\Models\TempProduct')->where('data_id', $data->id)
+                \Modules\TaxManager\Entities\Taxable::where('data_type', 'App\Models\TempProduct')->where('data_id', $data->id)
                     ->update(['data_type' => 'App\Models\Item', 'data_id' => $item->id]);
             }
         }

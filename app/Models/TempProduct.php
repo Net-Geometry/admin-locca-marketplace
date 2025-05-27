@@ -8,7 +8,7 @@ use App\Scopes\StoreScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
-use Modules\TaxVat\Entities\TaxOnMultiData;
+use Modules\TaxManager\Entities\Taxable;
 
 class TempProduct extends Model
 {
@@ -187,6 +187,6 @@ class TempProduct extends Model
     }
        public function taxVats()
     {
-        return $this->morphMany(TaxOnMultiData::class, 'data');
+        return $this->morphMany(Taxable::class, 'taxable');
     }
 }

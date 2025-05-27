@@ -372,16 +372,16 @@ class ItemController extends Controller
         Translation::insert($data);
 
 
-      if (addon_published_status('TaxVat')) {
-            $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+      if (addon_published_status('TaxManager')) {
+            $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
             if ($SystemTaxVat?->tax_type == 'product_wise') {
-                foreach (json_decode($request->tax_vat_ids??'[]', true) ?? [] as $tax_id) {
-                    \Modules\TaxVat\Entities\TaxOnMultiData::create(
+                foreach (json_decode($request->tax_ids??'[]', true) ?? [] as $tax_id) {
+                    \Modules\TaxManager\Entities\Taxable::create(
                         [
                             'data_type' => Item::class,
                             'data_id' => $item->id,
-                            'system_tax_vat_id' => $SystemTaxVat->id,
-                            'tax_vat_id' => $tax_id
+                            'system_tax_setup_id' => $SystemTaxVat->id,
+                            'tax_id' => $tax_id
                         ],
                     );
                 }
@@ -395,7 +395,7 @@ class ItemController extends Controller
         $product_approval_datas = \App\Models\BusinessSetting::where('key', 'product_approval_datas')->first()?->value ?? '';
         $product_approval_datas =json_decode($product_approval_datas , true);
         if (Helpers::get_mail_status('product_approval') && data_get($product_approval_datas,'Add_new_product',null) == 1) {
-            $this->store_temp_data(data: $item, request: $request, tag_ids:$tag_ids, nutrition_ids: $nutrition_ids, allergy_ids:$allergy_ids, generic_ids:$generic_ids , taxIds: json_decode($request->tax_vat_ids??'[]', true) ?? null);
+            $this->store_temp_data(data: $item, request: $request, tag_ids:$tag_ids, nutrition_ids: $nutrition_ids, allergy_ids:$allergy_ids, generic_ids:$generic_ids , taxIds: json_decode($request->tax_ids??'[]', true) ?? null);
             $item->is_approved = 0;
             $item->save();
             return response()->json(['message' => translate('messages.The_product_will_be_published_once_it_receives_approval_from_the_admin.')], 200);
@@ -690,7 +690,7 @@ class ItemController extends Controller
         $product_approval_datas = \App\Models\BusinessSetting::where('key', 'product_approval_datas')->first()?->value ?? '';
         $product_approval_datas =json_decode($product_approval_datas , true);
 
-        $taxIds =json_decode($request->tax_vat_ids??'[]' , true);
+        $taxIds =json_decode($request->tax_ids??'[]' , true);
         if (Helpers::get_mail_status('product_approval') && ((data_get($product_approval_datas,'Update_anything_in_product_details',null) == 1) || (data_get($product_approval_datas,'Update_product_price',null) == 1 && $old_price !=  $request->price) || ( data_get($product_approval_datas,'Update_product_variation',null) == 1 &&  $variation_changed)) )  {
 
             $this->store_temp_data(data: $p, request: $request,tag_ids: $tag_ids, nutrition_ids: $nutrition_ids, allergy_ids: $allergy_ids, generic_ids: $generic_ids , update: true , taxIds: $taxIds);
@@ -744,22 +744,22 @@ class ItemController extends Controller
         }
 
 
-            if (addon_published_status('TaxVat') && $taxIds) {
-            $taxVatIds = $p->taxVats()->pluck('tax_vat_id')->toArray() ?? [];
+            if (addon_published_status('TaxManager') && $taxIds) {
+            $taxVatIds = $p->taxVats()->pluck('tax_id')->toArray() ?? [];
             $newTaxVatIds =  array_map('intval', $taxIds ?? []);
             sort($newTaxVatIds);
             sort($taxVatIds);
             if ($newTaxVatIds != $taxVatIds) {
                 $p->taxVats()->delete();
-                $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+                $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
                 if ($SystemTaxVat?->tax_type == 'product_wise') {
                     foreach ($taxIds ?? [] as $tax_id) {
-                        \Modules\TaxVat\Entities\TaxOnMultiData::create(
+                        \Modules\TaxManager\Entities\Taxable::create(
                             [
                                 'data_type' => Item::class,
                                 'data_id' => $p->id,
-                                'system_tax_vat_id' => $SystemTaxVat->id,
-                                'tax_vat_id' => $tax_id
+                                'system_tax_setup_id' => $SystemTaxVat->id,
+                                'tax_id' => $tax_id
                             ],
                         );
                     }
@@ -1146,16 +1146,16 @@ class ItemController extends Controller
                 ['value' => $translated['value']]
             );
         }
-        if (addon_published_status('TaxVat')) {
-            $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+        if (addon_published_status('TaxManager')) {
+            $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
             if ($SystemTaxVat?->tax_type == 'product_wise') {
                 foreach ($taxIds ?? [] as $tax_id) {
-                    \Modules\TaxVat\Entities\TaxOnMultiData::create(
+                    \Modules\TaxManager\Entities\Taxable::create(
                         [
                             'data_type' => TempProduct::class,
                             'data_id' => $item->id,
-                            'system_tax_vat_id' => $SystemTaxVat->id,
-                            'tax_vat_id' => $tax_id
+                            'system_tax_setup_id' => $SystemTaxVat->id,
+                            'tax_id' => $tax_id
                         ],
                     );
                 }

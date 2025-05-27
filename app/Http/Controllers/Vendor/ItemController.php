@@ -49,11 +49,11 @@ class ItemController extends Controller
 
         $productWiseTax = false;
         $taxVats = [];
-        if (addon_published_status('TaxVat')) {
-            $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+        if (addon_published_status('TaxManager')) {
+            $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
             if ($SystemTaxVat?->tax_type == 'product_wise') {
                 $productWiseTax = true;
-                $taxVats =  \Modules\TaxVat\Entities\TaxVat::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
+                $taxVats =  \Modules\TaxManager\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
             }
         }
 
@@ -406,16 +406,16 @@ class ItemController extends Controller
             $item_details->save();
         }
 
-        if (addon_published_status('TaxVat')) {
-            $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+        if (addon_published_status('TaxManager')) {
+            $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
             if ($SystemTaxVat?->tax_type == 'product_wise') {
-                foreach ($request['tax_vat_ids'] ?? [] as $tax_id) {
-                    \Modules\TaxVat\Entities\TaxOnMultiData::create(
+                foreach ($request['tax_ids'] ?? [] as $tax_id) {
+                    \Modules\TaxManager\Entities\Taxable::create(
                         [
                             'data_type' => Item::class,
                             'data_id' => $food->id,
-                            'system_tax_vat_id' => $SystemTaxVat->id,
-                            'tax_vat_id' => $tax_id
+                            'system_tax_setup_id' => $SystemTaxVat->id,
+                            'tax_id' => $tax_id
                         ],
                     );
                 }
@@ -429,7 +429,7 @@ class ItemController extends Controller
         $product_approval_datas = \App\Models\BusinessSetting::where('key', 'product_approval_datas')->first()?->value ?? '';
         $product_approval_datas = json_decode($product_approval_datas, true);
         if (Helpers::get_mail_status('product_approval') && data_get($product_approval_datas, 'Add_new_product', null) == 1) {
-            $this->store_temp_data(data: $food, request: $request, tag_ids: $tag_ids,  nutrition_ids: $nutrition_ids, allergy_ids: $allergy_ids, generic_ids: $generic_ids, taxIds: $request['tax_vat_ids']);
+            $this->store_temp_data(data: $food, request: $request, tag_ids: $tag_ids,  nutrition_ids: $nutrition_ids, allergy_ids: $allergy_ids, generic_ids: $generic_ids, taxIds: $request['tax_ids']);
             $food->is_approved = 0;
             $food->save();
             return response()->json(['product_approval' => translate('messages.The_product_will_be_published_once_it_receives_approval_from_the_admin.')], 200);
@@ -479,12 +479,12 @@ class ItemController extends Controller
         $taxVats = [];
         $taxVatIds = [];
 
-        if (addon_published_status('TaxVat')) {
-            $taxVatIds = $product->taxVats()->pluck('tax_vat_id')->toArray();
-            $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+        if (addon_published_status('TaxManager')) {
+            $taxVatIds = $product->taxVats()->pluck('tax_id')->toArray();
+            $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
             if ($SystemTaxVat?->tax_type == 'product_wise') {
                 $productWiseTax = true;
-                $taxVats =  \Modules\TaxVat\Entities\TaxVat::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
+                $taxVats =  \Modules\TaxManager\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
             }
         }
         return view('vendor-views.product.edit', compact('product', 'product_category', 'categories', 'module_data', 'temp_product', 'conditions', 'brands', 'productWiseTax', 'taxVats', 'taxVatIds'));
@@ -758,7 +758,7 @@ class ItemController extends Controller
 
         if (Helpers::get_mail_status('product_approval') && ((data_get($product_approval_datas, 'Update_anything_in_product_details', null) == 1) || (data_get($product_approval_datas, 'Update_product_price', null) == 1 && $old_price !=  $request->price) || (data_get($product_approval_datas, 'Update_product_variation', null) == 1 &&  $variation_changed))) {
 
-            $this->store_temp_data(data: $p, request: $request, tag_ids: $tag_ids, nutrition_ids: $nutrition_ids, allergy_ids: $allergy_ids, generic_ids: $generic_ids, update: true, taxIds: $request['tax_vat_ids']);
+            $this->store_temp_data(data: $p, request: $request, tag_ids: $tag_ids, nutrition_ids: $nutrition_ids, allergy_ids: $allergy_ids, generic_ids: $generic_ids, update: true, taxIds: $request['tax_ids']);
             return response()->json(['product_approval' => translate('your_product_added_for_approval')], 200);
         } else {
             $p->image = $request->has('image') ? Helpers::update('product/', $p->image, 'png', $request->file('image')) : $p->image;
@@ -804,22 +804,22 @@ class ItemController extends Controller
                 );
         }
 
-        if (addon_published_status('TaxVat')) {
-            $taxVatIds = $p->taxVats()->pluck('tax_vat_id')->toArray() ?? [];
-            $newTaxVatIds =  array_map('intval', $request['tax_vat_ids'] ?? []);
+        if (addon_published_status('TaxManager')) {
+            $taxVatIds = $p->taxVats()->pluck('tax_id')->toArray() ?? [];
+            $newTaxVatIds =  array_map('intval', $request['tax_ids'] ?? []);
             sort($newTaxVatIds);
             sort($taxVatIds);
             if ($newTaxVatIds != $taxVatIds) {
                 $p->taxVats()->delete();
-                $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+                $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
                 if ($SystemTaxVat?->tax_type == 'product_wise') {
-                    foreach ($request['tax_vat_ids'] ?? [] as $tax_id) {
-                        \Modules\TaxVat\Entities\TaxOnMultiData::create(
+                    foreach ($request['tax_ids'] ?? [] as $tax_id) {
+                        \Modules\TaxManager\Entities\Taxable::create(
                             [
                                 'data_type' => Item::class,
                                 'data_id' => $p->id,
-                                'system_tax_vat_id' => $SystemTaxVat->id,
-                                'tax_vat_id' => $tax_id
+                                'system_tax_setup_id' => $SystemTaxVat->id,
+                                'tax_id' => $tax_id
                             ],
                         );
                     }
@@ -1823,16 +1823,16 @@ class ItemController extends Controller
                 );
         }
 
-        if (addon_published_status('TaxVat')) {
-            $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+        if (addon_published_status('TaxManager')) {
+            $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
             if ($SystemTaxVat?->tax_type == 'product_wise') {
                 foreach ($taxIds ?? [] as $tax_id) {
-                    \Modules\TaxVat\Entities\TaxOnMultiData::create(
+                    \Modules\TaxManager\Entities\Taxable::create(
                         [
                             'data_type' => TempProduct::class,
                             'data_id' => $temp_item->id,
-                            'system_tax_vat_id' => $SystemTaxVat->id,
-                            'tax_vat_id' => $tax_id
+                            'system_tax_setup_id' => $SystemTaxVat->id,
+                            'tax_id' => $tax_id
                         ],
                     );
                 }

@@ -173,8 +173,8 @@ class ConfigController extends Controller
                 return Vehicle::where('day_wise_price' ,'>','0')->min('day_wise_price');
             });
         }
-        if(addon_published_status('TaxVat')){
-          $systemTax=  \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+        if(addon_published_status('TaxManager')){
+          $systemTax=  \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
         }
 
 
@@ -323,7 +323,7 @@ class ConfigController extends Controller
     }
     public function getTaxVatList()
     {
-        $data = \Modules\TaxVat\Entities\TaxVat::where('is_active', 1)->select('id', 'name','tax_rate')->get();
+        $data = \Modules\TaxManager\Entities\Tax::where('is_active', 1)->select('id', 'name','tax_rate')->get();
         return response()->json($data, 200);
     }
 

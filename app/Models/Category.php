@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Modules\TaxVat\Entities\TaxOnMultiData;
+use Modules\TaxManager\Entities\Taxable;
 
 /**
  * Class Category
@@ -185,6 +185,6 @@ class Category extends Model
     }
     public function taxVats()
     {
-        return $this->morphMany(TaxOnMultiData::class, 'data');
+        return $this->morphMany(Taxable::class, 'taxable');
     }
 }

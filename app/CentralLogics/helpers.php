@@ -525,9 +525,9 @@ class Helpers
                 $item['nutritions_name']= $item?->nutritions ? Nutrition::whereIn('id',$item?->nutritions->pluck('id') )->pluck('nutrition') : null;
                 $item['allergies_name']= $item?->allergies ?Allergy::whereIn('id',$item?->allergies->pluck('id') )->pluck('allergy') : null;
                 $item['generic_name']= $item?->generic ? GenericName::whereIn('id',$item?->generic->pluck('id') )->pluck('generic_name'): null ;
-                $item['tax_vat_ids']= $item?->taxVats ?$item?->taxVats()->pluck('tax_vat_id')->toArray(): [] ;
+                $item['tax_ids']= $item?->taxVats ?$item?->taxVats()->pluck('tax_id')->toArray(): [] ;
 
-                
+
                 unset($item['taxVats']);
                 unset($item['nutritions']);
                 unset($item['allergies']);
@@ -641,7 +641,7 @@ class Helpers
             $data['allergies_name']= $data?->allergies ?Allergy::whereIn('id',$data?->allergies->pluck('id') )->pluck('allergy') : null;
             $data['generic_name']= $data?->generic ? GenericName::whereIn('id',$data?->generic->pluck('id') )->pluck('generic_name'): null ;
 
-            $data['tax_vat_ids']= $data?->taxVats ?$data?->taxVats()->pluck('tax_vat_id')->toArray(): [] ;
+            $data['tax_ids']= $data?->taxVats ?$data?->taxVats()->pluck('tax_id')->toArray(): [] ;
 
             unset($data['taxVats']);
 

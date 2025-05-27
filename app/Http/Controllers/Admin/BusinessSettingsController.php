@@ -7610,10 +7610,10 @@ class BusinessSettingsController extends Controller
                 'translationable_id' => $item->id
             ]);
             $item?->taxVats()?->delete();
-            if (addon_published_status('TaxVat')) {
-                $SystemTaxVat = \Modules\TaxVat\Entities\SystemTaxVat::where('is_active', 1)->where('is_default', 1)->first();
+            if (addon_published_status('TaxManager')) {
+                $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
                 if ($SystemTaxVat?->tax_type == 'product_wise') {
-                    \Modules\TaxVat\Entities\TaxOnMultiData::where('data_type', 'App\Models\TempProduct')->where('data_id', $data->id)
+                    \Modules\TaxManager\Entities\Taxable::where('data_type', 'App\Models\TempProduct')->where('data_id', $data->id)
                         ->update(['data_type' => 'App\Models\Item', 'data_id' => $item->id]);
                 }
             }

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\TaxVat\Entities\TaxOnMultiData;
+use Modules\TaxManager\Entities\Taxable;
 
 class Item extends Model
 {
@@ -347,6 +347,6 @@ class Item extends Model
 
      public function taxVats()
     {
-        return $this->morphMany(TaxOnMultiData::class, 'data');
+        return $this->morphMany(Taxable::class, 'taxable');
     }
 }
