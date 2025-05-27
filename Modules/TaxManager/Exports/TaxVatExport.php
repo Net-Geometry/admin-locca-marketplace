@@ -12,11 +12,12 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Modules\TaxManager\Traits\VatTaxConfiguration;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class TaxVatExport implements  FromView, ShouldAutoSize, WithStyles ,WithHeadings, WithEvents
 {
 
-    use Exportable;
+    use Exportable, VatTaxConfiguration;
     protected $data;
     // protected $search;
 
@@ -26,7 +27,7 @@ class TaxVatExport implements  FromView, ShouldAutoSize, WithStyles ,WithHeading
 
     public function view(): View
     {
-        return view('taxvat::file-exports.taxvat-export', [
+        return view($this->getProjectWiseViewPath('tax_list_export'), [
             'data' => $this->data,
         ]);
     }

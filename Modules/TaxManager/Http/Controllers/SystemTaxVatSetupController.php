@@ -53,7 +53,7 @@ class SystemTaxVatSetupController extends Controller
 
         $systemData =$this->getPorjectWiseSystemData();
 
-        return view($this->getProjectWiseViewPath('SystemTaxVatSetupController','index'), compact('taxVats', 'systemTaxVat', 'country_code' ,'systemData'));
+        return view($this->getProjectWiseViewPath('system_tax_setup'), compact('taxVats', 'systemTaxVat', 'country_code' ,'systemData'));
     }
 
 

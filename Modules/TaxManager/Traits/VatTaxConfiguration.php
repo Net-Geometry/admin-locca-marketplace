@@ -42,23 +42,26 @@ trait VatTaxConfiguration
         return $allProjects;
     }
 
-    public static function getProjectWiseViewPath($controller, $method)
+    public static function getProjectWiseViewPath($name)
     {
         $project = self::getProjectName();
         $allProjects = [
             '6ammart' => [
-                'TaxVatController' =>  ['index' => 'taxmanager::index',],
-                'SystemTaxVatSetupController' =>  ['index' => 'taxmanager::system_tax_setup',],
+                'tax_list_export' =>  'taxmanager::file-exports.tax_list_export',
+                'tax_list' =>  'taxmanager::tax.tax_list',
+                'system_tax_setup' =>  'taxmanager::tax.system_tax_setup',
             ],
             '6valley' => [
-                'TaxVatController' =>  ['index' => 'taxmanager::index',],
-                'SystemTaxVatSetupController' =>  ['index' => 'taxmanager::system_tax_setup',],
+                'tax_list_export' =>  'taxmanager::file-exports.tax_list_export',
+                'tax_list' =>  'taxmanager::tax.tax_list',
+                'system_tax_setup' =>  'taxmanager::tax.system_tax_setup',
             ],
+
         ];
 
 
         if ($project && array_key_exists($project, $allProjects)) {
-            return $method ? data_get($allProjects[$project], $controller . '.' . $method, []) : $allProjects[$project];
+            return $name ? data_get($allProjects[$project], $name, []) : $allProjects[$project];
         }
         return $allProjects;
     }

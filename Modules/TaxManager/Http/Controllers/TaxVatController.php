@@ -33,7 +33,7 @@ class TaxVatController extends Controller
     public function index(Request $request): Renderable
     {
        $taxVats = $this->getData($request)->paginate($this->getpagination());
-        return view($this->getProjectWiseViewPath('TaxVatController','index'), compact('taxVats'));
+        return view($this->getProjectWiseViewPath('tax_list'), compact('taxVats'));
     }
 
 
@@ -99,9 +99,9 @@ class TaxVatController extends Controller
         ];
 
         if ($request['type'] == 'csv') {
-            return Excel::download(new TaxVatExport($data), 'TaxVats.csv');
+            return Excel::download(new TaxVatExport($data), 'TaxList.csv');
         }
-        return Excel::download(new TaxVatExport($data), 'TaxVats.xlsx');
+        return Excel::download(new TaxVatExport($data), 'TaxList.xlsx');
     }
 
 
