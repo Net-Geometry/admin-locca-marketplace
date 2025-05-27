@@ -49,6 +49,9 @@
             }, function(response) {
 
                 $('#exampleModal').modal('hide');
+                if (!$('#system_tax_id').val()) {
+                        $('#system_tax_id').val(response.id);
+                    }
                 $('#vendor_tax_status').prop('checked', response.status);
                 $('#tax_settings').toggleClass('disabled', response.status != 1);
                     sent_notification('successMessage' , response.message);

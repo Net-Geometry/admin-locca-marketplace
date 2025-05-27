@@ -67,7 +67,7 @@ $countryCode= strtolower($country?$country->value:'auto');
 <!-- JS Preview mode only -->
 @include('layouts.admin.partials._header')
 
-@if(Request::is('admin/payment/configuration*') || Request::is('admin/sms/configuration*'))
+@if(Request::is('admin/payment/configuration*') || Request::is('admin/sms/configuration*') || Request::is('taxvat/*'))
 @php($module_type = 'settings')
 @endif
 

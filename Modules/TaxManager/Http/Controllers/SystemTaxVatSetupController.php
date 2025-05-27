@@ -59,6 +59,7 @@ class SystemTaxVatSetupController extends Controller
 
     public function systemTaxVatStore(Request $request): RedirectResponse
     {
+        $this->validateRequest($request);
         $systemTaxVat = $this->systemTaxVat->find($request->system_tax_id);
         $systemTaxVat->tax_type = $request->tax_type ?? 'order_wise';
         $systemTaxVat->tax_payer = $request->tax_payer ??  'vendor';
@@ -98,4 +99,13 @@ class SystemTaxVatSetupController extends Controller
         $systemTaxVat->save();
         return response()->json(['id' => $systemTaxVat->id, 'status' =>  $systemTaxVat->is_active, 'message' => translate('messages.vendor_tax_status_updated')]);
     }
+        private function validateRequest(Request $request, $id = null): void
+    {
+        $request->validate(
+            [
+                'tax_ids' => 'required_if:tax_type,order_wise',
+            ]
+        );
+    }
+
 }

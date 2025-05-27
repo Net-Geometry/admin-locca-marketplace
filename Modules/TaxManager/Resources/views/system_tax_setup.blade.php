@@ -2,6 +2,17 @@
 
 @section('title', translate('messages.Setup Tax Calculation'))
 
+ @section('taxManager')
+    active
+    @endsection
+    @section('taxManagerDisplay')
+    block
+    @endsection
+    @section('tax_system_setup')
+    show active
+    @endsection
+
+
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endpush
@@ -43,7 +54,7 @@
                     @method('put')
                     <input type="hidden" name="country_code"
                         value="{{ $country_code ?? ($systemTaxVat?->country_code ?? null) }}">
-                    <input type="hidden" name="system_tax_id" value="{{ $systemTaxVat?->id }}">
+                    <input type="hidden" id="system_tax_id" name="system_tax_id" value="{{ $systemTaxVat?->id }}">
                     <div class="card p-20">
                         <div class="bg--secondary p-15 rounded mb-20">
                             <div class="mb-20">
@@ -132,7 +143,7 @@
                                                 </select>
                                             </div>
                                             <div id="tax_rate_div"
-                                                class="{{ $systemTaxVat?->tax_type == 'order_wise' ? '' : 'd-none' }}">
+                                                class="{{!$systemTaxVat || $systemTaxVat?->tax_type == 'order_wise' ? '' : 'd-none' }}">
                                                 <span
                                                     class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
                                                 <select {{ $systemTaxVat?->tax_type == 'order_wise' ? 'selected' : '' }}

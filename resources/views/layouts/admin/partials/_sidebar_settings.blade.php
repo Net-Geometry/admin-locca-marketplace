@@ -461,6 +461,39 @@
                             </li>
                         @endif
 
+                        @if (addon_published_status('TaxManager'))
+                           <li class="navbar-vertical-aside-has-menu @yield('taxManager')">
+                               <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:">
+                                   <i class="tio-wallet nav-icon"></i>
+                                   <span
+                                       class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{translate('System_Tax')}}</span>
+                               </a>
+                               <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
+                                   style="display: @yield('taxManagerDisplay','none')">
+
+                                   <li class="navbar-vertical-aside-has-menu @yield('tax_setup')">
+                                       <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                       href="{{route('taxvat.index')}}"
+                                       title="{{translate('Taxes')}}')}}">
+                                           <i class="tio-chart-line-up nav-icon"></i>
+                                           <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                       {{translate('Taxes')}}
+                                   </span>
+                                       </a>
+                                   </li>
+                                   <li class="navbar-vertical-aside-has-menu @yield('tax_system_setup')">
+                                       <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                       href="{{route('taxvat.systemTaxvat')}}"
+                                       title="{{translate('System_Taxes')}}')}}">
+                                           <i class="tio-calculator nav-icon"></i>
+                                           <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                       {{translate('System_Taxes')}}
+                                   </span>
+                                       </a>
+                                   </li>
+                               </ul>
+                           </li>
+                       @endif
 
 
                         <li class="navbar-vertical-aside-has-menu {{Request::is('admin/business-settings/db-index')?'active':''}}">
@@ -516,7 +549,7 @@
                                 @endforeach
                             </ul>
                         </li>
-                    @endif
+                        @endif
                     <!--addon end-->
                     <!-- End web & adpp Settings -->
 

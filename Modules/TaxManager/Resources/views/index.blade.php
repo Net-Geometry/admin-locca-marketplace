@@ -1,6 +1,17 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Tax_Vat'))
+@section('title', translate('messages.Tax_Setup'))
+
+
+    @section('taxManager')
+    active
+    @endsection
+    @section('taxManagerDisplay')
+    block
+    @endsection
+    @section('tax_setup')
+    show active
+    @endsection
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
