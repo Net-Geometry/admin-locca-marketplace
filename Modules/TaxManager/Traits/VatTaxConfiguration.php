@@ -34,7 +34,7 @@ trait VatTaxConfiguration
             ]
         ];
 
-        return self::getData($allProjects, $key);
+        return self::getDataFromPorjectArray($allProjects, $key);
     }
 
     public static function getProjectWiseViewPath($name)
@@ -53,7 +53,7 @@ trait VatTaxConfiguration
 
         ];
 
-        return self::getData($allProjects, $name);
+        return self::getDataFromPorjectArray($allProjects, $name);
     }
     public static function getClassNames($model)
     {
@@ -72,11 +72,11 @@ trait VatTaxConfiguration
             ],
         ];
 
-        return self::getData($allProjects, $model);
+        return self::getDataFromPorjectArray($allProjects, $model);
     }
 
 
-    private static function getData($array, $key = null)
+    private static function getDataFromPorjectArray($array, $key = null)
     {
         $project = self::getProjectName();
         if ($project && array_key_exists($project, $array)) {
