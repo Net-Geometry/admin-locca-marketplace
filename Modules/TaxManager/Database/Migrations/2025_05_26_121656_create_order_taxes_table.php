@@ -17,8 +17,8 @@ class CreateOrderTaxesTable extends Migration
             $table->id();
             $table->string('tax_name');
             $table->string('tax_type');
-            $table->string('tax_from');
-            $table->double('tax_percentage', 23, 8)->default(0);
+            $table->string('tax_on');
+            $table->double('tax_rate', 23, 8)->default(0);
             $table->double('tax_amount', 23, 8)->default(0);
             $table->double('before_tax_amount', 23, 8)->default(0);
             $table->double('after_tax_amount', 23, 8)->default(0);

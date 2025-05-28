@@ -59,16 +59,16 @@ trait VatTaxConfiguration
     {
         $allProjects = [
             '6ammart' => [
-                'product' => 'App/Models/Item',
-                'category' =>  'App/Models/Category',
+                'product' => 'App\Models\Item',
+                'category' =>  'App\Models\Category',
             ],
             'stackfood' => [
-                'product' => 'App/Models/Food',
-                'category' =>  'App/Models/Category',
+                'product' => 'App\Models\Food',
+                'category' =>  'App\Models\Category',
             ],
             '6valley' => [
-                'product' => 'App/Models/Product',
-                'category' =>  'App/Models/Category',
+                'product' => 'App\Models\Product',
+                'category' =>  'App\Models\Category',
             ],
         ];
 
