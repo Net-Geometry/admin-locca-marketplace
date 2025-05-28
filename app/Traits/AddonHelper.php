@@ -86,6 +86,7 @@ trait AddonHelper
     function getDirectories(string $path): array
     {
         $directories = [];
+        $path= base_path($path);
         $items = scandir($path);
         foreach ($items as $item) {
             if ($item == '..' || $item == '.')
