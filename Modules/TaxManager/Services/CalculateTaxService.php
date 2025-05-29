@@ -56,6 +56,7 @@ class CalculateTaxService
 
                         $taxOnAdd['additionalData'] = $additionalData['name'];
                         $additionalDatas[] = $taxOnAdd;
+                         $totalTaxamount += $taxOnAdd['totalTaxamount'];
                     }
                 }
             }
@@ -111,6 +112,7 @@ class CalculateTaxService
                 orderId: $orderId,
                 countryCode: $countryCode
             );
+            $orderWiseData['totalTaxamount'] += $totalTaxamount;
             $orderWiseData['productWiseData'] = [];
             $orderWiseData['taxType'] = $taxType;
             $orderWiseData['additionalDatas'] = $additionalDatas;
