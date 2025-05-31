@@ -1,6 +1,5 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use Modules\TaxManager\Http\Controllers\TaxVatController;
 
 
 /*

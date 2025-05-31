@@ -7629,4 +7629,7 @@ Smartly or Earn. ',
   'Taxes' => 'Taxes',
   'System_Taxes' => 'System Taxes',
   'The tax ids field is required when tax type is order_wise.' => 'The tax ids field is required when tax type is order wise.',
+  'The total product amount field is required.' => 'The total product amount field is required.',
+  'The product ids field is required.' => 'The product ids field is required.',
+  'The category ids field is required.' => 'The category ids field is required.',
 );

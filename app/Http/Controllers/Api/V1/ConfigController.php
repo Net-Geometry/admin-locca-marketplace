@@ -321,11 +321,6 @@ class ConfigController extends Controller
 
         return $data ?? 0;
     }
-    public function getTaxVatList()
-    {
-        $data = \Modules\TaxManager\Entities\Tax::where('is_active', 1)->select('id', 'name','tax_rate')->get();
-        return response()->json($data, 200);
-    }
 
     public function get_zone(Request $request)
     {

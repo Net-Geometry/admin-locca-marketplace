@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+use Modules\TaxManager\Http\Controllers\Api\V1\TaxController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/taxvat', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'taxvat', 'as' => 'taxvat.'], function () {
+        Route::get('get-taxVat-list', [TaxController::class, 'getTaxVatList']);
+        Route::get('get-calculated-tax', [TaxController::class, 'getCalculateTax']);
+
+
 });
