@@ -17,7 +17,5 @@ use Modules\TaxManager\Http\Controllers\Api\V1\TaxController;
 
 Route::group(['prefix' => 'taxvat', 'as' => 'taxvat.'], function () {
         Route::get('get-taxVat-list', [TaxController::class, 'getTaxVatList']);
-        Route::get('get-calculated-tax', [TaxController::class, 'getCalculateTax']);
-
-
+        Route::put('get-calculated-tax', [TaxController::class, 'getCalculateTax']);
 });

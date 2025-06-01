@@ -7632,4 +7632,5 @@ Smartly or Earn. ',
   'The total product amount field is required.' => 'The total product amount field is required.',
   'The product ids field is required.' => 'The product ids field is required.',
   'The category ids field is required.' => 'The category ids field is required.',
+  'The additional charges must be an array.' => 'The additional charges must be an array.',
 );

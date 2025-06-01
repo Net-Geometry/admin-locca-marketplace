@@ -37,7 +37,7 @@ class CalculateTaxService
             $totalTaxPercent = 0;
             $totalTaxamount = 0;
             $taxType = $systemTaxVat?->tax_type;
-
+            $productWiseData=[];
             $additionalDatas = [];
             $additionalsDatas = $systemTaxVat->additionalData()->select('name', 'tax_ids')->get()->toArray();
             if (count($additionalCharges)) {
@@ -125,7 +125,7 @@ class CalculateTaxService
             if ($storeData) {
                 DB::rollBack();
             }
-            return ['include' => null, 'totalTaxPercent' => 0, 'totalTaxamount' => 0, 'error' => $th->getMessage()];
+            return ['include' => null, 'totalTaxPercent' => 0, 'totalTaxamount' => 0, 'error' => $th->getMessage() ,'line' => $th->getLine()];
         }
     }
 
