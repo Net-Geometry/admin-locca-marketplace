@@ -3,5 +3,5 @@
     "Rental": true,
     "Controller": true,
     "DashboardController": true,
-    "TaxManager": true
+    "TaxModule": true
 }

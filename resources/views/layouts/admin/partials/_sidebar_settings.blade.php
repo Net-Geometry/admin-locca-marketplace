@@ -461,15 +461,15 @@
                             </li>
                         @endif
 
-                        @if (addon_published_status('TaxManager'))
-                           <li class="navbar-vertical-aside-has-menu @yield('taxManager')">
+                        @if (addon_published_status('TaxModule'))
+                           <li class="navbar-vertical-aside-has-menu @yield('taxmodule')">
                                <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:">
                                    <i class="tio-wallet nav-icon"></i>
                                    <span
                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{translate('System_Tax')}}</span>
                                </a>
                                <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                   style="display: @yield('taxManagerDisplay','none')">
+                                   style="display: @yield('taxmoduleDisplay','none')">
 
                                    <li class="navbar-vertical-aside-has-menu @yield('tax_setup')">
                                        <a class="js-navbar-vertical-aside-menu-link nav-link"

@@ -66,11 +66,11 @@ class CategoryController extends BaseController
         $language = getWebConfig('language');
         $categoryWiseTax= false;
         $taxVats= [];
-        if(addon_published_status('TaxManager')){
-            $SystemTaxVat= \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active',1)->where('is_default',1)->first();
+        if(addon_published_status('TaxModule')){
+            $SystemTaxVat= \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active',1)->where('is_default',1)->first();
             if($SystemTaxVat?->tax_type == 'category_wise'){
                 $categoryWiseTax= true;
-                $taxVats=  \Modules\TaxManager\Entities\Tax::where('is_active',1)->where('is_default',1)->get(['id','name','tax_rate']);
+                $taxVats=  \Modules\TaxModule\Entities\Tax::where('is_active',1)->where('is_default',1)->get(['id','name','tax_rate']);
             }
         }
 
@@ -88,12 +88,12 @@ class CategoryController extends BaseController
         );
         $this->translationRepo->addByModel(request: $request, model: $category, modelPath: 'App\Models\Category', attribute: 'name');
 
-            if(addon_published_status('TaxManager')){
-                $SystemTaxVat= \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active',1)->where('is_default',1)->first();
+            if(addon_published_status('TaxModule')){
+                $SystemTaxVat= \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active',1)->where('is_default',1)->first();
                 if($SystemTaxVat?->tax_type == 'category_wise'){
 
                     foreach($request['tax_ids'] ?? [] as $tax_ids){
-                        \Modules\TaxManager\Entities\Taxable::create(
+                        \Modules\TaxModule\Entities\Taxable::create(
                                     [
                                         'taxable_type' => 'App\Models\Category',
                                         'taxable_id' => $category->id,
@@ -118,12 +118,12 @@ class CategoryController extends BaseController
         $taxVats= [];
         $taxVatIds= [];
 
-        if(addon_published_status('TaxManager')){
+        if(addon_published_status('TaxModule')){
            $taxVatIds = $category->taxVats()->pluck('tax_id')->toArray();
-            $SystemTaxVat= \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active',1)->where('is_default',1)->first();
+            $SystemTaxVat= \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active',1)->where('is_default',1)->first();
             if($SystemTaxVat?->tax_type == 'category_wise'){
                 $categoryWiseTax= true;
-                $taxVats=  \Modules\TaxManager\Entities\Tax::where('is_active',1)->where('is_default',1)->get(['id','name','tax_rate']);
+                $taxVats=  \Modules\TaxModule\Entities\Tax::where('is_active',1)->where('is_default',1)->get(['id','name','tax_rate']);
             }
         }
 
@@ -151,17 +151,17 @@ class CategoryController extends BaseController
         $this->translationRepo->updateByModel(request: $request, model: $category, modelPath: 'App\Models\Category', attribute: 'name');
 
 
-        if(addon_published_status('TaxManager') && $category['position'] == 0){
+        if(addon_published_status('TaxModule') && $category['position'] == 0){
             $taxVatIds = $category->taxVats()->pluck('tax_id')->toArray() ?? [];
             $newTaxVatIds =  array_map('intval', $request['tax_ids'] ?? []);
             sort($newTaxVatIds);
             sort($taxVatIds);
                 if( $newTaxVatIds != $taxVatIds ){
                     $category->taxVats()->delete();
-                    $SystemTaxVat= \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active',1)->where('is_default',1)->first();
+                    $SystemTaxVat= \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active',1)->where('is_default',1)->first();
                     if($SystemTaxVat?->tax_type == 'category_wise'){
                         foreach($request['tax_ids'] ?? [] as $tax_ids){
-                            \Modules\TaxManager\Entities\Taxable::create(
+                            \Modules\TaxModule\Entities\Taxable::create(
                                         [
                                             'taxable_type' => 'App\Models\Category',
                                             'taxable_id' => $category->id,

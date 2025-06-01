@@ -8,7 +8,7 @@ use App\Scopes\StoreScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
-use Modules\TaxManager\Entities\Taxable;
+use Modules\TaxModule\Entities\Taxable;
 
 class TempProduct extends Model
 {

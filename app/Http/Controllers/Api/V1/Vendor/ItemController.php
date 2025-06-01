@@ -372,11 +372,11 @@ class ItemController extends Controller
         Translation::insert($data);
 
 
-      if (addon_published_status('TaxManager')) {
-            $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
+      if (addon_published_status('TaxModule')) {
+            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
             if ($SystemTaxVat?->tax_type == 'product_wise') {
                 foreach (json_decode($request->tax_ids??'[]', true) ?? [] as $tax_id) {
-                    \Modules\TaxManager\Entities\Taxable::create(
+                    \Modules\TaxModule\Entities\Taxable::create(
                         [
                             'taxable_type' => Item::class,
                             'taxable_id' => $item->id,
@@ -744,17 +744,17 @@ class ItemController extends Controller
         }
 
 
-            if (addon_published_status('TaxManager') && $taxIds) {
+            if (addon_published_status('TaxModule') && $taxIds) {
             $taxVatIds = $p->taxVats()->pluck('tax_id')->toArray() ?? [];
             $newTaxVatIds =  array_map('intval', $taxIds ?? []);
             sort($newTaxVatIds);
             sort($taxVatIds);
             if ($newTaxVatIds != $taxVatIds) {
                 $p->taxVats()->delete();
-                $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
+                $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
                 if ($SystemTaxVat?->tax_type == 'product_wise') {
                     foreach ($taxIds ?? [] as $tax_id) {
-                        \Modules\TaxManager\Entities\Taxable::create(
+                        \Modules\TaxModule\Entities\Taxable::create(
                             [
                                 'taxable_type' => Item::class,
                                 'taxable_id' => $p->id,
@@ -1146,11 +1146,11 @@ class ItemController extends Controller
                 ['value' => $translated['value']]
             );
         }
-        if (addon_published_status('TaxManager')) {
-            $SystemTaxVat = \Modules\TaxManager\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
+        if (addon_published_status('TaxModule')) {
+            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
             if ($SystemTaxVat?->tax_type == 'product_wise') {
                 foreach ($taxIds ?? [] as $tax_id) {
-                    \Modules\TaxManager\Entities\Taxable::create(
+                    \Modules\TaxModule\Entities\Taxable::create(
                         [
                             'taxable_type' => TempProduct::class,
                             'taxable_id' => $item->id,

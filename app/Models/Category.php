@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Modules\TaxManager\Entities\Taxable;
+use Modules\TaxModule\Entities\Taxable;
 
 /**
  * Class Category

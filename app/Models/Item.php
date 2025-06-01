@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\TaxManager\Entities\Taxable;
+use Modules\TaxModule\Entities\Taxable;
 
 class Item extends Model
 {
