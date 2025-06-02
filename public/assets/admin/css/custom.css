@@ -115,7 +115,9 @@
     /* color: white; */
 }
 .select2-container--default .select2-selection--multiple {
-    /* height: auto; */
+
+    height: auto !important;
+    min-height: calc(1.6em + 1.21875rem);
 }
 .select2-container--default .color-preview {
     height: 12px;

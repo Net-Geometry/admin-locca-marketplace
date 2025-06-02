@@ -32,6 +32,7 @@ class AddOn extends Model
         'name',
         'price',
         'store_id',
+        'Addon_category_id',
         'status',
     ];
 
@@ -39,6 +40,7 @@ class AddOn extends Model
      * @var string[]
      */
     protected $casts = [
+        'Addon_category_id' => 'integer',
         'price' => 'float',
         'store_id' => 'integer',
         'status' => 'integer',

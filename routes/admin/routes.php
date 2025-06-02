@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\Customer\WalletBonusController;
 use App\Http\Controllers\Admin\Item\CommonConditionController;
 use App\Http\Controllers\Admin\DeliveryMan\DmVehicleController;
 use App\Http\Controllers\Admin\DeliveryMan\DeliveryManController;
+use App\Http\Controllers\Admin\Item\AddonCategoryController;
 use App\Http\Controllers\Admin\Promotion\AdvertisementController;
 use App\Http\Controllers\Admin\Notification\NotificationController;
 use App\Http\Controllers\Admin\Subscription\SubscriptionController;
@@ -93,6 +94,15 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         });
 
         Route::group(['prefix' => 'addon', 'as' => 'addon.', 'middleware' => ['module:addon']], function () {
+
+            Route::get('addon-category', [AddonCategoryController::class, 'index'])->name('addon-category');
+            Route::get('addon-status/{id}', [AddonCategoryController::class, 'status'])->name('addon-category-status');
+            Route::get('addon-edit/{id}', [AddonCategoryController::class, 'edit'])->name('addon-category-edit');
+            Route::put('addon-update/{id}', [AddonCategoryController::class, 'update'])->name('addon-category-update');
+            Route::delete('addon-category/{id}', [AddonCategoryController::class, 'delete'])->name('addon-category-delete');
+            Route::post('addon-category-store', [AddonCategoryController::class, 'store'])->name('addon-category-store');
+            Route::get('addon-category-export', [AddonCategoryController::class, 'exportAddonCategories'])->name('addon-category-export');
+
             Route::get(Addon::INDEX[URI], [AddonController::class, 'index'])->name('add-new');
             Route::post(Addon::ADD[URI], [AddonController::class, 'add'])->name('store');
             Route::get(Addon::UPDATE[URI].'/{id}', [AddonController::class, 'getUpdateView'])->name('edit');
