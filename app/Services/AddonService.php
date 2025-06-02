@@ -16,6 +16,7 @@ class AddonService
             'name' => $request->name[array_search('default', $request->lang)],
             'price' => $request->price,
             'store_id' => $request->store_id,
+            'addon_category_id' => $request->category_id,
         ];
     }
 

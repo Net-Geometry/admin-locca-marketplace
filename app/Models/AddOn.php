@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
+use Modules\TaxModule\Entities\Taxable;
 
 /**
  * Class AddOn
@@ -32,7 +33,7 @@ class AddOn extends Model
         'name',
         'price',
         'store_id',
-        'Addon_category_id',
+        'addon_category_id',
         'status',
     ];
 
@@ -40,7 +41,7 @@ class AddOn extends Model
      * @var string[]
      */
     protected $casts = [
-        'Addon_category_id' => 'integer',
+        'addon_category_id' => 'integer',
         'price' => 'float',
         'store_id' => 'integer',
         'status' => 'integer',
@@ -105,4 +106,9 @@ class AddOn extends Model
             }]);
         });
     }
+        public function taxVats()
+    {
+        return $this->morphMany(Taxable::class, 'taxable');
+    }
+
 }

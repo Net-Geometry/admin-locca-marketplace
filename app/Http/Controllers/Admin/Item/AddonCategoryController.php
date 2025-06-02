@@ -34,7 +34,7 @@ class AddonCategoryController extends Controller
                     }
                 });
             })
-            ->with([$categoryWiseTax ? 'taxVats.tax' : ''])
+            ->with('taxVats.tax')
             ->paginate(config('default_pagination'));
 
         $language = getWebConfig('language');

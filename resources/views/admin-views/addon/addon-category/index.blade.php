@@ -27,12 +27,12 @@
                     @if ($language)
                         <ul class="nav nav-tabs mb-4 border-0">
                             <li class="nav-item">
-                                <a class="nav-link lang_link active" href="#"
+                                <a class="nav-link lang_link active offcanvas-close" href="#"
                                     id="default-link">{{ translate('messages.default') }}</a>
                             </li>
                             @foreach ($language as $lang)
                                 <li class="nav-item">
-                                    <a class="nav-link lang_link" href="#"
+                                    <a class="nav-link lang_link offcanvas-close" href="#"
                                         id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
                                 </li>
                             @endforeach
@@ -222,7 +222,7 @@
 
                                     <td>
                                         <div class="btn--container justify-content-center">
-                                            <a class="btn btn-sm text-end action-btn info--outline text--info info-hover offcanvas-trigger get_data withdraw-info-show"
+                                            <a class="btn btn-sm text-end action-btn info--outline text--info info-hover offcanvas-trigger get_data data-info-show"
                                                 data-target="#offcanvas__customBtn3" data-id="{{ $category['id'] }}"
                                                 data-url="{{ route('admin.addon.addon-category-edit', [$category['id']]) }}"
                                                 href="javascript:" title="{{ translate('messages.edit_category') }}"><i
@@ -283,7 +283,7 @@
         });
 
 
-        $(document).on('click', '.withdraw-info-show', function() {
+        $(document).on('click', '.data-info-show', function() {
             let id = $(this).data('id');
             let url = $(this).data('url');
             fetch_data(id, url)
@@ -298,7 +298,6 @@
                     $('#loading').show()
                 },
                 success: function(data) {
-                    console.log(data);
                     $("#data-view").append(data.view);
                     initLangTabs();
                     initSelect2Dropdowns();
@@ -340,7 +339,7 @@
              $('.offcanvas-close, #offcanvasOverlay').on('click', function () {
         $('.custom-offcanvas').removeClass('open');
         $('#offcanvasOverlay').removeClass('show');
-    });
+            });
         }
     </script>
 @endpush
