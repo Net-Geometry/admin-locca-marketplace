@@ -31,6 +31,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
 
 
     Route::get('zone/list', 'ZoneController@get_zones');
+    Route::get('addon-category/list', 'AddonCategoryController@getList');
     Route::get('zone/check', 'ZoneController@zonesCheck');
 
     Route::get('offline_payment_method_list', 'ConfigController@offline_payment_method_list');

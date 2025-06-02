@@ -7650,4 +7650,7 @@ Smartly or Earn. ',
   'Type_Name' => 'Type Name',
   'If_you_turn_off_this_status_this_addon_will_not_be_available' => 'If you turn off this status this addon will not be available',
   'addon_updated_successfully' => 'Addon updated successfully',
+  'Update addon' => 'Update addon',
+  'Edit_Addon' => 'Edit Addon',
+  'The addon category id field is required.' => 'The addon category id field is required.',
 );

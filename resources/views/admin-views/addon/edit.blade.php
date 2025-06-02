@@ -163,7 +163,7 @@
 
         </div>
     </div>
-    <div class="offcanvas-footer p-3 d-flex align-items-center justify-content-center gap-3 mt-auto">
+    <div class="align-items-center bg-white bottom-0 d-flex gap-3 justify-content-center mt-auto offcanvas-footer p-3 position-sticky">
         <button type="button"
             class="btn w-100 btn--secondary offcanvas-close h--40px">{{ translate('Cancel') }}</button>
         <button type="submit" class="btn w-100 btn--primary h--40px">{{ translate('Update') }}</button>
