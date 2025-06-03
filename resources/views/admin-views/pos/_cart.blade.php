@@ -162,7 +162,7 @@
 
         <div class="row button--bottom-fixed g-1 bg-white">
             <div class="col-sm-6">
-                <button type="button" class="btn h-100  btn-outline-danger btn-block empty-Cart">{{ translate('messages.Clear Cart') }} </button>
+                <button type="button" class="btn h-100  btn-outline-danger btn-block empty-Cart" {{ (session()->has('cart') && count( session()->get('cart')) > 0)?'':'disabled' }}>{{ translate('messages.Clear Cart') }} </button>
             </div>
             <div class="col-sm-6">
                 <button type="submit" class="btn  btn--primary place-order-submit btn-block">{{ translate('messages.place_order') }} </button>
