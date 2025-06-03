@@ -26,6 +26,10 @@ trait VatTaxConfiguration
                 'tax_claculate_from' => ['Calculate_Tax_on_Billing_Address_Location'],
                 'tax_calculate_on' => ['order_wise', 'product_wise', 'category_wise'],
                 'additional_tax' => ['tax_on_additional_charge', 'tax_on_packaging_charge'],
+                'tax_calculate_on_rental_provider' => ['trip_wise'],
+                'additional_tax_rental_provider' => [],
+                'payer_types'=> [ 'vendor','rental_provider'],
+
             ],
             '6valley' => [
                 'tax_claculate_from' => ['Calculate_Tax_on_Billing_Address_Location', 'Calculate_Tax_on_Shipping_Address_Location'],

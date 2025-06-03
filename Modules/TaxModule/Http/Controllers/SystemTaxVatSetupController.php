@@ -35,12 +35,14 @@ class SystemTaxVatSetupController extends Controller
 
     public function index(Request $request): Renderable
     {
+        $tax_payer=$request->type === 'rental' ? 'rental_provider' :'vendor';
         $systemTaxVat = $this->systemTaxVat->with('additionalData')->when($this->getCountryType() == 'single', function ($query) {
             $query->where('is_default', true);
         }, function ($query) use ($request) {
             $query->where('country_code', $request->country_code);
-        })->first();
-
+        })
+        ->where('tax_payer', $tax_payer)
+        ->first();
 
         $taxVats = $this->taxVat->where('is_active', 1)
             ->when($this->getCountryType() == 'single', function ($query) {
@@ -53,7 +55,7 @@ class SystemTaxVatSetupController extends Controller
 
         $systemData =$this->getPorjectWiseSystemData();
 
-        return view($this->getProjectWiseViewPath('system_tax_setup'), compact('taxVats', 'systemTaxVat', 'country_code' ,'systemData'));
+        return view($this->getProjectWiseViewPath('system_tax_setup'), compact('taxVats', 'systemTaxVat', 'country_code' ,'systemData','tax_payer'));
     }
 
 
@@ -62,7 +64,7 @@ class SystemTaxVatSetupController extends Controller
         $this->validateRequest($request);
         $systemTaxVat = $this->systemTaxVat->find($request->system_tax_id);
         $systemTaxVat->tax_type = $request->tax_type ?? 'order_wise';
-        $systemTaxVat->tax_payer = $request->tax_payer ??  'vendor';
+        // $systemTaxVat->tax_payer = $request->tax_payer ??  'vendor';
         $systemTaxVat->tax_ids = $request->tax_ids;
         if ($this->getCountryType() !== 'single') {
             $systemTaxVat->country_code = $request->country_code ?? $systemTaxVat?->country_code;
@@ -93,6 +95,11 @@ class SystemTaxVatSetupController extends Controller
                 $systemTaxVat->country_code = $request->country_code ?? $systemTaxVat?->country_code;
                 $systemTaxVat->is_default = false;
             }
+            if($request->type ==='rental_provider'){
+                $systemTaxVat->tax_payer =$request->type;
+                $systemTaxVat->tax_type = $request->tax_type ?? 'trip_wise';
+
+            }
         }
 
         $systemTaxVat->is_active = !$systemTaxVat->is_active;
@@ -103,7 +110,7 @@ class SystemTaxVatSetupController extends Controller
     {
         $request->validate(
             [
-                'tax_ids' => 'required_if:tax_type,order_wise',
+                'tax_ids' => 'required_if:tax_type,order_wise|required_if:tax_type,trip_wise|',
             ]
         );
     }

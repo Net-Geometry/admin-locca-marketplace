@@ -8,7 +8,11 @@
     @section('taxmoduleDisplay')
     block
     @endsection
+    @if ($tax_payer=='rental_provider')
+    @section('tax_system_setup_rental')
+    @else
     @section('tax_system_setup')
+    @endif
     show active
     @endsection
 
@@ -23,7 +27,7 @@
             <div class="card p-20 mb-20">
                 <div class="row g-md-3 g-2 justify-content-between">
                     <div class="col-md-8">
-                        <h3 class="mb-1">{{ translate('messages.Allow Tax Calculation For Vendor ?') }} </h3>
+                        <h3 class="mb-1">{{ $tax_payer=='rental_provider' ? translate('messages.Allow Tax Calculation For Provider ?') : translate('messages.Allow Tax Calculation For Vendor ?') }} </h3>
                         <p class="fz-12 mb-0">{{ translate('messages.To active tax calculation turn on the status.') }}</p>
                     </div>
                     <div class="col-md-4 col-xxl-3">
@@ -35,7 +39,7 @@
                                 data-off_title="{{ translate('messages.Turn Off The Status?') }}"
                                 data-on_message= "{{ translate('Are you sure, do you want to turn ON the VAT status from your system. It will  effect on tax calculation & report') }}"
                                 data-off_message= "{{ translate('Are you sure, do you want to turn off the VAT status from your system. It will  effect on tax calculation & report') }}"
-                                data-url="{{ route('taxvat.systemTaxVatVendorStatus', ['id' => $systemTaxVat?->id, 'country_code' => $country_code ?? ($systemTaxVat?->country_code ?? null)]) }}"
+                                data-url="{{ route('taxvat.systemTaxVatVendorStatus', ['id' => $systemTaxVat?->id, 'country_code' =>$country_code ?? ($systemTaxVat?->country_code ?? null) , 'type' => $tax_payer ]) }}"
                                 for="vendor_tax_status">
                                 <input type="checkbox" class="toggle-switch-input"
                                     {{ $systemTaxVat?->is_active == 1 ? 'checked' : '' }} id="vendor_tax_status">
@@ -58,6 +62,7 @@
                     <div class="card p-20">
                         <div class="bg--secondary p-15 rounded mb-20">
                             <div class="mb-20">
+                                @php($productType = $tax_payer == 'rental_provider' ? translate('Trip_Amount') : translate('Product Price'))
                                 <h4 class="mb-1">{{ translate('Tax calculation based on Product Price') }} </h4>
                                 {{-- <p class="fz-12 mb-0">{{ translate('Tax calculation based on Product Price') }}</p> --}}
                             </div>
@@ -69,10 +74,10 @@
                                                 value="include"
                                                 {{ !$systemTaxVat || $systemTaxVat?->is_included == 1 ? 'checked' : '' }}>
                                             <label for="include1" class="fz-14 mb-0">
-                                                <h5 class="mb-1">{{ translate('Calculate Tax Include Product Price') }}
+                                                <h5 class="mb-1">{{ translate('Calculate Tax Include') }} {{ $productType }}
                                                 </h5>
                                                 <p class="mb-0 fz-11 fw-normal">
-                                                    {{ translate('Calculate Tax Include Product Price By selecting this option you will need to setup same tax rate for all types of income source.') }}
+                                                    {{ translate('Calculate Tax Included. By selecting this option you will need to setup same tax rate for all types of income source.') }}
                                                 </p>
                                             </label>
                                         </div>
@@ -83,7 +88,7 @@
                                                 {{ $systemTaxVat && $systemTaxVat?->is_included == 0 ? 'checked' : '' }}
                                                 value="exclude">
                                             <label for="include2" class="fz-14 mb-0">
-                                                <h5 class="mb-1">{{ translate('Calculate Tax Exclude Product Price') }}
+                                                <h5 class="mb-1">{{ translate('Calculate Tax Exclude') }} {{ $productType }}
                                                 </h5>
                                                 <p class="mb-0 fz-11 fw-normal">
                                                     {{ translate('By selecting this option you will need to setup individual tax rate for different types of income source.') }}
@@ -136,17 +141,18 @@
                                                     class="custom-select custom-select-color border rounded w-100"
                                                     name="tax_type"
                                                     data-current_seclected="{{ $systemTaxVat?->tax_type }}">
-                                                    @foreach (data_get($systemData,'tax_calculate_on',['order_wise', 'product_wise', 'category_wise'])   as $item)
+                                                    @php($tax_calculate_on= $tax_payer=='rental_provider' ? 'tax_calculate_on_rental_provider' : 'tax_calculate_on')
+                                                    @foreach (data_get($systemData, $tax_calculate_on,['order_wise', 'product_wise', 'category_wise'])   as $item)
                                                         <option {{ $systemTaxVat?->tax_type == $item ? 'selected' : '' }}
                                                             value="{{ $item }}"> {{ translate($item) }} </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             <div id="tax_rate_div"
-                                                class="{{!$systemTaxVat || $systemTaxVat?->tax_type == 'order_wise' ? '' : 'd-none' }}">
+                                                class="{{!$systemTaxVat || in_array($systemTaxVat?->tax_type,['order_wise' ,'trip_wise']) ? '' : 'd-none' }}">
                                                 <span
                                                     class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
-                                                <select {{ $systemTaxVat?->tax_type == 'order_wise' ? 'selected' : '' }}
+                                                <select {{ in_array($systemTaxVat?->tax_type,['order_wise' ,'trip_wise']) ? 'selected' : '' }}
                                                     name="tax_ids[]" id="tax__rate"
                                                     class="form-control js-select2-custom" multiple="multiple"
                                                     placeholder="Type & Select Tax Rate">
@@ -221,7 +227,10 @@
                                     </div>
                                 </div>
                             </div>
-                            @if ( data_get($systemData,'additional_tax',null) )
+
+                             @php($additional_tax= $tax_payer=='rental_provider' ? 'additional_tax_rental_provider' : 'additional_tax')
+
+                            @if ( data_get($systemData,$additional_tax,null) )
 
                                 <div class="bg--secondary rounded p-20">
                                     <div class="row g-lg-4 g-md-3 g-2">
@@ -231,7 +240,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="d-flex flex-column gap-lg-4 gap-3">
-                                                @foreach ($systemData['additional_tax'] as $item)
+                                                @foreach ($systemData[$additional_tax] as $item)
                                                     @php($additionalData = $systemTaxVat?->additionalData?->where('name', $item)->first())
                                                     <div>
                                                         <div
