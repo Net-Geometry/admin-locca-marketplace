@@ -102,7 +102,7 @@ class LoginController extends Controller
         $auth = ($role == 'admin_employee' ? 'admin' : $role);
         if (auth($auth)->attempt(['email' => $email, 'password' => $password], $remember)) {
             $user = auth($auth)->user();
-            $newToken = Str::random(60);
+            $newToken = $user?->remember_token ?? Str::random(60);
             $user->remember_token = $newToken;
             $user->save();
             session(['remember_token' => $newToken]);

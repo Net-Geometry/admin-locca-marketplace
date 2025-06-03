@@ -7653,4 +7653,5 @@ Smartly or Earn. ',
   'Update addon' => 'Update addon',
   'Edit_Addon' => 'Edit Addon',
   'The addon category id field is required.' => 'The addon category id field is required.',
+  'Your session has expired. Please log in again.' => 'Your session has expired. Please log in again.',
 );

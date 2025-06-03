@@ -19,22 +19,22 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        // dd(Auth::guard('admin')->user()->getRememberToken());
-        if(Auth::guard('admin')->user() && Auth::guard('admin')->user()->is_logged_in == 0){
+        if (Auth::guard('admin')->user() && Auth::guard('admin')->user()->is_logged_in == 0) {
             auth()->guard('admin')->logout();
         }
+info(['session' => session('remember_token'), 'user' => Auth::guard('admin')->user()->getRememberToken()]);
 
+// info(Auth::guard('admin')->user()->getRememberToken());
         if (Auth::guard('admin')->user()) {
-            // Check if session token matches DB token
             if (session('remember_token') !== Auth::guard('admin')->user()->getRememberToken()) {
-                Auth::guard('admin')->logout();
-                session()->invalidate();
-                session()->regenerateToken();
                 if (auth()?->guard('admin')?->user()?->role_id == 1) {
                     $user_link = Helpers::get_login_url('admin_login_url');
                 } else {
-                $user_link = Helpers::get_login_url('admin_employee_login_url');
-            }
+                    $user_link = Helpers::get_login_url('admin_employee_login_url');
+                }
+                Auth::guard('admin')->logout();
+                session()->invalidate();
+                session()->regenerateToken();
                 return redirect()->route('login', [$user_link])
                     ->withErrors(['Your session has expired. Please log in again.']);
             }
@@ -44,7 +44,5 @@ class AdminMiddleware
             return $next($request);
         }
         return redirect()->route('home');
-        // return redirect()->route('login');
-        // return redirect()->route('admin.auth.login');
     }
 }

@@ -19,11 +19,9 @@ class VendorMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (Auth::guard('vendor')->check()) {
-            if(!auth('vendor')->user()->status)
-            {
+            if (!auth('vendor')->user()->status) {
                 auth()->guard('vendor')->logout();
                 return redirect()->route('home');
-                // return redirect()->route('vendor.auth.login');
             }
 
             if (session('remember_token') !== auth('vendor')->user()->getRememberToken()) {
@@ -36,19 +34,14 @@ class VendorMiddleware
             }
 
             return $next($request);
-        }
-        else if (Auth::guard('vendor_employee')->check()) {
-            if(Auth::guard('vendor_employee')->user()->is_logged_in == 0)
-            {
+        } else if (Auth::guard('vendor_employee')->check()) {
+            if (Auth::guard('vendor_employee')->user()->is_logged_in == 0) {
                 auth()->guard('vendor_employee')->logout();
                 return redirect()->route('home');
-                // return redirect()->route('vendor.auth.login');
             }
-            if(!auth('vendor_employee')->user()->store->status)
-            {
+            if (!auth('vendor_employee')->user()->store->status) {
                 auth()->guard('vendor_employee')->logout();
                 return redirect()->route('home');
-                // return redirect()->route('vendor.auth.login');
             }
 
             if (session('remember_token') !== Auth::guard('vendor_employee')->user()->getRememberToken()) {
@@ -62,6 +55,5 @@ class VendorMiddleware
             return $next($request);
         }
         return redirect()->route('home');
-        // return redirect()->route('vendor.auth.login');
     }
 }
