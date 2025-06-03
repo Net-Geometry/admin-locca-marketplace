@@ -29,6 +29,8 @@ class CreateOrderTaxesTable extends Migration
             $table->foreignId('tax_id');
             $table->foreignId('taxable_id')->nullable();
             $table->string('taxable_type')->nullable();
+            $table->foreignId('store_id')->nullable();
+            $table->string('store_type')->nullable();
             $table->foreignId('system_tax_setup_id');
             $table->timestamps();
         });

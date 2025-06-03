@@ -20,6 +20,7 @@ class OrderTax extends Model
             'after_tax_amount' => 'float',
             'order_id' => 'integer',
             'tax_id' => 'integer',
+            'store_id' => 'integer',
             'system_tax_setup_id' => 'integer',
         ];
 
@@ -27,5 +28,9 @@ class OrderTax extends Model
     public function Orders(): HasMany
     {
         return $this->hasMany(Order::class, 'order_id');
+    }
+     public function store()
+    {
+        return $this->morphTo();
     }
 }

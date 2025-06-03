@@ -25,6 +25,7 @@ use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\VehicleDriver;
 use Modules\Rental\Entities\VehicleIdentity;
 use Modules\Rental\Entities\VehicleReview;
+use Modules\TaxModule\Entities\OrderTax;
 
 /**
  * Class Store
@@ -899,4 +900,10 @@ class Store extends Model
         }
         return $query;
     }
+
+        public function orderTaxes(): MorphMany
+    {
+        return $this->morphMany(OrderTax::class, 'store');
+    }
+
 }

@@ -67,6 +67,7 @@ trait VatTaxConfiguration
                 'category' =>  'App\Models\Category',
                 'addon' =>  'App\Models\AddOn',
                 'addon_category' =>  'App\Models\AddonCategory',
+                'store' =>  'App\Models\Store',
             ],
             'stackfood' => [
                 'product' => 'App\Models\Food',
