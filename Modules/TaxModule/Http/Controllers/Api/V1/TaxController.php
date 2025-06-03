@@ -37,6 +37,9 @@ class TaxController extends Controller
             'orderId' => 'nullable',
             'countryCode' => 'nullable',
             'taxPayer' => 'nullable',
+            'addonIds' => 'nullable',
+            'addonQuantity' => 'nullable',
+            'addonCategoryIds' => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -48,6 +51,9 @@ class TaxController extends Controller
             productIds: json_decode($request->productIds, true) ?? [],
             categoryIds: json_decode($request->categoryIds, true) ?? [],
             quantity: json_decode($request->quantity, true) ?? [],
+            addonIds: json_decode($request->addonIds, true) ?? [],
+            addonQuantity: json_decode($request->addonQuantity, true) ?? [],
+            addonCategoryIds: json_decode($request->addonCategoryIds, true) ?? [],
             storeData: false,
             additionalCharges: json_decode($request?->additionalCharges, true) ?? [],
             taxPayer: $request->taxPayer ?? 'vendor',

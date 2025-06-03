@@ -61,10 +61,14 @@ trait VatTaxConfiguration
             '6ammart' => [
                 'product' => 'App\Models\Item',
                 'category' =>  'App\Models\Category',
+                'addon' =>  'App\Models\AddOn',
+                'addon_category' =>  'App\Models\AddonCategory',
             ],
             'stackfood' => [
                 'product' => 'App\Models\Food',
                 'category' =>  'App\Models\Category',
+                'addon' =>  'App\Models\AddOn',
+                'addon_category' =>  'App\Models\AddonCategory',
             ],
             '6valley' => [
                 'product' => 'App\Models\Product',

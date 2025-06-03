@@ -192,10 +192,6 @@ if (!$is_published) {
 
 
 Route::get('/test', function () {
-
-
-// $data = \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(amount:1000, productIds: [373 =>100, 375 =>200], categoryIds:[373 => 1, 375 =>1], quantity:[373=>2, 375 =>2] ,storeData: true, additionalCharges:['tax_on_additional_charge'=>444,'tax_on_packaging_charge'=>200]);
-// return response()->json($data);
 dd('Hello tester');
 });
 

@@ -13,7 +13,7 @@ use Modules\TaxModule\Traits\VatTaxConfiguration;
 class CalculateTaxService
 {
     use VatTaxConfiguration;
-    public static function getCalculatedTax(float $amount, array $productIds, array $categoryIds, array $quantity, string $taxPayer = 'vendor',  bool $storeData = false, array $additionalCharges = [], $orderId = null, $countryCode = null)
+    public static function getCalculatedTax(float $amount, array $productIds, array $categoryIds, array $quantity, string $taxPayer = 'vendor',  bool $storeData = false, array $additionalCharges = [], array $addonIds = [], array $addonQuantity = [], array $addonCategoryIds = [], $orderId = null, $countryCode = null)
     {
         $systemTaxVat = SystemTaxSetup::with('additionalData')
             ->when($countryCode, function ($query) use ($countryCode) {
@@ -37,8 +37,11 @@ class CalculateTaxService
             $totalTaxPercent = 0;
             $totalTaxamount = 0;
             $taxType = $systemTaxVat?->tax_type;
-            $productWiseData=[];
+            $productWiseData = [];
             $additionalDatas = [];
+            $addonWiseData = [];
+            $orderTaxIds = [];
+
             $additionalsDatas = $systemTaxVat->additionalData()->select('name', 'tax_ids')->get()->toArray();
             if (count($additionalCharges)) {
                 foreach ($additionalsDatas as $additionalData) {
@@ -56,7 +59,8 @@ class CalculateTaxService
 
                         $taxOnAdd['additionalData'] = $additionalData['name'];
                         $additionalDatas[] = $taxOnAdd;
-                         $totalTaxamount += $taxOnAdd['totalTaxamount'];
+                        $orderTaxIds =  array_merge($orderTaxIds, $taxOnAdd['orderTaxIds']);
+                        $totalTaxamount += $taxOnAdd['totalTaxamount'];
                     }
                 }
             }
@@ -83,10 +87,42 @@ class CalculateTaxService
                         quantity: data_get($quantity, $key, 1),
                     );
 
-                    $totalTaxPercent += $taxData['totalTaxPercent'];
+                    // $totalTaxPercent += $taxData['totalTaxPercent'];
                     $totalTaxamount += $taxData['totalTaxamount'];
                     $taxData['product_id'] = $key;
                     $productWiseData[] = $taxData;
+                    $orderTaxIds = array_merge($orderTaxIds, $taxData['orderTaxIds']);
+                }
+
+
+                if (count($addonIds) > 0) {
+                    $addonDataType = self::getClassNames($taxType === 'product_wise' ? 'addon' : 'addon_category');
+                    foreach ($addonIds as $addonkey => $addonPrice) {
+                        $addonDataId = $taxType === 'product_wise' ? $addonkey : data_get($addonCategoryIds, $addonkey);
+
+                        $addonTaxVatIds = Taxable::where('taxable_type', $addonDataType)->where('taxable_id', $addonDataId)
+                            ->where('system_tax_setup_id', $systemTaxVat->id)
+                            ->pluck('tax_id')
+                            ->toArray();
+                        // info($addonTaxVatIds);
+                        $addonTaxData = self::calculateTax(
+                            systemTaxVat: $systemTaxVat,
+                            amount: $addonPrice,
+                            taxIds: $addonTaxVatIds,
+                            taxPayer: $taxPayer,
+                            storeData: $storeData,
+                            orderId: $orderId,
+                            countryCode: $countryCode,
+                            data_id: $addonDataId,
+                            data_type: $addonDataType,
+                            quantity: data_get($addonQuantity, $addonkey, 1),
+                        );
+                        //  $totalTaxPercent += $addonTaxData['totalTaxPercent'];
+                        $totalTaxamount += $addonTaxData['totalTaxamount'];
+                        $taxData['addon_id'] = $addonkey;
+                        $addonWiseData[] = $addonTaxData;
+                        $orderTaxIds = array_merge($orderTaxIds, $addonTaxData['orderTaxIds']);
+                    }
                 }
 
                 if ($storeData) {
@@ -99,7 +135,9 @@ class CalculateTaxService
                     'totalTaxamount' => $totalTaxamount,
                     'taxType' => $taxType,
                     'productWiseData' => $productWiseData,
-                    'additionalDatas' => $additionalDatas
+                    'additionalDatas' => $additionalDatas,
+                    'addonWiseData' => $addonWiseData,
+                    'orderTaxIds' => $orderTaxIds,
                 ];
             }
 
@@ -116,6 +154,7 @@ class CalculateTaxService
             $orderWiseData['productWiseData'] = [];
             $orderWiseData['taxType'] = $taxType;
             $orderWiseData['additionalDatas'] = $additionalDatas;
+            $orderWiseData['addonWiseData'] = $addonWiseData;
             if ($storeData) {
                 DB::commit();
             }
@@ -125,7 +164,7 @@ class CalculateTaxService
             if ($storeData) {
                 DB::rollBack();
             }
-            return ['include' => null, 'totalTaxPercent' => 0, 'totalTaxamount' => 0, 'error' => $th->getMessage() ,'line' => $th->getLine()];
+            return ['include' => null, 'totalTaxPercent' => 0, 'totalTaxamount' => 0, 'error' => $th->getMessage(), 'line' => $th->getLine()];
         }
     }
 
@@ -136,7 +175,7 @@ class CalculateTaxService
         $taxRatePercent = Tax::whereIn('id', $taxIds)->select('id', 'name', 'tax_rate')->get();
         $totalTaxPercent = 0;
         $totalTaxamount = 0;
-
+        $orderTaxIds = [];
         foreach ($taxRatePercent as $taxRate) {
             $taxData = self::getTaxAmount(amount: $amount, taxRatePercent: $taxRate->tax_rate, isInclude: $systemTaxVat->is_included);
             $totalTaxPercent += $taxRate->tax_rate;
@@ -161,9 +200,10 @@ class CalculateTaxService
                 $orderTaxData->taxable_type = $data_type;
                 $orderTaxData->quantity = $quantity;
                 $orderTaxData->save();
+                $orderTaxIds[] = $orderTaxData->id;
             }
         }
-        return  ['include' => $systemTaxVat?->is_included, 'totalTaxPercent' => $totalTaxPercent, 'totalTaxamount' => $totalTaxamount];
+        return  ['include' => $systemTaxVat?->is_included, 'totalTaxPercent' => $totalTaxPercent, 'totalTaxamount' => $totalTaxamount, 'orderTaxIds' => $orderTaxIds];
     }
 
     protected static function getTaxAmount($amount, $taxRatePercent, $isInclude = false)
@@ -175,5 +215,14 @@ class CalculateTaxService
         }
 
         return ['taxAmount' => 0, 'originalAmount' => $amount, 'totalAmount' => $amount, 'taxRatePercent' => $taxRatePercent];
+    }
+
+    public static function updateOrderTaxData($orderId, array $orderTaxIds)
+    {
+        if (count($orderTaxIds) > 0) {
+            OrderTax::whereIn('id', $orderTaxIds)->update(['order_id' => $orderId]);
+            return true;
+        }
+        return false;
     }
 }
