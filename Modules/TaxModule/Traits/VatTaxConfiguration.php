@@ -23,7 +23,7 @@ trait VatTaxConfiguration
     {
         $allProjects = [
             '6ammart' => [
-                'tax_claculate_from' => ['Calculate_Tax_on_Billing_Address_Location'],
+                'tax_calculate_from' => ['Calculate_Tax_on_Billing_Address_Location'],
                 'tax_calculate_on' => ['order_wise', 'product_wise', 'category_wise'],
                 'additional_tax' => ['tax_on_additional_charge', 'tax_on_packaging_charge'],
                 'tax_calculate_on_rental_provider' => ['trip_wise'],
@@ -32,13 +32,13 @@ trait VatTaxConfiguration
 
             ],
             '6valley' => [
-                'tax_claculate_from' => ['Calculate_Tax_on_Billing_Address_Location', 'Calculate_Tax_on_Shipping_Address_Location'],
+                'tax_calculate_from' => ['Calculate_Tax_on_Billing_Address_Location', 'Calculate_Tax_on_Shipping_Address_Location'],
                 'tax_calculate_on' => ['order_wise', 'product_wise', 'category_wise'],
                 'additional_tax' => ['tax_on_delivery_charge'],
             ]
         ];
 
-        return self::getDataFromPorjectArray($allProjects, $key);
+        return self::getDataFromProjectArray($allProjects, $key);
     }
 
     public static function getProjectWiseViewPath($name)
@@ -57,7 +57,7 @@ trait VatTaxConfiguration
 
         ];
 
-        return self::getDataFromPorjectArray($allProjects, $name);
+        return self::getDataFromProjectArray($allProjects, $name);
     }
     public static function getClassNames($model)
     {
@@ -85,11 +85,11 @@ trait VatTaxConfiguration
             ],
         ];
 
-        return self::getDataFromPorjectArray($allProjects, $model);
+        return self::getDataFromProjectArray($allProjects, $model);
     }
 
 
-    private static function getDataFromPorjectArray($array, $key = null)
+    private static function getDataFromProjectArray($array, $key = null)
     {
         $project = self::getProjectName();
         if ($project && array_key_exists($project, $array)) {
