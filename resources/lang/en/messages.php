@@ -7663,4 +7663,8 @@ Smartly or Earn. ',
   'Calculate Tax Include :{$productType} Price By selecting this option you will need to setup same tax rate for all types of income source.' => 'Calculate Tax Include :{$productType} Price By selecting this option you will need to setup same tax rate for all types of income source.',
   'Calculate Tax Included. By selecting this option you will need to setup same tax rate for all types of income source.' => 'Calculate Tax Included. By selecting this option you will need to setup same tax rate for all types of income source.',
   'The tax ids field is required when tax type is trip_wise.' => 'The tax ids field is required when tax type is trip wise.',
+  'Product Price' => 'Product Price',
+  'You_can_not_add_different_provider_vehicles' => 'You can not add different provider vehicles',
+  'Hrs' => 'Hrs',
+  'day_wise' => 'Day wise',
 );

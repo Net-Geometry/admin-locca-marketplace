@@ -22,9 +22,7 @@ class AdminMiddleware
         if (Auth::guard('admin')->user() && Auth::guard('admin')->user()->is_logged_in == 0) {
             auth()->guard('admin')->logout();
         }
-info(['session' => session('remember_token'), 'user' => Auth::guard('admin')->user()->getRememberToken()]);
 
-// info(Auth::guard('admin')->user()->getRememberToken());
         if (Auth::guard('admin')->user()) {
             if (session('remember_token') !== Auth::guard('admin')->user()->getRememberToken()) {
                 if (auth()?->guard('admin')?->user()?->role_id == 1) {

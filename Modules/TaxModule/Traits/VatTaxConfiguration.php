@@ -27,7 +27,7 @@ trait VatTaxConfiguration
                 'tax_calculate_on' => ['order_wise', 'product_wise', 'category_wise'],
                 'additional_tax' => ['tax_on_additional_charge', 'tax_on_packaging_charge'],
                 'tax_calculate_on_rental_provider' => ['trip_wise'],
-                'additional_tax_rental_provider' => [],
+                'additional_tax_rental_provider' => ['tax_on_additional_charge'],
                 'payer_types'=> [ 'vendor','rental_provider'],
 
             ],
@@ -68,16 +68,20 @@ trait VatTaxConfiguration
                 'addon' =>  'App\Models\AddOn',
                 'addon_category' =>  'App\Models\AddonCategory',
                 'store' =>  'App\Models\Store',
+                'order' =>  'App\Models\Order',
+                'trip' =>  'Modules\Rental\Entities\Trips',
             ],
             'stackfood' => [
                 'product' => 'App\Models\Food',
                 'category' =>  'App\Models\Category',
                 'addon' =>  'App\Models\AddOn',
                 'addon_category' =>  'App\Models\AddonCategory',
+                'order' =>  'App\Models\Order',
             ],
             '6valley' => [
                 'product' => 'App\Models\Product',
                 'category' =>  'App\Models\Category',
+                'order' =>  'App\Models\Order',
             ],
         ];
 

@@ -25,6 +25,7 @@ class CreateOrderTaxesTable extends Migration
             $table->string('tax_payer')->nullable();
             $table->string('country_code',20)->nullable()->index();
             $table->foreignId('order_id')->nullable();
+            $table->string('order_type')->nullable();
             $table->integer('quantity')->default(1)->nullable();
             $table->foreignId('tax_id');
             $table->foreignId('taxable_id')->nullable();

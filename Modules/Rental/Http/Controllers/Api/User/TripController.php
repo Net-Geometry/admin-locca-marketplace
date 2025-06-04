@@ -35,7 +35,7 @@ use Modules\Rental\Traits\RentalPushNotification;
 
 class TripController extends Controller
 {
-    use TripLogicTrait , RentalPushNotification;
+    use TripLogicTrait, RentalPushNotification;
     public function __construct(
         private RentalCart $cart,
         private Trips $trips,
@@ -67,14 +67,8 @@ class TripController extends Controller
         }
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
-
-
         $schedule_at = $request->schedule_at ? \Carbon\Carbon::parse($request->schedule_at) : now();
-
         $user_data =  $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first() ?? null;
-
-
-
         $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with('vehicle')->get();
 
         if (count($carts) == 0) {
@@ -92,9 +86,10 @@ class TripController extends Controller
             ], 403);
         }
         $estimated_trip_end_time = $schedule_at->copy()->addHours(
-            ceil(in_array($user_data->rental_type, ['hourly', 'day_wise']) ? $user_data->estimated_hours ?? 1 : $user_data->destination_time ?? 1));
+            ceil(in_array($user_data->rental_type, ['hourly', 'day_wise']) ? $user_data->estimated_hours ?? 1 : $user_data->destination_time ?? 1)
+        );
 
-        $trip_validation_check =  $this->tripValidationCheck($request, $schedule_at,$user_data);
+        $trip_validation_check =  $this->tripValidationCheck($request, $schedule_at, $user_data);
 
         if (data_get($trip_validation_check, 'status_code') === 403) {
 
@@ -125,9 +120,8 @@ class TripController extends Controller
             }
         }
 
-        $tax_included = BusinessSetting::where(['key' => 'tax_included'])->first()?->value ?? 0;
 
-        $details_data =  $this->tripDetails(request: $request, user_data: $user_data, carts: $carts, schedule_at: $schedule_at, estimated_trip_end_time: $estimated_trip_end_time, tax: $provider->tax, is_include: $tax_included, provider: $provider);
+        $details_data =  $this->tripDetails(request: $request, user_data: $user_data, carts: $carts, schedule_at: $schedule_at, estimated_trip_end_time: $estimated_trip_end_time, provider: $provider);
 
         if (data_get($details_data, 'code') === 'details_data') {
             DB::rollBack();
@@ -144,10 +138,12 @@ class TripController extends Controller
             $details_data = data_get($details_data, 'details_data');
         }
 
-        $discount_on_trip =$this->helpers->minDiscountCheck(productPrice: $price, discount: $discount_on_trip)['discount_applied'];
+        $discount_on_trip = $this->helpers->minDiscountCheck(productPrice: $price, discount: $discount_on_trip)['discount_applied'];
+        $totalDiscount = $discount_on_trip;
         $price -=  $discount_on_trip;
         $coupon_discount_amount = isset($coupon) ? CouponLogic::get_discount($coupon, $price) : 0;
-        $coupon_discount_amount =$this->helpers->minDiscountCheck(productPrice: $price, discount: $coupon_discount_amount)['discount_applied'];
+        $coupon_discount_amount = $this->helpers->minDiscountCheck(productPrice: $price, discount: $coupon_discount_amount)['discount_applied'];
+        $totalDiscount += $coupon_discount_amount;
         $price -=  $coupon_discount_amount;
 
         if ($is_guest == 0 && $user_id) {
@@ -155,29 +151,72 @@ class TripController extends Controller
             $discount_data = $this->helpers->getCusromerFirstOrderDiscount(order_count: $user->trips_count, user_creation_date: $user->created_at, refby: $user->ref_by, price: $price);
             if (data_get($discount_data, 'is_valid') == true &&  data_get($discount_data, 'calculated_amount') > 0) {
                 $ref_bonus_amount = data_get($discount_data, 'calculated_amount');
-                $ref_bonus_amount =$this->helpers->minDiscountCheck(productPrice: $price, discount: $ref_bonus_amount)['discount_applied'];
+                $ref_bonus_amount = $this->helpers->minDiscountCheck(productPrice: $price, discount: $ref_bonus_amount)['discount_applied'];
+                $totalDiscount += $ref_bonus_amount;
                 $price -= $ref_bonus_amount;
             }
         }
+
+        $productIds = [];
+        $productPrice = [];
+        $categoryIds = [];
+        $quantities = [];
+        $additionalCharges = [];
+        $tax_amount = 0;
         $tax_status = 'excluded';
-        if ($tax_included  == 1) {
-            $tax_status = 'included';
-        }
-        $orignal_tax_amount = $this->helpers->product_tax($price, $provider->tax, $tax_status == 'included');
-        $tax_amount = $tax_status == 'included' ? 0 : $orignal_tax_amount;
-        $claculated_tax= $orignal_tax_amount;
+        $tax_included = 0;
+        $taxMap = [];
 
         $additional_charge =  0;
         if (BusinessSetting::where('key', 'additional_charge_status')->first()?->value == 1) {
             $additional_charge = BusinessSetting::where('key', 'additional_charge')->first()?->value ?? 0;
+            $additionalCharges['tax_on_additional_charge'] = $additional_charge;
         }
 
-        $price= max(0, $price)+$tax_amount + $additional_charge;
+        if (addon_published_status('TaxModule')) {
+            foreach ($details_data as $item) {
+                $productIds[$item['vehicle_id']] = $item['original_price'];
+                $productPrice[$item['vehicle_id']] = $item['original_price'] * $item['quantity'];
+                $categoryIds[$item['vehicle_id']] = $item['category_id'];
+                $quantities[$item['vehicle_id']] = $item['quantity'];
+            }
+            $totalPriceBeforeDiscount = array_sum($productPrice);
+            foreach ($productPrice as $key => $productWisePrice) {
+                $proportion = $productWisePrice / $totalPriceBeforeDiscount;
+                $discountShare = $totalDiscount * $proportion;
+                $discountedPrice = $productWisePrice - $discountShare;
+                $productIds[$key] = $discountedPrice;
+            }
+
+            $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
+                amount: $price,
+                productIds: $productIds,
+                categoryIds: $categoryIds,
+                quantity: $quantities,
+                storeData: true,
+                additionalCharges: $additionalCharges,
+                taxPayer: 'rental_provider',
+                orderId: null,
+                storeId:$provider->id
+            );
+
+            $tax_amount = $taxData['totalTaxamount'];
+            $tax_included = $taxData['include'];
+            $tax_status = $tax_included ?  'included' : 'excluded';
+
+
+            foreach ($taxData['productWiseData'] as $item) {
+                $taxMap[$item['product_id']] = $item;
+            }
+        }
+
+
+        $price = max(0, $price) + $tax_amount + $additional_charge;
 
         $user_info = [
-            'contact_person_name' => $request->contact_person_name ? $request->contact_person_name : ($request->user?$request->user->f_name . ' ' . $request->user->l_name:''),
-            'contact_person_number' => $request->contact_person_number ? $request->contact_person_number : ($request->user?$request->user->phone:''),
-            'contact_person_email' => $request->contact_person_email ? $request->contact_person_email : ($request->user?$request->user->email:''),
+            'contact_person_name' => $request->contact_person_name ? $request->contact_person_name : ($request->user ? $request->user->f_name . ' ' . $request->user->l_name : ''),
+            'contact_person_number' => $request->contact_person_number ? $request->contact_person_number : ($request->user ? $request->user->phone : ''),
+            'contact_person_email' => $request->contact_person_email ? $request->contact_person_email : ($request->user ? $request->user->email : ''),
         ];
 
         $make_trip_data = [
@@ -189,13 +228,13 @@ class TripController extends Controller
             'user_data' => $user_data,
             'provider' => $provider,
             'coupon' => $coupon ?? null,
-            'tax_included' => $tax_included,
             'discount_on_trip' => $discount_on_trip ?? 0,
             'coupon_discount_amount' => $coupon_discount_amount ?? 0,
             'coupon_discount_by' => $coupon_discount_by ?? 'none',
             'coupon_code' => $coupon?->code ?? null,
-            'tax_amount' => $claculated_tax ?? 0,
+            'tax_amount' => $tax_amount ?? 0,
             'tax_status' => $tax_status,
+            'tax_included' => $tax_included,
             'trip_amount' => $price,
             'discount_on_trip_by' => $discount_on_trip_by ?? 'none',
             'additional_charge' => $additional_charge ?? 0,
@@ -209,21 +248,32 @@ class TripController extends Controller
             'user_info' => json_encode($user_info),
         ];
 
-
         $trip = $this->makeTrip($request, $make_trip_data);
 
         foreach ($details_data as $key => $item) {
             $details_data[$key]['trip_id'] = $trip->id;
+            if (count($taxMap) > 0 && isset($taxMap[$item['vehicle_id']])) {
+                $details_data[$key]['tax_percentage'] = $taxMap[$item['vehicle_id']]['totalTaxPercent'];
+                $details_data[$key]['tax_status'] =  $taxMap[$item['vehicle_id']]['include'] == 1 ? 'included' : 'excluded';
+                $details_data[$key]['tax_amount'] = $taxMap[$item['vehicle_id']]['totalTaxamount'];
+            }
+            unset($details_data[$key]['category_id']);
         }
-        TripDetails::insert($details_data);
 
+        TripDetails::insert($details_data);
+        if (isset($taxData['orderTaxIds'])) {
+            \Modules\TaxModule\Services\CalculateTaxService::updateOrderTaxData(
+                orderId: $trip->id,
+                orderTaxIds: $taxData['orderTaxIds'],
+            );
+        }
 
         $carts->each(function ($cart) {
             $cart->delete();
         });
 
-        if($trip->is_guest  == 0 && $trip->user_id ){
-            $this->createCashBackHistory($trip->trip_amount, $trip->user_id,$trip->id);
+        if ($trip->is_guest  == 0 && $trip->user_id) {
+            $this->createCashBackHistory($trip->trip_amount, $trip->user_id, $trip->id);
         }
 
         $user_data->delete();
@@ -235,22 +285,23 @@ class TripController extends Controller
         return response()->json($trip->id, 200);
     }
 
-    private function createCashBackHistory($trip_amount, $user_id,$trip_id){
-        $cashBack =  Helpers::getCalculatedCashBackAmount(amount:$trip_amount, customer_id:$user_id,type:1);
-        if(data_get($cashBack,'calculated_amount') > 0){
+    private function createCashBackHistory($trip_amount, $user_id, $trip_id)
+    {
+        $cashBack =  Helpers::getCalculatedCashBackAmount(amount: $trip_amount, customer_id: $user_id, type: 1);
+        if (data_get($cashBack, 'calculated_amount') > 0) {
             $CashBackHistory = new CashBackHistory();
             $CashBackHistory->user_id = $user_id;
             $CashBackHistory->trip_id = $trip_id;
-            $CashBackHistory->calculated_amount = data_get($cashBack,'calculated_amount');
-            $CashBackHistory->cashback_amount = data_get($cashBack,'cashback_amount');
-            $CashBackHistory->cash_back_id = data_get($cashBack,'id');
-            $CashBackHistory->cashback_type = data_get($cashBack,'cashback_type');
-            $CashBackHistory->min_purchase = data_get($cashBack,'min_purchase');
-            $CashBackHistory->max_discount = data_get($cashBack,'max_discount');
+            $CashBackHistory->calculated_amount = data_get($cashBack, 'calculated_amount');
+            $CashBackHistory->cashback_amount = data_get($cashBack, 'cashback_amount');
+            $CashBackHistory->cash_back_id = data_get($cashBack, 'id');
+            $CashBackHistory->cashback_type = data_get($cashBack, 'cashback_type');
+            $CashBackHistory->min_purchase = data_get($cashBack, 'min_purchase');
+            $CashBackHistory->max_discount = data_get($cashBack, 'max_discount');
             $CashBackHistory->save();
 
             $CashBackHistory?->trip()->update([
-                'cash_back_id'=> $CashBackHistory->id
+                'cash_back_id' => $CashBackHistory->id
             ]);
         }
         return true;
@@ -276,7 +327,7 @@ class TripController extends Controller
         $trip->payment_status = 'unpaid';
         $trip->tax_amount = $make_trip_data['tax_amount'];
         $trip->tax_status = $make_trip_data['tax_status'];
-        $trip->tax_percentage = $make_trip_data['provider']['tax'];
+        $trip->tax_percentage = 0;
         $trip->trip_type = $request->trip_type;
         $trip->additional_charge = $make_trip_data['additional_charge'];
         $trip->distance = $make_trip_data['distance'];
@@ -299,18 +350,13 @@ class TripController extends Controller
 
 
 
-    private function tripValidationCheck($request, $schedule_at,$user_data)
+    private function tripValidationCheck($request, $schedule_at, $user_data)
     {
 
-        // $settings_key = ['dine_in_order_option'];
-
-        // $settings =  array_column(BusinessSetting::whereIn('key', $settings_key)->get()->toArray(), 'value', 'key');
-
-        $longitude=  $user_data->pickup_location['lng']?? 0;
-        $latitude= $user_data->pickup_location['lat']?? 0;
+        $longitude =  $user_data->pickup_location['lng'] ?? 0;
+        $latitude = $user_data->pickup_location['lat'] ?? 0;
 
         $store = Store::with(['discount', 'store_sub'])->selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $schedule_at->format('w') . ' and `store_schedule`.`opening_time` < "' . $schedule_at->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $schedule_at->format('H:i:s') . '") > 0), true, false) as open')->where('id', $request->provider_id)->first();
-
 
         $zone_id = isset($store) ? [$store->zone_id] : json_decode($request->header('zoneId'), true);
 
@@ -355,11 +401,11 @@ class TripController extends Controller
             return ['code' => $response['code'], 'message' => translate($response['message']), 'status_code' => $response['status']];
         }
 
-        return ['store'=> $store , 'pickup_zone'=> $pickup_zone ];
+        return ['store' => $store, 'pickup_zone' => $pickup_zone];
     }
 
 
-    private function tripDetails($request, $user_data, $carts, $schedule_at, $estimated_trip_end_time, $tax, $is_include, $provider)
+    private function tripDetails($request, $user_data, $carts, $schedule_at, $estimated_trip_end_time, $provider)
     {
         $price = 0;
         $discount_on_trip = 0;
@@ -369,11 +415,11 @@ class TripController extends Controller
         foreach ($carts as $cart) {
 
             $vehicle = $this->vehicle->where('id', $cart->vehicle_id)->active()
-            ->withCount([
-                'vehicleIdentities as total_vehicle_count' => function ($query) use ($schedule_at) {
-                    $query->DynamicVehicleQuantity($schedule_at);
-                },
-            ])->first();
+                ->withCount([
+                    'vehicleIdentities as total_vehicle_count' => function ($query) use ($schedule_at) {
+                        $query->DynamicVehicleQuantity($schedule_at);
+                    },
+                ])->first();
 
 
             $response = match (true) {
@@ -411,31 +457,34 @@ class TripController extends Controller
             }
 
 
-            if($user_data->rental_type == 'hourly'){
-                $getPrice= $cart->vehicle->hourly_price *  $user_data->estimated_hours ;
-            } elseif($user_data->rental_type == 'day_wise'){
-                $getPrice=$cart->vehicle->day_wise_price * ( (int) round($user_data->estimated_hours/ 24)  )  ;
-            } else{
-                $getPrice= $cart->vehicle->distance_price *  $user_data->distance;
+            if ($user_data->rental_type == 'hourly') {
+                $getPrice = $cart->vehicle->hourly_price *  $user_data->estimated_hours;
+            } elseif ($user_data->rental_type == 'day_wise') {
+                $getPrice = $cart->vehicle->day_wise_price * ((int) round($user_data->estimated_hours / 24));
+            } else {
+                $getPrice = $cart->vehicle->distance_price *  $user_data->distance;
             }
 
-            $discount_data = $this->getDiscount(price: $getPrice , discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
+            $discount_data = $this->getDiscount(price: $getPrice, discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
 
             $trip_details_data = [
                 'vehicle_id' => $cart->vehicle_id,
                 'quantity' => $cart->quantity,
-                'tax_percentage' => $tax,
                 'discount_on_trip_by' => 'vendor',
                 'discount_percentage' => $cart->vehicle->discount_type == 'amount' ? 0 : $cart->vehicle->discount_price,
 
+                'category_id' => $cart->vehicle->category_id,
                 'price' => round($discount_data['price'], config('round_up_to_digit')) *  $cart->quantity,
                 'original_price' => round($discount_data['price'], config('round_up_to_digit')),
                 'calculated_price' => round($discount_data['price'], config('round_up_to_digit')) *  $cart->quantity,
 
                 'discount_on_trip' => round($discount_data['discount'], config('round_up_to_digit')),
                 'discount_type' => $cart->vehicle->discount_type,
-                'tax_amount' => round($this->helpers->product_tax($discount_data['price'] - round($discount_data['discount'], config('round_up_to_digit')), $tax, $is_include), config('round_up_to_digit')),
-                'tax_status' => $is_include == 1 ? 'included' : 'excluded',
+
+                'tax_percentage' => 0,
+                'tax_amount' => 0,
+                'tax_status' => 'excluded',
+
                 'vehicle_details' => json_encode($cart->vehicle),
                 'rental_type' => $user_data->rental_type,
                 'estimated_hours' => $user_data->estimated_hours,
@@ -458,16 +507,15 @@ class TripController extends Controller
         if (isset($provider_discount)) {
             $admin_discount = $this->checkAdminDiscount(price: $price, discount: $provider_discount['discount'], max_discount: $provider_discount['max_discount'], min_purchase: $provider_discount['min_purchase']);
 
-            $discount = max($discount_on_trip,$admin_discount);
+            $discount = max($discount_on_trip, $admin_discount);
 
-            if($admin_discount > 0 &&  $discount == $admin_discount )  {
+            if ($admin_discount > 0 &&  $discount == $admin_discount) {
                 $discount_on_trip_by = 'admin';
                 foreach ($details_data as $key => $trip_data) {
                     $details_data[$key]['discount_on_trip_by'] = $discount_on_trip_by;
                     $details_data[$key]['discount_type'] = 'precentage';
                     $details_data[$key]['discount_percentage'] = $provider_discount['discount'];
                     $details_data[$key]['discount_on_trip'] =  $this->checkAdminDiscount(price: $price, discount: $provider_discount['discount'], max_discount: $provider_discount['max_discount'], min_purchase: $provider_discount['min_purchase'], vehicle_wise_price: $trip_data['price']);
-                    $details_data[$key]['tax_amount'] = round($this->helpers->product_tax($trip_data['price'] - $trip_data['discount_on_trip'], config('round_up_to_digit')), $tax, $is_include);
                 }
             }
         }
@@ -503,17 +551,16 @@ class TripController extends Controller
     {
         $order_mail_status = Helpers::get_mail_status('rental_place_order_mail_status_user');
         try {
-            if( $trip->provider?->is_valid_subscription == 1 && $trip->provider?->store_sub?->max_order != "unlimited" && $trip->provider?->store_sub?->max_order > 0){
-                $trip->provider?->store_sub?->decrement('max_order' , 1);
+            if ($trip->provider?->is_valid_subscription == 1 && $trip->provider?->store_sub?->max_order != "unlimited" && $trip->provider?->store_sub?->max_order > 0) {
+                $trip->provider?->store_sub?->decrement('max_order', 1);
             }
-            if(config('mail.status') && $order_mail_status == '1' && Helpers::getRentalNotificationStatusData('customer','customer_trip_notification','mail_status')){
-                if (!$trip->is_guest && $trip->customer ) {
+            if (config('mail.status') && $order_mail_status == '1' && Helpers::getRentalNotificationStatusData('customer', 'customer_trip_notification', 'mail_status')) {
+                if (!$trip->is_guest && $trip->customer) {
                     Mail::to($trip->customer->email)->send(new TripBooking($trip->id));
-                }elseif($trip->is_guest == 1  && isset($trip->user_info['contact_person_email'])){
+                } elseif ($trip->is_guest == 1  && isset($trip->user_info['contact_person_email'])) {
                     Mail::to($trip->user_info['contact_person_email'])->send(new TripBooking($trip->id));
                 }
             }
-
         } catch (\Exception $ex) {
             info($ex->getMessage());
         }
@@ -524,7 +571,7 @@ class TripController extends Controller
 
 
 
-    public function getTripList(Request $request,$type)
+    public function getTripList(Request $request, $type)
     {
         $validator = Validator::make($request->all(), [
             'guest_id' => $request->user ? 'nullable' : 'required',
@@ -539,7 +586,7 @@ class TripController extends Controller
         $offset = $request['offset'] ?? 1;
         $trips = $this->trips->where(['user_id' => $user_id, 'is_guest' => $is_guest])
 
-        ->with('provider:id,name,logo,cover_photo,phone')
+            ->with('provider:id,name,logo,cover_photo,phone')
             ->when($request->search, function ($query) use ($request) {
                 $keys = explode(' ', $request->search);
                 $query->where(function ($query) use ($keys) {
@@ -552,10 +599,10 @@ class TripController extends Controller
                 $query->where('trip_status', $request->trip_status);
             })
             ->when($type == 'completed', function ($query) {
-                $query->whereIn('trip_status', ['completed','canceled']);
+                $query->whereIn('trip_status', ['completed', 'canceled']);
             })
             ->when($type == 'running', function ($query) {
-                $query->whereIn('trip_status', ['pending','confirmed','ongoing','payment_failed']);
+                $query->whereIn('trip_status', ['pending', 'confirmed', 'ongoing', 'payment_failed']);
             })
             ->latest()->paginate($limit, ['*'], 'page', $offset);
         $data = $this->helpers->preparePaginatedResponse(pagination: $trips, limit: $limit, offset: $offset, key: 'trips', extraData: []);
@@ -580,50 +627,49 @@ class TripController extends Controller
                 'vehicle_identity.vehicle_identity_data:id,vin_number,license_plate_number',
                 'vehicle_identity.vehicles:id,name,thumbnail',
                 'provider' => function ($query) {
-                    $query->select('id', 'name', 'logo', 'cover_photo', 'rating', 'phone','reviews_section')->with('store_sub')
+                    $query->select('id', 'name', 'logo', 'cover_photo', 'rating', 'phone', 'reviews_section')->with('store_sub')
                         ->withCount('vehicle_identity as total_vehicles');
                 }
             ])
             ->first();
-            if(!$trip){
-                return response()->json(['errors' => translate('trip_data_not_found')], 404);
+        if (!$trip) {
+            return response()->json(['errors' => translate('trip_data_not_found')], 404);
+        }
+
+        $trip->trip_details->each(function ($detail) {
+            $detail->license_plate_number = $detail->tripVehicleDetails
+                ->pluck('vehicle_identity_data.license_plate_number')
+                ->filter()
+                ->values()
+                ->toArray();
+            unset($detail->tripVehicleDetails);
+        });
+
+
+        $trip->vehicle_identity->each(function ($identity) {
+            $review = null;
+            $identity->license_plate_number = $identity?->vehicle_identity_data?->license_plate_number;
+            $identity->vehicle_name = $identity?->vehicles?->name;
+            $identity->vehicle_thumbnail = $identity?->vehicles?->thumbnail_full_url;
+            $review =  VehicleReview::where(['vehicle_identity_id' => $identity->vehicle_identity_data?->id, 'trip_id' => $identity->trip_id])->first();
+            $identity->rating = $review?->rating;
+            $identity->comment = $review?->comment;
+            $identity->reply = $review?->reply;
+            $identity->replied_at = $review?->replied_at;
+        });
+        if (isset($trip['provider'])) {
+            $ratings = StoreLogic::calculate_store_rating($trip['provider']['rating']);
+            $trip['provider']['avg_rating'] = $ratings['rating'];
+            $trip['provider']['rating_count'] = $ratings['total'];
+            if (isset($trip['provider']->store_sub)) {
+                $trip['provider']['chat'] = $trip?->provider?->store_sub?->chat ?? 0;
+                $trip['provider']['reviews_section'] = $trip?->provider?->store_sub?->review ??  $trip['provider']['reviews_section'] ?? 0;
+                unset($trip['provider']->store_sub);
+            } else {
+                $trip['provider']['chat'] = 1;
+                $trip['provider']['reviews_section'] = $trip['provider']['reviews_section'] ?? 0;
             }
-
-            $trip->trip_details->each(function ($detail) {
-                $detail->license_plate_number = $detail->tripVehicleDetails
-                    ->pluck('vehicle_identity_data.license_plate_number')
-                    ->filter()
-                    ->values()
-                    ->toArray();
-                    unset($detail->tripVehicleDetails);
-                });
-
-
-            $trip->vehicle_identity->each(function ($identity) {
-                $review=null;
-                $identity->license_plate_number = $identity?->vehicle_identity_data?->license_plate_number;
-                $identity->vehicle_name = $identity?->vehicles?->name;
-                $identity->vehicle_thumbnail= $identity?->vehicles?->thumbnail_full_url;
-                $review=  VehicleReview::where(['vehicle_identity_id'=> $identity->vehicle_identity_data?->id ,'trip_id' => $identity->trip_id])->first();
-                    $identity->rating = $review?->rating;
-                    $identity->comment = $review?->comment;
-                    $identity->reply = $review?->reply;
-                    $identity->replied_at = $review?->replied_at;
-                });
-                if(isset($trip['provider'])){
-                    $ratings = StoreLogic::calculate_store_rating($trip['provider']['rating']);
-                    $trip['provider']['avg_rating'] =$ratings['rating'];
-                    $trip['provider']['rating_count'] =$ratings['total'];
-                    if(isset($trip['provider']->store_sub)){
-                        $trip['provider']['chat'] =$trip?->provider?->store_sub?->chat ?? 0;
-                        $trip['provider']['reviews_section'] =$trip?->provider?->store_sub?->review ??  $trip['provider']['reviews_section'] ?? 0;
-                        unset($trip['provider']->store_sub);
-                    } else{
-                        $trip['provider']['chat'] =1;
-                        $trip['provider']['reviews_section'] = $trip['provider']['reviews_section'] ?? 0;
-                    }
-
-                }
+        }
 
         return response()->json($trip, 200);
     }
@@ -644,11 +690,11 @@ class TripController extends Controller
 
         $trip = $this->trips->where(['user_id' => $user_id, 'is_guest' => $is_guest, 'id' => $request->trip_id])->with('trip_details.vehicle')->first();
 
-        if(!$trip){
+        if (!$trip) {
             return response()->json(['errors' => translate('trip_data_not_found')], 404);
         }
 
-        if($trip->trip_status !== 'pending'){
+        if ($trip->trip_status !== 'pending') {
             return response()->json(['errors' => translate('You_can_not_cancal_this_trip')], 403);
         }
 
@@ -657,13 +703,12 @@ class TripController extends Controller
         $trip->cancellation_reason = $request->cancellation_reason;
         $trip->canceled = now();
         $trip->save();
-        foreach($trip->trip_details as $detail){
-            $detail?->vehicle?->total_trip > 0 ? $detail?->vehicle?->decrement('total_trip',$detail->quantity) : '';
+        foreach ($trip->trip_details as $detail) {
+            $detail?->vehicle?->total_trip > 0 ? $detail?->vehicle?->decrement('total_trip', $detail->quantity) : '';
         }
 
         Helpers::increment_order_count($trip->provider);
         return response()->json(['message' => translate('Trip_successfully_canceled')], 200);
-
     }
 
     public function makePayment(Request $request)
@@ -687,20 +732,20 @@ class TripController extends Controller
             'user_id' => $user_id,
             'is_guest' => $is_guest,
             'id' => $request->trip_id,
-            ])->first();
+        ])->first();
 
-            if (!$trip) {
-                return response()->json(['message' => translate('trip_data_not_found')], 404);
-            }
+        if (!$trip) {
+            return response()->json(['message' => translate('trip_data_not_found')], 404);
+        }
 
-            if ($is_guest && in_array($request->payment_method, ['wallet', 'partial_payment'])) {
-                return response()->json(['message' => translate('This_payment_method_is_not_available_for_guest_users')], 403);
-            }
+        if ($is_guest && in_array($request->payment_method, ['wallet', 'partial_payment'])) {
+            return response()->json(['message' => translate('This_payment_method_is_not_available_for_guest_users')], 403);
+        }
 
-            if($trip->payment_status == 'paid'){
-                return response()->json(['message' => translate('This_trip_is_already_paid')], 403);
-            }
-            $user = $request->user ? $request->user : $this->getGuestUserDetails($trip, $user_id);
+        if ($trip->payment_status == 'paid') {
+            return response()->json(['message' => translate('This_trip_is_already_paid')], 403);
+        }
+        $user = $request->user ? $request->user : $this->getGuestUserDetails($trip, $user_id);
 
         switch ($request->payment_method) {
             case 'cash_payment':
@@ -765,7 +810,7 @@ class TripController extends Controller
 
     private function processDigitalPayment($trip, $user, $request)
     {
-        return response()->json($this->digitalPayment($trip,$user,$request->payment_gateway,$request->callback_url,$request->payment_platform),200);
+        return response()->json($this->digitalPayment($trip, $user, $request->payment_gateway, $request->callback_url, $request->payment_platform), 200);
     }
 
     private function processWalletPayment($trip)
@@ -801,7 +846,8 @@ class TripController extends Controller
     }
 
 
-    private function create_order_payment($trip_id,$amount,$payment_status,$payment_method){
+    private function create_order_payment($trip_id, $amount, $payment_status, $payment_method)
+    {
         $payment = new PartialPayment();
         $payment->trip_id = $trip_id;
         $payment->amount = $amount;
@@ -811,19 +857,20 @@ class TripController extends Controller
         return true;
     }
 
-    private function digitalPayment($trip,$user,$payment_gateway,$url,$payment_platform='web'){
+    private function digitalPayment($trip, $user, $payment_gateway, $url, $payment_platform = 'web')
+    {
 
         $payer = new Payer(
-            (string) data_get($user,'f_name',''),
-            (string) data_get($user,'email',''),
-             (string)data_get($user,'phone',''),
+            (string) data_get($user, 'f_name', ''),
+            (string) data_get($user, 'email', ''),
+            (string)data_get($user, 'phone', ''),
             ''
         );
 
-        $store_logo= BusinessSetting::where(['key' => 'logo'])->first();
+        $store_logo = BusinessSetting::where(['key' => 'logo'])->first();
         $additional_data = [
-            'business_name' => BusinessSetting::where(['key'=>'business_name'])->first()?->value,
-            'business_logo' => $this->helpers->get_full_url('business',$store_logo?->value,$store_logo?->storage[0]?->value ?? 'public')
+            'business_name' => BusinessSetting::where(['key' => 'business_name'])->first()?->value,
+            'business_logo' => $this->helpers->get_full_url('business', $store_logo?->value, $store_logo?->storage[0]?->value ?? 'public')
         ];
 
         $payment_info = new PaymentInfo(
@@ -833,19 +880,16 @@ class TripController extends Controller
             payment_method: $payment_gateway,
             payment_platform: $payment_platform,
             payer_id: $trip->user_id,
-            receiver_id:  1,
+            receiver_id: 1,
             additional_data: $additional_data,
-            payment_amount: $trip->trip_amount- $trip->partially_paid_amount ,
+            payment_amount: $trip->trip_amount - $trip->partially_paid_amount,
             external_redirect_link: $url,
             attribute: 'trip_booking',
             attribute_id: $trip->id,
         );
-        $receiver_info = new Receiver('Admin','example.png');
+        $receiver_info = new Receiver('Admin', 'example.png');
         $redirect_link = Payment::generate_link($payer, $payment_info, $receiver_info);
 
         return $redirect_link;
     }
-
-
-
 }
