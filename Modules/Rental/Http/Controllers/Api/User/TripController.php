@@ -157,10 +157,7 @@ class TripController extends Controller
             }
         }
 
-        $productIds = [];
-        $productPrice = [];
-        $categoryIds = [];
-        $quantities = [];
+
         $additionalCharges = [];
         $tax_amount = 0;
         $tax_status = 'excluded';
@@ -173,43 +170,11 @@ class TripController extends Controller
             $additionalCharges['tax_on_additional_charge'] = $additional_charge;
         }
 
-        if (addon_published_status('TaxModule')) {
-            foreach ($details_data as $item) {
-                $productIds[$item['vehicle_id']] = $item['original_price'];
-                $productPrice[$item['vehicle_id']] = $item['original_price'] * $item['quantity'];
-                $categoryIds[$item['vehicle_id']] = $item['category_id'];
-                $quantities[$item['vehicle_id']] = $item['quantity'];
-            }
-            $totalPriceBeforeDiscount = array_sum($productPrice);
-            foreach ($productPrice as $key => $productWisePrice) {
-                $proportion = $productWisePrice / $totalPriceBeforeDiscount;
-                $discountShare = $totalDiscount * $proportion;
-                $discountedPrice = $productWisePrice - $discountShare;
-                $productIds[$key] = $discountedPrice;
-            }
-
-            $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
-                amount: $price,
-                productIds: $productIds,
-                categoryIds: $categoryIds,
-                quantity: $quantities,
-                storeData: true,
-                additionalCharges: $additionalCharges,
-                taxPayer: 'rental_provider',
-                orderId: null,
-                storeId:$provider->id
-            );
-
-            $tax_amount = $taxData['totalTaxamount'];
-            $tax_included = $taxData['include'];
-            $tax_status = $tax_included ?  'included' : 'excluded';
-
-
-            foreach ($taxData['productWiseData']?? [] as $item) {
-                $taxMap[$item['product_id']] = $item;
-            }
-        }
-
+        $finalCalculatedTax=  $this->getFinalCalculatedTax($details_data, $additionalCharges,$totalDiscount,$price,$provider->id);
+        $tax_amount = $finalCalculatedTax['tax_amount'];
+        $tax_included = $finalCalculatedTax['tax_included'];
+        $tax_status = $finalCalculatedTax['tax_status'];
+        $taxMap = $finalCalculatedTax['taxMap'];
 
         $price = max(0, $price) + $tax_amount + $additional_charge;
 
@@ -461,6 +426,7 @@ class TripController extends Controller
                 $getPrice = $cart->vehicle->hourly_price *  $user_data->estimated_hours;
             } elseif ($user_data->rental_type == 'day_wise') {
                 $getPrice = $cart->vehicle->day_wise_price * ((int) round($user_data->estimated_hours / 24));
+                $getPrice=max($cart->vehicle->day_wise_price, $getPrice);
             } else {
                 $getPrice = $cart->vehicle->distance_price *  $user_data->distance;
             }
@@ -892,4 +858,235 @@ class TripController extends Controller
 
         return $redirect_link;
     }
+
+
+
+
+
+    private function getFinalCalculatedTax($details_data, $additionalCharges,$totalDiscount,$price,$provider_id,$storeData=true){
+
+        $productIds = [];
+        $productPrice = [];
+        $categoryIds = [];
+        $quantities = [];
+
+        if (addon_published_status('TaxModule')) {
+            foreach ($details_data as $item) {
+                $productIds[$item['vehicle_id']] = $item['original_price'];
+                $productPrice[$item['vehicle_id']] = $item['original_price'] * $item['quantity'];
+                $categoryIds[$item['vehicle_id']] = $item['category_id'];
+                $quantities[$item['vehicle_id']] = $item['quantity'];
+            }
+            $totalPriceBeforeDiscount = array_sum($productPrice);
+            foreach ($productPrice as $key => $productWisePrice) {
+                $proportion = $productWisePrice / $totalPriceBeforeDiscount;
+                $discountShare = $totalDiscount * $proportion;
+                $discountedPrice = $productWisePrice - $discountShare;
+                $productIds[$key] = $discountedPrice;
+            }
+
+            $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
+                amount: $price,
+                productIds: $productIds,
+                categoryIds: $categoryIds,
+                quantity: $quantities,
+                storeData: $storeData,
+                additionalCharges: $additionalCharges,
+                taxPayer: 'rental_provider',
+                orderId: null,
+                storeId:$provider_id
+            );
+
+            $tax_amount = $taxData['totalTaxamount'];
+            $tax_included = $taxData['include'];
+            $tax_status = $tax_included ?  'included' : 'excluded';
+
+
+            foreach ($taxData['productWiseData']?? [] as $item) {
+                $taxMap[$item['product_id']] = $item;
+            }
+        }
+
+        return [
+            'tax_amount' => $tax_amount ?? 0,
+            'tax_included' => $tax_included ?? 0,
+            'tax_status' => $tax_status ?? 'excluded',
+            'taxMap' => $taxMap ?? [],
+            'taxData' => $taxData ?? [],
+        ];
+    }
+
+
+
+        public function getTaxFromCart(Request $request){
+
+
+        $user_id = $request->user ? $request->user->id : $request['guest_id'];
+        $is_guest = $request->user ? 0 : 1;
+        $schedule_at = $request->schedule_at ? \Carbon\Carbon::parse($request->schedule_at) : now();
+        $user_data =  $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first() ?? null;
+        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with('vehicle')->get();
+
+        if (count($carts) == 0) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'cart', 'message' => translate('Your_cart_is_empty')]
+                ]
+            ], 403);
+        }
+        if (!$user_data) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'cart', 'message' => translate('Your_location_is_empty')]
+                ]
+            ], 403);
+        }
+        $estimated_trip_end_time = $schedule_at->copy()->addHours(
+            ceil(in_array($user_data->rental_type, ['hourly', 'day_wise']) ? $user_data->estimated_hours ?? 1 : $user_data->destination_time ?? 1)
+        );
+
+        $trip_validation_check =  $this->tripValidationCheck($request, $schedule_at, $user_data);
+
+        if (data_get($trip_validation_check, 'status_code') === 403) {
+
+            return response()->json([
+                'errors' => [
+                    ['code' => data_get($trip_validation_check, 'code'), 'message' => data_get($trip_validation_check, 'message')]
+                ]
+            ], data_get($trip_validation_check, 'status_code'));
+        } else {
+            $provider = $trip_validation_check['store'];
+            // $pickup_zone = $trip_validation_check['pickup_zone'];
+        }
+
+        // DB::beginTransaction();
+
+        if ($request['coupon_code']) {
+            $coupon_check =  $this->couponCheck($request,false);
+            if (data_get($coupon_check, 'code') === 'coupon') {
+                // DB::rollBack();
+                return response()->json([
+                    'errors' => [
+                        ['code' => data_get($coupon_check, 'code'), 'message' => data_get($coupon_check, 'message')]
+                    ]
+                ], data_get($coupon_check, 'status_code'));
+            } else {
+                $coupon = data_get($coupon_check, 'coupon');
+                // $coupon_discount_by = data_get($coupon_check, 'coupon_discount_by');
+            }
+        }
+
+
+        $details_data =  $this->tripDetails(request: $request, user_data: $user_data, carts: $carts, schedule_at: $schedule_at, estimated_trip_end_time: $estimated_trip_end_time, provider: $provider);
+
+        if (data_get($details_data, 'code') === 'details_data') {
+            DB::rollBack();
+            return response()->json([
+                'errors' => [
+                    ['code' => data_get($details_data, 'code'), 'message' => data_get($details_data, 'message')]
+                ]
+            ], data_get($details_data, 'status_code'));
+        } else {
+            $price = data_get($details_data, 'price');
+            $discount_on_trip = data_get($details_data, 'discount');
+            $quantity = data_get($details_data, 'quantity');
+            $discount_on_trip_by = data_get($details_data, 'discount_on_trip_by');
+            $details_data = data_get($details_data, 'details_data');
+        }
+
+        $discount_on_trip = $this->helpers->minDiscountCheck(productPrice: $price, discount: $discount_on_trip)['discount_applied'];
+        $totalDiscount = $discount_on_trip;
+        $price -=  $discount_on_trip;
+        $coupon_discount_amount = isset($coupon) ? CouponLogic::get_discount($coupon, $price) : 0;
+        $coupon_discount_amount = $this->helpers->minDiscountCheck(productPrice: $price, discount: $coupon_discount_amount)['discount_applied'];
+        $totalDiscount += $coupon_discount_amount;
+        $price -=  $coupon_discount_amount;
+
+        if ($is_guest == 0 && $user_id) {
+            $user = User::withcount('trips')->find($user_id);
+            $discount_data = $this->helpers->getCusromerFirstOrderDiscount(order_count: $user->trips_count, user_creation_date: $user->created_at, refby: $user->ref_by, price: $price);
+            if (data_get($discount_data, 'is_valid') == true &&  data_get($discount_data, 'calculated_amount') > 0) {
+                $ref_bonus_amount = data_get($discount_data, 'calculated_amount');
+                $ref_bonus_amount = $this->helpers->minDiscountCheck(productPrice: $price, discount: $ref_bonus_amount)['discount_applied'];
+                $totalDiscount += $ref_bonus_amount;
+                $price -= $ref_bonus_amount;
+            }
+        }
+            if ($request['coupon_code']) {
+            $coupon_check =  $this->couponCheck($request);
+            if (data_get($coupon_check, 'code') === 'coupon') {
+                DB::rollBack();
+                return response()->json([
+                    'errors' => [
+                        ['code' => data_get($coupon_check, 'code'), 'message' => data_get($coupon_check, 'message')]
+                    ]
+                ], data_get($coupon_check, 'status_code'));
+            } else {
+                $coupon = data_get($coupon_check, 'coupon');
+                $coupon_discount_by = data_get($coupon_check, 'coupon_discount_by');
+            }
+        }
+
+
+        $details_data =  $this->tripDetails(request: $request, user_data: $user_data, carts: $carts, schedule_at: $schedule_at, estimated_trip_end_time: $estimated_trip_end_time, provider: $provider);
+
+        if (data_get($details_data, 'code') === 'details_data') {
+            DB::rollBack();
+            return response()->json([
+                'errors' => [
+                    ['code' => data_get($details_data, 'code'), 'message' => data_get($details_data, 'message')]
+                ]
+            ], data_get($details_data, 'status_code'));
+        } else {
+            $price = data_get($details_data, 'price');
+            $discount_on_trip = data_get($details_data, 'discount');
+            $quantity = data_get($details_data, 'quantity');
+            $discount_on_trip_by = data_get($details_data, 'discount_on_trip_by');
+            $details_data = data_get($details_data, 'details_data');
+        }
+
+        $discount_on_trip = $this->helpers->minDiscountCheck(productPrice: $price, discount: $discount_on_trip)['discount_applied'];
+        $totalDiscount = $discount_on_trip;
+        $price -=  $discount_on_trip;
+        $coupon_discount_amount = isset($coupon) ? CouponLogic::get_discount($coupon, $price) : 0;
+        $coupon_discount_amount = $this->helpers->minDiscountCheck(productPrice: $price, discount: $coupon_discount_amount)['discount_applied'];
+        $totalDiscount += $coupon_discount_amount;
+        $price -=  $coupon_discount_amount;
+
+        if ($is_guest == 0 && $user_id) {
+            $user = User::withcount('trips')->find($user_id);
+            $discount_data = $this->helpers->getCusromerFirstOrderDiscount(order_count: $user->trips_count, user_creation_date: $user->created_at, refby: $user->ref_by, price: $price);
+            if (data_get($discount_data, 'is_valid') == true &&  data_get($discount_data, 'calculated_amount') > 0) {
+                $ref_bonus_amount = data_get($discount_data, 'calculated_amount');
+                $ref_bonus_amount = $this->helpers->minDiscountCheck(productPrice: $price, discount: $ref_bonus_amount)['discount_applied'];
+                $totalDiscount += $ref_bonus_amount;
+                $price -= $ref_bonus_amount;
+            }
+        }
+
+
+        $additionalCharges = [];
+        $tax_amount = 0;
+        $tax_status = 'excluded';
+        $tax_included = 0;
+        $taxMap = [];
+
+        $additional_charge =  0;
+        if (BusinessSetting::where('key', 'additional_charge_status')->first()?->value == 1) {
+            $additional_charge = BusinessSetting::where('key', 'additional_charge')->first()?->value ?? 0;
+            $additionalCharges['tax_on_additional_charge'] = $additional_charge;
+        }
+
+        $finalCalculatedTax=  $this->getFinalCalculatedTax($details_data, $additionalCharges,$totalDiscount,$price,$provider->id);
+        $tax_amount = $finalCalculatedTax['tax_amount'];
+        $tax_included = $finalCalculatedTax['tax_included'];
+        $tax_status = $finalCalculatedTax['tax_status'];
+        $taxMap = $finalCalculatedTax['taxMap'];
+
+
+
+        }
+
+
+
 }

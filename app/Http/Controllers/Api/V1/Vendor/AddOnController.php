@@ -16,7 +16,7 @@ class AddOnController extends Controller
     {
         $vendor = $request['vendor'];
 
-        $addons = AddOn::withoutGlobalScope(StoreScope::class)->withoutGlobalScope('translate')->with('translations')->where('store_id', $vendor->stores[0]->id)->latest()->get();
+        $addons = AddOn::withoutGlobalScope(StoreScope::class)->withoutGlobalScope('translate')->with('translations','taxVats')->where('store_id', $vendor->stores[0]->id)->latest()->get();
 
         return response()->json(Helpers::addon_data_formatting($addons, true, true, app()->getLocale()), 200);
     }
@@ -32,7 +32,7 @@ class AddOnController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'category_id' => 'required',
+            'addon_category_id' => 'required',
             'price' => 'required|numeric',
             'translations' => 'array'
         ]);
@@ -53,7 +53,7 @@ class AddOnController extends Controller
         $addon = new AddOn();
         $addon->name = $data[0]['value'];
         $addon->price = $request->price;
-        $addon->addon_category_id = $request->category_id;
+        $addon->addon_category_id = $request->addon_category_id;
         $addon->store_id = $vendor->stores[0]->id;
         $addon->save();
 
@@ -102,7 +102,7 @@ class AddOnController extends Controller
             'id' => 'required',
             'name' => 'required',
             'price' => 'required',
-            'category_id' => 'required',
+            'addon_category_id' => 'required',
             'translations' => 'array'
         ]);
 
@@ -119,7 +119,7 @@ class AddOnController extends Controller
         $addon = AddOn::withoutGlobalScope(StoreScope::class)->find($request->id);
         $addon->name = $data[0]['value'];;
         $addon->price = $request->price;
-        $addon->addon_category_id = $request->category_id;
+        $addon->addon_category_id = $request->addon_category_id;
         $addon->save();
         $taxIds = json_decode($request->tax_ids ?? '[]', true);
         if (addon_published_status('TaxModule') && $taxIds) {

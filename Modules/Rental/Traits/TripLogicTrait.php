@@ -518,7 +518,7 @@ trait TripLogicTrait
 
         return $discount ?? 0;
     }
-    public  static function couponCheck($request)
+    public  static function couponCheck($request , $increment= true)
     {
 
         $coupon = Coupon::active()->where(['code' => $request['coupon_code']])->first();
@@ -545,7 +545,10 @@ trait TripLogicTrait
                 return ['code' => 'coupon', 'message' => translate('messages.invalid_coupon'), 'status_code' => 403];
             }
 
-            $coupon->increment('total_uses');
+            if($increment=== true){
+                $coupon->increment('total_uses');
+            }
+            
             $coupon_discount_by = $coupon->created_by;
 
             return ['coupon' => $coupon, 'coupon_discount_by' => $coupon_discount_by];

@@ -665,52 +665,14 @@ class Helpers
         $storage = [];
         if ($multi_data == true) {
             foreach ($data as $item) {
-                // if ($trans) {
-                //     $item['translations'][] = [
-                //         'translationable_type' => 'App\Models\AddOn',
-                //         'translationable_id' => $item->id,
-                //         'locale' => 'en',
-                //         'key' => 'name',
-                //         'value' => $item->name
-                //     ];
-                // }
-                // if (count($item->translations) > 0) {
-                //     foreach ($item['translations'] as $translation) {
-                //         if ($translation['locale'] == $local && $translation['key'] == 'name') {
-                //             $item['name'] = $translation['value'];
-                //         }
-                //     }
-                // }
-
-                // if (!$trans) {
-                //     unset($item['translations']);
-                // }
-
+                $item['tax_ids']= $item?->taxVats ?$item?->taxVats()->pluck('tax_id')->toArray(): [] ;
+                unset($item['taxVats']);
                 $storage[] = $item;
             }
             $data = $storage;
         } else if (isset($data)) {
-            // if ($trans) {
-            //     $data['translations'][] = [
-            //         'translationable_type' => 'App\Models\AddOn',
-            //         'translationable_id' => $data->id,
-            //         'locale' => 'en',
-            //         'key' => 'name',
-            //         'value' => $data->name
-            //     ];
-            // }
-
-            // if (count($data->translations) > 0) {
-            //     foreach ($data['translations'] as $translation) {
-            //         if ($translation['locale'] == $local && $translation['key'] == 'name') {
-            //             $data['name'] = $translation['value'];
-            //         }
-            //     }
-            // }
-
-            // if (!$trans) {
-            //     unset($data['translations']);
-            // }
+            $item['tax_ids']= $data?->taxVats ?$data?->taxVats()->pluck('tax_id')->toArray(): [] ;
+            unset($item['taxVats']);
         }
         return $data;
     }
