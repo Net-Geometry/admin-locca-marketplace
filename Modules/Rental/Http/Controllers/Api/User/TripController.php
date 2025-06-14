@@ -205,7 +205,7 @@ class TripController extends Controller
             $tax_status = $tax_included ?  'included' : 'excluded';
 
 
-            foreach ($taxData['productWiseData'] as $item) {
+            foreach ($taxData['productWiseData']?? [] as $item) {
                 $taxMap[$item['product_id']] = $item;
             }
         }

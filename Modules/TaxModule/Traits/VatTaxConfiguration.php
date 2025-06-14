@@ -31,6 +31,12 @@ trait VatTaxConfiguration
                 'payer_types'=> [ 'vendor','rental_provider'],
 
             ],
+            'stackfood' => [
+                'tax_calculate_from' => ['Calculate_Tax_on_Billing_Address_Location'],
+                'tax_calculate_on' => ['order_wise', 'product_wise', 'category_wise'],
+                'additional_tax' => ['tax_on_additional_charge', 'tax_on_packaging_charge'],
+                'payer_types'=> [ 'vendor'],
+            ],
             '6valley' => [
                 'tax_calculate_from' => ['Calculate_Tax_on_Billing_Address_Location', 'Calculate_Tax_on_Shipping_Address_Location'],
                 'tax_calculate_on' => ['order_wise', 'product_wise', 'category_wise'],
@@ -45,6 +51,11 @@ trait VatTaxConfiguration
     {
         $allProjects = [
             '6ammart' => [
+                'tax_list_export' =>  'taxmodule::file-exports.tax_list_export',
+                'tax_list' =>  'taxmodule::tax.tax_list',
+                'system_tax_setup' =>  'taxmodule::tax.system_tax_setup',
+            ],
+            'stackfood' => [
                 'tax_list_export' =>  'taxmodule::file-exports.tax_list_export',
                 'tax_list' =>  'taxmodule::tax.tax_list',
                 'system_tax_setup' =>  'taxmodule::tax.system_tax_setup',
@@ -77,6 +88,7 @@ trait VatTaxConfiguration
                 'addon' =>  'App\Models\AddOn',
                 'addon_category' =>  'App\Models\AddonCategory',
                 'order' =>  'App\Models\Order',
+                'store' =>  'App\Models\Restaurant',
             ],
             '6valley' => [
                 'product' => 'App\Models\Product',
