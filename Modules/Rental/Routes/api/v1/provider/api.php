@@ -153,6 +153,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
                 Route::get('get-trip-details', [TripController::class, 'getTripDetails']);
                 Route::post('payment', [TripController::class, 'makePayment']);
                 Route::put('cancel-trip', [TripController::class, 'cancelTrip']);
+                Route::Post('get-tax', [TripController::class, 'getTaxFromCart']);
             });
             Route::group(['middleware' => 'auth:api'], function () {
                 Route::group(['prefix' => 'wish-list'], function () {
