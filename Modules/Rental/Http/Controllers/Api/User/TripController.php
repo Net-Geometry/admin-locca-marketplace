@@ -370,7 +370,8 @@ class TripController extends Controller
     }
 
 
-    private function tripDetails($request, $user_data, $carts, $schedule_at, $estimated_trip_end_time, $provider)
+
+    private function tripDetails($request, $user_data, $carts, $schedule_at, $estimated_trip_end_time, $provider,$increment=true)
     {
         $price = 0;
         $discount_on_trip = 0;
@@ -460,7 +461,9 @@ class TripController extends Controller
                 'estimated_trip_end_time' => $estimated_trip_end_time,
 
             ];
-            $cart->vehicle->increment('total_trip', $cart->quantity);
+            if($increment==true){
+                $cart->vehicle->increment('total_trip', $cart->quantity);
+            }
             $details_data[] = $trip_details_data;
 
             $price += $trip_details_data['price'];
@@ -972,10 +975,10 @@ class TripController extends Controller
         }
 
 
-        $details_data =  $this->tripDetails(request: $request, user_data: $user_data, carts: $carts, schedule_at: $schedule_at, estimated_trip_end_time: $estimated_trip_end_time, provider: $provider);
+        $details_data =  $this->tripDetails(request: $request, user_data: $user_data, carts: $carts, schedule_at: $schedule_at, estimated_trip_end_time: $estimated_trip_end_time, provider: $provider ,increment:false);
 
         if (data_get($details_data, 'code') === 'details_data') {
-          
+
             return response()->json([
                 'errors' => [
                     ['code' => data_get($details_data, 'code'), 'message' => data_get($details_data, 'message')]

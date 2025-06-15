@@ -36,12 +36,14 @@ use App\Http\Controllers\Controller;
 use App\Models\OfflinePaymentMethod;
 use Illuminate\Support\Facades\Mail;
 use App\Models\ParcelDeliveryInstruction;
+use App\Traits\PlaceNewOrder;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 
 class OrderController extends Controller
 {
+    use PlaceNewOrder;
     public function track_order(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -89,7 +91,7 @@ class OrderController extends Controller
         return response()->json($order, 200);
     }
 
-    public function place_order(Request $request)
+    public function old_place_order(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'order_amount' => 'required',
@@ -2140,4 +2142,12 @@ class OrderController extends Controller
 
         return response()->json($data, 200);
     }
+
+
+     public function place_order(Request $request)
+    {
+        return $this->new_place_order($request);
+
+    }
 }
+
