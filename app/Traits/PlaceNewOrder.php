@@ -293,6 +293,16 @@ trait PlaceNewOrder
                     if (isset($request->is_buy_now) && $request->is_buy_now == 1) {
                         $carts = json_decode($request['cart'], true);
                     }
+
+                    if (count($carts) == 0 && !$is_pescription) {
+                        DB::rollBack();
+                        return response()->json([
+                            'errors' => [
+                                ['code' => 'empty_cart', 'message' => translate('messages.You_can_not_place_empty_orders')]
+                            ]
+                        ], 403);
+                    }
+
                     $order_details = $this->makeOrderDetails($carts, $request, $order, $store);
 
                     if (data_get($order_details, 'status_code') === 403) {
@@ -344,7 +354,7 @@ trait PlaceNewOrder
 
                 $order->tax_status = $tax_status;
 
-                if ($store->minimum_order > $product_price + $total_addon_price) {
+                if (!$is_pescription  && $store->minimum_order > $product_price + $total_addon_price) {
                     DB::rollBack();
                     return response()->json([
                         'errors' => [
@@ -431,17 +441,7 @@ trait PlaceNewOrder
 
             $order->save();
             if ($request->order_type !== 'parcel') {
-                if (count($order_details) == 0) {
-                    $errors = [];
-                    array_push($errors, ['code' => 'order_details', 'message' => translate('messages.You_can_not_place_empty_orders')]);
-                    DB::rollBack();
-                    return response()->json([
-                        'errors' => $errors
-                    ], 403);
-                }
-
                 $taxMapCollection = collect($taxMap);
-
                 foreach ($order_details as $key => $item) {
                     $order_details[$key]['order_id'] = $order->id;
 
