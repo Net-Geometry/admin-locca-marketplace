@@ -595,7 +595,7 @@ class VendorController extends Controller
                 'firebase_token' => $request['fcm_token']
             ]);
         }else{
-            VendorEmployee::where(['id' => $vendor['id']])->update([
+            VendorEmployee::where(['id' => $request['vendor_employee']->id])->update([
                 'firebase_token' => $request['fcm_token']
             ]);
 
