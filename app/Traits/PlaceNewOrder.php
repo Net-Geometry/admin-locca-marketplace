@@ -33,7 +33,7 @@ use App\Models\AddOn;
 trait PlaceNewOrder
 {
 
-    public function new_place_order(Request $request)
+    public function new_place_order(Request $request, $is_pescription = false)
     {
         $validator = Validator::make($request->all(), [
             // 'order_amount' => 'required',
@@ -53,6 +53,7 @@ trait PlaceNewOrder
             'contact_person_number' => $request->user ? 'nullable' : 'required',
             'contact_person_email' => $request->user ? 'nullable' : 'required',
             'password' => $request->create_new_user ? ['required', Password::min(8)] : 'nullable',
+            'order_attachment' => $is_pescription ? ['required'] : 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -159,9 +160,9 @@ trait PlaceNewOrder
             $store_discount_amount = 0;
             $flash_sale_vendor_discount_amount = 0;
             $flash_sale_admin_discount_amount = 0;
-            $store_discount_amount = 0;
-            $product_data = [];
+            $coupon_discount_amount = 0;
 
+            $product_data = [];
             $order_details = [];
 
 
@@ -176,7 +177,7 @@ trait PlaceNewOrder
             }
 
             $order->user_id = $request->user ? $request->user->id : $request['guest_id'];
-            $order->order_amount = $request['order_amount'];
+            $order->order_amount = $request['order_amount'] ?? 0;
             $order->payment_status = ($request->partial_payment ? 'partially_paid' : ($request['payment_method'] == 'wallet' ? 'paid' : 'unpaid'));
             $order->order_status = $order_status;
             $order->coupon_code = $request['coupon_code'];
@@ -232,7 +233,7 @@ trait PlaceNewOrder
             $order->created_at = now();
             $order->updated_at = now();
             $order->charge_payer = $request->charge_payer;
-
+            $order->prescription_order = $is_pescription ? 1 : 0;
             $additionalCharges = [];
 
 
@@ -275,41 +276,43 @@ trait PlaceNewOrder
                 $additionalCharges['tax_on_packaging_charge'] =  $order->extra_packaging_amount;
             }
 
-            $carts = Cart::where('user_id', $order->user_id)->where('is_guest', $order->is_guest)->where('module_id', $request->header('moduleId'))
-                ->when(isset($request->is_buy_now) && $request->is_buy_now == 1 && $request->cart_id, function ($query) use ($request) {
-                    return $query->where('id', $request->cart_id);
-                })
-                ->get()->map(function ($data) {
-                    $data->add_on_ids = json_decode($data->add_on_ids, true);
-                    $data->add_on_qtys = json_decode($data->add_on_qtys, true);
-                    $data->variation = json_decode($data->variation, true);
-                    return $data;
-                });
-
-            if (isset($request->is_buy_now) && $request->is_buy_now == 1) {
-                $carts = json_decode($request['cart'], true);
-            }
-
             if ($request->order_type !== 'parcel') {
+                if ($is_pescription === false) {
 
-                $order_details = $this->makeOrderDetails($carts, $request, $order, $store);
+                    $carts = Cart::where('user_id', $order->user_id)->where('is_guest', $order->is_guest)->where('module_id', $request->header('moduleId'))
+                        ->when(isset($request->is_buy_now) && $request->is_buy_now == 1 && $request->cart_id, function ($query) use ($request) {
+                            return $query->where('id', $request->cart_id);
+                        })
+                        ->get()->map(function ($data) {
+                            $data->add_on_ids = json_decode($data->add_on_ids, true);
+                            $data->add_on_qtys = json_decode($data->add_on_qtys, true);
+                            $data->variation = json_decode($data->variation, true);
+                            return $data;
+                        });
 
-                if (data_get($order_details, 'status_code') === 403) {
-                    DB::rollBack();
-                    return response()->json([
-                        'errors' => [
-                            ['code' => data_get($order_details, 'code'), 'message' => data_get($order_details, 'message')]
-                        ]
-                    ], data_get($order_details, 'status_code'));
+                    if (isset($request->is_buy_now) && $request->is_buy_now == 1) {
+                        $carts = json_decode($request['cart'], true);
+                    }
+                    $order_details = $this->makeOrderDetails($carts, $request, $order, $store);
+
+                    if (data_get($order_details, 'status_code') === 403) {
+                        DB::rollBack();
+                        return response()->json([
+                            'errors' => [
+                                ['code' => data_get($order_details, 'code'), 'message' => data_get($order_details, 'message')]
+                            ]
+                        ], data_get($order_details, 'status_code'));
+                    }
+
+                    $total_addon_price = $order_details['total_addon_price'];
+                    $product_price = $order_details['product_price'];
+                    $store_discount_amount = $order_details['store_discount_amount'];
+                    $flash_sale_admin_discount_amount = $order_details['flash_sale_admin_discount_amount'];
+                    $flash_sale_vendor_discount_amount = $order_details['flash_sale_vendor_discount_amount'];
+                    $product_data = $order_details['product_data'];
+                    $order_details = $order_details['order_details'];
                 }
 
-                $total_addon_price = $order_details['total_addon_price'];
-                $product_price = $order_details['product_price'];
-                $store_discount_amount = $order_details['store_discount_amount'];
-                $flash_sale_admin_discount_amount = $order_details['flash_sale_admin_discount_amount'];
-                $flash_sale_vendor_discount_amount = $order_details['flash_sale_vendor_discount_amount'];
-                $product_data = $order_details['product_data'];
-                $order_details = $order_details['order_details'];
 
                 $order->discount_on_product_by = $order_details['discount_on_product_by'] ?? 'vendor';
 
@@ -325,6 +328,8 @@ trait PlaceNewOrder
                         $order->ref_bonus_amount = data_get($discount_data, 'calculated_amount');
                     }
                 }
+
+                $total_price = max($total_price, 0);
 
                 $order->tax_status = 'excluded';
 
@@ -631,6 +636,11 @@ trait PlaceNewOrder
             $request->payment_method === 'digital_payment' && !Helpers::get_business_settings('digital_payment')['status'] => [
                 'code'    => 'digital_payment',
                 'message' => translate('messages.digital_payment_for_the_order_not_available_at_this_time'),
+                'status_code' => 403,
+            ],
+            $request->payment_method === 'cash_on_delivery' && !Helpers::get_business_settings('cash_on_delivery')['status'] => [
+                'code'    => 'digital_payment',
+                'message' => translate('messages.Cash_on_delivery_for_the_order_not_available_at_this_time'),
                 'status_code' => 403,
             ],
 
@@ -1117,19 +1127,7 @@ trait PlaceNewOrder
         $order->is_guest = $request->user ? 0 : 1;
         $order->store_id = $request['store_id'];
 
-        $schedule_at = $request->schedule_at ? \Carbon\Carbon::parse($request->schedule_at) : now();
-        $zoneAndStore = $this->getZoneAndStore($request, $schedule_at);
-
-        if (data_get($zoneAndStore, 'status_code') === 403) {
-
-            return response()->json([
-                'errors' => [
-                    ['code' => data_get($zoneAndStore, 'code'), 'message' => data_get($zoneAndStore, 'message')]
-                ]
-            ], data_get($zoneAndStore, 'status_code'));
-        }
-
-        $store = $zoneAndStore['store'];
+        $store = $store = Store::with(['discount', 'store_sub'])->where('id', $request->store_id)->first();
 
         if ($request->order_type !== 'parcel') {
             $couponData = $this->getCouponData($request);
