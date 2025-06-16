@@ -2,6 +2,7 @@
 
 namespace App\CentralLogics;
 
+use App\Models\VendorEmployee;
 use DateTime;
 use App\Models\Tag;
 use App\Models\Item;
@@ -1570,12 +1571,15 @@ class Helpers
 
     public static function send_order_notification($order)
     {
-        $push_notification_status=self::getNotificationStatusData('store','store_order_notification','push_notification_status', $order?->store?->id);
+        $push_notification_status = self::getNotificationStatusData('store','store_order_notification','push_notification_status', $order?->store?->id);
 
         try {
 
+            if((in_array($order->payment_method, ['cash_on_delivery', 'offline_payment'])
+                && $order->order_status == 'pending' ) ||
+                (!in_array($order->payment_method, ['cash_on_delivery', 'offline_payment'])
+                && $order->order_status == 'confirmed' )){
 
-            if((in_array($order->payment_method, ['cash_on_delivery', 'offline_payment'])  && $order->order_status == 'pending' )||(!in_array($order->payment_method, ['cash_on_delivery', 'offline_payment']) && $order->order_status == 'confirmed' )){
                 $data = [
                     'title' => translate('Order_Notification'),
                     'description' => translate('messages.new_order_push_description'),
@@ -1586,6 +1590,7 @@ class Helpers
                     'zone_id' => $order->zone_id,
                     'type' => 'new_order',
                 ];
+
                 self::send_push_notif_to_topic($data, 'admin_message', 'order_request', url('/').'/admin/order/list/all');
             }
 
@@ -1639,6 +1644,8 @@ class Helpers
                         'created_at' => now(),
                         'updated_at' => now()
                     ]);
+
+                    self::sendStoreEmployeeNotification($order, $data);
                 }
             }
 
@@ -1665,6 +1672,8 @@ class Helpers
                             'created_at' => now(),
                             'updated_at' => now()
                         ]);
+
+                        self::sendStoreEmployeeNotification($order, $data);
                     }
                 } else {
                     $data = [
@@ -1731,6 +1740,8 @@ class Helpers
                         'created_at' => now(),
                         'updated_at' => now()
                     ]);
+
+                    self::sendStoreEmployeeNotification($order, $data);
                 }
             }
 
@@ -1752,6 +1763,8 @@ class Helpers
                         'created_at' => now(),
                         'updated_at' => now()
                     ]);
+
+                    self::sendStoreEmployeeNotification($order, $data);
                 }
             }
 
@@ -1787,6 +1800,8 @@ class Helpers
                             'created_at' => now(),
                             'updated_at' => now()
                         ]);
+
+                        self::sendStoreEmployeeNotification($order, $data);
                     }
                 }
             }
@@ -4140,13 +4155,13 @@ class Helpers
         return $data;
     }
 
-    public static function getNotificationStatusData($user_type,$key,$notification_type, $store_id= null){
-        $data= NotificationSetting::where('type',$user_type)->where('key',$key)->select($notification_type)->first();
-        $data= $data?->{$notification_type} === 'active' ? 1 : 0;
+    public static function getNotificationStatusData($user_type,$key, $notification_type, $store_id = null){
+        $data = NotificationSetting::where('type',$user_type)->where('key',$key)->select($notification_type)->first();
+        $data = $data?->{$notification_type} === 'active' ? 1 : 0;
 
-        if($store_id && $user_type == 'store' && $data === 1){
-            $data= self::getStoreNotificationStatusData(store_id:$store_id,key:$key ,notification_type: $notification_type);
-            $data= $data?->{$notification_type} === 'active' ? 1 : 0;
+        if( $store_id && $user_type == 'store' && $data === 1 ){
+            $data = self::getStoreNotificationStatusData(store_id:$store_id,key:$key ,notification_type: $notification_type);
+            $data = $data?->{$notification_type} === 'active' ? 1 : 0;
         }
 
         return $data;
@@ -4199,10 +4214,10 @@ class Helpers
         return true;
     }
     public static function getStoreNotificationStatusData($store_id,$key,$notification_type){
-        $data= StoreNotificationSetting::where('store_id',$store_id)->where('key',$key)->select($notification_type)->first();
+        $data = StoreNotificationSetting::where('store_id',$store_id)->where('key',$key)->select($notification_type)->first();
         if(!$data){
             self::storeNotificationDataSetup($store_id);
-            $data= StoreNotificationSetting::where('store_id',$store_id)->where('key',$key)->select($notification_type)->first();
+            $data = StoreNotificationSetting::where('store_id',$store_id)->where('key',$key)->select($notification_type)->first();
         }
         return $data ?? null ;
     }
@@ -4650,7 +4665,23 @@ class Helpers
         ];
     }
 
+    public static function sendStoreEmployeeNotification($order, $data)
+    {
+        $employees = VendorEmployee::where('store_id', $order->store->id)->get();
+//        $notificationData = [];
+        foreach ($employees as $employee) {
+            self::send_push_notif_to_device($employee->firebase_token, $data);
 
+//            $notificationData[] = [
+//                'data' => json_encode($data),
+//                'vendor_id' => $order->store->vendor_id,
+//                'created_at' => now(),
+//                'updated_at' => now()
+//            ];
+        }
+
+//        DB::table('user_notifications')->insert($notificationData);
+    }
 
 
 
