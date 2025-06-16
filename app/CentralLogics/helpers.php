@@ -4552,19 +4552,15 @@ class Helpers
 
   public static function getFinalCalculatedTax($details_data, $additionalCharges, $totalDiscount, $price, $storeId, $storeData = true)
     {
-
         $productIds = [];
         $productPrice = [];
         $categoryIds = [];
         $quantities = [];
 
         $addonIds = [];
+        $addonPrice = [];
         $addonQuantity = [];
         $addonCategoryIds = [];
-
-
-
-
 
         if (addon_published_status('TaxModule')) {
             foreach ($details_data as $item) {
@@ -4608,15 +4604,6 @@ class Helpers
                 $productIds[$key] = $discountedPrice;
             }
 
-
-
-
-            // dd($totalDiscount,$addonIds,$addonQuantity,$addonCategoryIds,$addonPrice,$item);
-
-
-
-
-
             $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                 amount: $price,
                 productIds: $productIds,
@@ -4649,9 +4636,6 @@ class Helpers
             'taxData' => $taxData ?? [],
         ];
     }
-
-
-
 
 
 }
