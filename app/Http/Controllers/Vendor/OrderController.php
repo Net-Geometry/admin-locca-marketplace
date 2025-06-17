@@ -15,13 +15,14 @@ use App\CentralLogics\CouponLogic;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\OrderPayment;
+use App\Traits\PlaceNewOrder;
 use Brian2694\Toastr\Facades\Toastr;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+
 
 class OrderController extends Controller
 {
+    use PlaceNewOrder;
     public function list($status)
     {
         $key = explode(' ', request()?->search);
@@ -205,19 +206,7 @@ class OrderController extends Controller
 
     }
 
-//    public function search(Request $request){
-//        $key = explode(' ', $request['search']);
-//        $orders=Order::where(['store_id'=>Helpers::get_store_id()])->where(function ($q) use ($key) {
-//            foreach ($key as $value) {
-//                $q->orWhere('id', 'like', "%{$value}%")
-//                    ->orWhere('order_status', 'like', "%{$value}%")
-//                    ->orWhere('transaction_reference', 'like', "%{$value}%");
-//            }
-//        })->StoreOrder()->NotDigitalOrder()->limit(100)->get();
-//        return response()->json([
-//            'view'=>view('vendor-views.order.partials._table',compact('orders'))->render()
-//        ]);
-//    }
+
 
     public function details(Request $request,$id)
     {
@@ -350,7 +339,7 @@ class OrderController extends Controller
 
                 $order->cancellation_reason = $request->reason;
                 $order->canceled_by = 'store';
-                
+
                 $order?->store ?   Helpers::increment_order_count($order?->store) : '';
 
             }
@@ -428,6 +417,7 @@ class OrderController extends Controller
 
     public function edit_order_amount(Request $request)
     {
+
         $request->validate([
             'order_amount' => 'required',
 
@@ -480,30 +470,72 @@ class OrderController extends Controller
         $product_price = $request->order_amount;
         $total_addon_price = 0;
         $store_discount_amount = $order->store_discount_amount;
-        if($store_discount_amount == 0){
-            $store_discount = Helpers::get_store_discount($store);
-            if (isset($store_discount)) {
-                if ($product_price + $total_addon_price < $store_discount['min_purchase']) {
-                    $store_discount_amount = 0;
-                }
 
-                if ($store_discount['max_discount'] != 0 && $store_discount_amount > $store_discount['max_discount']) {
-                    $store_discount_amount = $store_discount['max_discount'];
-                }
+        $discount=$order->store_discount_amount;
+      $discount_on_product_by = $order->discount_on_product_by ?? 'vendor' ;
+
+        $store_discount = Helpers::get_store_discount($store);
+
+        $admin_discount = Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $store_discount['discount'], max_discount: $store_discount['max_discount'], min_purchase: $store_discount['min_purchase']);
+
+        $discount = max($discount, $admin_discount);
+
+        if($admin_discount > 0 && $discount == $admin_discount ){
+                $discount_on_product_by =  'admin' ;
             }
-        }
+
+
+        $order->discount_on_product_by= $discount_on_product_by;
+        $store_discount_amount=$discount;
+        $additionalCharges=[];
+
 
         $coupon_discount_amount = $coupon ? CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount) : 0;
         $total_price = $product_price + $total_addon_price - $store_discount_amount - $coupon_discount_amount;
-        $total_price = $total_price > 0 ? $total_price : 0 ;
+        $total_price = max($total_price, 0);
         //Added service charge
-        $additional_charge_status = BusinessSetting::where('key', 'additional_charge_status')->first()->value;
-        $additional_charge = BusinessSetting::where('key', 'additional_charge')->first()->value;
-        if ($additional_charge_status == 1) {
-            $order->additional_charge = $additional_charge ?? 0;
-        } else {
-            $order->additional_charge = 0;
-        }
+
+
+   $settings = BusinessSetting::whereIn('key', [
+                'dm_tips_status',
+                'additional_charge_status',
+                'additional_charge',
+                'extra_packaging_data',
+            ])->pluck('value', 'key');
+
+            $dm_tips_manage_status     = $settings['dm_tips_status'] ?? null;
+            $additional_charge_status  = $settings['additional_charge_status'] ?? null;
+            $additional_charge         = $settings['additional_charge'] ?? null;
+
+            $extra_packaging_data_raw  = $settings['extra_packaging_data'] ?? '';
+            $extra_packaging_data      = json_decode($extra_packaging_data_raw, true) ?? [];
+
+
+            //Added DM TIPS
+            $order->dm_tips = 0;
+            if ($dm_tips_manage_status == 1) {
+                $order->dm_tips = $request->dm_tips ?? 0;
+            }
+
+            //Added service charge
+            $order->additional_charge =$order->additional_charge;
+
+            if ($additional_charge_status == 1) {
+                $order->additional_charge = $additional_charge ?? 0;
+                $additionalCharges['tax_on_additional_charge'] = $order->additional_charge;
+            }
+
+            // extra packaging charge
+
+            $order->extra_packaging_amount =  (!empty($extra_packaging_data) && $request?->extra_packaging_amount > 0 && $store && ($extra_packaging_data[$store->module->module_type] == '1') && ($store?->storeConfig?->extra_packaging_status == '1')) ? $store?->storeConfig?->extra_packaging_amount : 0;
+
+            if ($order->extra_packaging_amount > 0) {
+                $additionalCharges['tax_on_packaging_charge'] =  $order->extra_packaging_amount;
+            }
+
+
+
+
 
         $tax = $store->tax;
         $order->tax_status = 'excluded';
@@ -514,6 +546,38 @@ class OrderController extends Controller
 
         $total_tax_amount = Helpers::product_tax($total_price, $tax, $order->tax_status == 'included');
         $tax_a = $order->tax_status == 'included' ? 0 : $total_tax_amount;
+
+
+
+
+
+
+
+                // $totalDiscount = $store_discount_amount  + $coupon_discount_amount +  $order->ref_bonus_amount;
+
+
+
+                // $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount,
+                // $product_price + $total_addon_price, $store->id);
+                // $tax_amount = $finalCalculatedTax['tax_amount'];
+                // $tax_status = $finalCalculatedTax['tax_status'];
+                // $taxMap = $finalCalculatedTax['taxMap'];
+                // $orderTaxIds = data_get($finalCalculatedTax ,'taxData.orderTaxIds',[] );
+
+                // $order->tax_status = $tax_status;
+
+
+
+
+
+
+
+
+
+
+
+
+
         $free_delivery_over = BusinessSetting::where('key', 'free_delivery_over')->first()->value;
         if (isset($free_delivery_over)) {
             if ($free_delivery_over <= $product_price + $total_addon_price - $coupon_discount_amount - $store_discount_amount) {
@@ -534,7 +598,7 @@ class OrderController extends Controller
                     $free_delivery_by = 'admin';
                 }
             }
-            $coupon->increment('total_uses');
+            // $coupon->increment('total_uses');
         }
 
         $order->coupon_discount_amount = round($coupon_discount_amount, config('round_up_to_digit'));
@@ -643,9 +707,9 @@ class OrderController extends Controller
             Toastr::warning(translate('all_image_delete_warning'));
             return back();
         }
-      
+
         Helpers::check_and_delete('order/' , $request['name']);
-        
+
         foreach ($proof as $image) {
             if ($image != $request['name']) {
                 array_push($array, $image);
