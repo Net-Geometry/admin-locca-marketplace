@@ -133,7 +133,7 @@ class CalculateTaxService
     {
         $results = [];
 
-        $availableAdditions = $systemTaxVat->additionalData()->select('name', 'tax_ids')->get();
+        $availableAdditions = $systemTaxVat->additionalData()->where('is_active',1)->select('name', 'tax_ids')->get();
 
         foreach ($availableAdditions as $additionalData) {
             $chargeName = $additionalData->name;

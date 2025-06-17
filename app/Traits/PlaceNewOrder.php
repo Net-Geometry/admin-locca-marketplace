@@ -115,6 +115,7 @@ trait PlaceNewOrder
             $delivery_charge = null;
             $free_delivery_by = null;
             $taxMap = [];
+            $orderTaxIds = [];
 
             if ($request->order_type !== 'parcel') {
 
@@ -347,10 +348,12 @@ trait PlaceNewOrder
 
 
 
-                $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount, $product_price + $total_addon_price, $store->id);
+                $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount,
+                $product_price + $total_addon_price, $store->id);
                 $tax_amount = $finalCalculatedTax['tax_amount'];
                 $tax_status = $finalCalculatedTax['tax_status'];
                 $taxMap = $finalCalculatedTax['taxMap'];
+                $orderTaxIds = data_get($finalCalculatedTax ,'taxData.orderTaxIds',[] );
 
                 $order->tax_status = $tax_status;
 
@@ -461,10 +464,10 @@ trait PlaceNewOrder
                 }
 
                 OrderDetail::insert($order_details);
-                if (isset($finalCalculatedTax['orderTaxIds'])) {
-                    \Modules\TaxModule\Services\CalculateTaxService::updateOrderTaxData(
+                if (count($orderTaxIds)) {
+                   \Modules\TaxModule\Services\CalculateTaxService::updateOrderTaxData(
                         orderId: $order->id,
-                        orderTaxIds: $finalCalculatedTax['orderTaxIds'],
+                        orderTaxIds: $orderTaxIds,
                     );
                 }
                 if (count($product_data) > 0) {

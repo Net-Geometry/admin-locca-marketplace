@@ -7675,4 +7675,7 @@ Smartly or Earn. ',
   'The longitude field is required unless order type is in take_away.' => 'The longitude field is required unless order type is in take away.',
   'The latitude field is required unless order type is in take_away.' => 'The latitude field is required unless order type is in take away.',
   'Please_select_items_from_the_same_store' => 'Please select items from the same store',
+  'The contact person name field is required.' => 'The contact person name field is required.',
+  'The contact person number field is required.' => 'The contact person number field is required.',
+  'The contact person email field is required.' => 'The contact person email field is required.',
 );
