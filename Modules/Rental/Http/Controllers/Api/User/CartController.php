@@ -62,7 +62,8 @@ class CartController extends Controller
             'distance' => 'required_if:rental_type,distance_wise',
             'destination_time' => 'required_if:rental_type,distance_wise',
         ], [
-            'destination_time.required_if' => translate('destination_address_is_required_when_rental_type_is_distance_wise')
+            'destination_time.required_if' =>  translate('destination_address_is_required_when_rental_type_is_distance_wise'),
+            'estimated_hours.*' =>  $request->rental_type ==  'hourly'  ?  translate('estimated_hours_is_required_when_rental_type_is_hourly') : translate('estimated_day_is_required_when_rental_type_is_day_wise')
         ]);
 
 
@@ -96,12 +97,12 @@ class CartController extends Controller
                 ]
             ], data_get($validation_check, 'status_code'));
         }
-        if($request->rental_type == 'hourly'){
-            $getPrice=$vehicle->hourly_price *  $request->estimated_hours ;
-        } elseif($request->rental_type == 'day_wise'){
-            $getPrice=$vehicle->day_wise_price * ( (int) round($request->estimated_hours/ 24)  )  ;
-        } else{
-            $getPrice=$vehicle->distance_price *  $request->distance;
+        if ($request->rental_type == 'hourly') {
+            $getPrice = $vehicle->hourly_price *  $request->estimated_hours;
+        } elseif ($request->rental_type == 'day_wise') {
+            $getPrice = $vehicle->day_wise_price * ((int) round($request->estimated_hours / 24));
+        } else {
+            $getPrice = $vehicle->distance_price *  $request->distance;
         }
         $price = $this->getDiscount(price: $getPrice, discount_type: $vehicle->discount_type, discount: $vehicle->discount_price);
 
@@ -226,7 +227,7 @@ class CartController extends Controller
                 return ['code' => $response['code'], 'message' => translate($response['message']), 'status_code' => $response['status']];
             }
         } catch (\Exception $exception) {
-            return ['code' => 'fatal_error', 'message' =>$exception->getMessage(), 'status_code' => 500];
+            return ['code' => 'fatal_error', 'message' => $exception->getMessage(), 'status_code' => 500];
         }
 
         return null;
@@ -288,12 +289,12 @@ class CartController extends Controller
         }
 
 
-        if($user_data->rental_type == 'hourly'){
-            $getPrice= $cart->vehicle->hourly_price *  $user_data->estimated_hours ;
-        } elseif($user_data->rental_type == 'day_wise'){
-            $getPrice=$cart->vehicle->day_wise_price * ( (int) round($user_data->estimated_hours/ 24)  )  ;
-        } else{
-            $getPrice= $cart->vehicle->distance_price *  $user_data->distance;
+        if ($user_data->rental_type == 'hourly') {
+            $getPrice = $cart->vehicle->hourly_price *  $user_data->estimated_hours;
+        } elseif ($user_data->rental_type == 'day_wise') {
+            $getPrice = $cart->vehicle->day_wise_price * ((int) round($user_data->estimated_hours / 24));
+        } else {
+            $getPrice = $cart->vehicle->distance_price *  $user_data->distance;
         }
 
         $price = $this->getDiscount(price: $getPrice, discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
@@ -377,7 +378,7 @@ class CartController extends Controller
 
 
 
-        if($request->vehicle_id && $request->pickup_time){
+        if ($request->vehicle_id && $request->pickup_time) {
 
             $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first();
             $pickup_time = $request->pickup_time
@@ -386,14 +387,14 @@ class CartController extends Controller
 
 
             $vehicle = $this->vehicle->where('id', $request->vehicle_id)->active()
-            ->withCount([
-                'vehicleIdentities as total_vehicle_count' => function ($query) use ($pickup_time) {
-                    $query->DynamicVehicleQuantity($pickup_time);
-                },
-            ])
-            ->first();
+                ->withCount([
+                    'vehicleIdentities as total_vehicle_count' => function ($query) use ($pickup_time) {
+                        $query->DynamicVehicleQuantity($pickup_time);
+                    },
+                ])
+                ->first();
 
-            $validation_check =  $this->addToCartValidations($vehicle, $request, $user_id, $is_guest, $pickup_time, $user_data,false);
+            $validation_check =  $this->addToCartValidations($vehicle, $request, $user_id, $is_guest, $pickup_time, $user_data, false);
 
             if (data_get($validation_check, 'status_code') === 403) {
                 return response()->json([
@@ -402,7 +403,6 @@ class CartController extends Controller
                     ]
                 ], data_get($validation_check, 'status_code'));
             }
-
         }
 
 
@@ -413,7 +413,7 @@ class CartController extends Controller
         $data = [
             'carts' => [],
             'user_data' => [],
-            'status'=> 'success'
+            'status' => 'success'
         ];
         return response()->json($data, 200);
     }
@@ -422,13 +422,20 @@ class CartController extends Controller
 
     public function updateUserData(RentalCartUserData $user_data, Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'guest_id' => $request->user ? 'nullable' : 'required',
-            'rental_type' => 'required|in:hourly,distance_wise,day_wise',
-            'estimated_hours' => 'required_if:rental_type,hourly|required_if:rental_type,day_wise',
-            'distance' => 'required_if:rental_type,distance_wise',
-            'destination_time' => 'required_if:rental_type,distance_wise',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'guest_id' => $request->user ? 'nullable' : 'required',
+                'rental_type' => 'required|in:hourly,distance_wise,day_wise',
+                'estimated_hours' => 'required_if:rental_type,hourly|required_if:rental_type,day_wise',
+                'distance' => 'required_if:rental_type,distance_wise',
+                'destination_time' => 'required_if:rental_type,distance_wise',
+            ],
+            [
+                'destination_time.required_if' =>  translate('destination_address_is_required_when_rental_type_is_distance_wise'),
+                'estimated_hours.*' =>  $request->rental_type ==  'hourly'  ?  translate('estimated_hours_is_required_when_rental_type_is_hourly') : translate('estimated_day_is_required_when_rental_type_is_day_wise')
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
@@ -532,12 +539,12 @@ class CartController extends Controller
         foreach ($carts as $cart) {
             if ($cart->vehicle &&  $cart->vehicle->status == 1) {
 
-                if(($request->rental_type ?? $user_data?->rental_type) == 'hourly'){
-                    $getPrice=$cart->vehicle->hourly_price *   ($request->estimated_hours ?? $user_data?->estimated_hours) ;
-                } elseif(($request->rental_type ?? $user_data?->rental_type) == 'day_wise'){
-                    $getPrice=$cart->vehicle->day_wise_price * ( (int) round(($request->estimated_hours ?? $user_data?->estimated_hours)/ 24)) ;
-                } else{
-                    $getPrice=$cart->vehicle?->distance_price *  ($request->distance ?? $user_data?->distance);
+                if (($request->rental_type ?? $user_data?->rental_type) == 'hourly') {
+                    $getPrice = $cart->vehicle->hourly_price *   ($request->estimated_hours ?? $user_data?->estimated_hours);
+                } elseif (($request->rental_type ?? $user_data?->rental_type) == 'day_wise') {
+                    $getPrice = $cart->vehicle->day_wise_price * ((int) round(($request->estimated_hours ?? $user_data?->estimated_hours) / 24));
+                } else {
+                    $getPrice = $cart->vehicle?->distance_price *  ($request->distance ?? $user_data?->distance);
                 }
 
                 $price = $this->getDiscount(price: $getPrice, discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
@@ -569,29 +576,29 @@ class CartController extends Controller
             ? \Carbon\Carbon::parse($request->pickup_time)
             : ($user_data?->pickup_time ? \Carbon\Carbon::parse($user_data->pickup_time) : now());
 
-            $carts=  $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))
+        $carts =  $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))
             ->with(['vehicle' => function ($query) use ($pickup_time) {
                 $query->withCount([
                     'vehicleIdentities as total_vehicle_count' => function ($query) use ($pickup_time) {
                         $query->DynamicVehicleQuantity($pickup_time);
                     },
                 ]);
-            }, 'provider:id,name,address,tax,pickup_zone_id', 'provider.discount' => function($query){
-            return $query->validate();
-        }])
+            }, 'provider:id,name,address,tax,pickup_zone_id', 'provider.discount' => function ($query) {
+                return $query->validate();
+            }])
             ->get();
-            $carts->each(function ($cart) {
-                if (!empty($cart->provider->pickup_zone_id)) {
-                    $cart->provider->pickup_zone_id = is_string($cart->provider->pickup_zone_id)
-                        ? json_decode($cart->provider->pickup_zone_id, true)
-                        : (array) $cart->provider->pickup_zone_id;
-                } else {
-                    $cart->provider->pickup_zone_id = [];
-                }
-            });
+        $carts->each(function ($cart) {
+            if (!empty($cart->provider->pickup_zone_id)) {
+                $cart->provider->pickup_zone_id = is_string($cart->provider->pickup_zone_id)
+                    ? json_decode($cart->provider->pickup_zone_id, true)
+                    : (array) $cart->provider->pickup_zone_id;
+            } else {
+                $cart->provider->pickup_zone_id = [];
+            }
+        });
 
         return [
-            'carts' =>$carts,
+            'carts' => $carts,
             'user_data' => $this->setUserData($request, $user_id, $is_guest, $total_cart_price)
         ];
     }
