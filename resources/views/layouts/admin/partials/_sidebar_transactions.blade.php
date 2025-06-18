@@ -162,18 +162,17 @@
                     </a>
                 </li>
 
-                {{-- <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/low-stock-report') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.transactions.report.low-stock-report') }}" title="{{ translate('messages.Stock_Report') }}">
-                        <span class="tio-chart-bar-4 nav-icon"></span>
-                        <span class="text-truncate text-capitalize">{{ translate('messages.Stock_Report') }}</span>
-                    </a>
-                </li> --}}
-
 
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/order-report') ? 'active' : '' }}">
                     <a class="nav-link " href="{{ route('admin.transactions.report.order-report') }}" title="{{ translate('messages.order_report') }}">
                         <span class="tio-chart-bar-4 nav-icon"></span>
                         <span class="text-truncate text-capitalize">{{ translate('messages.order_report') }}</span>
+                    </a>
+                </li>
+                <li class="navbar-vertical-aside-has-menu @yield('vendor_tax_report')">
+                    <a class="nav-link " href="{{ route('admin.transactions.report.vendorTax') }}" title="{{ translate('Vendor_Tax_Report') }}">
+                        <span class="tio-american-express nav-icon"></span>
+                        <span class="text-truncate text-capitalize">{{ translate('Vendor_Tax_Report') }}</span>
                     </a>
                 </li>
                 @endif

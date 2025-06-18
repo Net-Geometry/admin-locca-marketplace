@@ -709,6 +709,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('low-stock-wise-report-search', 'ReportController@low_stock_wise_export')->name('low-stock-wise-report-export');
                 Route::get('disbursement-report/{tab?}', 'ReportController@disbursement_report')->name('disbursement_report');
                 Route::get('disbursement-report-export/{type}/{tab?}', 'ReportController@disbursement_report_export')->name('disbursement_report_export');
+
+                Route::get('vendor-tax-report', 'VendoTaxReportController@vendorTax')->name('vendorTax');
+
             });
 
             Route::group(['prefix' => 'account-transaction', 'as' => 'account-transaction.', 'middleware' => ['module:collect_cash']], function () {
