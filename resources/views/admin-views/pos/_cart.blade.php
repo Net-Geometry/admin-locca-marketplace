@@ -12,7 +12,7 @@
         <?php
             $subtotal = 0;
             $addon_price = 0;
-            $tax = isset($store)? $store->tax: 0;
+            $tax = session()->get('tax_amount');
             $discount = 0;
             $discount_type = 'amount';
             $discount_on_product = 0;
@@ -21,10 +21,6 @@
         @if(session()->has('cart') && count( session()->get('cart')) > 0)
             <?php
                 $cart = session()->get('cart');
-                if(isset($cart['tax']))
-                {
-                    $tax = $cart['tax'];
-                }
                 if(isset($cart['discount']))
                 {
                     $discount = $cart['discount'];
@@ -79,11 +75,16 @@
     $total = $subtotal+$addon_price;
     $discount_amount = ($discount_type=='percent' && $discount>0)?((($total-$discount_on_product) * $discount)/100):$discount;
     $total -= ($discount_amount + $discount_on_product);
-    $tax_included = \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first() ?  \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first()->value : 0;
-    $total_tax_amount= ($tax > 0)?(($total * $tax)/100):0;
+    $has_tax = session()->get('tax_amount');
+    $has_include = session()->get('tax_included');
+    $tax_included = ($has_include && $has_tax && $has_tax < 0) ? 1 : 0;
+    $total_tax_amount = $has_tax;
     $total = $total + $delivery_fee;
 ?>
 <div class="box p-3">
+    @dump($has_tax)
+    @dump($has_include)
+    @dump($has_tax > 0)
     <dl class="row text-dark">
         @if (Config::get('module.current_module_type') == 'food')
 
@@ -93,8 +94,8 @@
 
         <dd  class="col-6">{{translate('messages.subtotal')}}
             @if ($tax_included ==  1)
-            ({{ translate('messages.TAX_Included') }})
-            @php($total_tax_amount=0)
+                ({{ translate('messages.TAX_Included') }})
+                @php($total_tax_amount=0)
             @endif
             :</dd>
         <dd class="col-6 text-right">{{\App\CentralLogics\Helpers::format_currency($subtotal+$addon_price)}}</dd>

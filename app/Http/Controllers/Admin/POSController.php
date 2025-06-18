@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Traits\PlaceNewOrder;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
@@ -27,8 +28,11 @@ use Illuminate\Support\Facades\Config;
 
 class POSController extends Controller
 {
+    use PlaceNewOrder;
     public function index(Request $request)
     {
+//        dd(session()->get('cart'));
+//        dd(session()->get('tax_amount'));
         $time = Carbon::now()->toTimeString();
         $category = $request->query('category_id', 0);
         $module_id = Config::get('module.current_module_id');
@@ -421,6 +425,8 @@ class POSController extends Controller
                     $cart->push($data);
                 }
 
+                $this->setPosCalculatedTax($product->store);
+
             } else {
                 $cart = collect([$data]);
                 $cart->put('store_id', $product->store_id);
@@ -490,10 +496,14 @@ class POSController extends Controller
                 }
             }
 
-
-
             $cart->forget($request->key);
             $request->session()->put('cart', $cart);
+
+            $product = Item::withoutGlobalScope(StoreScope::class)->with('store')->find($item_id);
+            if ($product && $product->store) {
+                $this->setPosCalculatedTax($product->store);
+            }
+
         }
 
         return response()->json([],200);
@@ -517,12 +527,25 @@ class POSController extends Controller
                 $request->session()->put('cart_product_ids', $product_ids);
             }
         }
+
+        try {
+            $product_id = $cart[$request->key]['id'];
+            $product = Item::withoutGlobalScope(StoreScope::class)->with('store')->find($product_id);
+            if ($product && $product->store) {
+                $this->setPosCalculatedTax($product->store);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Failed to recalculate tax after quantity update: ' . $e->getMessage());
+        }
+
         return response()->json([],200);
     }
 
     public function emptyCart(Request $request)
     {
         session()->forget('cart');
+        session()->forget('tax_amount');
+        session()->forget('tax_included');
         session()->forget('address');
         session()->forget('cart_product_ids');
         return response()->json([], 200);
