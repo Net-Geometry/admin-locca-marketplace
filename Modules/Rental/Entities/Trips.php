@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\TaxModule\Entities\OrderTax;
 
 class Trips extends Model
 {
@@ -168,6 +169,9 @@ class Trips extends Model
     {
         return $this->hasManyThrough(Vehicle::class , TripDetails::class,'trip_id','id','id','vehicle_id');
     }
-
+    public function orderTaxes()
+    {
+        return $this->morphMany(OrderTax::class, 'order');
+    }
 
 }

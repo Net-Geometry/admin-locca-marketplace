@@ -175,6 +175,7 @@ class TripController extends Controller
         $tax_included = $finalCalculatedTax['tax_included'];
         $tax_status = $finalCalculatedTax['tax_status'];
         $taxMap = $finalCalculatedTax['taxMap'];
+        $orderTaxIds = data_get($finalCalculatedTax, 'taxData.orderTaxIds', []);
 
         $price = max(0, $price) + $tax_amount + $additional_charge;
 
@@ -226,10 +227,10 @@ class TripController extends Controller
         }
 
         TripDetails::insert($details_data);
-        if (isset($taxData['orderTaxIds'])) {
+        if (count($orderTaxIds)) {
             \Modules\TaxModule\Services\CalculateTaxService::updateOrderTaxData(
                 orderId: $trip->id,
-                orderTaxIds: $taxData['orderTaxIds'],
+                orderTaxIds: $orderTaxIds,
             );
         }
 
@@ -371,7 +372,7 @@ class TripController extends Controller
 
 
 
-    private function tripDetails($request, $user_data, $carts, $schedule_at, $estimated_trip_end_time, $provider,$increment=true)
+    private function tripDetails($request, $user_data, $carts, $schedule_at, $estimated_trip_end_time, $provider, $increment = true)
     {
         $price = 0;
         $discount_on_trip = 0;
@@ -461,7 +462,7 @@ class TripController extends Controller
                 'estimated_trip_end_time' => $estimated_trip_end_time,
 
             ];
-            if($increment==true){
+            if ($increment == true) {
                 $cart->vehicle->increment('total_trip', $cart->quantity);
             }
             $details_data[] = $trip_details_data;
@@ -975,7 +976,7 @@ class TripController extends Controller
         }
 
 
-        $details_data =  $this->tripDetails(request: $request, user_data: $user_data, carts: $carts, schedule_at: $schedule_at, estimated_trip_end_time: $estimated_trip_end_time, provider: $provider ,increment:false);
+        $details_data =  $this->tripDetails(request: $request, user_data: $user_data, carts: $carts, schedule_at: $schedule_at, estimated_trip_end_time: $estimated_trip_end_time, provider: $provider, increment: false);
 
         if (data_get($details_data, 'code') === 'details_data') {
 
@@ -1015,13 +1016,13 @@ class TripController extends Controller
             $additional_charge = BusinessSetting::where('key', 'additional_charge')->first()?->value ?? 0;
             $additionalCharges['tax_on_additional_charge'] = $additional_charge;
         }
-        $finalCalculatedTax =  $this->getFinalCalculatedTax($details_data, $additionalCharges, $totalDiscount, $price, $provider->id ,  false);
+        $finalCalculatedTax =  $this->getFinalCalculatedTax($details_data, $additionalCharges, $totalDiscount, $price, $provider->id,  false);
         $data = [
             'tax_amount' => $finalCalculatedTax['tax_amount'],
             'tax_status' => $finalCalculatedTax['tax_status'],
             'tax_included' => $finalCalculatedTax['tax_included'],
             // 'taxData' =>  $finalCalculatedTax['taxData']
         ];
-        return response()->json($data,200);
+        return response()->json($data, 200);
     }
 }
