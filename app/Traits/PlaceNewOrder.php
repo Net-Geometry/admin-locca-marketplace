@@ -1123,6 +1123,7 @@ trait PlaceNewOrder
         $discount_on_product_by = 'vendor';
         foreach ($carts as $c) {
             if(is_array($c)) {
+//                dd($c);
                 $isCampaign = false;
                 if (isset($c['item_type']) && ($c['item_type'] === 'App\Models\ItemCampaign' || $c['item_type'] === 'AppModelsItemCampaign')) {
                     $product = ItemCampaign::with('module')->active()->find($c['item_id']);
@@ -1162,15 +1163,15 @@ trait PlaceNewOrder
                         $product_variations = json_decode($product->food_variations, true);
 
                         if (count($product_variations)) {
-                            $variation_data = Helpers::get_varient($product_variations, $c['variation']);
+                            $variation_data = Helpers::get_varient($product_variations, $c['variations']);
                             $price = $product['price'] + $variation_data['price'];
                             $variations = $variation_data['variations'];
                         } else {
                             $price = $product['price'];
                         }
                     } else {
-                        if (count(json_decode($product['variations'], true)) > 0 && count($c['variation']) > 0) {
-                            $variant_data = Helpers::variation_price($product, json_encode($c['variation']));
+                        if (count(json_decode($product['variations'], true)) > 0 && count($c['variations']) > 0) {
+                            $variant_data = Helpers::variation_price($product, json_encode($c['variations']));
                             $price = $variant_data['price'];
                             $stock = $variant_data['stock'];
                         } else {
@@ -1402,7 +1403,7 @@ trait PlaceNewOrder
         ];
         return response()->json($data, 200);
     }
-    public function setPosCalculatedTax($store, $storeData=false)
+    public function setPosCalculatedTax($store, $storeData=true)
     {
         $additionalCharges = [];
         $settings = BusinessSetting::whereIn('key', [
@@ -1420,7 +1421,6 @@ trait PlaceNewOrder
 
         $carts = session()->get('cart');
         $order_details = $this->makePosOrderDetails($carts, null, $store);
-
         $total_addon_price = $order_details['total_addon_price'];
         $product_price = $order_details['product_price'];
         $store_discount_amount = $order_details['store_discount_amount'];
@@ -1429,11 +1429,17 @@ trait PlaceNewOrder
         $order_details = $order_details['order_details'];
 
         $totalDiscount = $store_discount_amount + $flash_sale_admin_discount_amount + $flash_sale_vendor_discount_amount;
-
         $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount,
             $product_price + $total_addon_price, $store->id , $storeData);
 
         session()->put('tax_amount', $finalCalculatedTax['tax_amount']);
         session()->put('tax_included', $finalCalculatedTax['tax_included']);
+
+        $data = [
+            'tax_amount' => $finalCalculatedTax['tax_amount'],
+            'tax_status' => $finalCalculatedTax['tax_status'],
+            'tax_included' => $finalCalculatedTax['tax_included'],
+        ];
+        return response()->json($data, 200);
     }
 }

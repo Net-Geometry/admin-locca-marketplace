@@ -67,24 +67,25 @@
 </div>
 
 <?php
-    if(session()->get('address') && count(session()->get('address'))>0){
-        $delivery_fee = session()->get('address')['delivery_fee'];
-    }else{
-        $delivery_fee = 0;
+    $total = $subtotal + $addon_price;
+
+    if ($discount_type == 'percent' && $discount > 0) {
+        $discount_amount = (($total - $discount_on_product) * $discount) / 100;
+    } else {
+        $discount_amount = $discount;
     }
-    $total = $subtotal+$addon_price;
-    $discount_amount = ($discount_type=='percent' && $discount>0)?((($total-$discount_on_product) * $discount)/100):$discount;
+
     $total -= ($discount_amount + $discount_on_product);
-    $has_tax = session()->get('tax_amount');
-    $has_include = session()->get('tax_included');
-    $tax_included = ($has_include && $has_tax && $has_tax < 0) ? 1 : 0;
-    $total_tax_amount = $has_tax;
-    $total = $total + $delivery_fee;
+
+    $tax_amount = session()->get('tax_amount');
+    $tax_included = session()->get('tax_included');
+//    $tax_included = ($tax_included && $tax_amount > 0) ? 1 : 0;
+
+    $delivery_fee = session()->get('address.delivery_fee', 0);
+    $total += $delivery_fee;
 ?>
+
 <div class="box p-3">
-    @dump($has_tax)
-    @dump($has_include)
-    @dump($has_tax > 0)
     <dl class="row text-dark">
         @if (Config::get('module.current_module_type') == 'food')
 
@@ -95,7 +96,7 @@
         <dd  class="col-6">{{translate('messages.subtotal')}}
             @if ($tax_included ==  1)
                 ({{ translate('messages.TAX_Included') }})
-                @php($total_tax_amount=0)
+                @php($tax_amount=0)
             @endif
             :</dd>
         <dd class="col-6 text-right">{{\App\CentralLogics\Helpers::format_currency($subtotal+$addon_price)}}</dd>
@@ -120,7 +121,7 @@
 
         <dd  class="col-6">{{ translate('messages.tax') }}  : </dd>
         <dd class="col-6 text-right">
-            {{\App\CentralLogics\Helpers::format_currency(round($total_tax_amount,2))}}</dd>
+            {{\App\CentralLogics\Helpers::format_currency(round($tax_amount,2))}}</dd>
         @endif
         <dd  class="col-6 pr-0">
             <hr class="my-0">
@@ -130,7 +131,7 @@
         </dd>
         <dt  class="col-6">{{ translate('messages.total') }}  : </dt>
         <dt class="col-6 text-right">
-            {{\App\CentralLogics\Helpers::format_currency(round($total+$total_tax_amount, 2))}}
+            {{\App\CentralLogics\Helpers::format_currency(round($total+$tax_amount, 2))}}
         </dt>
     </dl>
 

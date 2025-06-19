@@ -29,6 +29,7 @@ use App\Models\GenericName;
 use App\Models\StoreWallet;
 use App\Models\Translation;
 use Illuminate\Support\Str;
+use mysql_xdevapi\Exception;
 use PayPal\Api\Transaction;
 use App\Models\ItemCampaign;
 use App\Models\FlashSaleItem;
@@ -4586,7 +4587,7 @@ class Helpers
                 }
 
                 $productIds[$item_id] = $item['price'];
-                $productPrice[$item_id] = $item['price'] * $item['quantity'];
+                $productPrice[$item_id] = $item['price'] * $item['quantity'] ;
                 $categoryIds[$item_id] = $item['category_id'];
                 $quantities[$item_id] = $item['quantity'];
 
@@ -4602,21 +4603,24 @@ class Helpers
 
             }
 
-            $totalAddonPriceBeforeDiscount = array_sum($addonPrice);
-            foreach ($addonPrice as $key => $addonWisePrice) {
+            try {
+                $totalAddonPriceBeforeDiscount = array_sum($addonPrice);
+                foreach ($addonPrice as $key => $addonWisePrice) {
                     $proportion = $addonWisePrice / $totalAddonPriceBeforeDiscount;
                     $discountShare = $item['addon_discount'] * $proportion;
                     $discountedPrice = $addonWisePrice - $discountShare;
-                    $addonIds[$key] = $discountedPrice;
+                    $addonIds[$key] = $discountedPrice/$addonQuantity[$key];
                 }
 
-
-            $totalPriceBeforeDiscount = array_sum($productPrice);
-            foreach ($productPrice as $key => $productWisePrice) {
-                $proportion = $productWisePrice / $totalPriceBeforeDiscount;
-                $discountShare = $totalDiscount * $proportion;
-                $discountedPrice = $productWisePrice - $discountShare;
-                $productIds[$key] = $discountedPrice;
+                $totalPriceBeforeDiscount = array_sum($productPrice);
+                foreach ($productPrice as $key => $productWisePrice) {
+                    $proportion = $productWisePrice / $totalPriceBeforeDiscount;
+                    $discountShare = $totalDiscount * $proportion;
+                    $discountedPrice = $productWisePrice - $discountShare;
+                    $productIds[$key] = $discountedPrice/$quantities[$key];
+                }
+            }catch (\Exception $exception){
+                info(['error_creating_trip_transaction', $exception->getMessage()]);
             }
 
             $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
@@ -4624,16 +4628,17 @@ class Helpers
                 productIds: $productIds,
                 categoryIds: $categoryIds,
                 quantity: $quantities,
+                taxPayer: 'vendor',
                 storeData: $storeData,
                 additionalCharges: $additionalCharges,
-                taxPayer: 'vendor',
-                orderId: null,
-                storeId: $storeId,
                 addonIds: $addonIds,
                 addonQuantity: $addonQuantity,
-                addonCategoryIds: $addonCategoryIds
+                addonCategoryIds: $addonCategoryIds,
+                orderId: null,
+                storeId: $storeId
             );
 
+//            dd($taxData);
             $tax_amount = $taxData['totalTaxamount'];
             $tax_included = $taxData['include'];
             $tax_status = $tax_included ?  'included' : 'excluded';

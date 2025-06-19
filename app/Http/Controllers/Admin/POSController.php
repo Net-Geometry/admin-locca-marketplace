@@ -425,7 +425,6 @@ class POSController extends Controller
                     $cart->push($data);
                 }
 
-                $this->setPosCalculatedTax($product->store);
 
             } else {
                 $cart = collect([$data]);
@@ -436,6 +435,7 @@ class POSController extends Controller
             $request->session()->put('cart_product_ids', $product_ids);
         }
 
+        $this->setPosCalculatedTax($product->store);
         return response()->json([
             'data' => $data
         ]);
