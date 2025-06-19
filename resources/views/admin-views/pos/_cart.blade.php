@@ -117,10 +117,9 @@
         <dd class="col-6">{{ translate('messages.delivery_fee') }} :</dd>
         <dd class="col-6 text-right" id="delivery_price">
             {{ \App\CentralLogics\Helpers::format_currency($delivery_fee) }}</dd>
-            @if ($tax_included !=  1)
-
-        <dd  class="col-6">{{ translate('messages.tax') }}  : </dd>
-        <dd class="col-6 text-right">
+        @if ($tax_included !=  1)
+            <dd  class="col-6">{{ translate('messages.tax') }}  : </dd>
+            <dd class="col-6 text-right">
             {{\App\CentralLogics\Helpers::format_currency(round($tax_amount,2))}}</dd>
         @endif
         <dd  class="col-6 pr-0">

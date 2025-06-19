@@ -12,7 +12,7 @@
             <?php
             $subtotal = 0;
             $addon_price = 0;
-            $tax = \App\CentralLogics\Helpers::get_store_data()->tax;
+            $tax = session()->get('tax_amount');
             $discount = 0;
             $discount_type = 'amount';
             $discount_on_product = 0;
@@ -21,9 +21,6 @@
             @if (session()->has('cart') && count(session()->get('cart')) > 0)
                 <?php
                 $cart = session()->get('cart');
-                if (isset($cart['tax'])) {
-                    $tax = $cart['tax'];
-                }
                 if (isset($cart['discount'])) {
                     $discount = $cart['discount'];
                     $discount_type = $cart['discount_type'];
@@ -74,30 +71,40 @@
 </div>
 
 <?php
-$add = false;
-if (session()->has('address') && count(session()->get('address')) > 0) {
-    $add = true;
-    $delivery_fee = session()->get('address')['delivery_fee'];
-} else {
-    $delivery_fee = 0;
-}
-$total = $subtotal + $addon_price;
-$discount_amount = $discount_type == 'percent' && $discount > 0 ? (($total - $discount_on_product) * $discount) / 100 : $discount;
-$total -= $discount_amount + $discount_on_product;
-$tax_included =  \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first()?->value ?? 0;
-$total_tax_amount = $tax > 0 ? ($total * $tax) / 100 : 0;
+    $add = false;
+    if (session()->has('address') && count(session()->get('address')) > 0) {
+        $add = true;
+        $delivery_fee = session()->get('address')['delivery_fee'];
+    } else {
+        $delivery_fee = 0;
+    }
 
-if ($tax_included ==  1){
-    $total_tax_amount=0;
-}
-$total = $total + $delivery_fee;
-if (isset($cart['paid'])) {
-    $paid = $cart['paid'];
-    $change = $total + $total_tax_amount - $paid;
-} else {
-    $paid = $total + $total_tax_amount;
-    $change = 0;
-}
+    $total = $subtotal + $addon_price;
+
+    if ($discount_type == 'percent' && $discount > 0) {
+        $discount_amount = (($total - $discount_on_product) * $discount) / 100;
+    } else {
+        $discount_amount = $discount;
+    }
+
+    $total -= $discount_amount + $discount_on_product;
+
+    $tax_amount = session()->get('tax_amount');
+    $tax_included = session()->get('tax_included');
+
+    if ($tax_included ==  1){
+        $tax_amount = 0;
+    }
+
+    $total += $delivery_fee;
+
+    if (isset($cart['paid'])) {
+        $paid = $cart['paid'];
+        $change = $total + $tax_amount - $paid;
+    } else {
+        $paid = $total + $tax_amount;
+        $change = 0;
+    }
 ?>
 <form action="{{ route('vendor.pos.order') }}" id='order_place' method="post">
     @csrf
@@ -127,20 +134,22 @@ if (isset($cart['paid'])) {
             <dd class="col-6 text-right"><button class="btn btn-sm" type="button" data-toggle="modal"
                     data-target="#add-discount"><i class="tio-edit"></i></button>-
                 {{ \App\CentralLogics\Helpers::format_currency(round($discount_amount, 2)) }}</dd>
-                @if ($tax_included !=  1)
-            <dt class="col-6 font-regular">{{ translate('messages.tax') }} : </dt>
-            <dd class="col-6 text-right"><button class="btn btn-sm" type="button" data-toggle="modal"
-                    data-target="#add-tax"><i
-                        class="tio-edit"></i></button>{{ \App\CentralLogics\Helpers::format_currency(round($total_tax_amount, 2)) }}
-            </dd>
+            @if ($tax_included !=  1)
+                <dt class="col-6 font-regular">{{ translate('messages.tax') }} : </dt>
+                <dd class="col-6 text-right">
+{{--                    <button class="btn btn-sm" type="button" data-toggle="modal"--}}
+{{--                    data-target="#add-tax">--}}
+{{--                        <i class="tio-edit"></i></button>--}}
+                    {{ \App\CentralLogics\Helpers::format_currency(round($tax_amount, 2)) }}
+                </dd>
             @endif
             <dd class="col-12">
                 <hr class="m-0">
             </dd>
-            <input type="hidden" id='total_order_amount' value="{{ round($total + $total_tax_amount, 2) }}">
+            <input type="hidden" id='total_order_amount' value="{{ round($total + $tax_amount, 2) }}">
             <dt class="col-6 font-regular">{{ translate('Total') }}: </dt>
             <dd class="col-6 text-right h4 b">
-                {{ \App\CentralLogics\Helpers::format_currency(round($total + $total_tax_amount, 2)) }} </dd>
+                {{ \App\CentralLogics\Helpers::format_currency(round($total + $tax_amount, 2)) }} </dd>
         </dl>
         <div class="pos--payment-options mt-3 mb-3">
             <h5 class="mb-3">{{ translate($add ? 'messages.Payment Method' : 'Paid by') }}</h5>

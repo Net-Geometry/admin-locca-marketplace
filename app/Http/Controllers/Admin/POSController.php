@@ -840,8 +840,8 @@ class POSController extends Controller
 
         try {
             $order->store_discount_amount= $store_discount_amount;
-            $order->tax_percentage = $tax_amount;
-            $order->total_tax_amount= $tax_amount;
+            $order->tax_percentage = 0;
+            $order->total_tax_amount = $tax_amount;
             $order->order_amount = $total_price + $tax_amount + $order->delivery_charge;
             $order->adjusment = $request->amount - ($total_price + $tax_amount + $order->delivery_charge);
             $order->payment_method = $request->type == 'wallet'?'wallet':'cash_on_delivery';
