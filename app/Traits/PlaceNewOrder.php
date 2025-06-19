@@ -1403,7 +1403,7 @@ trait PlaceNewOrder
         ];
         return response()->json($data, 200);
     }
-    public function setPosCalculatedTax($store, $storeData=true)
+    public function setPosCalculatedTax($store, $storeData=false)
     {
         $additionalCharges = [];
         $settings = BusinessSetting::whereIn('key', [
