@@ -8,6 +8,7 @@ use App\Scopes\ZoneScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\ReportFilter;
+use Modules\TaxModule\Entities\OrderTax;
 
 class Order extends Model
 {
@@ -330,5 +331,9 @@ class Order extends Model
     protected static function boot()
     {
         parent::boot();
+    }
+    public function orderTaxes()
+    {
+        return $this->morphMany(OrderTax::class, 'order');
     }
 }

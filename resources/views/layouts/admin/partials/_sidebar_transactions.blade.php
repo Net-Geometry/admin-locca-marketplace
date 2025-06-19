@@ -170,7 +170,7 @@
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu @yield('vendor_tax_report')">
-                    <a class="nav-link " href="{{ route('admin.transactions.report.vendorTax') }}" title="{{ translate('Vendor_Tax_Report') }}">
+                    <a class="nav-link " href="{{ route('admin.transactions.report.vendorWiseTaxes') }}" title="{{ translate('Vendor_Tax_Report') }}">
                         <span class="tio-american-express nav-icon"></span>
                         <span class="text-truncate text-capitalize">{{ translate('Vendor_Tax_Report') }}</span>
                     </a>
