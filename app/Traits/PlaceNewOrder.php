@@ -1123,7 +1123,6 @@ trait PlaceNewOrder
         $discount_on_product_by = 'vendor';
         foreach ($carts as $c) {
             if(is_array($c)) {
-//                dd($c);
                 $isCampaign = false;
                 if (isset($c['item_type']) && ($c['item_type'] === 'App\Models\ItemCampaign' || $c['item_type'] === 'AppModelsItemCampaign')) {
                     $product = ItemCampaign::with('module')->active()->find($c['item_id']);
@@ -1403,7 +1402,7 @@ trait PlaceNewOrder
         ];
         return response()->json($data, 200);
     }
-    public function setPosCalculatedTax($store, $storeData=false)
+    public function setPosCalculatedTax($store, $storeData=false, $orderCart=null)
     {
         $additionalCharges = [];
         $settings = BusinessSetting::whereIn('key', [
@@ -1419,8 +1418,14 @@ trait PlaceNewOrder
             $additionalCharges['tax_on_additional_charge'] = $additional_charge ?? 0;
         }
 
-        $carts = session()->get('cart');
+        if ($orderCart) {
+            $carts = session()->get($orderCart);
+        }else{
+            $carts = session()->get('cart');
+        }
+//        dd('ok');
         $order_details = $this->makePosOrderDetails($carts, null, $store);
+//        dd($order_details);
         $total_addon_price = $order_details['total_addon_price'];
         $product_price = $order_details['product_price'];
         $store_discount_amount = $order_details['store_discount_amount'];
@@ -1440,6 +1445,7 @@ trait PlaceNewOrder
             'tax_status' => $finalCalculatedTax['tax_status'],
             'tax_included' => $finalCalculatedTax['tax_included'],
         ];
+//        dd($finalCalculatedTax);
         return response()->json($data, 200);
     }
 }

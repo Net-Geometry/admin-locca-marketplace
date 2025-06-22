@@ -21,6 +21,7 @@ use App\Exports\OrderExport;
 use App\Mail\RefundRejected;
 use App\Models\ItemCampaign;
 use App\Models\RefundReason;
+use App\Traits\PlaceNewOrder;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
@@ -42,6 +43,7 @@ use MatanYadaev\EloquentSpatial\Objects\Point;
 
 class OrderController extends Controller
 {
+    use PlaceNewOrder;
     public function list($status, Request $request)
     {
         // dd($status);
@@ -1038,6 +1040,7 @@ class OrderController extends Controller
             session()->forget('order_cart');
         } else {
             $request->session()->put('order_cart', $cart);
+            $this->setPosCalculatedTax($order->store, false, 'order_cart');
         }
         return back();
     }
