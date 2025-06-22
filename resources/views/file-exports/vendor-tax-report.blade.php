@@ -33,9 +33,8 @@
                             {{ $data['to'] ? Carbon\Carbon::parse($data['to'])->format('d M Y') : '' }}
                         @endif
                         <br>
-
-                        {{-- {{ translate('Search_Bar_Content') }}- {{ $data['search'] ?? translate('N/A') }} --}}
-                        {{-- <br> --}}
+                        {{ translate('Search_Bar_Content') }}- {{ $data['search'] ?? translate('N/A') }}
+                        <br>
 
                     </th>
                     <th> </th>

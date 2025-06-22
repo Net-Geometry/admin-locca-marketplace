@@ -7702,4 +7702,6 @@ Smartly or Earn. ',
   'Details' => 'Details',
   'Order Amount' => 'Order Amount',
   'Total_Tax_Amount' => 'Total Tax Amount',
+  'The from field is required.' => 'The from field is required.',
+  'The to field is required.' => 'The to field is required.',
 );
