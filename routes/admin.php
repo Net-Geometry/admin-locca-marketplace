@@ -713,6 +713,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('vendor-wise-taxes', 'VendoTaxReportController@vendorWiseTaxes')->name('vendorWiseTaxes');
                 Route::get('vendor-wise-taxes-export', 'VendoTaxReportController@vendorWiseTaxExport')->name('vendorWiseTaxExport');
                 Route::get('vendor-tax-report', 'VendoTaxReportController@vendorTax')->name('vendorTax');
+                Route::get('vendor-tax-export', 'VendoTaxReportController@vendorTaxExport')->name('vendorTaxExport');
 
             });
 

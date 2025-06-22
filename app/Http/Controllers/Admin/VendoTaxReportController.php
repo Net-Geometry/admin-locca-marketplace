@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\VendorTaxExport;
 use App\Exports\VendorWiseTaxExport;
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\Store;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,8 +23,8 @@ class VendoTaxReportController extends Controller
         $key = explode(' ', $request['search']);
 
         list($startDate, $endDate) = explode(' - ', $dateRange);
-        $startDate = \Carbon\Carbon::createFromFormat('m/d/Y', trim($startDate));
-        $endDate = \Carbon\Carbon::createFromFormat('m/d/Y', trim($endDate));
+        $startDate = Carbon::createFromFormat('m/d/Y', trim($startDate));
+        $endDate = Carbon::createFromFormat('m/d/Y', trim($endDate));
         $startDate = $startDate->startOfDay();
         $endDate = $endDate->endOfDay();
 
@@ -52,53 +54,7 @@ class VendoTaxReportController extends Controller
 
 
 
-    public function vendorTax(Request $request)
-    {
 
-        $dateRange = $request->dates ?? now()->startOfYear()->format('m/d/Y') . ' - ' . now()->endOfYear()->format('m/d/Y');
-        $key = explode(' ', $request['search']);
-
-        list($startDate, $endDate) = explode(' - ', $dateRange);
-        $startDate = \Carbon\Carbon::createFromFormat('m/d/Y', trim($startDate));
-        $endDate = \Carbon\Carbon::createFromFormat('m/d/Y', trim($endDate));
-        $startDate = $startDate->startOfDay();
-        $endDate = $endDate->endOfDay();
-
-        $store_id = $request->id;
-        $store = is_numeric($store_id) ? Store::select('id', 'name', 'phone')->findOrFail($store_id) : null;
-
-        // $start = microtime(true);
-
-        $summary = DB::table('orders')
-            ->where('store_id', $store->id)
-            ->whereIn('order_status', ['delivered', 'refund_requested', 'refund_request_canceled'])
-            ->when($startDate && $endDate, fn($q) => $q->whereBetween('created_at', [$startDate, $endDate]))
-            ->selectRaw('COUNT(*) as total_orders, SUM(order_amount) as total_order_amount, SUM(total_tax_amount) as total_tax')
-            ->first();
-
-        $totalOrders = $summary->total_orders;
-        $totalOrderAmount = $summary->total_order_amount;
-        $totalTax = $summary->total_tax;
-
-        $orders = \App\Models\Order::with([
-            'orderTaxes' => function (MorphMany $query) {
-                $query->where('order_type', \App\Models\Order::class)
-                    ->select('id', 'order_id', 'tax_name', 'tax_amount', 'tax_type');
-            }
-        ])
-            ->where('store_id', $store->id)
-            ->whereIn('order_status', ['delivered', 'refund_requested', 'refund_request_canceled'])
-            ->when($startDate && $endDate, fn($q) => $q->whereBetween('created_at', [$startDate, $endDate]))
-            ->select(['id', 'order_amount', 'total_tax_amount', 'created_at']) // Efficient field selection
-            ->latest('created_at')
-            ->paginate(config('default_pagination'))
-            ->withQueryString();
-        // $time = microtime(true) - $start;
-        // dd("Query took {$time} seconds", $stores);
-        $startDate = Carbon::parse($startDate)->format('d M, Y');
-        $endDate = Carbon::parse($endDate)->format('d M, Y');
-        return view('admin-views.report.tax-report.vendor-tax-detail-report', compact('totalOrders', 'totalOrderAmount', 'totalTax', 'store', 'orders', 'startDate', 'endDate'));
-    }
 
     private function  vendorWiseTaxData($store, $startDate, $endDate, $search)
     {
@@ -214,14 +170,12 @@ class VendoTaxReportController extends Controller
 
     public function vendorWiseTaxExport(Request $request)
     {
-
-
         $dateRange = $request->dates ?? now()->subDays(6)->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
         $key = explode(' ', $request['search']);
 
         list($startDate, $endDate) = explode(' - ', $dateRange);
-        $startDate = \Carbon\Carbon::createFromFormat('m/d/Y', trim($startDate));
-        $endDate = \Carbon\Carbon::createFromFormat('m/d/Y', trim($endDate));
+        $startDate = Carbon::createFromFormat('m/d/Y', trim($startDate));
+        $endDate = Carbon::createFromFormat('m/d/Y', trim($endDate));
         $startDate = $startDate->startOfDay();
         $endDate = $endDate->endOfDay();
 
@@ -256,5 +210,99 @@ class VendoTaxReportController extends Controller
     }
 
 
-    
+    public function vendorTax(Request $request)
+    {
+
+        $dateRange = $request->dates ?? now()->startOfYear()->format('m/d/Y') . ' - ' . now()->endOfYear()->format('m/d/Y');
+
+        list($startDate, $endDate) = explode(' - ', $dateRange);
+        $startDate = Carbon::createFromFormat('m/d/Y', trim($startDate));
+        $endDate = Carbon::createFromFormat('m/d/Y', trim($endDate));
+        $startDate = $startDate->startOfDay();
+        $endDate = $endDate->endOfDay();
+
+        $store_id = $request->id;
+        $store = is_numeric($store_id) ? Store::select('id', 'name', 'phone')->findOrFail($store_id) : null;
+
+        // $start = microtime(true);
+        $vendortaxData =   $this->getVendortaxData($store->id, $startDate, $endDate);
+        $summary =   $vendortaxData['summary'];
+        $orders = $vendortaxData['orders'];
+
+        $totalOrders = $summary->total_orders;
+        $totalOrderAmount = $summary->total_order_amount;
+        $totalTax = $summary->total_tax;
+
+        $orders = $orders->paginate(config('default_pagination'))
+            ->withQueryString();
+
+        // $time = microtime(true) - $start;
+        // dd("Query took {$time} seconds", $stores);
+        $startDate = Carbon::parse($startDate)->format('d M, Y');
+        $endDate = Carbon::parse($endDate)->format('d M, Y');
+        return view('admin-views.report.tax-report.vendor-tax-detail-report', compact('totalOrders', 'totalOrderAmount', 'totalTax', 'store', 'orders', 'startDate', 'endDate'));
+    }
+
+    public function vendorTaxExport(Request $request)
+    {
+        $dateRange = $request->dates ?? now()->startOfYear()->format('m/d/Y') . ' - ' . now()->endOfYear()->format('m/d/Y');
+        list($startDate, $endDate) = explode(' - ', $dateRange);
+        $startDate = Carbon::createFromFormat('m/d/Y', trim($startDate));
+        $endDate = Carbon::createFromFormat('m/d/Y', trim($endDate));
+        $startDate = $startDate->startOfDay();
+        $endDate = $endDate->endOfDay();
+
+        $store_id = $request->id;
+        $store = is_numeric($store_id) ? Store::select('id', 'name', 'phone')->findOrFail($store_id) : null;
+
+        // $start = microtime(true);
+        $vendortaxData =   $this->getVendortaxData($store->id, $startDate, $endDate);
+        $summary =   $vendortaxData['summary'];
+        $orders = $vendortaxData['orders'];
+
+        $orders = $orders->get();
+
+        // $time = microtime(true) - $start;
+        // dd("Query took {$time} seconds", $stores);
+        $startDate = Carbon::parse($startDate)->format('d M, Y');
+        $endDate = Carbon::parse($endDate)->format('d M, Y');
+
+        $data = [
+            'orders' => $orders,
+            'search' => $request->search ?? null,
+            'from' => $startDate,
+            'to' => $endDate,
+            'summary' => $summary
+        ];
+        // dd($request->export_type);
+        if ($request->export_type == 'excel') {
+            return Excel::download(new VendorTaxExport($data), $store->name .'s TaxExport.xlsx');
+        } else if ($request->export_type == 'csv') {
+            return Excel::download(new VendorTaxExport($data),  $store->name .'s TaxExport.csv');
+        }
+    }
+
+        private function getVendortaxData($store_id, $startDate, $endDate)
+    {
+        $summary = DB::table('orders')
+            ->where('store_id', $store_id)
+            ->whereIn('order_status', ['delivered', 'refund_requested', 'refund_request_canceled'])
+            ->when($startDate && $endDate, fn($q) => $q->whereBetween('created_at', [$startDate, $endDate]))
+            ->selectRaw('COUNT(*) as total_orders, SUM(order_amount) as total_order_amount, SUM(total_tax_amount) as total_tax')
+            ->first();
+
+        $orders = Order::with([
+            'orderTaxes' => function (MorphMany $query) {
+                $query->where('order_type', Order::class)
+                    ->select('id', 'order_id', 'tax_name', 'tax_amount', 'tax_type');
+            }
+        ])
+            ->where('store_id', $store_id)
+            ->whereIn('order_status', ['delivered', 'refund_requested', 'refund_request_canceled'])
+            ->when($startDate && $endDate, fn($q) => $q->whereBetween('created_at', [$startDate, $endDate]))
+            ->select(['id', 'order_amount', 'total_tax_amount','order_type' ,'created_at'])
+            ->latest('created_at');
+
+        return ['summary' => $summary, 'orders' => $orders];
+    }
 }

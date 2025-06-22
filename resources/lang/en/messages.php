@@ -7690,4 +7690,6 @@ Smartly or Earn. ',
   'total_tax_amount' => 'Total tax amount',
   'tax_type' => 'Tax type',
   'tax_amount' => 'Tax amount',
+  'Vendor_tax_report' => 'Vendor tax report',
+  'Summary' => 'Summary',
 );

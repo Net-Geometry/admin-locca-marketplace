@@ -160,8 +160,9 @@
                                     </td>
                                     <td>
                                         <span class="fz-14 title-clr">
-                                            {{ $store->store_name }}
-                                            <span class="fz-11 d-block">{{ $store->store_phone }}</span>
+                                            <a href="{{route('admin.store.view', $store->store_id)}}" target="_blank" rel="noopener noreferrer"> {{ $store->store_name }}</a>
+
+                                            <span  class="fz-11 d-block"> <a href="tel:{{ $store->store_phone }}"> {{ $store->store_phone }}</a></span>
                                         </span>
                                     </td>
                                     <td>
@@ -192,7 +193,7 @@
                                                 <i class="tio-invisible"></i>
                                             </a>
                                             <a class="btn btn-sm action-btn success-border btn-outline-varify text-success"
-                                                href="#0">
+                                                href="{{ route('admin.transactions.report.vendorTaxExport', ['export_type' => 'excel', 'id' => $store->store_id ,request()->getQueryString()]) }}">
                                                 <svg width="11" height="12" viewBox="0 0 11 12" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <path
