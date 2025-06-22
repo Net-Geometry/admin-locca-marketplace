@@ -283,6 +283,11 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::post('expense-report-search', 'ReportController@expense_search')->name('expense-report-search');
             Route::get('disbursement-report', 'ReportController@disbursement_report')->name('disbursement-report');
             Route::get('disbursement-report-export/{type}', 'ReportController@disbursement_report_export')->name('disbursement-report-export');
+
+            Route::get('vendor-tax-report', 'VendoTaxReportController@vendorTax')->name('vendorTax');
+            Route::get('vendor-tax-export', 'VendoTaxReportController@vendorTaxExport')->name('vendorTaxExport');
+
+
         });
     });
 });

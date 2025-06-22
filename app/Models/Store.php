@@ -901,7 +901,7 @@ class Store extends Model
         return $query;
     }
 
-        public function orderTaxes(): MorphMany
+    public function orderTaxes(): MorphMany
     {
         return $this->morphMany(OrderTax::class, 'store');
     }
