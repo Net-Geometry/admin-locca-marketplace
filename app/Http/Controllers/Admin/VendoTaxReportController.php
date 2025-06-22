@@ -213,7 +213,7 @@ class VendoTaxReportController extends Controller
     public function vendorTax(Request $request)
     {
 
-        $dateRange = $request->dates ?? now()->startOfYear()->format('m/d/Y') . ' - ' . now()->endOfYear()->format('m/d/Y');
+        $dateRange = $request->dates ?? now()->subDays(6)->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
 
         list($startDate, $endDate) = explode(' - ', $dateRange);
         $startDate = Carbon::createFromFormat('m/d/Y', trim($startDate));
@@ -245,7 +245,7 @@ class VendoTaxReportController extends Controller
 
     public function vendorTaxExport(Request $request)
     {
-        $dateRange = $request->dates ?? now()->startOfYear()->format('m/d/Y') . ' - ' . now()->endOfYear()->format('m/d/Y');
+        $dateRange = $request->dates ?? now()->subDays(6)->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
         list($startDate, $endDate) = explode(' - ', $dateRange);
         $startDate = Carbon::createFromFormat('m/d/Y', trim($startDate));
         $endDate = Carbon::createFromFormat('m/d/Y', trim($endDate));

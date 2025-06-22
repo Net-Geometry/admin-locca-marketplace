@@ -15,11 +15,7 @@
                 <form action="" method="get">
                     <div class="row g-lg-4 g-3 align-items-end">
                         <div class="col-lg-4 col-md-6">
-                            {{-- <div class="form-group mb-0">
-                    <label class="input-label mb-2 d-block title-clr fw-normal" for="exampleFormControlInput1"></label>
-                    <input type="date" name="start_date" value="" class="form-control" id="date_from" required>
-                </div> --}}
-
+ 
                             <label class="form-label">{{ translate('Date Range') }}</label>
                             <div class="position-relative">
                                 <i class="tio-calendar-month icon-absolute-on-right"></i>
@@ -232,20 +228,19 @@
 
 @push('script_2')
     <script>
+
+        "use strict";
         $(function() {
             $('input[name="dates"]').daterangepicker({
-                startDate: moment('{{ $startDate }}'), // already in ISO 8601
+                startDate: moment('{{ $startDate }}'),
                 endDate: moment('{{ $endDate }}'),
                 maxDate: moment(),
                 locale: {
                     format: 'MM/DD/YYYY'
                 }
             });
-
-
         });
 
-        "use strict";
         $(document).on('ready', function() {
             $('.js-data-example-ajax').select2({
                 ajax: {
