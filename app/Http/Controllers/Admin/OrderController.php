@@ -900,6 +900,8 @@ class OrderController extends Controller
 
             if (isset($request->cart_item_key)) {
                 $cart[$request->cart_item_key] = $data;
+
+                $this->setOrderEditCalculatedTax($product->store);
                 return response()->json([
                     'data' => 2
                 ]);
@@ -995,7 +997,11 @@ class OrderController extends Controller
             } else {
                 $cart->push($data);
             }
+            $this->setOrderEditCalculatedTax($product->store);
         }
+
+        $this->setOrderEditCalculatedTax($product->store);
+
         return response()->json([
             'data' => 0
         ]);
@@ -1004,9 +1010,15 @@ class OrderController extends Controller
     public function remove_from_cart(Request $request)
     {
         $cart = $request->session()->get('order_cart', collect([]));
+        $item_id = $cart[$request->key]['item_id'];
         $cart[$request->key]->status = false;
         $request->session()->put('order_cart', $cart);
 
+        $product = Item::withoutGlobalScope(StoreScope::class)->with('store')->find($item_id);
+
+        if ($product && $product->store) {
+            $this->setOrderEditCalculatedTax($product->store);
+        }
         return response()->json([], 200);
     }
 
@@ -1040,7 +1052,7 @@ class OrderController extends Controller
             session()->forget('order_cart');
         } else {
             $request->session()->put('order_cart', $cart);
-            $this->setPosCalculatedTax($order->store, false, 'order_cart');
+            $this->setOrderEditCalculatedTax($order->store);
         }
         return back();
     }
@@ -1187,19 +1199,55 @@ class OrderController extends Controller
         }
 
         $coupon_discount_amount = $coupon ? CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount) : 0;
-        $total_price = $product_price + $total_addon_price - $store_discount_amount - $coupon_discount_amount;
+        $additionalCharges = [];
+        $settings = BusinessSetting::whereIn('key', [
+            'additional_charge_status',
+            'additional_charge',
+            'extra_packaging_data',
+        ])->pluck('value', 'key');
 
-        $tax = $store->tax;
+        $additional_charge_status  = $settings['additional_charge_status'] ?? null;
+        $additional_charge         = $settings['additional_charge'] ?? null;
 
+        $order->additional_charge = 0;
 
-        $order->tax_status = 'excluded';
-
-        $tax_included = BusinessSetting::where(['key' => 'tax_included'])->first() ?  BusinessSetting::where(['key' => 'tax_included'])->first()->value : 0;
-        if ($tax_included ==  1) {
-            $order->tax_status = 'included';
+        if ($additional_charge_status == 1) {
+            $order->additional_charge = $additional_charge ?? 0;
+            $additionalCharges['tax_on_additional_charge'] = $order->additional_charge;
         }
 
-        $total_tax_amount = Helpers::product_tax($total_price, $tax, $order->tax_status == 'included');
+        $order_details = $this->makeEditOrderDetails($cart, null, $store);
+//dd('ok',$cart, $order_details);
+        if (data_get($order_details, 'status_code') === 403) {
+            DB::rollBack();
+            return response()->json([
+                'errors' => [
+                    ['code' => data_get($order_details, 'code'), 'message' => data_get($order_details, 'message')]
+                ]
+            ], data_get($order_details, 'status_code'));
+        }
+
+        $total_addon_price = $order_details['total_addon_price'];
+        $product_price = $order_details['product_price'];
+        $store_discount_amount = $order_details['store_discount_amount'];
+        $flash_sale_admin_discount_amount = $order_details['flash_sale_admin_discount_amount'];
+        $flash_sale_vendor_discount_amount = $order_details['flash_sale_vendor_discount_amount'];
+        $product_data = $order_details['product_data'];
+        $order_details = $order_details['order_details'];
+
+        $total_price = $product_price + $total_addon_price - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount - $coupon_discount_amount;
+        $totalDiscount = $store_discount_amount + $flash_sale_admin_discount_amount + $flash_sale_vendor_discount_amount  + $coupon_discount_amount +  $order->ref_bonus_amount;
+        $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount, $product_price + $total_addon_price, $store->id);
+
+        $tax_amount = $finalCalculatedTax['tax_amount'];
+        $tax_included = $finalCalculatedTax['tax_included'];
+        $tax_status = $finalCalculatedTax['tax_status'];
+        $taxMap = $finalCalculatedTax['taxMap'];
+        $orderTaxIds = data_get($finalCalculatedTax ,'taxData.orderTaxIds',[] );
+
+        $order->tax_status = $tax_status;
+
+        $total_tax_amount = $tax_amount;
 
         $total_tax_amount = $order->tax_status == 'included' ? 0 : $total_tax_amount;
 
@@ -1219,17 +1267,6 @@ class OrderController extends Controller
         }
 
 
-      //Added service charge
-        $additional_charge_status = BusinessSetting::where('key', 'additional_charge_status')->first()->value;
-        $additional_charge = BusinessSetting::where('key', 'additional_charge')->first()->value;
-        if ($additional_charge_status == 1) {
-            $order->additional_charge = $additional_charge ?? 0;
-        } else {
-            $order->additional_charge = 0;
-        }
-
-
-
         $total_order_ammount = $total_price + $total_tax_amount + $order->delivery_charge + $order->additional_charge;
         $adjustment = $order->order_amount - $total_order_ammount;
 
@@ -1240,6 +1277,43 @@ class OrderController extends Controller
         $order->adjusment = $adjustment;
         $order->edited = true;
         $order->save();
+
+        if ($order->order_type !== 'parcel') {
+            $taxMapCollection = collect($taxMap);
+            foreach ($order_details as $key => $item) {
+                $order_details[$key]['order_id'] = $order->id;
+
+                if ($item['item_id']) {
+                    $item_id = $item['item_id'];
+                } else {
+                    $item_id = $item['item_campaign_id'];
+                }
+                $index = $taxMapCollection->search(function ($tax) use ($item_id) {
+                    return $tax['product_id'] == $item_id;
+                });
+                if ($index !== false) {
+                    $matchedTax = $taxMapCollection->pull($index);
+                    $order_details[$key]['tax_status'] = $matchedTax['include'] == 1 ? 'included' : 'excluded';
+                    $order_details[$key]['tax_amount'] = $matchedTax['totalTaxamount'];
+                }
+            }
+
+//            OrderDetail::insert($order_details);
+            $order?->orderTaxes()?->delete();
+            if (count($orderTaxIds)) {
+                \Modules\TaxModule\Services\CalculateTaxService::updateOrderTaxData(
+                    orderId: $order->id,
+                    orderTaxIds: $orderTaxIds,
+                );
+            }
+            if (count($product_data) > 0) {
+                foreach ($product_data as $item) {
+                    ProductLogic::update_stock($item['item'], $item['quantity'], $item['variant'])->save();
+                    ProductLogic::update_flash_stock($item['item'], $item['quantity'])?->save();
+                }
+            }
+        }
+
         session()->forget('order_cart');
         Toastr::success(translate('messages.order_updated_successfully'));
         return back();

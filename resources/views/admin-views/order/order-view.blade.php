@@ -805,16 +805,15 @@
                                         }
                                     }
                                     $coupon_discount_amount = $coupon ? \App\CentralLogics\CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount ) : $order['coupon_discount_amount'];
-
-                                    $tax_amount = session()->get('tax_amount');
-
+//                                    session()->forget('edit_tax_amount');
+                                    $tax_amount = session()->get('edit_tax_amount');
                                     $total_price = $product_price + $total_addon_price - $store_discount_amount - $coupon_discount_amount;
 
                                     $total_tax_amount = $tax_amount;
 
                                     $total_tax_amount = round($total_tax_amount, 2);
 
-                                    $tax_included = session()->get('tax_included');
+                                    $tax_included = session()->get('edit_tax_included');
                                     if ($tax_included ==  1){
                                         $total_tax_amount=0;
                                     }

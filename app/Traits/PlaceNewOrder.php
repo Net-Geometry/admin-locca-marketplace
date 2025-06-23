@@ -1123,6 +1123,7 @@ trait PlaceNewOrder
         $discount_on_product_by = 'vendor';
         foreach ($carts as $c) {
             if(is_array($c)) {
+//                dd($c);
                 $isCampaign = false;
                 if (isset($c['item_type']) && ($c['item_type'] === 'App\Models\ItemCampaign' || $c['item_type'] === 'AppModelsItemCampaign')) {
                     $product = ItemCampaign::with('module')->active()->find($c['item_id']);
@@ -1284,6 +1285,198 @@ trait PlaceNewOrder
 
         ];
     }
+    private function makeEditOrderDetails($carts, $request, $store)
+    {
+        $total_addon_price = 0;
+        $product_price = 0;
+        $store_discount_amount = 0;
+        $flash_sale_vendor_discount_amount = 0;
+        $flash_sale_admin_discount_amount = 0;
+        $product_data = [];
+        $order_details = [];
+        $variations = [];
+        $discount_on_product_by = 'vendor';
+        foreach ($carts as $c) {
+//            dd(!isset($c['status']) || $c['status'] !== false);
+            if (!isset($c['status']) || $c['status'] !== false) {
+                $isCampaign = false;
+                if (isset($c['item_type']) && ($c['item_type'] === 'App\Models\ItemCampaign' || $c['item_type'] === 'AppModelsItemCampaign')) {
+                    $product = ItemCampaign::with('module')->active()->find($c['item_id']);
+                    $isCampaign = true;
+                } else {
+                    $product = Item::with('module')->active()->find($c['item_id'] ?? $c['id']);
+                }
+                if ($product) {
+                    if ($product->store_id != $store->id) {
+                        return [
+                            'status_code' => 403,
+                            'code' => 'different_stores',
+                            'message' => translate('messages.Please_select_items_from_the_same_store'),
+                        ];
+                    }
+
+                    if ($product?->pharmacy_item_details?->is_prescription_required == '1' && empty($request->file('order_attachment'))) {
+                        return [
+                            'status_code' => 403,
+                            'code' => 'prescription',
+                            'message' => translate('messages.prescription_is_required_for_this_order'),
+                        ];
+                    }
+
+                    if ($product?->maximum_cart_quantity && $c['quantity'] > $product?->maximum_cart_quantity) {
+                        return [
+                            'status_code' => 403,
+                            'code' => 'quantity',
+                            'message' => translate('messages.maximum_cart_quantity_limit_over'),
+                        ];
+                    }
+
+
+                    $foodVariation = false;
+                    if ($product?->module?->module_type == 'food') {
+                        $foodVariation = true;
+                        $product_variations = json_decode($product->food_variations, true);
+
+                        if (count($product_variations)) {
+                            $variation_data = Helpers::get_edit_varient($product_variations, json_decode($c['variation'], true));
+                            $price = $product['price'] + $variation_data['price'];
+                            $variations = $variation_data['variations'];
+                        } else {
+                            $price = $product['price'];
+                        }
+                    } else {
+                        if (count(json_decode($product['variations'], true)) > 0 && count($c['variation']) > 0) {
+                            $variant_data = Helpers::variation_price($product, json_encode($c['variation']));
+                            $price = $variant_data['price'];
+                            $stock = $variant_data['stock'];
+                        } else {
+                            $price = $product['price'];
+                            $stock = $product?->stock;
+                        }
+
+                        if (config('module.' . $product->module->module_type)['stock']) {
+                            if ($c['quantity'] > $stock) {
+
+                                return [
+                                    'status_code' => 403,
+                                    'code' => 'stock',
+                                    'message' => $product->title . ' ' . translate('messages.is_out_of_stock')
+                                ];
+                            }
+
+                            $product_data[] = [
+                                'item' => clone $product,
+                                'quantity' => $c['quantity'],
+                                'variant' => count($c['variation']) > 0 ? $c['variation'][0]['type'] : null
+                            ];
+                        }
+                    }
+
+                    $product = Helpers::product_data_formatting($product, false, false, app()->getLocale());
+                    $addon_data = Helpers::calculate_addon_price(
+                        AddOn::whereIn('id', is_array($c['add_ons'] ?? null) ? $c['add_ons'] : [])->get(),
+                        is_array($c['add_on_qtys'] ?? null) ? $c['add_on_qtys'] : []
+                    );
+                    $product_discount = Helpers::product_discount_calculate($product, $price, $store, false);
+
+
+                    $discount_type = $product_discount['discount_type'];
+
+                    $or_d = [
+                        'item_id' => $isCampaign ? null : $c['item_id'],
+                        'item_campaign_id' => $isCampaign ? $c['item_id'] : null,
+                        'item_details' => json_encode($product),
+                        'quantity' => $c['quantity'],
+                        'price' => round($price, config('round_up_to_digit')),
+
+                        'category_id' => collect(is_string($product->category_ids) ? json_decode($product->category_ids, true) : $product->category_ids)->firstWhere('position', 1)['id'] ?? null,
+                        // 'tax_amount' => round(Helpers::tax_calculate($product, $price), config('round_up_to_digit')),
+                        'tax_amount' => 0,
+                        'tax_status' => null,
+
+                        'discount_on_product_by' => $product_discount['discount_type'],
+                        'discount_type' => $product_discount['discount_type'],
+                        'discount_on_item' => $product_discount['discount_amount'],
+                        'discount_percentage' => $product_discount['discount_percentage'],
+
+                        'variant' => json_encode($c['variant']),
+                        'variation' => $foodVariation ? json_encode($variations) : json_encode($c['variation']),
+                        'add_ons' => json_encode($addon_data['addons']),
+
+                        'total_add_on_price' => round($addon_data['total_add_on_price'], config('round_up_to_digit')),
+                        'addon_discount' => 0,
+
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ];
+
+
+                    $total_addon_price += $or_d['total_add_on_price'];
+                    $product_price += $price * $or_d['quantity'];
+                    $store_discount_amount += $or_d['discount_type'] != 'flash_sale' ? $or_d['discount_on_item'] * $or_d['quantity'] : 0;
+                    $flash_sale_admin_discount_amount += $or_d['discount_type'] == 'flash_sale' ? $product_discount['admin_discount_amount'] * $or_d['quantity'] : 0;
+                    $flash_sale_vendor_discount_amount += $or_d['discount_type'] == 'flash_sale' ? $product_discount['vendor_discount_amount'] * $or_d['quantity'] : 0;
+                    $order_details[] = $or_d;
+                    $addon_data[] = $addon_data['addons'];
+                } else {
+                    return [
+                        'status_code' => 403,
+                        'code' => 'not_found',
+                        'message' => translate('messages.product_not_found'),
+                    ];
+                }
+
+
+            }
+        }
+
+        $discount = $store_discount_amount;
+        $storeDiscount = Helpers::get_store_discount($store);
+        if (isset($storeDiscount) && $discount_type != 'flash_sale') {
+            $admin_discount = Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase']);
+
+            $discount = max($discount, $admin_discount);
+
+            if ($admin_discount > 0 &&  $discount == $admin_discount) {
+                $discount_on_product_by = 'store_discount';
+                foreach ($order_details as $key => $detail_data) {
+                    $order_details[$key]['discount_on_product_by'] = $discount_on_product_by;
+                    $order_details[$key]['discount_type'] = 'precentage';
+                    $order_details[$key]['discount_percentage'] = $storeDiscount['discount'];
+                    $order_details[$key]['discount_on_item'] =  Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $detail_data['price'] * $detail_data['quantity']);
+
+                    $order_details[$key]['addon_discount'] =  Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $total_addon_price);
+                }
+            }
+        }
+
+//        $filtered = $carts->filter(function ($cart) {
+//            return $cart->status !== false;
+//        });
+//
+//        $items = $filtered->map(function ($cart) {
+//            return [
+//                'id' => $cart->id,
+//                'price' => (float) $cart->price,
+//                'quantity' => (int) $cart->quantity,
+//                'total' => (float) $cart->price * (int) $cart->quantity,
+//            ];
+//        });
+//
+//
+//        dd($product_price, $items->toArray());
+        return [
+            'order_details' => $order_details,
+            'total_addon_price' => $total_addon_price,
+            'product_price' => $product_price,
+            'store_discount_amount' => $discount,
+            'discount_on_product_by' => $discount_on_product_by == 'store_discount' ? 'admin' : 'vendor',
+            'flash_sale_admin_discount_amount' => $flash_sale_admin_discount_amount,
+            'flash_sale_vendor_discount_amount' => $flash_sale_vendor_discount_amount,
+            'product_data' => $product_data
+
+        ];
+    }
 
     public function getCalculatedTax($request)
     {
@@ -1402,7 +1595,7 @@ trait PlaceNewOrder
         ];
         return response()->json($data, 200);
     }
-    public function setPosCalculatedTax($store, $storeData=false, $orderCart=null)
+    public function setPosCalculatedTax($store, $storeData=false)
     {
         $additionalCharges = [];
         $settings = BusinessSetting::whereIn('key', [
@@ -1418,14 +1611,8 @@ trait PlaceNewOrder
             $additionalCharges['tax_on_additional_charge'] = $additional_charge ?? 0;
         }
 
-        if ($orderCart) {
-            $carts = session()->get($orderCart);
-        }else{
-            $carts = session()->get('cart');
-        }
-//        dd('ok');
+        $carts = session()->get('cart');
         $order_details = $this->makePosOrderDetails($carts, null, $store);
-//        dd($order_details);
         $total_addon_price = $order_details['total_addon_price'];
         $product_price = $order_details['product_price'];
         $store_discount_amount = $order_details['store_discount_amount'];
@@ -1445,7 +1632,60 @@ trait PlaceNewOrder
             'tax_status' => $finalCalculatedTax['tax_status'],
             'tax_included' => $finalCalculatedTax['tax_included'],
         ];
-//        dd($finalCalculatedTax);
+        return response()->json($data, 200);
+    }
+    public function setOrderEditCalculatedTax($store, $storeData=false)
+    {
+        $additionalCharges = [];
+        $settings = BusinessSetting::whereIn('key', [
+            'additional_charge_status',
+            'additional_charge',
+            'extra_packaging_data',
+        ])->pluck('value', 'key');
+
+        $additional_charge_status  = $settings['additional_charge_status'] ?? null;
+        $additional_charge         = $settings['additional_charge'] ?? null;
+
+        if ($additional_charge_status == 1) {
+            $additionalCharges['tax_on_additional_charge'] = $additional_charge ?? 0;
+        }
+
+        $carts = session()->get('order_cart');
+//        $filteredCarts = $carts->filter(function ($cart) {
+//            return $cart->status !== false;
+//        });
+//
+//        $items = $filteredCarts->map(function ($cart) {
+//            return [
+//                'id' => $cart->id,
+//                'price' => (float) $cart->price,
+//                'quantity' => (int) $cart->quantity,
+//                'total' => (float) $cart->price * (int) $cart->quantity,
+//            ];
+//        });
+//
+//        dd($items->toArray());
+
+        $order_details = $this->makeEditOrderDetails($carts, null, $store);
+
+        $total_addon_price = $order_details['total_addon_price'];
+        $product_price = $order_details['product_price'];
+        $store_discount_amount = $order_details['store_discount_amount'];
+        $flash_sale_admin_discount_amount = $order_details['flash_sale_admin_discount_amount'];
+        $flash_sale_vendor_discount_amount = $order_details['flash_sale_vendor_discount_amount'];
+        $order_details = $order_details['order_details'];
+
+        $totalDiscount = $store_discount_amount + $flash_sale_admin_discount_amount + $flash_sale_vendor_discount_amount;
+        $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount,
+            $product_price + $total_addon_price, $store->id , $storeData);
+//dd($finalCalculatedTax, $additionalCharges, $totalDiscount, $product_price + $total_addon_price, $store->id , $storeData);
+        session()->put('edit_tax_amount', $finalCalculatedTax['tax_amount']);
+        session()->put('edit_tax_included', $finalCalculatedTax['tax_included']);
+        $data = [
+            'tax_amount' => $finalCalculatedTax['tax_amount'],
+            'tax_status' => $finalCalculatedTax['tax_status'],
+            'tax_included' => $finalCalculatedTax['tax_included'],
+        ];
         return response()->json($data, 200);
     }
 }

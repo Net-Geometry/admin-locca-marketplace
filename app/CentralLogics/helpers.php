@@ -2786,6 +2786,36 @@ class Helpers
 
         return ['price'=>$variation_price,'variations'=>$result];
     }
+    public static function get_edit_varient(array $product_variations, $variations)
+    {
+        $result = [];
+        $variation_price = 0;
+
+        foreach ($variations as $k => $variation) {
+            foreach ($product_variations as $product_variation) {
+                if (
+                    isset($variation['values']) &&
+                    isset($product_variation['values']) &&
+                    $product_variation['name'] == $variation['name']
+                ) {
+                    $result[$k] = $product_variation;
+                    $result[$k]['values'] = [];
+
+                    foreach ($product_variation['values'] as $option) {
+                        foreach ($variation['values'] as $selected) {
+                            if (isset($selected['label']) && $option['label'] === $selected['label']) {
+                                $result[$k]['values'][] = $option;
+                                $variation_price += $option['optionPrice'];
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return ['price' => $variation_price, 'variations' => $result];
+    }
 
     public static function food_variation_price($product, $variations)
     {
@@ -4623,6 +4653,7 @@ class Helpers
                 info(['error_creating_trip_transaction', $exception->getMessage()]);
             }
 
+//            dd($proportion,$totalDiscount,$productWisePrice,$totalPriceBeforeDiscount,$discountedPrice,'fgsdfg',$price,$productIds,$categoryIds,$quantities,$storeData,$additionalCharges,$addonIds,$addonQuantity,$addonCategoryIds,$storeId);
             $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                 amount: $price,
                 productIds: $productIds,
