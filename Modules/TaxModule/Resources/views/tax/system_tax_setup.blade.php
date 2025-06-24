@@ -8,20 +8,17 @@
     @section('taxmoduleDisplay')
     block
     @endsection
-    @if ($tax_payer=='rental_provider')
-    @section('tax_system_setup_rental')
-    @else
     @section('tax_system_setup')
-    @endif
     show active
     @endsection
 
 
-@push('css_or_js')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-@endpush
+
 
 @section('content')
+@php( $tax_payer = $tax_payer ?? 'vendor')
+
+
     <div class="content container-fluid">
         <h2 class="mb-20">{{ translate('messages.Setup Tax Calculation') }}</h3>
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 mt-4 __gap-12px">
@@ -46,7 +43,7 @@
             <div class="card p-20 mb-20">
                 <div class="row g-md-3 g-2 justify-content-between">
                     <div class="col-md-8">
-                        <h3 class="mb-1">{{ $tax_payer=='rental_provider' ? translate('messages.Allow Tax Calculation For Provider ?') : translate('messages.Allow Tax Calculation For Vendor ?') }} </h3>
+                        <h3 class="mb-1 text-capitalize">{{translate('messages.Allow Tax Calculation For'). ' ' .translate($tax_payer)  }} ?</h3>
                         <p class="fz-12 mb-0">{{ translate('messages.To active tax calculation turn on the status.') }}</p>
                     </div>
                     <div class="col-md-4 col-xxl-3">
@@ -81,9 +78,15 @@
                     <div class="card p-20">
                         <div class="bg--secondary p-15 rounded mb-20">
                             <div class="mb-20">
-                                @php($productType = $tax_payer == 'rental_provider' ? translate('Trip_Amount') : translate('Product Price'))
-                                <h4 class="mb-1">{{ translate('Tax calculation based on Product Price') }} </h4>
-                                {{-- <p class="fz-12 mb-0">{{ translate('Tax calculation based on Product Price') }}</p> --}}
+                                @if ( $tax_payer == 'rental_provider')
+                                @php($productType = translate('Trip_Amount'))
+
+                                @elseif($tax_payer == 'parcel' )
+                                @php($productType = translate('Parcel_Amount'))
+                                @else
+                                @php($productType = translate('Product Price'))
+                                @endif
+                                <h4 class="mb-1">{{ translate('Tax calculation based on').' '.$productType }} </h4>
                             </div>
                             <div class="bg-white border rounded p-15">
                                 <div class="row g-lg-4 g-md-3 g-2">
@@ -160,7 +163,9 @@
                                                     class="custom-select custom-select-color border rounded w-100"
                                                     name="tax_type"
                                                     data-current_seclected="{{ $systemTaxVat?->tax_type }}">
-                                                    @php($tax_calculate_on = $tax_payer=='rental_provider' ? 'tax_calculate_on_rental_provider' : 'tax_calculate_on')
+
+                                                    @php($tax_calculate_on = $tax_payer== 'vendor' ? 'tax_calculate_on' : 'tax_calculate_on_'.$tax_payer)
+
                                                     @foreach (data_get($systemData, $tax_calculate_on,['order_wise', 'product_wise', 'category_wise'])   as $item)
                                                         <option {{ $systemTaxVat?->tax_type == $item ? 'selected' : '' }}
                                                             value="{{ $item }}"> {{ translate($item) }} </option>

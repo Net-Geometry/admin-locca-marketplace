@@ -286,8 +286,7 @@
                                                 alt="img" class="mb-20">
                                             <h4 class="mb-2">{{ translate('No Tax Report Generated') }}</h4>
                                             <p class="mb-0 fz-12px">
-                                                {{ translate('To generate your tax report please select & input above
-                                                                                                                                                                                                                                                                                                field and submit for the result') }}
+                                                {{ translate('To generate your tax report please select & input above field and submit for the result') }}
                                             </p>
                                         </div>
                                     </td>
