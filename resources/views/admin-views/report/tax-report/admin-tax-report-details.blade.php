@@ -29,13 +29,13 @@
                         <div id="usersExportDropdown4"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
-                            <a id="export-excel" class="dropdown-item" href="javascript:;">
+                            <a id="export-excel" class="dropdown-item" href="{{ route('admin.transactions.report.getTaxDetailsExport',['source'=> $taxSource ,'export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
-                            <a id="export-csv" class="dropdown-item" href="javascript:;">
+                            <a id="export-csv" class="dropdown-item" href="{{ route('admin.transactions.report.getTaxDetailsExport',['source'=> $taxSource ,'export_type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
@@ -79,9 +79,19 @@
                         class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table fz--14px">
                         <thead class="thead-light">
                             <tr>
+                                @php
+                                if( $taxSource =='admin_commission'){
+                                    $col= 'Commission';
+                                } elseif($taxSource =='delivery_commission'){
+                                    $col= 'Delivery_Commission';
+                                } else{
+                                    $col= 'Additional_Charge';
+                                }
+
+                                @endphp
                                 <th class="border-0">{{ translate('sl') }}</th>
-                                <th class="border-0">{{ translate('Transaction ID') }}</th>
-                                <th class="border-0">{{ translate('Amount') }}</th>
+                                <th class="border-0">{{ translate('Order') }}</th>
+                                <th class="border-0">{{ translate($col) }}</th>
                                 <th class="border-0">{{ translate('Tax Amount') }}</th>
                             </tr>
                         </thead>

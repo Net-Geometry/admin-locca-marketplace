@@ -29,13 +29,13 @@
                         <div id="usersExportDropdown4"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
-                            <a id="export-excel" class="dropdown-item" href="javascript:;">
+                            <a id="export-excel" class="dropdown-item" href="{{ route('admin.transactions.report.getTaxDetailsExport',['source'=> $taxSource ,'export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
-                            <a id="export-csv" class="dropdown-item" href="javascript:;">
+                            <a id="export-csv" class="dropdown-item" href="{{ route('admin.transactions.report.getTaxDetailsExport',['source'=> $taxSource ,'export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">

@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exports\VendorTaxExport;
-use App\Exports\VendorWiseTaxExport;
+use App\Exports\AdminTaxReportDetailsExport;
+use App\Exports\AdminTaxReportExport;
 use App\Http\Controllers\Controller;
-use App\Models\Order;
 use App\Models\OrderTransaction;
-use App\Models\Store;
 use App\Models\SubscriptionTransaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Maatwebsite\Excel\Facades\Excel;
-use Modules\TaxModule\Entities\OrderTax;
 use Modules\TaxModule\Entities\Tax;
 
 class AdminTaxReportController extends Controller
@@ -26,7 +22,7 @@ class AdminTaxReportController extends Controller
         $date_range_type = $request->date_range_type;
         $calculate_tax_on = $request->calculate_tax_on;
 
-        if ($request->date_range_type == 'this_fiscal_year') {
+        if ($date_range_type == 'this_fiscal_year') {
             $dateRange = now()->startOfYear()->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
         } else {
             $dateRange = $request->dates ?? now()->subDays(6)->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
@@ -38,20 +34,8 @@ class AdminTaxReportController extends Controller
         $startDate = $startDate->startOfDay();
         $endDate = $endDate->endOfDay();
 
-        if ($request->calculate_tax_on == 'all_source') {
-            $tax_on_subscription = $request->tax_rate ?? [];
-            // $tax_on_packaging_charge = $request->tax_rate ?? [];
-            $tax_on_service_charge = $request->tax_rate ?? [];
-            $tax_on_delivery_charge_commission = $request->tax_rate ?? [];
-        } else {
-            $tax_on_subscription = $request->tax_on_subscription ?? [];
-            // $tax_on_packaging_charge = $request->tax_on_packaging_charge ?? [];
-            $tax_on_service_charge = $request->tax_on_service_charge ?? [];
-            $tax_on_delivery_charge_commission = $request->tax_on_delivery_charge_commission ?? [];
-            $tax_on_order_commission = $request->tax_on_order_commission ?? [];
-        }
 
-        $taxRates =   $this->getTaxRates($request);
+        $taxRates =  $this->getTaxRates($request);
 
         $tax_on_subscription = $taxRates['tax_on_subscription'];
         // $tax_on_packaging_charge =  $taxRates['tax_on_packaging_charge'];
@@ -319,18 +303,7 @@ class AdminTaxReportController extends Controller
         $startDate = $startDate->startOfDay();
         $endDate = $endDate->endOfDay();
 
-        if ($request->calculate_tax_on == 'all_source') {
-            $tax_on_subscription = $request->tax_rate ?? [];
-            $tax_on_service_charge = $request->tax_rate ?? [];
-            $tax_on_delivery_charge_commission = $request->tax_rate ?? [];
-        } else {
-            $tax_on_subscription = $request->tax_on_subscription ?? [];
-            $tax_on_service_charge = $request->tax_on_service_charge ?? [];
-            $tax_on_delivery_charge_commission = $request->tax_on_delivery_charge_commission ?? [];
-            $tax_on_order_commission = $request->tax_on_order_commission ?? [];
-        }
-
-        $taxRates =   $this->getTaxRates($request);
+        $taxRates =  $this->getTaxRates($request);
 
         $tax_on_subscription = $taxRates['tax_on_subscription'];
         $tax_on_service_charge = $taxRates['tax_on_service_charge'];
@@ -339,13 +312,13 @@ class AdminTaxReportController extends Controller
 
 
         $taxSource = $request->source;
-        if ($request->source == 'vendor_subscription') {
+        if ($taxSource == 'vendor_subscription') {
             $data =  $this->getSubsctiprionData($startDate, $endDate, $tax_on_subscription);
             $view = 'admin-views.report.tax-report.admin-subscription-tax-report-details';
-        } elseif ($request->source == 'admin_commission') {
+        } elseif ($taxSource == 'admin_commission') {
             $data =  $this->getAdminCommissionTaxData($startDate, $endDate, $tax_on_order_commission);
             $view = 'admin-views.report.tax-report.admin-tax-report-details';
-        } elseif ($request->source == 'delivery_commission') {
+        } elseif ($taxSource == 'delivery_commission') {
             $data =  $this->getDeliveryCommissionTaxData($startDate, $endDate, $tax_on_delivery_charge_commission);
             $view = 'admin-views.report.tax-report.admin-tax-report-details';
         } else {
@@ -379,7 +352,7 @@ class AdminTaxReportController extends Controller
     }
 
 
-    private function getSubsctiprionData($startDate, $endDate, $tax_on_subscription)
+    private function getSubsctiprionData($startDate, $endDate, $tax_on_subscription, $export = false)
     {
         $summary = DB::selectOne("  SELECT
                         COUNT(*) AS total_sub,
@@ -402,27 +375,44 @@ class AdminTaxReportController extends Controller
         $tax_on_subscription = $tax_on_subscription->toArray();
 
         $subData = SubscriptionTransaction::where('is_trial', 0)
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->paginate(config('default_pagination'));
+            ->whereBetween('created_at', [$startDate, $endDate]);
+        if ($export === false) {
+            $subData = $subData->paginate(config('default_pagination'));
+            $subData->getCollection()->transform(function ($transaction) use ($tax_on_subscription) {
+                $taxes = [];
+
+                foreach ($tax_on_subscription as $tax) {
+                    $rate = (float) $tax['tax_rate'];
+                    $amount = ($transaction->paid_amount * $rate) / 100;
+
+                    $taxes[] = [
+                        'tax_name' => $tax['name'],
+                        'tax_rate' => $rate,
+                        'tax_amount' => round($amount, 2),
+                    ];
+                }
+
+                $transaction->calculated_taxes = $taxes;
+                return $transaction;
+            });
+        } else {
+            $subData = $subData->cursor()->map(function ($transaction) use ($tax_on_subscription) {
+
+                $calculatedTaxes = collect($tax_on_subscription)->map(function ($tax) use ($transaction) {
+                    $rate = (float) $tax['tax_rate'];
+                    return [
+                        'tax_name' => $tax['name'],
+                        'tax_rate' => $rate,
+                        'tax_amount' => round(($transaction->paid_amount * $rate) / 100, 2)
+                    ];
+                })->all();
+
+                $transaction->calculated_taxes = $calculatedTaxes;
+                return $transaction;
+            });
+        }
 
 
-        $subData->getCollection()->transform(function ($transaction) use ($tax_on_subscription) {
-            $taxes = [];
-
-            foreach ($tax_on_subscription as $tax) {
-                $rate = (float) $tax['tax_rate'];
-                $amount = ($transaction->paid_amount * $rate) / 100;
-
-                $taxes[] = [
-                    'tax_name' => $tax['name'],
-                    'tax_rate' => $rate,
-                    'tax_amount' => round($amount, 2),
-                ];
-            }
-
-            $transaction->calculated_taxes = $taxes;
-            return $transaction;
-        });
 
         return [
             'data' => $subData,
@@ -433,7 +423,7 @@ class AdminTaxReportController extends Controller
 
         ];
     }
-    private function getAdminCommissionTaxData($startDate, $endDate, $tax_data)
+    private function getAdminCommissionTaxData($startDate, $endDate, $tax_data, $export = false)
     {
         $results = DB::selectOne("  SELECT
                 COUNT(*) AS total_count,
@@ -452,32 +442,57 @@ class AdminTaxReportController extends Controller
         $total_order_amount = $results->total_order_amount;
         $admin_commission = $results->admin_commission;
 
-
+        $total_tax_amount = 0;
         $orderData = OrderTransaction::whereNull('status')
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->select('order_id', 'order_amount', 'tax', 'admin_commission', 'admin_expense', 'delivery_fee_comission', 'additional_charge')
-            ->paginate(config('default_pagination'));
-        $total_tax_amount = 0;
-        $orderData->getCollection()->transform(function ($transaction) use ($tax_data, &$total_tax_amount) {
-            $taxes = [];
-
-            foreach ($tax_data as $tax) {
-                $rate = (float) $tax['tax_rate'];
-                $amount = (($transaction->admin_commission + $transaction->admin_expense - $transaction->delivery_fee_comission - $transaction->additional_charge) * $rate) / 100;
-
-                $taxes[] = [
-                    'tax_name' => $tax['name'],
-                    'tax_rate' => $rate,
-                    'tax_amount' => round($amount, 2),
-                ];
-                $total_tax_amount += $amount;
-            }
-
-            $transaction->calculated_taxes = $taxes;
-            return $transaction;
-        });
+            ->select('order_id', 'order_amount', 'tax', 'admin_commission', 'admin_expense', 'delivery_fee_comission', 'additional_charge');
 
 
+        if ($export === false) {
+
+            $orderData = $orderData->paginate(config('default_pagination'));
+            $orderData->getCollection()->transform(function ($transaction) use ($tax_data, &$total_tax_amount) {
+                $taxes = [];
+                foreach ($tax_data as $tax) {
+                    $rate = (float) $tax['tax_rate'];
+                    $amount = (($transaction->admin_commission + $transaction->admin_expense - $transaction->delivery_fee_comission - $transaction->additional_charge) * $rate) / 100;
+
+                    $taxes[] = [
+                        'tax_name' => $tax['name'],
+                        'tax_rate' => $rate,
+                        'tax_amount' => round($amount, 2),
+                    ];
+                    $total_tax_amount += $amount;
+                }
+
+                $transaction->calculated_taxes = $taxes;
+                return $transaction;
+            });
+        } else {
+            $orderData = $orderData->cursor()->map(function ($transaction) use ($tax_data, &$total_tax_amount) {
+                $taxes = [];
+
+                foreach ($tax_data as $tax) {
+                    $rate = (float) $tax['tax_rate'];
+                    $amount = ((
+                        $transaction->admin_commission +
+                        $transaction->admin_expense -
+                        $transaction->delivery_fee_comission -
+                        $transaction->additional_charge
+                    ) * $rate) / 100;
+
+                    $taxes[] = [
+                        'tax_name' => $tax['name'],
+                        'tax_rate' => $rate,
+                        'tax_amount' => round($amount, 2),
+                    ];
+                    $total_tax_amount += $amount;
+                }
+
+                $transaction->calculated_taxes = $taxes;
+                return $transaction;
+            });
+        }
         return [
             'data' => $orderData,
             'total_count' => $total_count,
@@ -486,7 +501,7 @@ class AdminTaxReportController extends Controller
             'total_order_amount' => $total_order_amount,
         ];
     }
-    private function getDeliveryCommissionTaxData($startDate, $endDate, $tax_data)
+    private function getDeliveryCommissionTaxData($startDate, $endDate, $tax_data, $export = false)
     {
         $results = DB::selectOne(" SELECT
                     COUNT(*) AS total_count,
@@ -508,27 +523,45 @@ class AdminTaxReportController extends Controller
         $total_tax_amount = 0;
         $orderData = OrderTransaction::whereNull('status')
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->select('order_id', 'order_amount', 'delivery_fee_comission')
-            ->paginate(config('default_pagination'));
+            ->select('order_id', 'order_amount', 'delivery_fee_comission');
+        if ($export === false) {
+            $orderData =  $orderData->paginate(config('default_pagination'));
+            $orderData->getCollection()->transform(function ($transaction) use ($tax_data, &$total_tax_amount) {
+                $taxes = [];
 
-        $orderData->getCollection()->transform(function ($transaction) use ($tax_data, &$total_tax_amount) {
-            $taxes = [];
+                foreach ($tax_data as $tax) {
+                    $rate = (float) $tax['tax_rate'];
+                    $amount = (($transaction->delivery_fee_comission) * $rate) / 100;
+                    $taxes[] = [
+                        'tax_name' => $tax['name'],
+                        'tax_rate' => $rate,
+                        'tax_amount' => round($amount, 2),
+                    ];
+                    $total_tax_amount += $amount;
+                }
 
-            foreach ($tax_data as $tax) {
-                $rate = (float) $tax['tax_rate'];
-                $amount = (($transaction->delivery_fee_comission) * $rate) / 100;
-                $taxes[] = [
-                    'tax_name' => $tax['name'],
-                    'tax_rate' => $rate,
-                    'tax_amount' => round($amount, 2),
-                ];
-                $total_tax_amount += $amount;
-            }
+                $transaction->calculated_taxes = $taxes;
+                return $transaction;
+            });
+        } else {
+            $orderData = $orderData->cursor()->map(function ($transaction) use ($tax_data, &$total_tax_amount) {
+                $taxes = [];
 
-            $transaction->calculated_taxes = $taxes;
-            return $transaction;
-        });
+                foreach ($tax_data as $tax) {
+                    $rate = (float) $tax['tax_rate'];
+                    $amount = (($transaction->delivery_fee_comission) * $rate) / 100;
+                    $taxes[] = [
+                        'tax_name' => $tax['name'],
+                        'tax_rate' => $rate,
+                        'tax_amount' => round($amount, 2),
+                    ];
+                    $total_tax_amount += $amount;
+                }
 
+                $transaction->calculated_taxes = $taxes;
+                return $transaction;
+            });
+        }
 
         return [
             'data' => $orderData,
@@ -539,7 +572,7 @@ class AdminTaxReportController extends Controller
 
         ];
     }
-    private function getServiceChargeTaxData($startDate, $endDate, $tax_data)
+    private function getServiceChargeTaxData($startDate, $endDate, $tax_data, $export = false)
     {
         $results = DB::selectOne(" SELECT
                     COUNT(*) AS total_count,
@@ -563,27 +596,47 @@ class AdminTaxReportController extends Controller
         $total_tax_amount = 0;
         $orderData = OrderTransaction::whereNull('status')
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->select('order_id', 'order_amount', 'additional_charge')
-            ->paginate(config('default_pagination'));
+            ->select('order_id', 'order_amount', 'additional_charge');
 
-        $orderData->getCollection()->transform(function ($transaction) use ($tax_data, &$total_tax_amount) {
-            $taxes = [];
 
-            foreach ($tax_data as $tax) {
-                $rate = (float) $tax['tax_rate'];
-                $amount = (($transaction->additional_charge) * $rate) / 100;
-                $taxes[] = [
-                    'tax_name' => $tax['name'],
-                    'tax_rate' => $rate,
-                    'tax_amount' => round($amount, 2),
-                ];
-                $total_tax_amount += $amount;
-            }
+        if ($export === false) {
+            $orderData =  $orderData->paginate(config('default_pagination'));
+            $orderData->getCollection()->transform(function ($transaction) use ($tax_data, &$total_tax_amount) {
+                $taxes = [];
 
-            $transaction->calculated_taxes = $taxes;
-            return $transaction;
-        });
+                foreach ($tax_data as $tax) {
+                    $rate = (float) $tax['tax_rate'];
+                    $amount = (($transaction->additional_charge) * $rate) / 100;
+                    $taxes[] = [
+                        'tax_name' => $tax['name'],
+                        'tax_rate' => $rate,
+                        'tax_amount' => round($amount, 2),
+                    ];
+                    $total_tax_amount += $amount;
+                }
 
+                $transaction->calculated_taxes = $taxes;
+                return $transaction;
+            });
+        } else {
+            $orderData = $orderData->cursor()->map(function ($transaction) use ($tax_data, &$total_tax_amount) {
+                $taxes = [];
+
+                foreach ($tax_data as $tax) {
+                    $rate = (float) $tax['tax_rate'];
+                    $amount = (($transaction->additional_charge) * $rate) / 100;
+                    $taxes[] = [
+                        'tax_name' => $tax['name'],
+                        'tax_rate' => $rate,
+                        'tax_amount' => round($amount, 2),
+                    ];
+                    $total_tax_amount += $amount;
+                }
+
+                $transaction->calculated_taxes = $taxes;
+                return $transaction;
+            });
+        }
 
         return [
             'data' => $orderData,
@@ -595,13 +648,157 @@ class AdminTaxReportController extends Controller
     }
 
 
+    public function adminTaxDetailsExport(Request $request)
+    {
+        $date_range_type = $request->date_range_type;
+
+        if ($date_range_type == 'this_fiscal_year') {
+            $dateRange = now()->startOfYear()->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
+        } else {
+            $dateRange = $request->dates ?? now()->subDays(6)->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
+        }
+
+        list($startDate, $endDate) = explode(' - ', $dateRange);
+        $startDate = Carbon::createFromFormat('m/d/Y', trim($startDate));
+        $endDate = Carbon::createFromFormat('m/d/Y', trim($endDate));
+        $startDate = $startDate->startOfDay();
+        $endDate = $endDate->endOfDay();
+
+        $taxSource = $request->source;
+        $taxRates =  $this->getTaxRates($request);
+
+        $tax_on_subscription = $taxRates['tax_on_subscription'];
+        $tax_on_service_charge = $taxRates['tax_on_service_charge'];
+        $tax_on_delivery_charge_commission = $taxRates['tax_on_delivery_charge_commission'];
+        $tax_on_order_commission = $taxRates['tax_on_order_commission'];
+
+        if ($taxSource == 'vendor_subscription') {
+            $data =  $this->getSubsctiprionData($startDate, $endDate, $tax_on_subscription, true);
+        } elseif ($taxSource == 'admin_commission') {
+            $data =  $this->getAdminCommissionTaxData($startDate, $endDate, $tax_on_order_commission, true);
+        } elseif ($taxSource == 'delivery_commission') {
+            $data =  $this->getDeliveryCommissionTaxData($startDate, $endDate, $tax_on_delivery_charge_commission, true);
+        } else {
+            $data =  $this->getServiceChargeTaxData($startDate, $endDate, $tax_on_service_charge, true);
+        }
+
+
+
+        $total_tax_amount = $data['total_tax_amount'];
+        $total_amount = $data['total_amount'];
+        $total_count = $data['total_count'];
+        $total_tax_rate = $data['total_tax_rate'] ?? 0;
+        $total_order_amount = $data['total_order_amount'] ?? 0;
+        $taxData = $data['data'];
+
+
+
+        $startDate = Carbon::parse($startDate)->toIso8601String();
+        $endDate = Carbon::parse($endDate)->toIso8601String();
+        $data = [
+            'taxData' => $taxData,
+            'search' => $request->search ?? null,
+            'from' => $startDate,
+            'to' => $endDate,
+            'total_tax_amount' => $total_tax_amount,
+            'total_amount' => $total_amount,
+            'total_count' => $total_count,
+            'total_tax_rate' => $total_tax_rate,
+            'total_order_amount' => $total_order_amount,
+            'taxSource' => $taxSource
+        ];
+
+
+        if ($request->export_type == 'excel') {
+            return Excel::download(new AdminTaxReportDetailsExport($data), $taxSource . ' ' . 'TaxExport.xlsx');
+        } else if ($request->export_type == 'csv') {
+            return Excel::download(new AdminTaxReportDetailsExport($data), $taxSource . ' ' . 'TaxExport.csv');
+        }
+    }
+    public function adminTaxReportExport(Request $request)
+    {
+
+        $date_range_type = $request->date_range_type;
+
+        if ($date_range_type == 'this_fiscal_year') {
+            $dateRange = now()->startOfYear()->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
+        } else {
+            $dateRange = $request->dates ?? now()->subDays(6)->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
+        }
+
+        list($startDate, $endDate) = explode(' - ', $dateRange);
+        $startDate = Carbon::createFromFormat('m/d/Y', trim($startDate));
+        $endDate = Carbon::createFromFormat('m/d/Y', trim($endDate));
+        $startDate = $startDate->startOfDay();
+        $endDate = $endDate->endOfDay();
+
+
+        $taxRates =  $this->getTaxRates($request);
+
+        $tax_on_subscription = $taxRates['tax_on_subscription'];
+        // $tax_on_packaging_charge =  $taxRates['tax_on_packaging_charge'];
+        $tax_on_service_charge = $taxRates['tax_on_service_charge'];
+        $tax_on_delivery_charge_commission = $taxRates['tax_on_delivery_charge_commission'];
+        $tax_on_order_commission = $taxRates['tax_on_order_commission'];
+
+
+        $orderTaxData = $this->getOrderTaxes($tax_on_service_charge, $tax_on_delivery_charge_commission, $tax_on_order_commission,  $startDate, $endDate);
+
+        $taxOnSubscriptionData = $this->generateSubscriotionTax($tax_on_subscription, $startDate, $endDate);
+
+        if ($taxOnSubscriptionData) {
+
+            $combinedResults = array_merge(
+                $orderTaxData,
+                [
+                    'vendor_subscription' => [
+                        'total_base_amount' => array_reduce($taxOnSubscriptionData, fn($carry, $item) =>  $item->total_paid_amount, 0),
+                        'taxes' => array_reduce($taxOnSubscriptionData, function ($carry, $item) {
+                            $carry[$item->tax_name][] = [
+                                'tax_rate' => $item->tax_rate,
+                                'total_tax_amount' => $item->total_tax
+                            ];
+                            return $carry;
+                        }, [])
+                    ]
+                ]
+            );
+        } else {
+            $combinedResults = $orderTaxData;
+        }
+        $totalBase = 0;
+        $totalTax = 0;
+
+        foreach ($combinedResults as $category) {
+            $totalBase += $category['total_base_amount'];
+            foreach ($category['taxes'] as $taxGroup) {
+                foreach ($taxGroup as $tax) {
+                    $totalTax += $tax['total_tax_amount'];
+                }
+            }
+        }
 
 
 
 
 
+        $startDate = Carbon::parse($startDate)->toIso8601String();
+        $endDate = Carbon::parse($endDate)->toIso8601String();
+        $data = [
+            'taxData' => $combinedResults,
+            'search' => $request->search ?? null,
+            'from' => $startDate,
+            'to' => $endDate,
+            'total_tax_amount' => $totalTax,
+            'total_amount' => $totalBase,
+
+        ];
 
 
-
-
+        if ($request->export_type == 'excel') {
+            return Excel::download(new AdminTaxReportExport($data), 'AdminTaxExport.xlsx');
+        } else if ($request->export_type == 'csv') {
+            return Excel::download(new AdminTaxReportExport($data), 'AdminTaxExport.csv');
+        }
+    }
 }
