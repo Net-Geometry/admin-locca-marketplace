@@ -1315,6 +1315,8 @@ class OrderController extends Controller
         }
 
         session()->forget('order_cart');
+        session()->forget('edit_tax_amount');
+        session()->forget('edit_tax_included');
         Toastr::success(translate('messages.order_updated_successfully'));
         return back();
     }

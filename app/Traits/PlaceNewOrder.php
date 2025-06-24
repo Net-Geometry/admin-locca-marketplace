@@ -1363,11 +1363,10 @@ trait PlaceNewOrder
                                     'message' => $product->title . ' ' . translate('messages.is_out_of_stock')
                                 ];
                             }
-
                             $product_data[] = [
                                 'item' => clone $product,
                                 'quantity' => $c['quantity'],
-                                'variant' => count($c['variation']) > 0 ? $c['variation'][0]['type'] : null
+                                'variant' => is_array($c['variation']) && count($c['variation']) > 0 ? $c['variation'][0]['type'] : null
                             ];
                         }
                     }
