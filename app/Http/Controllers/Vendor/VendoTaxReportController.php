@@ -53,7 +53,7 @@ class VendoTaxReportController extends Controller
 
     public function vendorTaxExport(Request $request)
     {
-      $dateRange = $request->dates ?? now()->subDays(6)->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
+        $dateRange = $request->dates ?? now()->subDays(6)->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
         $key = explode(' ', $request['search']);
         list($startDate, $endDate) = explode(' - ', $dateRange);
         $startDate = Carbon::createFromFormat('m/d/Y', trim($startDate));
@@ -65,17 +65,12 @@ class VendoTaxReportController extends Controller
         $store = Helpers::get_store_data();
 
         // $start = microtime(true);
-        $vendortaxData =   $this->getVendortaxData($store->id, $startDate, $endDate, $key);
+        $vendortaxData =   $this->getVendortaxData($store->id, $startDate, $endDate, $key, true);
         $summary =   $vendortaxData['summary'];
         $orders = $vendortaxData['orders'];
+        // $taxSummary = $vendortaxData['taxSummary'];
 
-        $totalOrders = $summary->total_orders;
-        $totalOrderAmount = $summary->total_order_amount;
-        $totalTax = $summary->total_tax;
-        $taxSummary = $vendortaxData['taxSummary'];
- 
-
-        $orders = $orders->get();
+        $orders = $orders->cursor();
 
         // $time = microtime(true) - $start;
         // dd("Query took {$time} seconds", $stores);
@@ -97,13 +92,13 @@ class VendoTaxReportController extends Controller
         }
     }
 
-    private function getVendortaxData($store_id, $startDate, $endDate, $search)
+    private function getVendortaxData($store_id, $startDate, $endDate, $search, $export = false)
     {
         $summary = DB::table('orders')
             ->where('store_id', $store_id)
             ->whereIn('order_status', ['delivered', 'refund_requested', 'refund_request_canceled'])
             ->when($startDate && $endDate, fn($q) => $q->whereBetween('created_at', [$startDate, $endDate]))
-            ->when(isset($search), fn($q) => $q->where(function ($q) use ($search) {
+            ->when(count($search), fn($q) => $q->where(function ($q) use ($search) {
                 foreach ($search as $value) {
                     $q->orWhere('id', 'like', "%{$value}%");
                 }
@@ -119,7 +114,7 @@ class VendoTaxReportController extends Controller
         ])
 
             ->where('store_id', $store_id)
-            ->when(isset($search), fn($q) => $q->where(function ($q) use ($search) {
+            ->when(count($search), fn($q) => $q->where(function ($q) use ($search) {
                 foreach ($search as $value) {
                     $q->orWhere('id', 'like', "%{$value}%");
                 }
@@ -129,23 +124,23 @@ class VendoTaxReportController extends Controller
             ->select(['id', 'order_amount', 'total_tax_amount', 'order_type', 'created_at', 'order_status', 'payment_status'])
             ->latest('created_at');
 
+        if(!$export){
+            $taxSummary = DB::table('order_taxes')
+                ->select('tax_name', DB::raw('SUM(tax_amount) as total_tax'))
+                ->where('order_type', Order::class)
+                ->when(count($search), fn($q) => $q->where(function ($q) use ($search) {
+                    foreach ($search as $value) {
+                        $q->orWhere('order_id', 'like', "%{$value}%");
+                    }
+                }))
+                ->where('store_id', $store_id)
+                ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                    $query->whereBetween('created_at', [$startDate, $endDate]);
+                })
+                ->groupBy('tax_name')
+                ->get();
 
-        $taxSummary = DB::table('order_taxes')
-            ->select('tax_name', DB::raw('SUM(tax_amount) as total_tax'))
-            ->where('order_type', Order::class)
-            ->when(isset($search), fn($q) => $q->where(function ($q) use ($search) {
-                foreach ($search as $value) {
-                    $q->orWhere('order_id', 'like', "%{$value}%");
-                }
-            }))
-            ->where('store_id', $store_id)
-            ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
-                $query->whereBetween('created_at', [$startDate, $endDate]);
-            })
-            ->groupBy('tax_name')
-            ->get();
-
-
-        return ['summary' => $summary, 'orders' => $orders, 'taxSummary' => $taxSummary];
+        }
+        return ['summary' => $summary, 'orders' => $orders, 'taxSummary' => $taxSummary??[]];
     }
 }

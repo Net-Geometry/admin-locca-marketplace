@@ -9,7 +9,7 @@
 @section('content')
 <div class="content container-fluid">
 
-   
+
     <!--- Admin Tax Report -->
     <h2 class="mb-20">Admin Tax Report</h3>
     <div class="card p-20 mb-20">
@@ -18,7 +18,7 @@
             <p class="mb-0 fz-12">To generate you tax report please select & input following field and submit for the result.</p>
         </div>
         <div class="bg--secondary rounded p-20 mb-20">
-            <div class="row g-lg-4 g-md-3 g-2">            
+            <div class="row g-lg-4 g-md-3 g-2">
                 <div class="col-md-6">
                     <div class="d-flex flex-column gap-lg-4 gap-3">
                         <div>
@@ -117,9 +117,9 @@
                     <div class="input-group input--group">
                         <input id="datatableSearch_" type="search" name="search" class="form-control h--40px"
                                 placeholder="{{ translate('messages.Ex:') }} 10010" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search')}}">
-                                
+
                                 <input type="hidden" name="parcel_order" value="">
-                                
+
                         <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                     </div>
                 </form>
@@ -311,9 +311,9 @@
                     <div class="input-group input--group">
                         <input id="datatableSearch_" type="search" name="search" class="form-control h--40px"
                                 placeholder="{{ translate('messages.Ex:') }} 10010" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search')}}">
-                                
+
                                 <input type="hidden" name="parcel_order" value="">
-                                
+
                         <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                     </div>
                 </form>
@@ -364,7 +364,7 @@
                     <th class="border-0 text-center">Action</th>
                 </tr>
                 </thead>
-    
+
                 <tbody>
                     <tr>
                         <td colspan="5" class="py-5">

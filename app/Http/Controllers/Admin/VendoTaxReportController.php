@@ -187,7 +187,7 @@ class VendoTaxReportController extends Controller
         $data = $this->vendorWiseTaxData($store, $startDate, $endDate, $key);
         $summary = $data['result'];
         $storeQuery = $data['storeQuery'];
-        $storeQuery =  $storeQuery->get();
+        $storeQuery =  $storeQuery->cursor();
         $storeIds = $storeQuery->pluck('store_id')->toArray();
 
         $stores = $this->getOrderTaxData($startDate, $endDate, $storeIds, $storeQuery, true);
@@ -260,7 +260,7 @@ class VendoTaxReportController extends Controller
         $summary =   $vendortaxData['summary'];
         $orders = $vendortaxData['orders'];
 
-        $orders = $orders->get();
+        $orders = $orders->cursor();
 
         // $time = microtime(true) - $start;
         // dd("Query took {$time} seconds", $stores);
