@@ -1135,4 +1135,60 @@ class DeliverymanController extends Controller
         return response()->json($data,200);
 
     }
+    public function earningReport(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'limit' => 'required|integer',
+            'offset' => 'required|integer',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'type' => 'nullable|in:all,delivery_charge,delivery_tips',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $limit = $request['limit'] ?? 25;
+        $offset = $request['offset'] ?? 1;
+        $type = $request['type'] ?? 'all';
+
+        $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
+
+        $baseQuery = Order::with(['transaction:id,order_id'])
+            ->where('delivery_man_id', $dm['id'])
+            ->whereNotNull('delivered');
+
+        if ($request->start_date && $request->end_date) {
+            $baseQuery->whereBetween('delivered', [$request->start_date, $request->end_date]);
+        } elseif ($request->start_date) {
+            $baseQuery->whereDate('delivered', '>=', $request->start_date);
+        } elseif ($request->end_date) {
+            $baseQuery->whereDate('delivered', '<=', $request->end_date);
+        }
+
+        if ($type === 'delivery_fee') {
+            $baseQuery->where('original_delivery_charge', '>', 0);
+        } elseif ($type === 'delivery_tips') {
+            $baseQuery->where('dm_tips', '>', 0);
+        }
+
+        $total_dm_tips = (clone $baseQuery)->sum('dm_tips');
+        $total_delivery_charge = (clone $baseQuery)->sum('original_delivery_charge');
+
+        $paginated_orders = (clone $baseQuery)
+            ->select(['id', 'delivery_man_id', 'dm_tips', 'delivered', 'original_delivery_charge', 'payment_method'])
+            ->paginate($limit, ['*'], 'page', $offset);
+
+        $data = [
+            'earning' => $paginated_orders,
+            'total_dm_tips' => $total_dm_tips,
+            'total_delivery_charge' => $total_delivery_charge,
+            'limit' => $limit,
+            'offset' => $offset,
+        ];
+
+        return response()->json($data, 200);
+    }
+
 }

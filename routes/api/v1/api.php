@@ -118,7 +118,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             //Remove account
             Route::delete('remove-account', 'DeliverymanController@remove_account');
 
-
+            Route::get('earning-report', 'DeliverymanController@earningReport');
 
             Route::get('get-withdraw-method-list', 'DeliverymanController@withdraw_method_list');
             Route::get('get-disbursement-report', 'DeliverymanController@disbursement_report');
