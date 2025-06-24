@@ -715,6 +715,10 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('vendor-tax-report', 'VendoTaxReportController@vendorTax')->name('vendorTax');
                 Route::get('vendor-tax-export', 'VendoTaxReportController@vendorTaxExport')->name('vendorTaxExport');
 
+                Route::get('get-tax-export', 'AdminTaxReportController@getTaxReport')->name('getTaxReport');
+                Route::get('get-tax-list', 'AdminTaxReportController@getTaxList')->name('getTaxList');
+                Route::get('get-tax-details', 'AdminTaxReportController@getTaxDetails')->name('getTaxDetails');
+
             });
 
             Route::group(['prefix' => 'account-transaction', 'as' => 'account-transaction.', 'middleware' => ['module:collect_cash']], function () {

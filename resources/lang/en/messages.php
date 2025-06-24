@@ -7704,4 +7704,47 @@ Smartly or Earn. ',
   'Total_Tax_Amount' => 'Total Tax Amount',
   'The from field is required.' => 'The from field is required.',
   'The to field is required.' => 'The to field is required.',
+  'Vendor_Tax_Reports' => 'Vendor Tax Reports',
+  'Admin Tax Report' => 'Admin Tax Report',
+  'To generate you tax report please select & input following field and submit for the result' => 'To generate you tax report please select & input following field and submit for the result',
+  'Date Range Type' => 'Date Range Type',
+  'This Fiscal Year' => 'This Fiscal Year',
+  'Select How to calculate tax' => 'Select How to calculate tax',
+  'Same Tax for All Income Source' => 'Same Tax for All Income Source',
+  'Different Tax for Different Income Source' => 'Different Tax for Different Income Source',
+  'Tax on Order Commission' => 'Tax on Order Commission',
+  'Tax on Delivery Charge Commission' => 'Tax on Delivery Charge Commission',
+  'Tax on Service charge' => 'Tax on Service charge',
+  'Tax on Packaging Charge' => 'Tax on Packaging Charge',
+  'Tax on Subscription' => 'Tax on Subscription',
+  'Select Tax Rates' => 'Select Tax Rates',
+  'Tax Report List' => 'Tax Report List',
+  'Income Source' => 'Income Source',
+  'Total Income' => 'Total Income',
+  'No Tax Report Generated' => 'No Tax Report Generated',
+  'To generate your tax report please select & input above
+                                                field and submit for the result' => 'To generate your tax report please select & input above
+                                                field and submit for the result',
+  'packaging_charge' => 'Packaging charge',
+  'vendor_subscription' => 'Vendor subscription',
+  'To generate your tax report please select & input above
+                                                                                                                                                field and submit for the result' => 'To generate your tax report please select & input above
+                                                                                                                                                field and submit for the result',
+  'To generate your tax report please select & input above
+                                                                                                                                                                                                field and submit for the result' => 'To generate your tax report please select & input above
+                                                                                                                                                                                                field and submit for the result',
+  'Select_Tax_Rate' => 'Select Tax Rate',
+  'To generate your tax report please select & input above
+                                                                                                                                                                                                                                                field and submit for the result' => 'To generate your tax report please select & input above
+                                                                                                                                                                                                                                                field and submit for the result',
+  'To generate your tax report please select & input above
+                                                                                                                                                                                                                                                                                                field and submit for the result' => 'To generate your tax report please select & input above
+                                                                                                                                                                                                                                                                                                field and submit for the result',
+  'Tax Details' => 'Tax Details',
+  'Date:' => 'Date:',
+  'Total_Transactions' => 'Total Transactions',
+  'Total_Amount' => 'Total Amount',
+  'Total Tax Percentage' => 'Total Tax Percentage',
+  'Total_Order_Amount' => 'Total Order Amount',
+  'Total_Commission' => 'Total Commission',
 );

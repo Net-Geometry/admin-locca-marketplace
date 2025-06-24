@@ -169,6 +169,12 @@
                         <span class="text-truncate text-capitalize">{{ translate('messages.order_report') }}</span>
                     </a>
                 </li>
+                <li class="navbar-vertical-aside-has-menu @yield('tax_report')">
+                    <a class="nav-link " href="{{ route('admin.transactions.report.getTaxReport') }}" title="{{ translate('Tax_Report') }}">
+                        <span class="tio-albums nav-icon"></span>
+                        <span class="text-truncate text-capitalize">{{ translate('Tax_Report') }}</span>
+                    </a>
+                </li>
                 <li class="navbar-vertical-aside-has-menu @yield('vendor_tax_report')">
                     <a class="nav-link " href="{{ route('admin.transactions.report.vendorWiseTaxes') }}" title="{{ translate('Vendor_Tax_Report') }}">
                         <span class="tio-american-express nav-icon"></span>

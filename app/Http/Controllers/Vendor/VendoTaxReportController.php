@@ -70,7 +70,7 @@ class VendoTaxReportController extends Controller
         $orders = $vendortaxData['orders'];
         // $taxSummary = $vendortaxData['taxSummary'];
 
-        $orders = $orders->get();
+        $orders = $orders->cursor();
 
         // $time = microtime(true) - $start;
         // dd("Query took {$time} seconds", $stores);
