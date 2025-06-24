@@ -180,19 +180,46 @@
                         @endforeach
                     @endif
                 @else
-                    @php($variations = count($temp) > 0 ? explode('-', $temp[0]['type']) : [])
-                    @foreach (json_decode($product->choice_options) as $key => $choice)
+{{--                    @php($variations = count($temp) > 0 ? explode('-', $temp[0]['type']) : [])--}}
+                        <?php
+                        $variations = [];
+                        $itemType = isset($temp['type']) ? $temp['type'] : $temp[0]['type'];
+
+                        if (is_array($temp) && isset($itemType)) {
+                            $typeParts = explode('-', $itemType);
+                            $choiceOptions = json_decode($product->choice_options ?? '[]');
+
+                            foreach ($choiceOptions as $index => $choice) {
+                                if (isset($choice->name)) {
+                                    $variations[$choice->name] = trim($typeParts[$index] ?? '');
+                                }
+                            }
+                        }
+                        ?>
+
+                @foreach (json_decode($product->choice_options) as $key => $choice)
                         <div class="h3 p-0 pt-2">{{ $choice->title }}
                         </div>
 
                         <div class="d-flex justify-content-left flex-wrap">
                             @foreach ($choice->options as $option)
-                                <input class="btn-check" type="radio" id="{{ $choice->name }}-{{ $option }}"
-                                    name="{{ $choice->name }}" value="{{ $option }}"
-                                    {{ count($temp) > 0 && str_replace(' ', '', $option) == $variations[$key] ? 'checked' : '' }}
-                                    autocomplete="off">
+{{--                                <input class="btn-check" type="radio" id="{{ $choice->name }}-{{ $option }}"--}}
+{{--                                    name="{{ $choice->name }}" value="{{ $option }}"--}}
+{{--                                    {{ count($temp) > 0 && str_replace(' ', '', $option) == $variations[$key] ? 'checked' : '' }}--}}
+{{--                                       autocomplete="off">--}}
+                                @php($option_id = Str::slug($choice->name . '-' . $option, '_'))
+
+                                <input class="btn-check" type="radio"
+                                       id="{{ $option_id }}"
+                                       name="{{ $choice->name }}"
+                                       value="{{ $option }}"
+                                       {{ trim(strtolower($option)) == strtolower($variations[$choice->name] ?? '') ? 'checked' : '' }}
+                                       autocomplete="off">
                                 <label class="btn btn-sm check-label mx-1 choice-input"
-                                    for="{{ $choice->name }}-{{ $option }}">{{ Str::limit($option, 20, '...') }}</label>
+                                       for="{{ $option_id }}">
+                                    {{ Str::limit($option, 20, '...') }}
+                                </label>
+
                             @endforeach
                         </div>
                     @endforeach

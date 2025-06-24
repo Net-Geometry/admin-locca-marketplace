@@ -483,7 +483,7 @@
                                    </li>
                                    <li class="navbar-vertical-aside-has-menu @yield('tax_system_setup')">
                                        <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                       href="{{route('taxvat.systemTaxvat')}}"
+                                       href="{{route('taxvat.systemTaxvat',['type' => 'vendor'])}}"
                                        title="{{translate('System_Taxes')}}">
                                            <i class="tio-calculator nav-icon"></i>
                                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
@@ -491,18 +491,6 @@
                                    </span>
                                        </a>
                                    </li>
-                                   @if (addon_published_status('Rental'))
-                                        <li class="navbar-vertical-aside-has-menu @yield('tax_system_setup_rental')">
-                                       <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                       href="{{route('taxvat.systemTaxvat',['type' => 'rental'])}}"
-                                       title="{{translate('Rental_System_Taxes')}}">
-                                           <i class="tio-bike nav-icon"></i>
-                                           <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                       {{translate('Rental_System_Taxes')}}
-                                   </span>
-                                       </a>
-                                   </li>
-                                   @endif
                                </ul>
                            </li>
                        @endif

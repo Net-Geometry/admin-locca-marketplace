@@ -407,6 +407,11 @@ trait PlaceNewOrder
                 $order->free_delivery_by = $free_delivery_by;
             } else {
 
+
+
+
+
+
                 $order->delivery_charge = round($original_delivery_charge, config('round_up_to_digit')) ?? 0;
                 $order->original_delivery_charge = round($original_delivery_charge, config('round_up_to_digit'));
                 $order->order_amount = round($order->delivery_charge, config('round_up_to_digit'));
@@ -1121,6 +1126,7 @@ trait PlaceNewOrder
         $order_details = [];
         $variations = [];
         $discount_on_product_by = 'vendor';
+        $discount_type = '';
         foreach ($carts as $c) {
             if(is_array($c)) {
 //                dd($c);
@@ -1131,6 +1137,7 @@ trait PlaceNewOrder
                 } else {
                     $product = Item::with('module')->active()->find($c['item_id'] ?? $c['id']);
                 }
+
                 if ($product) {
                     if ($product->store_id != $store->id) {
                         return [
@@ -1171,7 +1178,7 @@ trait PlaceNewOrder
                         }
                     } else {
                         if (count(json_decode($product['variations'], true)) > 0 && count($c['variations']) > 0) {
-                            $variant_data = Helpers::variation_price($product, json_encode($c['variations']));
+                            $variant_data = Helpers::pos_variation_price($product, json_encode($c['variations']));
                             $price = $variant_data['price'];
                             $stock = $variant_data['stock'];
                         } else {
@@ -1192,7 +1199,7 @@ trait PlaceNewOrder
                             $product_data[] = [
                                 'item' => clone $product,
                                 'quantity' => $c['quantity'],
-                                'variant' => count($c['variations']) > 0 ? $c['variations'][0]['type'] : null
+                                'variant' => count($c['variations']) > 0 ? $c['variations']['type'] : null
                             ];
                         }
                     }
@@ -1345,7 +1352,9 @@ trait PlaceNewOrder
                             $price = $product['price'];
                         }
                     } else {
-                        if (count(json_decode($product['variations'], true)) > 0 && count($c['variation']) > 0) {
+//                        if (count(json_decode($product['variations'], true)) > 0 && count($c['variation']) > 0) {
+                        if (is_array(json_decode($product['variations'], true)) && count(json_decode($product['variations'], true)) > 0 &&
+                            is_array($c['variation']) && count($c['variation']) > 0) {
                             $variant_data = Helpers::variation_price($product, json_encode($c['variation']));
                             $price = $variant_data['price'];
                             $stock = $variant_data['stock'];
@@ -1685,6 +1694,7 @@ trait PlaceNewOrder
             'tax_status' => $finalCalculatedTax['tax_status'],
             'tax_included' => $finalCalculatedTax['tax_included'],
         ];
+//        dd($data);
         return response()->json($data, 200);
     }
 }

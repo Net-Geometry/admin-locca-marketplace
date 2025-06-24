@@ -7702,4 +7702,8 @@ Smartly or Earn. ',
   'Details' => 'Details',
   'Order Amount' => 'Order Amount',
   'Total_Tax_Amount' => 'Total Tax Amount',
+  'Order Module' => 'Order Module',
+  'Rental Module' => 'Rental Module',
+  'Parcel Module' => 'Parcel Module',
+  'please_select_a_valid_delivery_location_on_the_map' => 'Please select a valid delivery location on the map',
 );

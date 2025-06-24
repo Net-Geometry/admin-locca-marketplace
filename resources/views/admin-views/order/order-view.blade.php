@@ -591,13 +591,19 @@
                                                                         <strong><u>{{ translate('messages.variation') }}
                                                                                 :
                                                                             </u></strong>
-                                                                        @foreach (json_decode($detail['variation'], true)[0] as $key1 => $variation)
+                                                                    <?php
+                                                                        $detailsVariation = isset(json_decode($detail['variation'], true)[0]) ? json_decode($detail['variation'], true)[0] : json_decode($detail['variation'], true);
+                                                                    ?>
+{{--                                                                        @foreach (json_decode($detail['variation'], true)[0] as $key1 => $variation)--}}
+                                                                        @foreach ($detailsVariation as $key1 => $variation)
                                                                             @if ($key1 != 'stock' || ($order->store && config('module.' . $order->store->module->module_type)['stock']))
                                                                                 <div class="font-size-sm text-body">
                                                                                         <span>{{ $key1 }} :
                                                                                         </span>
-                                                                                    <span
-                                                                                        class="font-weight-bold">{{ Str::limit($variation, 15, '...') }}</span>
+{{--                                                                                    <span class="font-weight-bold">{{ Str::limit($variation, 15, '...') }}</span>--}}
+                                                                                    <span class="font-weight-bold">
+                                                                                        {{ Str::limit(implode(', ', (array) $variation), 15, '...') }}
+                                                                                    </span>
                                                                                 </div>
                                                                             @endif
                                                                         @endforeach

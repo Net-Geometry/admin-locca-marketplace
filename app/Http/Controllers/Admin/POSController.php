@@ -31,8 +31,6 @@ class POSController extends Controller
     use PlaceNewOrder;
     public function index(Request $request)
     {
-//        dd(session()->get('cart'));
-//        dd(session()->get('tax_amount'));
         $time = Carbon::now()->toTimeString();
         $category = $request->query('category_id', 0);
         $module_id = Config::get('module.current_module_id');
@@ -50,9 +48,17 @@ class POSController extends Controller
             $cart = $request->session()->get('cart', collect([]));
             if(!isset($cart['store_id']) || $cart['store_id'] != $store_id) {
                 session()->forget('cart');
+                session()->forget('tax_amount');
+                session()->forget('tax_included');
+                session()->forget('cart');
                 session()->forget('address');
                 session()->forget('cart_product_ids');
             }
+        }
+
+        if (empty(session('cart')) || count(session('cart')) === 0) {
+            session()->forget('tax_amount');
+            session()->forget('tax_included');
         }
 
         $products = Item::withoutGlobalScope(StoreScope::class)->active()

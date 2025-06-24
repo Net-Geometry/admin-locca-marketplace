@@ -987,17 +987,18 @@ class OrderController extends Controller
             $addon_data = Helpers::calculate_addon_price(\App\Models\AddOn::withoutGlobalScope(StoreScope::class)->whereIn('id', $add_ons)->get(), $add_on_qtys);
             $data['add_ons'] = json_encode($addon_data['addons']);
             $data['total_add_on_price'] = $addon_data['total_add_on_price'];
-            // dd($data);
+//             dd($data);
+
             $cart = $request->session()->get('order_cart', collect([]));
             if (isset($request->cart_item_key)) {
                 $cart[$request->cart_item_key] = $data;
+                $this->setOrderEditCalculatedTax($product->store);
                 return response()->json([
                     'data' => 2
                 ]);
             } else {
                 $cart->push($data);
             }
-            $this->setOrderEditCalculatedTax($product->store);
         }
 
         $this->setOrderEditCalculatedTax($product->store);

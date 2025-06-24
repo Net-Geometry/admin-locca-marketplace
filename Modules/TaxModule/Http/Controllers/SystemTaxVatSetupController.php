@@ -35,7 +35,14 @@ class SystemTaxVatSetupController extends Controller
 
     public function index(Request $request): Renderable
     {
-        $tax_payer=$request->type === 'rental' ? 'rental_provider' :'vendor';
+        $type_map = [
+            'rental' => 'rental_provider',
+            'vendor' => 'vendor',
+            'parcel' => 'parcel',
+            'prescription' => 'prescription',
+        ];
+
+        $tax_payer = $type_map[$request->type] ?? 'vendor';
         $systemTaxVat = $this->systemTaxVat->with('additionalData')->when($this->getCountryType() == 'single', function ($query) {
             $query->where('is_default', true);
         }, function ($query) use ($request) {
@@ -95,18 +102,15 @@ class SystemTaxVatSetupController extends Controller
                 $systemTaxVat->country_code = $request->country_code ?? $systemTaxVat?->country_code;
                 $systemTaxVat->is_default = false;
             }
-            if($request->type ==='rental_provider'){
-                $systemTaxVat->tax_payer =$request->type;
-                $systemTaxVat->tax_type = $request->tax_type ?? 'trip_wise';
-
-            }
+            $systemTaxVat->tax_payer =$request->type;
+            $systemTaxVat->tax_type = $request->tax_type ?? $request->type == 'rental_provider' ?  'trip_wise' : 'order_wise';
         }
 
         $systemTaxVat->is_active = !$systemTaxVat->is_active;
         $systemTaxVat->save();
         return response()->json(['id' => $systemTaxVat->id, 'status' =>  $systemTaxVat->is_active, 'message' => translate('messages.vendor_tax_status_updated')]);
     }
-        private function validateRequest(Request $request, $id = null): void
+    private function validateRequest(Request $request, $id = null): void
     {
         $request->validate(
             [

@@ -24,6 +24,25 @@
 @section('content')
     <div class="content container-fluid">
         <h2 class="mb-20">{{ translate('messages.Setup Tax Calculation') }}</h3>
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 mt-4 __gap-12px">
+                <div class="js-nav-scroller hs-nav-scroller-horizontal mt-2">
+                    <!-- Nav -->
+                    <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
+                        <li class="nav-item">
+                            <a class="nav-link  {{ Request::is('taxvat/system-taxvat') && request('type') == 'vendor' ?'active':'' }}" href="{{ route('taxvat.systemTaxvat',['type' => 'vendor']) }}"   aria-disabled="true">{{translate('Order Module')}}</a>
+                        </li>
+                        @if (addon_published_status('Rental'))
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::is('taxvat/system-taxvat') && request('type') == 'rental' ?'active':'' }}" href="{{route('taxvat.systemTaxvat',['type' => 'rental'])}}"  aria-disabled="true">{{translate('Rental Module')}}</a>
+                        </li>
+                        @endif
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::is('taxvat/system-taxvat') && request('type') == 'parcel' ?'active':'' }}" href="{{route('taxvat.systemTaxvat',['type' => 'parcel'])}}"  aria-disabled="true">{{translate('Parcel Module')}}</a>
+                        </li>
+                    </ul>
+                    <!-- End Nav -->
+                </div>
+            </div>
             <div class="card p-20 mb-20">
                 <div class="row g-md-3 g-2 justify-content-between">
                     <div class="col-md-8">
@@ -141,7 +160,7 @@
                                                     class="custom-select custom-select-color border rounded w-100"
                                                     name="tax_type"
                                                     data-current_seclected="{{ $systemTaxVat?->tax_type }}">
-                                                    @php($tax_calculate_on= $tax_payer=='rental_provider' ? 'tax_calculate_on_rental_provider' : 'tax_calculate_on')
+                                                    @php($tax_calculate_on = $tax_payer=='rental_provider' ? 'tax_calculate_on_rental_provider' : 'tax_calculate_on')
                                                     @foreach (data_get($systemData, $tax_calculate_on,['order_wise', 'product_wise', 'category_wise'])   as $item)
                                                         <option {{ $systemTaxVat?->tax_type == $item ? 'selected' : '' }}
                                                             value="{{ $item }}"> {{ translate($item) }} </option>

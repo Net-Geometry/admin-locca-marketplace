@@ -137,7 +137,8 @@
                                 @else
                                     @if (count(json_decode($detail['variation'], true)) > 0)
                                         <strong><u>Variation : </u></strong>
-                                        @foreach (json_decode($detail['variation'], true)[0] as $key1 => $variation)
+                                        @foreach (json_decode($detail['variation'], true) as $key1 => $variation)
+{{--                                        @foreach (json_decode($detail['variation'], true)[0] as $key1 => $variation)--}}
                                             @if ($key1 != 'stock')
                                                 <div class="font-size-sm text-body">
                                                     <span>{{ $key1 }} : </span>

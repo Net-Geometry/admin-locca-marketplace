@@ -113,6 +113,18 @@ class Helpers
         return $result;
     }
 
+    public static function pos_variation_price($product, $variation)
+    {
+        $match = json_decode($variation, true);
+        $result = ['price' => 0, 'stock' => 0];
+        foreach (json_decode($product['variations'], true) as $property => $value) {
+            if ($value['type'] == $match['type']) {
+                $result = ['price' => $value['price'], 'stock' => $value['stock'] ?? 0];
+            }
+        }
+        return $result;
+    }
+
     public static function address_data_formatting($data)
     {
         foreach ($data as $key=>$item) {
