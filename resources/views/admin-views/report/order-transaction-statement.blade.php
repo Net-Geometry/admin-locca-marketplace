@@ -378,7 +378,7 @@
                 </tr>
                 <tr>
                     <td>{{translate('messages.store_net_income')}}</td>
-                    <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->store_amount - $order_transaction->tax) }}</td>
+                    <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->store_amount - ($order_transaction?->order?->order_type == 'parcel' ? 0: $order_transaction->tax)) }}</td>
                 </tr>
             </tbody>
         </table>

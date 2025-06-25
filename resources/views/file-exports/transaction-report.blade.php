@@ -136,7 +136,7 @@
                 <td>{{ \App\CentralLogics\Helpers::format_currency($ot->delivery_fee_comission) }}</td>
                 {{-- admin_net_income --}}
                 <td>{{ \App\CentralLogics\Helpers::format_currency(($ot->admin_commission  - $ot->order['flash_admin_discount_amount'])) }}</td>
-                <td>{{ \App\CentralLogics\Helpers::format_currency($ot->store_amount - $ot->tax) }}</td>
+                <td>{{ \App\CentralLogics\Helpers::format_currency($ot->store_amount -($ot?->order?->order_type == 'parcel' ? 0: $ot->tax)) }}</td>
                 @if ($ot->received_by == 'admin')
                     <td>{{ translate('messages.admin') }}</td>
                 @elseif ($ot->received_by == 'deliveryman')

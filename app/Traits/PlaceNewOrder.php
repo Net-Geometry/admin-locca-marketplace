@@ -436,7 +436,7 @@ trait PlaceNewOrder
                 $tax_included = $taxData['include'];
                 $orderTaxIds = $taxData['orderTaxIds'] ?? [];
                 $tax_status = $tax_included ?  'included' : 'excluded';
-
+                $order->total_tax_amount = round($tax_amount, config('round_up_to_digit'));
 
                 $order->tax_status = $tax_status;
                 $order->order_amount = round($order->delivery_charge + $tax_amount, config('round_up_to_digit'));
@@ -509,8 +509,8 @@ trait PlaceNewOrder
                 $store->increment('total_order');
             }
             if (!isset($request->is_buy_now) || (isset($request->is_buy_now) && $request->is_buy_now == 0)) {
-                foreach ($carts as $cart) {
-                    $cart->delete();
+                foreach ($carts??[] as $cart) {
+                    $cart?->delete();
                 }
             }
             if ($request->user) {
@@ -554,6 +554,7 @@ trait PlaceNewOrder
                 'user_id' => (int) $order->user_id,
             ], 200);
         } catch (\Exception $exception) {
+             
             info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             DB::rollBack();
             return response()->json([$exception], 403);
@@ -906,7 +907,7 @@ trait PlaceNewOrder
             $original_delivery_charge = $original_delivery_charge + $extra_charges;
             $delivery_charge = $delivery_charge + $extra_charges;
         } else {
-            $parcel_category = ParcelCategory::first($request->parcel_category_id);
+            $parcel_category = ParcelCategory::find($request->parcel_category_id);
             if ($parcel_category?->parcel_minimum_shipping_charge) {
                 $per_km_shipping_charge = $parcel_category->parcel_per_km_shipping_charge;
                 $minimum_shipping_charge = $parcel_category->parcel_minimum_shipping_charge;

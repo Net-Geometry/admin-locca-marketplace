@@ -7725,4 +7725,8 @@ Smartly or Earn. ',
   'No Tax Report Generated' => 'No Tax Report Generated',
   'Allow Tax Calculation For' => 'Allow Tax Calculation For',
   'Tax calculation based on' => 'Tax calculation based on',
+  'rental_provider' => 'Rental provider',
+  'Parcel_Amount' => 'Parcel Amount',
+  'Parcel_Order_List' => 'Parcel Order List',
+  'To generate your tax report please select & input above field and submit for the result' => 'To generate your tax report please select & input above field and submit for the result',
 );
