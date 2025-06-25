@@ -1190,9 +1190,9 @@ class DeliverymanController extends Controller
 
         $data = [
             'earning' => $paginated_orders,
-            'total_dm_tips' => $total_dm_tips,
-            'total_delivery_charge' => $total_delivery_charge,
-            'total_admin_commission' => $total_admin_commission,
+            'total_dm_tips' => (float)$total_dm_tips,
+            'total_delivery_charge' => (float)$total_delivery_charge,
+            'total_admin_commission' => (float)$total_admin_commission,
             'type' => $type,
             'limit' => $limit,
             'offset' => $offset,

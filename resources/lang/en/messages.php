@@ -7742,4 +7742,17 @@ Smartly or Earn. ',
   'Thanks for using our service.' => 'Thanks for using our service.',
   'Freelance' => 'Freelance',
   'Admin Commission' => 'Admin Commission',
+  'Business TIN' => 'Business TIN',
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  'Taxpayer
+                                                Identification Number(TIN)' => 'Taxpayer
+                                                Identification Number(TIN)',
+  'Type Your Taxpayer Identification Number(TIN)' => 'Type Your Taxpayer Identification Number(TIN)',
+  'TIN Certificate' => 'TIN Certificate',
+  'pdf, doc, jpg. File size : max 2 MB' => 'Pdf, doc, jpg. File size : max 2 MB',
+  'Select a file or' => 'Select a file or',
+  'Drag & Drop' => 'Drag & Drop',
+  'Taxpayer
+                                            Identification Number(TIN)' => 'Taxpayer
+                                            Identification Number(TIN)',
 );

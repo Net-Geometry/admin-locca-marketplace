@@ -167,13 +167,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-3 my-0">
-                                <div class="col-md-6">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label" for="tax">{{translate('messages.vat/tax')}} (%)</label>
-                                        <input type="number" name="tax" class="form-control" placeholder="{{translate('messages.vat/tax')}}" min="0" step=".01" required value="{{old('tax')}}">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="position-relative">
                                         <label class="input-label" for="tax">{{translate('Estimated Delivery Time ( Min & Maximum Time)')}}</label>
                                         <input type="text" id="time_view" class="form-control" readonly>
@@ -355,6 +349,54 @@
                                                 </a>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div>
+                        <div class="card p-20">
+                            <div class="mb-20">
+                                <h3 class="mb-1">{{translate('Business TIN')}}</h3>
+                                <p class="fz-12px mb-0">{{translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')}}</p>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-8 col-xxl-9">
+                                    <div class="bg--secondary rounded p-20 h-100">
+                                        <div class="form-group">
+                                            <label class="input-label mb-2 d-block title-clr fw-normal" for="exampleFormControlInput1">{{translate('Taxpayer
+                                                Identification Number(TIN)')}} <span class="text-danger">*</span></label>
+                                            <input type="number" name="tin" placeholder="{{translate('Type Your Taxpayer Identification Number(TIN)')}}" class="form-control" required>
+                                        </div>
+                                        <div class="form-group mb-0">
+                                            <label class="input-label mb-2 d-block title-clr fw-normal" for="exampleFormControlInput1">{{translate('Expire Date')}} <span class="text-danger">*</span></label>
+                                            <input type="date" name="tin_expire_date" class="form-control" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-xxl-3">
+                                    <div class="bg--secondary rounded p-20 h-100 __custom-upload-img">
+                                        <div class="mb-20">
+                                            <h4 class="mb-1 fz--14px">{{translate('TIN Certificate')}}</h4>
+                                            <p class="fz-12px mb-0">{{translate('pdf, doc, jpg. File size : max 2 MB')}}</p>
+                                        </div>
+                                        <label class="position-relative mb-0 d-inline-block image--border cursor-pointer w-100 h-100px max-width-300px">
+                                            <img class="h-165 aspect-ratio-1 rounded-10 display-none" id="logoImageViewer"
+                                                 data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
+                                                 src="{{ asset('public/assets/admin/img/upload-img.png') }}"
+                                                 alt=""/>
+                                            <div class="upload-file__textbox p-2 h-100">
+                                                <img width="34" height="34" src="{{ asset('public/assets/admin/img/upload-cloud.png') }}" alt="" class="svg">
+                                                <span class="mt-2 text-center fw-normal fs-12">
+                                                    {{translate('Select a file or')}} <span class="fw-medium title-clr">{{translate('Drag & Drop')}}</span> {{translate('here')}}
+                                                </span>
+                                            </div>
+                                            <div class="icon-file-group outside">
+                                                <input type="file" name="tin_certificate_image" id="customFileEg1" class="custom-file-input" accept=".webp, .jpg, .png, .jpeg|image/*">
+                                            </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
