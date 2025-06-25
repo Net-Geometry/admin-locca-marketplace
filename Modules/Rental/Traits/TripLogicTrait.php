@@ -412,6 +412,7 @@ trait TripLogicTrait
             );
             return $trip;
         } else {
+            $finalPricing['taxStatus'] = $tax_status ?? 'excluded';
             $finalPricing['details'] = $details;
             return $finalPricing;
         }

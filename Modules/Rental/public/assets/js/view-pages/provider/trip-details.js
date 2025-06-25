@@ -532,7 +532,8 @@ $(document).ready(function () {
         $('.grand-total').text(formatCurrency(response.grandTotal));
         $('.coupon_discount_amount').text( '-'+ formatCurrency(response.couponDiscount));
         $('.discount_amount').text('-'+ formatCurrency(response.discount));
-        $('.tax_amount').text((taxIncluded ? '' : '+') + formatCurrency(response.taxAmount));
+         $('.tax_amount').text((response.taxStatus ? '' : '+') + formatCurrency(response.taxAmount));
+        $('#tax_include_or_exclude').text(response.taxStatus == 'included' ? taxIncluded : ''  );
         $('.ref_bonus_amount').text( '-'+ formatCurrency(response.refBonus));
         $('.additional_charge').text('+'+ formatCurrency(response.additionalCharge));
     }

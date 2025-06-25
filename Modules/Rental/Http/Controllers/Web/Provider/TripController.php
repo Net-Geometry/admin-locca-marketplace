@@ -509,6 +509,7 @@ class TripController extends Controller
                     'discount' => round($calculationData['discount'], config('round_up_to_digit')),
                     'couponDiscount' => round($calculationData['couponDiscount'], config('round_up_to_digit')),
                     'taxAmount' => round($calculationData['taxAmount'], config('round_up_to_digit')),
+                    'taxStatus' => $calculationData['taxStatus'],
                     'additionalCharge' => round($calculationData['additionalCharge'], config('round_up_to_digit')),
                 ]);
             }

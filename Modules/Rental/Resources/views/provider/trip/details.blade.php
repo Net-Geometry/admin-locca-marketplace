@@ -344,7 +344,7 @@ active
                                     @endif
 
 
-                                    @if ($trip->tax_status == 'excluded')
+                                    @if ($trip->tax_status == 'excluded' && $trip->tax_amount > 0)
                                     <dt class="col-6 font-regular text-uppercase">{{translate('Vat/tax')}}</dt>
                                     <dd class="col-6 text-right">
                                         +{{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount)}}
@@ -1023,11 +1023,10 @@ active
                                             @endif
 
                                             <dt class="col-6 font-regular">{{translate('Vat/Tax')}}
-                                                {{ \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first()->value  ? translate('(Included)') : '' }}
-                                            </dt>
+                                            <span id="tax_include_or_exclude"></span>                                            </dt>
 
                                             <dd class="col-6 text-right tax_amount">
-                                            {{ \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first()->value  ? '': '+'}} {{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount)}}
+                                            + {{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount)}}
                                             </dd>
 
                                             <dt class="col-6 font-regular ">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</dt>
@@ -1073,7 +1072,7 @@ active
     </div>
 
     <input type="hidden" id="currency_symbol" value="{{ \App\CentralLogics\Helpers::currency_symbol() }}">
-    <input type="hidden" id="tax_included" value="{{ \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first()?->value }}">
+<input type="hidden" id="tax_included" value="{{ translate('(Included)') }}">
     <div id="max_quantity_msg" data-max-quantity-msg="{{ translate('Maximum available quantity is') }}"></div>
     <div id="get_calculation_url" data-url="{{ route('vendor.trip.get-calculation') }}"></div>
 

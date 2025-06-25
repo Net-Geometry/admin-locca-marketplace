@@ -860,35 +860,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-sm-6">
-                                    @php($tax_included = \App\Models\BusinessSetting::where('key', 'tax_included')->first())
-                                    @php($tax_included = $tax_included ? $tax_included->value : 0)
-                                    <div class="form-group mb-0">
-                                        <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border rounded px-3 form-control">
-                                        <span class="pr-1 d-flex align-items-center"><span class="line--limit-1">{{ translate('Include_TAX_Amount') }}</span>
-                                        <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('messages.If_enabled,_the_customer_will_see_the_total_product_price,_including_VAT/Tax._If_it’s_disabled,_the_VAT/Tax_will_be_added_separately_with_the_total_cost_of_the_product.')}}">
-                                            <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
-                                        </span>
-                                        </span>
-                                            <input type="checkbox"
-
-                                                   data-id="tax_included"
-                                                   data-type="toggle"
-                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/tax-on.png') }}"
-                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/tax-off.png') }}"
-                                                   data-title-on="{{ translate('messages.Want_to') }} <strong>{{ translate('messages.‘Include_Tax_Amount?’') }}</strong>"
-                                                   data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Tax_Amount’?') }}</strong>"
-                                                   data-text-on="<p>{{ translate('messages.If_you_enable_it,_customers_will_see_the_product_Price_including_Tax,_during_checkout.') }}</p>"
-                                                   data-text-off="<p>{{ translate('messages.If_you_disable_it,_customers_will_see_the_product_or_service_price_without_Tax,_during_checkout.') }}</p>"
-                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
-                                                   value="1" name="tax_included" id="tax_included"
-                                            {{ $tax_included == 1 ? 'checked' : '' }}>
-                                            <span class="toggle-switch-label text">
-                                                <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
+                            
                                 <div class="col-sm-6 col-lg-4">
                                     @php($vnv = \App\Models\BusinessSetting::where('key', 'toggle_veg_non_veg')->first())
                                     @php($vnv = $vnv ? $vnv->value : 0)
