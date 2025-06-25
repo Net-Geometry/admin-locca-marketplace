@@ -28,6 +28,7 @@ trait VatTaxConfiguration
                 'additional_tax' => ['tax_on_additional_charge', 'tax_on_packaging_charge'],
                 'tax_calculate_on_rental_provider' => ['trip_wise'],
                 'tax_calculate_on_parcel' => ['order_wise'],
+                'tax_calculate_on_prescription' => ['order_wise'],
                 'additional_tax_rental_provider' => ['tax_on_additional_charge'],
                 'payer_types'=> [ 'vendor','rental_provider','parcel', 'prescription'],
 
