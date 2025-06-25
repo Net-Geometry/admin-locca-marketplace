@@ -26,7 +26,7 @@ class OrderTransaction extends Model
     {
         return $query->where('module_id', $module_id);
     }
-    
+
     public function scopeNotRefunded($query)
     {
         return $query->where(function($query){

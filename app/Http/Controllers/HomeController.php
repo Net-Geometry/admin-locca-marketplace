@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DeliveryMan;
+use App\Models\OrderTransaction;
 use App\Models\Zone;
 use App\Models\Order;
 use App\Models\Contact;
@@ -409,6 +411,46 @@ class HomeController extends Controller
         $logo = BusinessSetting::where('key', "logo")->first();
         $mpdf_view = View::make('order-invoice', compact('order', 'BusinessData', 'logo'));
         Helpers::gen_mpdf(view: $mpdf_view, file_prefix: 'OrderInvoice', file_postfix: $id);
+        return back();
+    }
+
+    public function earningReportInvoice(Request $request, $id)
+    {
+        $type       = $request->input('type', 'all');
+        $startDate  = $request->start_date;
+        $endDate    = $request->end_date;
+
+        $logo = BusinessSetting::where('key', "logo")->first();
+        $dm   = DeliveryMan::findOrFail($id);
+
+        $businessDataKeys = ['footer_text', 'email_address', 'phone', 'app_url'];
+        $businessData     = BusinessSetting::whereIn('key', $businessDataKeys)->pluck('value', 'key');
+
+        $query = OrderTransaction::where('delivery_man_id', $dm->id)
+            ->select(['id','order_id', 'delivery_man_id', 'dm_tips', 'original_delivery_charge', 'delivery_fee_comission', 'created_at']);
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
+        } elseif ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
+        }
+
+        if ($type === 'delivery_fee') {
+            $query->where('original_delivery_charge', '>', 0);
+        } elseif ($type === 'delivery_tips') {
+            $query->where('dm_tips', '>', 0);
+        }
+
+        $earnings = $query->get();
+
+        $mpdf_view = View::make('deliveryman-report-invoice', compact(
+            'earnings', 'dm', 'logo', 'businessData', 'startDate', 'endDate'
+        ));
+
+        Helpers::gen_mpdf(view: $mpdf_view, file_prefix: 'Earning Statement', file_postfix: $id);
+
         return back();
     }
 }

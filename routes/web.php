@@ -43,6 +43,7 @@ Route::get('shipping-policy', 'HomeController@shipping_policy')->name('shipping-
 Route::post('newsletter/subscribe', 'NewsletterController@newsLetterSubscribe')->name('newsletter.subscribe');
 Route::get('subscription-invoice/{id}', 'HomeController@subscription_invoice')->name('subscription_invoice');
 Route::get('order-invoice/{id}', 'HomeController@order_invoice')->name('order_invoice');
+Route::get('deliveryman-earning-report-invoice/{id}', 'HomeController@earningReportInvoice')->name('delivery_earning_invoice');
 
 Route::get('login/{tab}', 'LoginController@login')->name('login');
 Route::post('external-login-from-drivemond', 'LoginController@externalLoginFromDrivemond');

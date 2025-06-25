@@ -183,7 +183,15 @@
 {{--                    @php($variations = count($temp) > 0 ? explode('-', $temp[0]['type']) : [])--}}
                         <?php
                         $variations = [];
-                        $itemType = isset($temp['type']) ? $temp['type'] : $temp[0]['type'];
+                        $itemType = null;
+                        if (is_array($temp)) {
+                            if (isset($temp['type']) && !empty($temp['type'])) {
+                                $itemType = $temp['type'];
+                            } elseif (isset($temp[0]['type'])) {
+                                $itemType = $temp[0]['type'];
+                            }
+                        }
+
 
                         if (is_array($temp) && isset($itemType)) {
                             $typeParts = explode('-', $itemType);

@@ -31,6 +31,12 @@ class DeliveryMan extends Authenticatable
     ];
 
     protected $appends = ['image_full_url','identity_image_full_url'];
+
+    public function getFullNameAttribute()
+    {
+        return $this->f_name . ' ' . $this->l_name;
+    }
+
     public function total_canceled_orders()
     {
         return $this->hasMany(Order::class)->where('order_status','canceled');

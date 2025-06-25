@@ -6,6 +6,7 @@ ini_set('memory_limit', '-1');
 
 use App\Models\Order;
 use App\Library\Payer;
+use App\Models\OrderTransaction;
 use App\Traits\Payment;
 use App\Library\Receiver;
 use App\Models\DeliveryMan;
@@ -1155,16 +1156,14 @@ class DeliverymanController extends Controller
 
         $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
 
-        $baseQuery = Order::with(['transaction:id,order_id'])
-            ->where('delivery_man_id', $dm['id'])
-            ->whereNotNull('delivered');
+        $baseQuery = OrderTransaction::with(['order:id,payment_method'])->where('delivery_man_id', $dm['id']);
 
         if ($request->start_date && $request->end_date) {
-            $baseQuery->whereBetween('delivered', [$request->start_date, $request->end_date]);
+            $baseQuery->whereBetween('created_at', [$request->start_date, $request->end_date]);
         } elseif ($request->start_date) {
-            $baseQuery->whereDate('delivered', '>=', $request->start_date);
+            $baseQuery->whereDate('created_at', '>=', $request->start_date);
         } elseif ($request->end_date) {
-            $baseQuery->whereDate('delivered', '<=', $request->end_date);
+            $baseQuery->whereDate('created_at', '<=', $request->end_date);
         }
 
         if ($type === 'delivery_fee') {
@@ -1175,15 +1174,26 @@ class DeliverymanController extends Controller
 
         $total_dm_tips = (clone $baseQuery)->sum('dm_tips');
         $total_delivery_charge = (clone $baseQuery)->sum('original_delivery_charge');
+        $total_admin_commission = (clone $baseQuery)->sum('delivery_fee_comission');
 
         $paginated_orders = (clone $baseQuery)
-            ->select(['id', 'delivery_man_id', 'dm_tips', 'delivered', 'original_delivery_charge', 'payment_method'])
+            ->select(['id','order_id', 'delivery_man_id', 'dm_tips', 'original_delivery_charge','delivery_fee_comission','created_at'])
             ->paginate($limit, ['*'], 'page', $offset);
+
+        $paginated_orders->getCollection()->transform(function ($item) {
+            $item->dm_tips = (float) $item->dm_tips;
+            $item->original_delivery_charge = (float) $item->original_delivery_charge;
+            $item->delivery_fee_comission = (float) $item->delivery_fee_comission;
+            return $item;
+        });
+
 
         $data = [
             'earning' => $paginated_orders,
             'total_dm_tips' => $total_dm_tips,
             'total_delivery_charge' => $total_delivery_charge,
+            'total_admin_commission' => $total_admin_commission,
+            'type' => $type,
             'limit' => $limit,
             'offset' => $offset,
         ];
