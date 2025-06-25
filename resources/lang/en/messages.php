@@ -7737,4 +7737,8 @@ Smartly or Earn. ',
   'Total_Order_Amount' => 'Total Order Amount',
   'Total_Commission' => 'Total Commission',
   'Additional_Charge' => 'Additional Charge',
+  'Password does not match.' => 'Password does not match.',
+  'cannot_change_status_after_delivered' => 'Cannot change status after delivered',
+  'order_amount_updated' => 'Order amount updated',
+  'discount_amount_updated' => 'Discount amount updated',
 );

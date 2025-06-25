@@ -33,7 +33,7 @@ use App\Models\AddOn;
 trait PlaceNewOrder
 {
 
-    public function new_place_order(Request $request, $is_pescription = false)
+    public function new_place_order(Request $request, $is_prescription = false)
     {
         $validator = Validator::make($request->all(), [
             // 'order_amount' => 'required',
@@ -53,7 +53,7 @@ trait PlaceNewOrder
             'contact_person_number' => $request->user ? 'nullable' : 'required',
             'contact_person_email' => $request->user ? 'nullable' : 'required',
             'password' => $request->create_new_user ? ['required', Password::min(8)] : 'nullable',
-            'order_attachment' => $is_pescription ? ['required'] : 'nullable',
+            'order_attachment' => $is_prescription ? ['required'] : 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -234,7 +234,7 @@ trait PlaceNewOrder
             $order->created_at = now();
             $order->updated_at = now();
             $order->charge_payer = $request->charge_payer;
-            $order->prescription_order = $is_pescription ? 1 : 0;
+            $order->prescription_order = $is_prescription ? 1 : 0;
             $additionalCharges = [];
 
 
@@ -278,7 +278,7 @@ trait PlaceNewOrder
             }
 
             if ($request->order_type !== 'parcel') {
-                if ($is_pescription === false) {
+                if ($is_prescription === false) {
 
                     $carts = Cart::where('user_id', $order->user_id)->where('is_guest', $order->is_guest)->where('module_id', $request->header('moduleId'))
                         ->when(isset($request->is_buy_now) && $request->is_buy_now == 1 && $request->cart_id, function ($query) use ($request) {
@@ -295,7 +295,7 @@ trait PlaceNewOrder
                         $carts = json_decode($request['cart'], true);
                     }
 
-                    if (count($carts) == 0 && !$is_pescription) {
+                    if (count($carts) == 0 && !$is_prescription) {
                         DB::rollBack();
                         return response()->json([
                             'errors' => [
@@ -362,7 +362,7 @@ trait PlaceNewOrder
 
                 $order->tax_status = $tax_status;
 
-                if (!$is_pescription  && $store->minimum_order > $product_price + $total_addon_price) {
+                if (!$is_prescription  && $store->minimum_order > $product_price + $total_addon_price) {
                     DB::rollBack();
                     return response()->json([
                         'errors' => [
@@ -554,7 +554,7 @@ trait PlaceNewOrder
                 'user_id' => (int) $order->user_id,
             ], 200);
         } catch (\Exception $exception) {
-             
+
             info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             DB::rollBack();
             return response()->json([$exception], 403);
