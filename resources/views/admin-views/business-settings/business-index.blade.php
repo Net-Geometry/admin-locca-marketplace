@@ -860,7 +860,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            
+
                                 <div class="col-sm-6 col-lg-4">
                                     @php($vnv = \App\Models\BusinessSetting::where('key', 'toggle_veg_non_veg')->first())
                                     @php($vnv = $vnv ? $vnv->value : 0)
@@ -1302,37 +1302,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="__bg-F8F9FC-card p-0 mt-4">
-                                <div class="border-bottom p-3">
-                                    <h4 class="card-title m-0 text--title">{{translate('Shipping Charge')}}</h4>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row g-3 align-items-end">
-                                        <div class="col-sm-6 col-lg-4">
-                                            @php($minimum_shipping_charge = \App\Models\BusinessSetting::where('key', 'minimum_shipping_charge')->first())
-                                            <div class="form-group mb-0">
-                                                <label class="form-label text-capitalize"
-                                                    for="minimum_shipping_charge">{{ translate('messages.minimum_shipping_charge') }}</label>
-                                                <input type="number" name="minimum_shipping_charge" class="form-control"
-                                                    id="minimum_shipping_charge" min="0" step=".01"  placeholder="{{ translate('messages.Ex:_10') }}"
-                                                    value="{{ $minimum_shipping_charge ? $minimum_shipping_charge->value : 0 }}"
-                                                    required>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-lg-4">
-                                            @php($per_km_shipping_charge = \App\Models\BusinessSetting::where('key', 'per_km_shipping_charge')->first())
-                                            <div class="form-group mb-0">
-                                                <label class="form-label text-capitalize"
-                                                    for="per_km_shipping_charge">{{ translate('messages.per_km_shipping_charge') }}</label>
-                                                <input type="number" name="per_km_shipping_charge" class="form-control"
-                                                    id="per_km_shipping_charge" min="0" step=".01"  placeholder="{{ translate('messages.Ex:_100') }}"
-                                                    value="{{ $per_km_shipping_charge ? $per_km_shipping_charge->value : 0 }}"
-                                                    required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    
 
                             <div class="__bg-F8F9FC-card p-0 mt-4">
                                 <div class="border-bottom p-3">
