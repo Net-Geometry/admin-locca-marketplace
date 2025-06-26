@@ -377,27 +377,38 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-xxl-3">
-                                    <div class="bg--secondary rounded p-20 h-100 __custom-upload-img">
-                                        <div class="mb-20">
-                                            <h4 class="mb-1 fz--14px">{{translate('TIN Certificate')}}</h4>
-                                            <p class="fz-12px mb-0">{{translate('pdf, doc, jpg. File size : max 2 MB')}}</p>
+                                    <div class="bg--secondary rounded p-20 h-100 single-document-uploaderwrap">
+                                        <div class="d-flex align-items-center gap-1 justify-content-between mb-20">
+                                            <div>
+                                                <h4 class="mb-1 fz--14px">{{translate('TIN Certificate')}}</h4>
+                                                <p class="fz-12px mb-0">{{translate('pdf, doc, jpg. File size : max 2 MB')}}</p>
+                                            </div>
+                                            <div class="d-flex gap-3 align-items-center">
+                                                <button type="button" id="doc_edit_btn" class="w-30px h-30 rounded d-flex align-items-center justify-content-center btn--primary btn px-3 icon-btn">
+                                                    <i class="tio-edit"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                        <label class="image--border cursor-pointer w-100 h-100px max-width-300px">
-                                            <img class="h-165 aspect-ratio-1 rounded-10 display-none" id="logoImageViewer2"
-                                                 src="{{ $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png') }}"
-                                                 alt=""/>
-
-                                            <div class="upload-file__textbox p-2 h-100">
-                                                <img width="34" height="34" src="{{ asset('public/assets/admin/img/upload-cloud.png') }}" alt="" class="svg">
-                                                <span class="mt-2 text-center fw-normal fs-12">
-                                                    {{ translate('Select a file or') }} <span class="fw-medium title-clr">{{ translate('Drag & Drop') }}</span> {{ translate('here') }}
-                                                </span>
+                                        <div>
+                                            <div id="file-assets"
+                                                 data-picture-icon="{{ asset('public/assets/admin/img/picture.svg') }}"
+                                                 data-document-icon="{{ asset('public/assets/admin/img/document.svg') }}"
+                                                 data-blank-thumbnail="{{ asset('public/assets/admin/img/picture.svg') }}">
                                             </div>
-
-                                            <div class="icon-file-group outside">
-                                                <input type="file" name="tin_certificate_image" id="tin_certificate_image" class="custom-file-input" accept=".webp,.pdf,.doc,.jpg,.png,.jpeg|image/*">
+                                            <!-- Upload box -->
+                                            <div class="d-flex justify-content-center" id="pdf-container">
+                                                <div class="document-upload-wrapper" id="doc-upload-wrapper">
+                                                    <input type="file" name="tin_certificate" class="document_input" accept=".doc, .pdf, .jpg, .png, .jpeg">
+                                                    <div class="textbox">
+                                                        <img width="40" height="40" class="svg"
+                                                             src="{{ asset('public/assets/admin/img/doc-uploaded.png') }}"
+                                                             alt="">
+                                                        <p class="fs-12 mb-0">Select a file or <span class="font-semibold">Drag & Drop</span>
+                                                            here</p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -417,6 +428,10 @@
 @endsection
 
 @push('script_2')
+
+    <script src="{{ asset('public/assets/admin/js/file-preview/pdf.min.js') }}"></script>
+    <script src="{{ asset('public/assets/admin/js/file-preview/pdf-worker.min.js') }}"></script>
+    <script src="{{ asset('public/assets/admin/js/file-preview/add-multiple-document-upload.js') }}"></script>
 
     <script src="{{asset('public/assets/admin/js/spartan-multi-image-picker.js')}}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
@@ -701,54 +716,54 @@
     })
 
     // ---- file upload with textbox
-    $(document).ready(function () {
-        function previewFile(inputSelector, previewImgSelector, textBoxSelector, previewContainerSelector = null) {
-            const input = $(inputSelector);
-            const imagePreview = $(previewImgSelector);
-            const textBox = $(textBoxSelector);
-            const container = previewContainerSelector ? $(previewContainerSelector) : null;
+    {{--$(document).ready(function () {--}}
+    {{--    function previewFile(inputSelector, previewImgSelector, textBoxSelector, previewContainerSelector = null) {--}}
+    {{--        const input = $(inputSelector);--}}
+    {{--        const imagePreview = $(previewImgSelector);--}}
+    {{--        const textBox = $(textBoxSelector);--}}
+    {{--        const container = previewContainerSelector ? $(previewContainerSelector) : null;--}}
 
-            input.on('change', function () {
-                const file = this.files[0];
-                if (!file) return;
+    {{--        input.on('change', function () {--}}
+    {{--            const file = this.files[0];--}}
+    {{--            if (!file) return;--}}
 
-                const fileType = file.type;
-                const fileName = file.name;
-                const fileExt = fileName.split('.').pop().toLowerCase();
-                const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    {{--            const fileType = file.type;--}}
+    {{--            const fileName = file.name;--}}
+    {{--            const fileExt = fileName.split('.').pop().toLowerCase();--}}
+    {{--            const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];--}}
 
-                if (validImageTypes.includes(fileType)) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        imagePreview.attr('src', e.target.result).removeClass('display-none');
-                        textBox.hide();
-                        if (container) container.find('.uploaded-file-info').remove();
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    // Show placeholder icon
-                    const iconPath = getFileIconByExt(fileExt);
-                    imagePreview.attr('src', iconPath).removeClass('display-none');
-                    textBox.hide();
+    {{--            if (validImageTypes.includes(fileType)) {--}}
+    {{--                const reader = new FileReader();--}}
+    {{--                reader.onload = function (e) {--}}
+    {{--                    imagePreview.attr('src', e.target.result).removeClass('display-none');--}}
+    {{--                    textBox.hide();--}}
+    {{--                    if (container) container.find('.uploaded-file-info').remove();--}}
+    {{--                };--}}
+    {{--                reader.readAsDataURL(file);--}}
+    {{--            } else {--}}
+    {{--                // Show placeholder icon--}}
+    {{--                const iconPath = getFileIconByExt(fileExt);--}}
+    {{--                imagePreview.attr('src', iconPath).removeClass('display-none');--}}
+    {{--                textBox.hide();--}}
 
-                    if (container) {
-                        container.find('.uploaded-file-info').remove(); // Remove old file info
-                        container.append(`<div class="uploaded-file-info mt-2 small text-muted">${fileName}</div>`);
-                    }
-                }
-            });
+    {{--                if (container) {--}}
+    {{--                    container.find('.uploaded-file-info').remove(); // Remove old file info--}}
+    {{--                    container.append(`<div class="uploaded-file-info mt-2 small text-muted">${fileName}</div>`);--}}
+    {{--                }--}}
+    {{--            }--}}
+    {{--        });--}}
 
-            function getFileIconByExt(ext) {
-                switch (ext) {
-                    case 'pdf': return '{{ asset("public/assets/admin/img/pdf-icon.png") }}';
-                    case 'doc':
-                    case 'docx': return '{{ asset("public/assets/admin/img/doc-icon.png") }}';
-                    default: return '{{ asset("public/assets/admin/img/file-icon.png") }}';
-                }
-            }
-        }
+    {{--        function getFileIconByExt(ext) {--}}
+    {{--            switch (ext) {--}}
+    {{--                case 'pdf': return '{{ asset("public/assets/admin/img/pdf-icon.png") }}';--}}
+    {{--                case 'doc':--}}
+    {{--                case 'docx': return '{{ asset("public/assets/admin/img/doc-icon.png") }}';--}}
+    {{--                default: return '{{ asset("public/assets/admin/img/file-icon.png") }}';--}}
+    {{--            }--}}
+    {{--        }--}}
+    {{--    }--}}
 
-        previewFile('#tin_certificate_image', '#logoImageViewer2', '.upload-file__textbox', '.image--border' );
-    });
+    {{--    previewFile('#tin_certificate_image', '#logoImageViewer2', '.upload-file__textbox', '.image--border' );--}}
+    {{--});--}}
 </script>
 @endpush

@@ -7775,4 +7775,9 @@ Smartly or Earn. ',
   'Drag & Drop' => 'Drag & Drop',
   'The tin expire date field is required.' => 'The tin expire date field is required.',
   'Parcel_Tax_Reports' => 'Parcel Tax Reports',
+  'minimum_delivery_time_should_be_more_than_10_min' => 'Minimum delivery time should be more than 10 min',
+  'Minimum delivery time should be more than 10 min' => 'Minimum delivery time should be more than 10 min',
+  'Taxpayer
+                                            Identification Number(TIN)' => 'Taxpayer
+                                            Identification Number(TIN)',
 );
