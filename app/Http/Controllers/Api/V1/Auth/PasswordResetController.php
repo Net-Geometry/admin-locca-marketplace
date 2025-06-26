@@ -45,12 +45,8 @@ class PasswordResetController extends Controller
         })->first();
 
 
-        $login_settings = array_column(BusinessSetting::whereIn('key',['email_verification_status','phone_verification_status'
-        ])->get(['key','value'])->toArray(), 'value', 'key');
-
-
         if (isset($customer)) {
-            if($firebase_otp_verification && isset($login_settings['phone_verification_status']) && $login_settings['phone_verification_status'] == 1)
+            if($firebase_otp_verification)
             {
                 return response()->json(['message' => translate('messages.otp_sent_successfull')], 200);
             }
@@ -91,7 +87,7 @@ class PasswordResetController extends Controller
             }
 
             $is_sms_active= Setting::whereJsonContains('live_values->status','1')->where('settings_type', 'sms_config')->exists();
-            if($is_sms_active && isset($login_settings['phone_verification_status']) && $login_settings['phone_verification_status'] == 1){
+            if($is_sms_active ){
                 $response =null;
                 $published_status =0;
                 $payment_published_status = config('get_payment_publish_status');
@@ -114,7 +110,7 @@ class PasswordResetController extends Controller
                     ]], 403);
                 }
             }
-            elseif(config('mail.status') && isset($login_settings['email_verification_status']) && $login_settings['email_verification_status'] == 1){
+            elseif(config('mail.status')){
                 try {
                     $mailResponse=null;
                         if (Helpers::get_mail_status('forget_password_mail_status_user') == '1' && $customer['email']) {

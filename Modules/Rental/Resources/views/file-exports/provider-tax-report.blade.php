@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12 text-center ">
-        <h1>{{ translate('Vendor_Tax_Report') }}</h1>
+        <h1>{{ translate('Provider_Tax_Report') }}</h1>
     </div>
     <div class="col-lg-12">
 
@@ -44,8 +44,8 @@
                 </tr>
                 <tr>
                     <th class="border-0">{{ translate('sl') }}</th>
-                    <th class="border-0">{{ translate('messages.order_id') }}</th>
-                    <th class="border-0">{{ translate('messages.order_amount') }}</th>
+                    <th class="border-0">{{ translate('messages.Trip_id') }}</th>
+                    <th class="border-0">{{ translate('messages.trip_amount') }}</th>
                     <th class="border-0">{{ translate('messages.tax_type') }}</th>
                     <th class="border-0">{{ translate('messages.tax_amount') }}</th>
             </thead>
@@ -59,10 +59,10 @@
                             #{{ $order->id }}
                         </td>
                         <td>
-                            {{ \App\CentralLogics\Helpers::format_currency($order->order_amount) }}
+                            {{ \App\CentralLogics\Helpers::format_currency($order->trip_amount) }}
                         </td>
                         <td>
-                            {{ translate($order?->orderTaxes?->first()?->tax_type ?? 'order_wise') }}
+                            {{ translate('messages.trip_wise') }}
                         </td>
                         <td>
                             <div class="d-flex flex-column gap-1">

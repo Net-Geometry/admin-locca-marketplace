@@ -1,4 +1,4 @@
-<div class="row">
+resources/views/file-exports/vendor-wise-tax-report.blade.php<div class="row">
     <div class="col-lg-12 text-center "><h1 >{{ translate('messages.trip_report') }}</h1></div>
     <div class="col-lg-12">
 

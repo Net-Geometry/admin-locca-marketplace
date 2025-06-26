@@ -466,6 +466,13 @@
                                 <span class="text-truncate">{{ translate('messages.trip_report') }}</span>
                             </a>
                         </li>
+                           {{-- <li class="navbar-vertical-aside-has-menu @yield('vendor_tax_report')">
+                        <a class="nav-link " href="{{ route('vendor.report.trip-tax-report') }}"
+                           title="{{ translate('messages.Tax_Report') }}">
+                            <span class="tio-saving nav-icon"></span>
+                            <span class="text-truncate">{{ translate('messages.Tax_Report') }}</span>
+                        </a>
+                    </li> --}}
                     @endif
 
                     @if (\App\CentralLogics\Helpers::employee_module_permission_check('employee'))
