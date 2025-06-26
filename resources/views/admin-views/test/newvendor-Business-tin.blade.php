@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="col-md-4 col-xxl-3">
-                    <div class="bg--secondary rounded p-20 h-100 __custom-upload-img">
+                    <div class="bg--secondary rounded p-20 __custom-upload-img">
                         <div class="mb-20">
                             <h4 class="mb-1 fz--14px">TIN Certificate</h4>
                             <p class="fz-12px mb-0">pdf, doc, jpg. File size : max 2 MB</p>
