@@ -165,7 +165,7 @@ class VendorController extends Controller
         $store->pickup_zone_id = json_encode($request['pickup_zone_id']?? []) ;
         $store->tin = $request->tin;
         $store->tin_expire_date = $request->tin_expire_date;
-        $extension = $request->file('tin_certificate_image')->getClientOriginalExtension();
+        $extension = $request->has('tin_certificate_image') ? $request->file('tin_certificate_image')->getClientOriginalExtension() : 'png';
         $store->tin_certificate_image = Helpers::upload('store/', $extension, $request->file('tin_certificate_image'));
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->status = 0;

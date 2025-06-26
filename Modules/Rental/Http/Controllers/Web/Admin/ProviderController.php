@@ -1094,7 +1094,7 @@ class ProviderController extends Controller
      */
     private function createStore(Request $request, Vendor $vendor): mixed
     {
-        $extension = $request->file('tin_certificate_image')->getClientOriginalExtension();
+        $extension = $request->has('tin_certificate_image') ? $request->file('tin_certificate_image')->getClientOriginalExtension() : 'png';
         return $this->store->create([
             'name' => $request->name[array_search('default', $request->lang)],
             'phone' => $request->phone,
@@ -1124,7 +1124,7 @@ class ProviderController extends Controller
      */
     private function updateStore(Request $request, Store $store): mixed
     {
-        $extension = $request->file('tin_certificate_image')->getClientOriginalExtension();
+        $extension = $request->has('tin_certificate_image') ? $request->file('tin_certificate_image')->getClientOriginalExtension() : 'png';
         return $store->update([
             'name' => $request->name[array_search('default', $request->lang)],
             'phone' => $request->phone,
