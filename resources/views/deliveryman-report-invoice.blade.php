@@ -23,15 +23,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            -webkit-print-color-adjust: exact !important; 
-            print-color-adjust: exact !important; 
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         h1,h2,h3,h4,h5,h6 {
             color: #303030;
             margin: 0;
         }
         span{
-           color: #303030B2; 
+           color: #303030B2;
            font-size: 9px;
            line-height: 12px;
            display: inline-block;
@@ -129,9 +129,9 @@
         .invoice-space{
             padding: 20px 20px 0;
         }
-        .logo-header{            
+        .logo-header{
             margin-bottom: 15px;
-        }        
+        }
         .logo-header h3{
             font-size: 20px;
         }
@@ -143,7 +143,7 @@
         .header-information{
             border-bottom: 1px dashed #E6E7EC;
             border-top: 1px dashed #E6E7EC;
-            padding: 15px 0;          
+            padding: 15px 0;
         }
         .header-information .header-info-item{
             margin-bottom: 5px;
@@ -194,14 +194,14 @@
 <body>
 
 <div class="invoice-body">
-    <div class="invoice-space">        
+    <div class="invoice-space">
         <table class=" table w-100">
             <tr>
                 <td>
-                    <h3>{{translate('Earning Statement')}}</h3>                    
+                    <h3>{{translate('Earning Statement')}}</h3>
                 </td>
                 <td class="text-right">
-                    <img src="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','favicon')}}" alt="{{translate('logo')}}" class="logo">                
+                    <img src="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','favicon')}}" alt="{{translate('logo')}}" class="logo">
                 </td>
             </tr>
         </table>
@@ -227,7 +227,18 @@
                         </div>
                         <div class="header-info-item">
                             <span class="name">{{translate('Statement Period')}} :</span>
-                            <span class="datas">{{ $startDate }} @if($endDate) {{translate('to')}} @endif {{ $endDate }}</span>
+                            <span class="datas">
+                                @if ($startDate && $endDate)
+                                    {{ $startDate }} {{ translate('to') }} {{ $endDate }}
+                                @elseif ($startDate)
+                                    {{ $startDate }}
+                                @elseif ($endDate)
+                                    {{ $endDate }}
+                                @else
+                                    {{ translate('All Time') }}
+                                @endif
+                            </span>
+
                         </div>
                     </div>
                 </td>
@@ -248,7 +259,7 @@
                         </div>
                         <div class="header-info-item">
                             <span class="name">{{translate('Admin Incentive')}} :</span>
-                            <span class="datas">8745.00$</span>
+                            <span class="datas">{{ \App\CentralLogics\Helpers::format_currency($earnings->sum('delivery_fee_comission'))}}</span>
                         </div>
                     </div>
                 </td>
