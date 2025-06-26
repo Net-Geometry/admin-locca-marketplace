@@ -2,21 +2,21 @@
 
 @section('title', translate('messages.Setup Tax Calculation'))
 
- @section('taxmodule')
+@section('taxmodule')
     active
-    @endsection
-    @section('taxmoduleDisplay')
+@endsection
+@section('taxmoduleDisplay')
     block
-    @endsection
-    @section('tax_system_setup')
+@endsection
+@section('tax_system_setup')
     show active
-    @endsection
+@endsection
 
 
 
 
 @section('content')
-@php( $tax_payer = $tax_payer ?? 'vendor')
+    @php($tax_payer = $tax_payer ?? 'vendor')
 
 
     <div class="content container-fluid">
@@ -26,15 +26,21 @@
                     <!-- Nav -->
                     <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
                         <li class="nav-item">
-                            <a class="nav-link  {{ Request::is('taxvat/system-taxvat') && request('type') == 'vendor' ?'active':'' }}" href="{{ route('taxvat.systemTaxvat',['type' => 'vendor']) }}"   aria-disabled="true">{{translate('Order Module')}}</a>
+                            <a class="nav-link  {{ Request::is('taxvat/system-taxvat') && request('type') == 'vendor' ? 'active' : '' }}"
+                                href="{{ route('taxvat.systemTaxvat', ['type' => 'vendor']) }}"
+                                aria-disabled="true">{{ translate('Order Module') }}</a>
                         </li>
                         @if (addon_published_status('Rental'))
-                        <li class="nav-item">
-                            <a class="nav-link {{ Request::is('taxvat/system-taxvat') && request('type') == 'rental' ?'active':'' }}" href="{{route('taxvat.systemTaxvat',['type' => 'rental'])}}"  aria-disabled="true">{{translate('Rental Module')}}</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::is('taxvat/system-taxvat') && request('type') == 'rental' ? 'active' : '' }}"
+                                    href="{{ route('taxvat.systemTaxvat', ['type' => 'rental']) }}"
+                                    aria-disabled="true">{{ translate('Rental Module') }}</a>
+                            </li>
                         @endif
                         <li class="nav-item">
-                            <a class="nav-link {{ Request::is('taxvat/system-taxvat') && request('type') == 'parcel' ?'active':'' }}" href="{{route('taxvat.systemTaxvat',['type' => 'parcel'])}}"  aria-disabled="true">{{translate('Parcel Module')}}</a>
+                            <a class="nav-link {{ Request::is('taxvat/system-taxvat') && request('type') == 'parcel' ? 'active' : '' }}"
+                                href="{{ route('taxvat.systemTaxvat', ['type' => 'parcel']) }}"
+                                aria-disabled="true">{{ translate('Parcel Module') }}</a>
                         </li>
                     </ul>
                     <!-- End Nav -->
@@ -43,7 +49,8 @@
             <div class="card p-20 mb-20">
                 <div class="row g-md-3 g-2 justify-content-between">
                     <div class="col-md-8">
-                        <h3 class="mb-1 text-capitalize">{{translate('messages.Allow Tax Calculation For'). ' ' .translate($tax_payer)  }} ?</h3>
+                        <h3 class="mb-1 text-capitalize">
+                            {{ translate('messages.Allow Tax Calculation For') . ' ' . translate($tax_payer) }} ?</h3>
                         <p class="fz-12 mb-0">{{ translate('messages.To active tax calculation turn on the status.') }}</p>
                     </div>
                     <div class="col-md-4 col-xxl-3">
@@ -55,7 +62,7 @@
                                 data-off_title="{{ translate('messages.Turn Off The Status?') }}"
                                 data-on_message= "{{ translate('Are you sure, do you want to turn ON the VAT status from your system. It will  effect on tax calculation & report') }}"
                                 data-off_message= "{{ translate('Are you sure, do you want to turn off the VAT status from your system. It will  effect on tax calculation & report') }}"
-                                data-url="{{ route('taxvat.systemTaxVatVendorStatus', ['id' => $systemTaxVat?->id, 'prescription_system_id' => $systemTaxVatForPrescription?->id, 'country_code' =>$country_code ?? ($systemTaxVat?->country_code ?? null) , 'type' => $tax_payer ]) }}"
+                                data-url="{{ route('taxvat.systemTaxVatVendorStatus', ['id' => $systemTaxVat?->id, 'prescription_system_id' => $systemTaxVatForPrescription?->id, 'country_code' => $country_code ?? ($systemTaxVat?->country_code ?? null), 'type' => $tax_payer]) }}"
                                 for="vendor_tax_status">
                                 <input type="checkbox" class="toggle-switch-input"
                                     {{ $systemTaxVat?->is_active == 1 ? 'checked' : '' }} id="vendor_tax_status">
@@ -78,15 +85,14 @@
                     <div class="card p-20">
                         <div class="bg--secondary p-15 rounded mb-20">
                             <div class="mb-20">
-                                @if ( $tax_payer == 'rental_provider')
-                                @php($productType = translate('Trip_Amount'))
-
-                                @elseif($tax_payer == 'parcel' )
-                                @php($productType = translate('Parcel_Amount'))
+                                @if ($tax_payer == 'rental_provider')
+                                    @php($productType = translate('Trip_Amount'))
+                                @elseif($tax_payer == 'parcel')
+                                    @php($productType = translate('Parcel_Amount'))
                                 @else
-                                @php($productType = translate('Product Price'))
+                                    @php($productType = translate('Product Price'))
                                 @endif
-                                <h4 class="mb-1">{{ translate('Tax calculation based on').' '.$productType }} </h4>
+                                <h4 class="mb-1">{{ translate('Tax calculation based on') . ' ' . $productType }} </h4>
                             </div>
                             <div class="bg-white border rounded p-15">
                                 <div class="row g-lg-4 g-md-3 g-2">
@@ -96,7 +102,8 @@
                                                 value="include"
                                                 {{ !$systemTaxVat || $systemTaxVat?->is_included == 1 ? 'checked' : '' }}>
                                             <label for="include1" class="fz-14 mb-0">
-                                                <h5 class="mb-1">{{ translate('Calculate Tax Include') }} {{ $productType }}
+                                                <h5 class="mb-1">{{ translate('Calculate Tax Include') }}
+                                                    {{ $productType }}
                                                 </h5>
                                                 <p class="mb-0 fz-11 fw-normal">
                                                     {{ translate('Calculate Tax Included. By selecting this option you will need to setup same tax rate for all types of income source.') }}
@@ -110,7 +117,8 @@
                                                 {{ $systemTaxVat && $systemTaxVat?->is_included == 0 ? 'checked' : '' }}
                                                 value="exclude">
                                             <label for="include2" class="fz-14 mb-0">
-                                                <h5 class="mb-1">{{ translate('Calculate Tax Exclude') }} {{ $productType }}
+                                                <h5 class="mb-1">{{ translate('Calculate Tax Exclude') }}
+                                                    {{ $productType }}
                                                 </h5>
                                                 <p class="mb-0 fz-11 fw-normal">
                                                     {{ translate('By selecting this option you will need to setup individual tax rate for different types of income source.') }}
@@ -164,19 +172,20 @@
                                                     name="tax_type"
                                                     data-current_seclected="{{ $systemTaxVat?->tax_type }}">
 
-                                                    @php($tax_calculate_on = $tax_payer== 'vendor' ? 'tax_calculate_on' : 'tax_calculate_on_'.$tax_payer)
+                                                    @php($tax_calculate_on = $tax_payer == 'vendor' ? 'tax_calculate_on' : 'tax_calculate_on_' . $tax_payer)
 
-                                                    @foreach (data_get($systemData, $tax_calculate_on,['order_wise', 'product_wise', 'category_wise'])   as $item)
+                                                    @foreach (data_get($systemData, $tax_calculate_on, ['order_wise', 'product_wise', 'category_wise']) as $item)
                                                         <option {{ $systemTaxVat?->tax_type == $item ? 'selected' : '' }}
                                                             value="{{ $item }}"> {{ translate($item) }} </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             <div id="tax_rate_div"
-                                                class="{{!$systemTaxVat || in_array($systemTaxVat?->tax_type,['order_wise' ,'trip_wise']) ? '' : 'd-none' }}">
+                                                class="{{ !$systemTaxVat || in_array($systemTaxVat?->tax_type, ['order_wise', 'trip_wise']) ? '' : 'd-none' }}">
                                                 <span
                                                     class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
-                                                <select {{ in_array($systemTaxVat?->tax_type,['order_wise' ,'trip_wise']) ? 'selected' : '' }}
+                                                <select
+                                                    {{ in_array($systemTaxVat?->tax_type, ['order_wise', 'trip_wise']) ? 'selected' : '' }}
                                                     name="tax_ids[]" id="tax__rate"
                                                     class="form-control js-select2-custom" multiple="multiple"
                                                     placeholder="Type & Select Tax Rate">
@@ -251,13 +260,16 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="bg--secondary rounded p-20 mb-20">
-                                <div class="row g-lg-4 g-md-3 g-2">
-                                    <div class="col-md-6">
-                                        <h3 class="mb-1">{{ translate('Uploaded Prescription Order') }}</h3>
-                                        <p class="mb-0 fz-12">{{ translate('Here you can setup your tax type & tax rate for the tax type.') }}</p>
-                                        <div class="info-notes-bg px-2 py-2 rounded fz-11  gap-2 align-items-center d-flex ">
+                            @if (request('type') == 'vendor' || !request('type'))
+                                <div class="bg--secondary rounded p-20 mb-20">
+                                    <div class="row g-lg-4 g-md-3 g-2">
+                                        <div class="col-md-6">
+                                            <h3 class="mb-1">{{ translate('Uploaded Prescription Order') }}</h3>
+                                            <p class="mb-0 fz-12">
+                                                {{ translate('Here you can setup your tax type & tax rate for the tax type.') }}
+                                            </p>
+                                            <div
+                                                class="info-notes-bg px-2 py-2 rounded fz-11  gap-2 align-items-center d-flex ">
                                                 <svg width="20" height="21" viewBox="0 0 20 21" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <g clip-path="url(#clip0_13899_104013)">
@@ -297,57 +309,63 @@
                                                     </defs>
                                                 </svg>
 
-                                                <span  >
+                                                <span>
                                                     {{ translate('Only for Pharmacy Module uploaded prescription orders') }}
 
                                                 </span>
                                             </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="d-flex flex-column gap-lg-4 gap-3">
-                                             <input type="hidden" id="prescription_system_tax_id" name="prescription_system_tax_id" value="{{ $systemTaxVatForPrescription?->id }}">
-                                            <div>
-                                                <span
-                                                    class="mb-2 d-block title-clr fw-normal">{{ translate('messages.Select Tax Type') }}</span>
-                                                <select
-                                                    class="custom-select custom-select-color border rounded w-100"
-                                                    name="prescription_tax_type"
-                                                    data-current_seclected="{{ $systemTaxVatForPrescription?->tax_type }}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="d-flex flex-column gap-lg-4 gap-3">
+                                                <input type="hidden" id="prescription_system_tax_id"
+                                                    name="prescription_system_tax_id"
+                                                    value="{{ $systemTaxVatForPrescription?->id }}">
+                                                <div>
+                                                    <span
+                                                        class="mb-2 d-block title-clr fw-normal">{{ translate('messages.Select Tax Type') }}</span>
+                                                    <select class="custom-select custom-select-color border rounded w-100"
+                                                        name="prescription_tax_type"
+                                                        data-current_seclected="{{ $systemTaxVatForPrescription?->tax_type }}">
 
-                                                    @php($tax_calculate_on = $systemTaxVatForPrescription?->tax_payer== 'vendor' ? 'tax_calculate_on' : 'tax_calculate_on_'.$systemTaxVatForPrescription?->tax_payer)
+                                                        @php($tax_calculate_on = $systemTaxVatForPrescription?->tax_payer == 'vendor' ? 'tax_calculate_on' : 'tax_calculate_on_' . $systemTaxVatForPrescription?->tax_payer)
 
-                                                    @foreach (data_get($systemData, $tax_calculate_on,['order_wise'])   as $item)
-                                                        <option {{ $systemTaxVatForPrescription?->tax_type == $item ? 'selected' : '' }}
-                                                            value="{{ $item }}"> {{ translate($item) }} </option>
-                                                    @endforeach
-                                                </select>
+                                                        @foreach (data_get($systemData, $tax_calculate_on, ['order_wise']) as $item)
+                                                            <option
+                                                                {{ $systemTaxVatForPrescription?->tax_type == $item ? 'selected' : '' }}
+                                                                value="{{ $item }}"> {{ translate($item) }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div id=""
+                                                    class="{{ !$systemTaxVatForPrescription || in_array($systemTaxVatForPrescription?->tax_type, ['order_wise', 'trip_wise']) ? '' : 'd-none' }}">
+                                                    <span
+                                                        class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
+                                                    <select
+                                                        {{ in_array($systemTaxVatForPrescription?->tax_type, ['order_wise', 'trip_wise']) ? 'selected' : '' }}
+                                                        name="tax_ids_for_prescription[]" id="tax__rate1"
+                                                        class="form-control js-select2-custom" multiple="multiple"
+                                                        placeholder="Type & Select Tax Rate">
+                                                        @foreach ($taxVats as $taxVat)
+                                                            <option
+                                                                {{ in_array($taxVat->id, $systemTaxVatForPrescription?->tax_ids ?? []) ? 'selected' : '' }}
+                                                                value="{{ $taxVat->id }}"> {{ $taxVat->name }}
+                                                                ({{ $taxVat->tax_rate }}%)
+                                                            </option>
+                                                        @endforeach
+
+                                                    </select>
+                                                </div>
+
                                             </div>
-                                            <div id=""  class="{{!$systemTaxVatForPrescription || in_array($systemTaxVatForPrescription?->tax_type,['order_wise' ,'trip_wise']) ? '' : 'd-none' }}">
-                                                <span
-                                                    class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
-                                                <select {{ in_array($systemTaxVatForPrescription?->tax_type,['order_wise' ,'trip_wise']) ? 'selected' : '' }}
-                                                    name="tax_ids_for_prescription[]" id="tax__rate1"
-                                                    class="form-control js-select2-custom" multiple="multiple"
-                                                    placeholder="Type & Select Tax Rate">
-                                                    @foreach ($taxVats as $taxVat)
-                                                        <option
-                                                            {{ in_array($taxVat->id, $systemTaxVatForPrescription?->tax_ids ?? []) ? 'selected' : '' }}
-                                                            value="{{ $taxVat->id }}"> {{ $taxVat->name }}
-                                                            ({{ $taxVat->tax_rate }}%)
-                                                        </option>
-                                                    @endforeach
-
-                                                </select>
-                                            </div>
-
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
 
-                             @php($additional_tax= $tax_payer=='rental_provider' ? 'additional_tax_rental_provider' : 'additional_tax')
+                               @php($additional_tax = $tax_payer == 'vendor' ? 'additional_tax' : 'additional_tax_' . $tax_payer)
 
-                            @if ( data_get($systemData,$additional_tax,null) )
+                            @if (data_get($systemData, $additional_tax, null))
 
                                 <div class="bg--secondary rounded p-20">
                                     <div class="row g-lg-4 g-md-3 g-2">
@@ -439,4 +457,3 @@
     <script src="{{ asset('Modules/TaxModule/public/assets/js/admin/toastr_notification.js') }}"></script>
     <script src="{{ asset('Modules/TaxModule/public/assets/js/admin/system_taxvat.js') }}"></script>
 @endpush
-

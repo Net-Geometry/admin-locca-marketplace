@@ -50,7 +50,8 @@ class SystemTaxVatSetupController extends Controller
         })
             ->where('tax_payer', $tax_payer)
             ->first();
-        if ($this->getProjectName() == '6ammart') {
+
+        if ($this->getProjectName() == '6ammart' && $systemTaxVat?->tax_payer == 'vendor') {
             $systemTaxVatForPrescription = $this->systemTaxVat->with('additionalData')->when($this->getCountryType() == 'single', function ($query) {
                 $query->where('is_default', true);
             }, function ($query) use ($request) {
@@ -102,7 +103,7 @@ class SystemTaxVatSetupController extends Controller
         }
         $systemTaxVat->is_included = $tax_status == 'include' ? 1 : 0;
         $systemTaxVat->save();
-        foreach ($this->getPorjectWiseSystemData($systemTaxVat->tax_payer == 'rental_provider' ? 'additional_tax_rental_provider' : 'additional_tax') ?? [] as $item) {
+        foreach ($this->getPorjectWiseSystemData($systemTaxVat->tax_payer == 'vendor' ? 'additional_tax' : 'additional_tax_'.$systemTaxVat->tax_payer) ?? [] as $item) {
             $taxOnAdditionalData = $this->taxOnAdditionalData->where('system_tax_setup_id', $systemTaxVat->id)->where('name', $item)->firstOrNew();
             $taxOnAdditionalData->name = $item;
             $taxOnAdditionalData->system_tax_setup_id = $systemTaxVat->id;
