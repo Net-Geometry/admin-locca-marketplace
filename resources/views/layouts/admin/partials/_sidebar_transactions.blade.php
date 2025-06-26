@@ -181,6 +181,12 @@
                         <span class="text-truncate text-capitalize">{{ translate('Vendor_Tax_Report') }}</span>
                     </a>
                 </li>
+                <li class="navbar-vertical-aside-has-menu @yield('parcel_tax_report')">
+                    <a class="nav-link " href="{{ route('admin.transactions.report.parcel-wise-taxes') }}" title="{{ translate('Parcel_Tax_Report') }}">
+                        <span class="tio-american-express nav-icon"></span>
+                        <span class="text-truncate text-capitalize">{{ translate('Parcel_Tax_Report') }}</span>
+                    </a>
+                </li>
                 @endif
                     @if (addon_published_status('Rental'))
                         <!-- Rental Report -->

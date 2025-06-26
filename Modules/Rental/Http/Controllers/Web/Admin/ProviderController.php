@@ -1094,6 +1094,7 @@ class ProviderController extends Controller
      */
     private function createStore(Request $request, Vendor $vendor): mixed
     {
+        $extension = $request->file('tin_certificate_image')->getClientOriginalExtension();
         return $this->store->create([
             'name' => $request->name[array_search('default', $request->lang)],
             'phone' => $request->phone,
@@ -1107,7 +1108,9 @@ class ProviderController extends Controller
             'zone_id' => $request->zone_id,
             'module_id' => config('module')['current_module_id'],
             'pickup_zone_id' => json_encode($request->pickup_zones ?? []),
-            'tax' => $request->tax,
+            'tin' => $request->tin,
+            'tin_expire_date' => $request->tin_expire_date,
+            'tin_certificate_image' => Helpers::upload('store/', $extension, $request->file('tin_certificate_image')),
             'delivery_time' => "{$request->minimum_delivery_time}-{$request->maximum_delivery_time} {$request->delivery_time_type}",
             'status' => 1,
             'store_business_model' => 'none',
@@ -1121,6 +1124,7 @@ class ProviderController extends Controller
      */
     private function updateStore(Request $request, Store $store): mixed
     {
+        $extension = $request->file('tin_certificate_image')->getClientOriginalExtension();
         return $store->update([
             'name' => $request->name[array_search('default', $request->lang)],
             'phone' => $request->phone,
@@ -1133,7 +1137,9 @@ class ProviderController extends Controller
             'zone_id' => $request->zone_id,
             'module_id' => config('module')['current_module_id'],
             'pickup_zone_id' => json_encode($request->pickup_zones ?? []),
-            'tax' => $request->tax,
+            'tin' => $request->tin,
+            'tin_expire_date' => $request->tin_expire_date,
+            'tin_certificate_image' => $request->has('tin_certificate_image') ? Helpers::update('store/', $store->tin_certificate_image, $extension, $request->file('tin_certificate_image')) : $store->tin_certificate_image,
             'delivery_time' => "{$request->minimum_delivery_time}-{$request->maximum_delivery_time} {$request->delivery_time_type}",
             'status' => 1,
             'store_business_model' => 'none',

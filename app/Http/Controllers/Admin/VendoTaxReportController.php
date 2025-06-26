@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ParcelWiseTaxExport;
 use App\Exports\VendorTaxExport;
 use App\Exports\VendorWiseTaxExport;
 use App\Http\Controllers\Controller;
@@ -15,7 +16,10 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class VendoTaxReportController extends Controller
 {
-
+    public function __construct()
+    {
+        DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+    }
     public function vendorWiseTaxes(Request $request)
     {
 
@@ -53,6 +57,65 @@ class VendoTaxReportController extends Controller
     }
 
 
+    public function parcelWiseTaxes(Request $request)
+    {
+        $dateRange = $request->dates ?? now()->subDays(6)->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
+
+        list($startDate, $endDate) = explode(' - ', $dateRange);
+        $startDate = Carbon::createFromFormat('m/d/Y', trim($startDate));
+        $endDate = Carbon::createFromFormat('m/d/Y', trim($endDate));
+        $startDate = $startDate->startOfDay();
+        $endDate = $endDate->endOfDay();
+
+        $orders = Order::where('order_type', 'parcel')
+            ->whereIn('order_status', ['delivered', 'refund_requested', 'refund_request_canceled'])
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->paginate(config('default_pagination'));
+        $totalOrders = $orders->count();
+        $totalOrderAmount = $orders->sum('order_amount');
+        $totalTax = $orders->sum('total_tax_amount');
+
+        $startDate = Carbon::parse($startDate)->toIso8601String();
+        $endDate = Carbon::parse($endDate)->toIso8601String();
+
+        return view('admin-views.report.tax-report.parcel-tax-report', compact('totalOrders', 'totalOrderAmount', 'totalTax', 'dateRange', 'startDate', 'endDate','orders'));
+    }
+
+    public function parcelWiseTaxExport(Request $request)
+    {
+        $dateRange = $request->dates ?? now()->subDays(6)->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
+
+        list($startDate, $endDate) = explode(' - ', $dateRange);
+        $startDate = Carbon::createFromFormat('m/d/Y', trim($startDate));
+        $endDate = Carbon::createFromFormat('m/d/Y', trim($endDate));
+        $startDate = $startDate->startOfDay();
+        $endDate = $endDate->endOfDay();
+
+        $orders = Order::where('order_type', 'parcel')
+            ->whereIn('order_status', ['delivered', 'refund_requested', 'refund_request_canceled'])
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
+
+        $summary['total_orders'] = $orders->count();
+        $summary['total_order_amount'] = $orders->sum('order_amount');
+        $summary['total_tax'] = $orders->sum('total_tax_amount');
+
+        $startDate = Carbon::parse($startDate)->toIso8601String();
+        $endDate = Carbon::parse($endDate)->toIso8601String();
+
+        $data = [
+            'orders' => $orders,
+            'from' => $startDate,
+            'to' => $endDate,
+            'summary' => $summary
+        ];
+
+        if ($request->export_type == 'excel') {
+            return Excel::download(new ParcelWiseTaxExport($data), 'ParcelWiseTaxExport.xlsx');
+        } else if ($request->export_type == 'csv') {
+            return Excel::download(new ParcelWiseTaxExport($data), 'ParcelWiseTaxExport.csv');
+        }
+    }
 
 
 
@@ -114,7 +177,6 @@ class VendoTaxReportController extends Controller
             'storeQuery' => $storeQuery,
         ];
     }
-
 
     private function getOrderTaxData($startDate, $endDate, $storeIds, $storeQuery, $export = false)
     {
