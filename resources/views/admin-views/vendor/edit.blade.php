@@ -411,19 +411,20 @@
                                             <h4 class="mb-1 fz--14px">{{translate('TIN Certificate')}}</h4>
                                             <p class="fz-12px mb-0">{{translate('pdf, doc, jpg. File size : max 2 MB')}}</p>
                                         </div>
-                                        <label class="position-relative mb-0 d-inline-block image--border cursor-pointer w-100 h-100px max-width-300px">
+                                        <label class="image--border cursor-pointer w-100 h-100px max-width-300px">
                                             <img class="h-165 aspect-ratio-1 rounded-10 display-none" id="logoImageViewer2"
-                                                 data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                                  src="{{ $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png') }}"
                                                  alt=""/>
+
                                             <div class="upload-file__textbox p-2 h-100">
                                                 <img width="34" height="34" src="{{ asset('public/assets/admin/img/upload-cloud.png') }}" alt="" class="svg">
                                                 <span class="mt-2 text-center fw-normal fs-12">
-                                                    {{translate('Select a file or')}} <span class="fw-medium title-clr">{{translate('Drag & Drop')}}</span> {{translate('here')}}
+                                                    {{ translate('Select a file or') }} <span class="fw-medium title-clr">{{ translate('Drag & Drop') }}</span> {{ translate('here') }}
                                                 </span>
                                             </div>
+
                                             <div class="icon-file-group outside">
-                                                <input type="file" name="tin_certificate_image" id="customFileEg1" class="custom-file-input" accept=".webp, .jpg, .png, .jpeg|image/*">
+                                                <input type="file" name="tin_certificate_image" id="tin_certificate_image" class="custom-file-input" accept=".webp,.pdf,.doc,.jpg,.png,.jpeg|image/*">
                                             </div>
                                         </label>
                                     </div>
@@ -733,61 +734,34 @@
     })
 
     // ---- file upload with textbox
-    $(document).ready(function() {
-        function handleImageUpload(inputSelector, imgViewerSelector, textBoxSelector, iconSelector) {
-            const inputElement = $(inputSelector);
+    $(document).ready(function () {
+            function previewFile(inputSelector, previewImgSelector, textBoxSelector) {
+                const input = $(inputSelector);
+                const imagePreview = $(previewImgSelector);
+                const textBox = $(textBoxSelector);
 
-            // Handle input change for file selection
-            inputElement.on('change', function() {
-                const file = this.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        $(imgViewerSelector).attr('src', e.target.result).show();
-                        $(textBoxSelector).hide();
-                        $(iconSelector).remove();
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
+                input.on('change', function () {
+                    const file = this.files[0];
+                    if (!file) return;
 
-            // Handle drag-and-drop functionality
-            const dropZone = inputElement.closest('.image--border');
+                    const fileType = file.type;
+                    const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
 
-            dropZone.on('dragover', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            });
+                    if (validImageTypes.includes(fileType)) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            imagePreview.attr('src', e.target.result).removeClass('display-none');
+                            textBox.hide();
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        imagePreview.attr('src', '{{ asset('public/assets/admin/img/file-icon.png') }}').removeClass('display-none');
+                        textBox.hide();
+                    }
+                });
+            }
 
-            dropZone.on('dragleave', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            });
-
-            dropZone.on('drop', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                const file = e.originalEvent.dataTransfer.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        $(imgViewerSelector).attr('src', e.target.result).show();
-                        $(textBoxSelector).hide();
-                        $(iconSelector).remove();
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-
-        handleImageUpload(
-            '#customFileEg1',
-            '#logoImageViewer',
-            '#logoImageViewer2',
-            '#logoImageViewer ~ .upload-file__textbox',
-            '#logoEditIcon'
-        );
-    });
+            previewFile('#tin_certificate_image', '#logoImageViewer2', '.upload-file__textbox');
+        });
 </script>
 @endpush

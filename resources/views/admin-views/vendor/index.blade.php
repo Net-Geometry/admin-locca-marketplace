@@ -382,19 +382,20 @@
                                             <h4 class="mb-1 fz--14px">{{translate('TIN Certificate')}}</h4>
                                             <p class="fz-12px mb-0">{{translate('pdf, doc, jpg. File size : max 2 MB')}}</p>
                                         </div>
-                                        <label class="position-relative mb-0 d-inline-block image--border cursor-pointer w-100 h-100px max-width-300px">
-                                            <img class="h-165 aspect-ratio-1 rounded-10 display-none" id="logoImageViewer"
-                                                 data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
-                                                 src="{{ asset('public/assets/admin/img/upload-img.png') }}"
+                                        <label class="image--border cursor-pointer w-100 h-100px max-width-300px">
+                                            <img class="h-165 aspect-ratio-1 rounded-10 display-none" id="logoImageViewer2"
+                                                 src="{{ $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png') }}"
                                                  alt=""/>
+
                                             <div class="upload-file__textbox p-2 h-100">
                                                 <img width="34" height="34" src="{{ asset('public/assets/admin/img/upload-cloud.png') }}" alt="" class="svg">
                                                 <span class="mt-2 text-center fw-normal fs-12">
-                                                    {{translate('Select a file or')}} <span class="fw-medium title-clr">{{translate('Drag & Drop')}}</span> {{translate('here')}}
+                                                    {{ translate('Select a file or') }} <span class="fw-medium title-clr">{{ translate('Drag & Drop') }}</span> {{ translate('here') }}
                                                 </span>
                                             </div>
+
                                             <div class="icon-file-group outside">
-                                                <input type="file" name="tin_certificate_image" id="customFileEg1" class="custom-file-input" accept=".webp, .jpg, .png, .jpeg|image/*">
+                                                <input type="file" name="tin_certificate_image" id="tin_certificate_image" class="custom-file-input" accept=".webp,.pdf,.doc,.jpg,.png,.jpeg|image/*">
                                             </div>
                                         </label>
                                     </div>
@@ -698,5 +699,56 @@
         $("#time_view").val(min+' to '+max+' '+type);
 
     })
+
+    // ---- file upload with textbox
+    $(document).ready(function () {
+        function previewFile(inputSelector, previewImgSelector, textBoxSelector, previewContainerSelector = null) {
+            const input = $(inputSelector);
+            const imagePreview = $(previewImgSelector);
+            const textBox = $(textBoxSelector);
+            const container = previewContainerSelector ? $(previewContainerSelector) : null;
+
+            input.on('change', function () {
+                const file = this.files[0];
+                if (!file) return;
+
+                const fileType = file.type;
+                const fileName = file.name;
+                const fileExt = fileName.split('.').pop().toLowerCase();
+                const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+
+                if (validImageTypes.includes(fileType)) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imagePreview.attr('src', e.target.result).removeClass('display-none');
+                        textBox.hide();
+                        if (container) container.find('.uploaded-file-info').remove();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // Show placeholder icon
+                    const iconPath = getFileIconByExt(fileExt);
+                    imagePreview.attr('src', iconPath).removeClass('display-none');
+                    textBox.hide();
+
+                    if (container) {
+                        container.find('.uploaded-file-info').remove(); // Remove old file info
+                        container.append(`<div class="uploaded-file-info mt-2 small text-muted">${fileName}</div>`);
+                    }
+                }
+            });
+
+            function getFileIconByExt(ext) {
+                switch (ext) {
+                    case 'pdf': return '{{ asset("public/assets/admin/img/pdf-icon.png") }}';
+                    case 'doc':
+                    case 'docx': return '{{ asset("public/assets/admin/img/doc-icon.png") }}';
+                    default: return '{{ asset("public/assets/admin/img/file-icon.png") }}';
+                }
+            }
+        }
+
+        previewFile('#tin_certificate_image', '#logoImageViewer2', '.upload-file__textbox', '.image--border' );
+    });
 </script>
 @endpush
