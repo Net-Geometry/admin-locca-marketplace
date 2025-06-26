@@ -10,6 +10,7 @@ use Modules\Rental\Http\Controllers\Web\Admin\CategoryController;
 use Modules\Rental\Http\Controllers\Web\Admin\DriverController;
 use Modules\Rental\Http\Controllers\Web\Admin\ProviderController;
 use Modules\Rental\Http\Controllers\Web\Admin\DashboardController;
+use Modules\Rental\Http\Controllers\Web\Admin\ProviderTaxReportController;
 use Modules\Rental\Http\Controllers\Web\Admin\ReportController;
 use Modules\Rental\Http\Controllers\Web\Admin\TripController;
 use Modules\Rental\Http\Controllers\Web\Admin\VehicleController;
@@ -201,6 +202,13 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
                 Route::get('provider-wise-trip-report', [ReportController::class, 'providerTripReport'])->name('provider-trip-report');
                 Route::get('provider-wise-trip-report-export', [ReportController::class, 'providerTripExport'])->name('provider-trip-report-export');
                 Route::post('set-date', [ReportController::class, 'set_date'])->name('set-date');
+
+                Route::get('provider-wise-taxes', [ProviderTaxReportController::class, 'providerWiseTaxes'])->name('providerWiseTaxes');
+                Route::get('provider-wise-taxes-export', [ProviderTaxReportController::class, 'providerWiseTaxExport'])->name('providerWiseTaxExport');
+                Route::get('provider-tax-report',[ProviderTaxReportController::class, 'providerTax'])->name('providerTax');
+                Route::get('provider-tax-export', [ProviderTaxReportController::class, 'providerTaxExport'])->name('providerTaxExport');
+
+
             });
         });
     });
