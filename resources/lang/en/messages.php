@@ -7741,4 +7741,8 @@ Smartly or Earn. ',
   'cannot_change_status_after_delivered' => 'Cannot change status after delivered',
   'order_amount_updated' => 'Order amount updated',
   'discount_amount_updated' => 'Discount amount updated',
+  'Delivery_Commission' => 'Delivery Commission',
+  'Total_Transactions' => 'Total Transactions',
+  'Total_Amount' => 'Total Amount',
+  'Total Tax Percentage' => 'Total Tax Percentage',
 );
