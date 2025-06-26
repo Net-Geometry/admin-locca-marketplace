@@ -7764,4 +7764,12 @@ Smartly or Earn. ',
   'Tax on Trip Commission' => 'Tax on Trip Commission',
   'Tax_Details_Report' => 'Tax Details Report',
   'Admin_Tax_Report' => 'Admin Tax Report',
+  'Business TIN' => 'Business TIN',
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  'Taxpayer
+                                                Identification Number(TIN)' => 'Taxpayer
+                                                Identification Number(TIN)',
+  'Type Your Taxpayer Identification Number(TIN)' => 'Type Your Taxpayer Identification Number(TIN)',
+  'TIN Certificate' => 'TIN Certificate',
+  'pdf, doc, jpg. File size : max 2 MB' => 'Pdf, doc, jpg. File size : max 2 MB',
 );

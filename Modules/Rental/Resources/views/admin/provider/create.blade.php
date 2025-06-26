@@ -296,14 +296,6 @@
                                                    placeholder="{{ translate('messages.Ex:') }} 103.344322" id="longitude"
                                                    value="{{ old('longitude') }}" required readonly>
                                         </div>
-                                        <div class="form-group mb-5">
-                                            <label class="input-label font-semibold"
-                                                for="tax">{{ translate('messages.Vat/Tax') }}
-                                                (%)</label>
-                                            <input type="number" name="tax" class="form-control" id="tax"
-                                                placeholder="{{ translate('messages.vat/tax') }}" min="0"
-                                                step=".01" required value="{{ old('tax') }}">
-                                        </div>
                                         <div class="position-relative">
                                             <label class="input-label font-semibold"
                                                 for="tax">{{ translate('Approx. Pickup Time') }}</label>

@@ -140,6 +140,9 @@ class Store extends Model
         'announcement',
         'announcement_message',
         'comment',
+        'tin',
+        'tin_expire_date',
+        'tin_certificate_image',
     ];
 
     /**
