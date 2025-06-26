@@ -7772,4 +7772,8 @@ Smartly or Earn. ',
   'Type Your Taxpayer Identification Number(TIN)' => 'Type Your Taxpayer Identification Number(TIN)',
   'TIN Certificate' => 'TIN Certificate',
   'pdf, doc, jpg. File size : max 2 MB' => 'Pdf, doc, jpg. File size : max 2 MB',
+  'Parcel_Tax_Report' => 'Parcel Tax Report',
+  'Parcel Tax Report' => 'Parcel Tax Report',
+  'Order Id' => 'Order Id',
+  'Parcel_Tax_Reports' => 'Parcel Tax Reports',
 );

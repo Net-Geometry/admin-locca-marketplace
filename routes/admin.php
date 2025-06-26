@@ -711,8 +711,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('disbursement-report-export/{type}/{tab?}', 'ReportController@disbursement_report_export')->name('disbursement_report_export');
 
                 Route::get('vendor-wise-taxes', 'VendoTaxReportController@vendorWiseTaxes')->name('vendorWiseTaxes');
-                Route::get('parcel-wise-taxes', 'VendoTaxReportController@parcelWiseTaxes')->name('parcel-wise-taxes');
-                Route::get('parcel-wise-taxes-export', 'VendoTaxReportController@parcelWiseTaxExport')->name('parcel-wise-tax-export');
                 Route::get('vendor-wise-taxes-export', 'VendoTaxReportController@vendorWiseTaxExport')->name('vendorWiseTaxExport');
                 Route::get('vendor-tax-report', 'VendoTaxReportController@vendorTax')->name('vendorTax');
                 Route::get('vendor-tax-export', 'VendoTaxReportController@vendorTaxExport')->name('vendorTaxExport');
@@ -722,6 +720,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('get-tax-details', 'AdminTaxReportController@getTaxDetails')->name('getTaxDetails');
                 Route::get('tax-details-report-export', 'AdminTaxReportController@adminTaxDetailsExport')->name('getTaxDetailsExport');
                 Route::get('admin-tax-report-export', 'AdminTaxReportController@adminTaxReportExport')->name('adminTaxReportExport');
+
+                Route::get('parcel-wise-taxes', 'AdminTaxReportController@parcelWiseTaxes')->name('parcel-wise-taxes');
+                Route::get('parcel-wise-taxes-export', 'AdminTaxReportController@parcelWiseTaxExport')->name('parcel-wise-tax-export');
 
             });
 

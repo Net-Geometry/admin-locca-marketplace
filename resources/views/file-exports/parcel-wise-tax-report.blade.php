@@ -16,11 +16,11 @@
 
                         @if (isset($data['summary']))
                             <br>
-                            {{ translate('total_orders') }} - {{ $data['summary']->total_orders ??0 }}
+                            {{ translate('total_orders') }} - {{ $data['summary']['total_orders'] ??0 }}
                             <br>
-                            {{ translate('total_order_amount') }} - {{ $data['summary']->total_order_amount ??0 }}
+                            {{ translate('total_order_amount') }} - {{ $data['summary']['total_order_amount'] ??0 }}
                             <br>
-                            {{ translate('total_tax') }} - {{ $data['summary']->total_tax ??0 }}
+                            {{ translate('total_tax') }} - {{ $data['summary']['total_tax'] ??0 }}
                         @endif
                         @if ($data['from'])
                             <br>
