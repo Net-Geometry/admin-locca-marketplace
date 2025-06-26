@@ -266,13 +266,13 @@
                                         class="text-truncate text-capitalize">{{ translate('messages.trip_report') }}</span>
                                 </a>
                             </li>
-                            {{-- <li class="navbar-vertical-aside-has-menu @yield('trip_tax_report')">
+                            <li class="navbar-vertical-aside-has-menu @yield('trip_tax_report')">
                                 <a class="nav-link " href="{{ route('admin.transactions.rental.report.getTaxReport') }}"
                                     title="{{ translate('Trip_Tax_Report') }}">
                                     <span class="tio-albums nav-icon"></span>
                                     <span class="text-truncate text-capitalize">{{ translate('Trip_Tax_Report') }}</span>
                                 </a>
-                            </li> --}}
+                            </li>
                             <li class="navbar-vertical-aside-has-menu @yield('provider_tax_report')">
                                 <a class="nav-link " href="{{ route('admin.transactions.rental.report.providerWiseTaxes') }}"
                                     title="{{ translate('Provider_Tax_Report') }}">

@@ -1,8 +1,8 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('Admin Tax Report'))
+@section('title', translate('Admin Trip Tax Report'))
 
-@section('tax_report')
+@section('trip_tax_report')
     active
 @endsection
 
@@ -11,7 +11,7 @@
 
 
         <!--- Admin Tax Report -->
-        <h2 class="mb-20">{{ translate('messages.Admin Tax Report') }}</h3>
+        <h2 class="mb-20">{{ translate('messages.Admin Trip Tax Report') }}</h3>
             <!--- Tax Details Page -->
             <h2 class="mb-20 mt-5">{{ translate('messages.Tax Details') }}</h2>
             <div class="bg--secondary rounded p-20">
@@ -29,13 +29,13 @@
                         <div id="usersExportDropdown4"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
-                            <a id="export-excel" class="dropdown-item" href="{{ route('admin.transactions.report.getTaxDetailsExport',['source'=> $taxSource ,'export_type' => 'excel', request()->getQueryString()]) }}">
+                            <a id="export-excel" class="dropdown-item" href="{{ route('admin.transactions.rental.report.getTaxDetailsExport',['source'=> $taxSource ,'export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
-                            <a id="export-csv" class="dropdown-item" href="{{ route('admin.transactions.report.getTaxDetailsExport',['source'=> $taxSource ,'export_type' => 'csv', request()->getQueryString()]) }}">
+                            <a id="export-csv" class="dropdown-item" href="{{ route('admin.transactions.rental.report.getTaxDetailsExport',['source'=> $taxSource ,'export_type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
@@ -48,13 +48,13 @@
                     @if ($taxSource =='admin_commission' )
                     <div class="col-md-6">
                         <div class="bg-white p-12 w-100 rounded d-flex align-items-center justify-content-between">
-                            {{ translate('Total_Orders') }} <h4 class="theme-clr fw-bold mb-0">{{ $total_count }}
+                            {{ translate('Total_Trips') }} <h4 class="theme-clr fw-bold mb-0">{{ $total_count }}
                             </h4>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="bg-white p-12 w-100 rounded d-flex align-items-center justify-content-between">
-                            {{ translate('Total_Order_Amount') }} <h4 class="theme-clr fw-bold mb-0">
+                            {{ translate('Total_Trip_Amount') }} <h4 class="theme-clr fw-bold mb-0">
                                 {{ \App\CentralLogics\Helpers::format_currency($total_order_amount) }}</h4>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
 
                                 @endphp
                                 <th class="border-0">{{ translate('sl') }}</th>
-                                <th class="border-0">{{ translate('Order') }}</th>
+                                <th class="border-0">{{ translate('Trip') }}</th>
                                 <th class="border-0">{{ translate($col) }}</th>
                                 <th class="border-0">{{ translate('Tax Amount') }}</th>
                             </tr>
@@ -104,12 +104,12 @@
                                         {{ $key + $taxData->firstItem() }}
                                     </td>
                                     <td>
-                                        <h6>{{ \App\CentralLogics\Helpers::format_currency($item->order_amount) }}</h6>
-                                         <small>#{{ $item->order_id }} </small>
+                                        <h6>{{ \App\CentralLogics\Helpers::format_currency($item->trip_amount) }}</h6>
+                                         <small>#{{ $item->trip_id }} </small>
                                     </td>
                                     <td>
                                         @if ($taxSource =='admin_commission' )
-                                        {{ \App\CentralLogics\Helpers::format_currency($item->admin_commission+$item->admin_expense-$item->delivery_fee_comission-$item->additional_charge) }}
+                                        {{ \App\CentralLogics\Helpers::format_currency($item->admin_commission) }}
                                         @elseif ($taxSource == 'delivery_commission')
                                         {{ \App\CentralLogics\Helpers::format_currency( $item->delivery_fee_comission ) }}
                                         @else

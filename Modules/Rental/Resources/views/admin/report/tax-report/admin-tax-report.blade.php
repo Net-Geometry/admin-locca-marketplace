@@ -2,7 +2,7 @@
 
 @section('title', translate('Admin Tax Report'))
 
-@section('tax_report')
+@section('trip_tax_report')
     active
 @endsection
 
@@ -11,10 +11,10 @@
 
 
         <!--- Admin Tax Report -->
-        <h2 class="mb-20">{{ translate('messages.Admin Tax Report') }}</h3>
+        <h2 class="mb-20">{{ translate('messages.Admin Trip Tax Report') }}</h3>
             <div class="card p-20 mb-20">
                 <div class="mb-20">
-                    <h3 class="mb-1">{{ translate('messages.Admin Tax Report') }}</h3>
+                    <h3 class="mb-1">{{ translate('messages.Admin Trip Tax Report') }}</h3>
                     <p class="mb-0 fz-12">
                         {{ translate('To generate you tax report please select & input following field and submit for the result') }}.
                     </p>
@@ -67,23 +67,14 @@
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
                                         id="calculate_commission_tax">
                                         <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Order Commission') }}</span>
+                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Trip Commission') }}</span>
                                         <select name="tax_on_order_commission[]" id="select_customer_fiscal1"
                                             class="form-control js-select2-custom" multiple="multiple"
                                             placeholder="Type & Select Tax Rate">
 
                                         </select>
                                     </div>
-                                    <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
-                                        id="calculate_delivery_charge_tax">
-                                        <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Delivery Charge Commission') }}</span>
-                                        <select name="tax_on_delivery_charge_commission[]" id="select_customer_fiscal2"
-                                            class="form-control js-select2-custom" multiple="multiple"
-                                            placeholder="Type & Select Tax Rate">
 
-                                        </select>
-                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -99,19 +90,8 @@
                                         </select>
                                     </div>
                                 </div>
-                                {{-- <div class="d-flex flex-column gap-lg-4 gap-3">
-                                    <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
-                                        id="calculate_packaging_charge_tax">
-                                        <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Packaging Charge') }}</span>
-                                        <select name="tax_on_packaging_charge[]" id="select_customer_fiscal-4"
-                                            class="form-control js-select2-custom" multiple="multiple"
-                                            placeholder="Type & Select Tax Rate">
 
-                                        </select>
-                                    </div>
-                                </div> --}}
-                                <div class="d-flex flex-column gap-lg-4 gap-3">
+                                {{-- <div class="d-flex flex-column gap-lg-4 gap-3">
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
                                         id="calculate_subscription_tax">
                                         <span
@@ -122,7 +102,7 @@
 
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="d-flex flex-column gap-lg-4 gap-3">
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? 'd-none' : '' }}"
                                         id="calculate_tax_rate">
@@ -196,13 +176,13 @@
                             <div id="usersExportDropdown__admin"
                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
                                 <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
-                                <a id="export-excel" class="dropdown-item" href="{{ route('admin.transactions.report.adminTaxReportExport',['export_type' => 'excel', request()->getQueryString()]) }}">
+                                <a id="export-excel" class="dropdown-item" href="{{ route('admin.transactions.rental.report.adminTaxReportExport',['export_type' => 'excel', request()->getQueryString()]) }}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                         src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                         alt="Image Description">
                                     {{ translate('messages.excel') }}
                                 </a>
-                                <a id="export-csv" class="dropdown-item" href="{{ route('admin.transactions.report.adminTaxReportExport',['export_type' => 'csv', request()->getQueryString()]) }}">
+                                <a id="export-csv" class="dropdown-item" href="{{ route('admin.transactions.rental.report.adminTaxReportExport',['export_type' => 'csv', request()->getQueryString()]) }}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
                                         src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                         alt="Image Description">
@@ -272,7 +252,7 @@
                                     <td class="text-center">
                                         <div class="d-flex gap-2 justify-content-center">
                                             <a class="btn btn-sm theme-border action-btn theme-hover theme-clr"
-                                                href="{{ route('admin.transactions.report.getTaxDetails',['source'=> $key , request()->getQueryString()]) }}">
+                                                href="{{ route('admin.transactions.rental.report.getTaxDetails',['source'=> $key , request()->getQueryString()]) }}">
                                                 <i class="tio-invisible"></i>
                                             </a>
                                         </div>
@@ -370,7 +350,7 @@
                 $select.trigger('change');
                 $select.select2({
                     ajax: {
-                        url: '{{ route('admin.transactions.report.getTaxList') }}',
+                        url: '{{ route('admin.transactions.rental.report.getTaxList') }}',
                         data: function(params) {
                             return {
                                 q: params.term,

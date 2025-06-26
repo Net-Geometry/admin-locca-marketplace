@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Rental\Http\Controllers\Web\Admin\AdminTripTaxReportController;
 use Modules\Rental\Http\Controllers\Web\Admin\BrandController;
 use Modules\Rental\Http\Controllers\Web\Admin\Promotions\BannerController;
 use Modules\Rental\Http\Controllers\Web\Admin\Promotions\CouponController;
@@ -208,6 +209,11 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
                 Route::get('provider-tax-report',[ProviderTaxReportController::class, 'providerTax'])->name('providerTax');
                 Route::get('provider-tax-export', [ProviderTaxReportController::class, 'providerTaxExport'])->name('providerTaxExport');
 
+                Route::get('get-tax-export',[AdminTripTaxReportController::class, 'getTaxReport'])->name('getTaxReport');
+                Route::get('get-tax-list',[AdminTripTaxReportController::class, 'getTaxList'])->name('getTaxList');
+                Route::get('get-tax-details',[AdminTripTaxReportController::class, 'getTaxDetails'])->name('getTaxDetails');
+                Route::get('tax-details-report-export',[AdminTripTaxReportController::class, 'adminTaxDetailsExport'])->name('getTaxDetailsExport');
+                Route::get('admin-tax-report-export',[AdminTripTaxReportController::class, 'adminTaxReportExport'])->name('adminTaxReportExport');
 
             });
         });
