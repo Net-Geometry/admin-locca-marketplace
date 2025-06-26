@@ -9,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{translate('Delivery Man Earning Report Invoice')}}</title>
-    <style>
+     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap');
 
         body {
@@ -23,18 +23,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
+            -webkit-print-color-adjust: exact !important; 
+            print-color-adjust: exact !important; 
         }
         h1,h2,h3,h4,h5,h6 {
             color: #303030;
             margin: 0;
         }
         span{
-            color: #303030B2;
-            font-size: 9px;
-            line-height: 12px;
-            display: inline-block;
+           color: #303030B2; 
+           font-size: 9px;
+           line-height: 12px;
+           display: inline-block;
         }
         * {
             box-sizing: border-box
@@ -129,37 +129,27 @@
         .invoice-space{
             padding: 20px 20px 0;
         }
-        .logo-header{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1px;
-            flex-wrap: wrap;
+        .logo-header{            
             margin-bottom: 15px;
-        }
+        }        
         .logo-header h3{
             font-size: 20px;
         }
         .logo{
-            max-width: 110px;
+            max-width: 40px;
+            padding-bottom: 12px;
         }
         /*Header Info*/
         .header-information{
             border-bottom: 1px dashed #E6E7EC;
             border-top: 1px dashed #E6E7EC;
-            padding: 15px 0;
-            display: flex;
-            justify-content: space-between;
-        }
-        .header-information .header-info-inner{
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+            padding: 15px 0;          
         }
         .header-information .header-info-item{
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            margin-bottom: 5px;
+        }
+        .header-info-right{
+            margin-left: 50px;
         }
         .header-information .name{
             width: 90px;
@@ -187,10 +177,6 @@
         }
         /*Footer*/
         .invoice-footer{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 4px;
             background-color: #FAFAFA;
             padding: 14px 32px;
             margin-top: 36px;
@@ -203,63 +189,71 @@
             border-bottom: 1px dashed #E6E7EC;
             border-top: 1px dashed #E6E7EC;
         }
-        .copyright{
-            text-align: center;
-            display: block;
-        }
     </style>
 </head>
 <body>
 
 <div class="invoice-body">
-    <div class="invoice-space">
-        <div class="logo-header">
-            <h3>{{translate('Earning Statement')}}</h3>
-            <img src="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','favicon')}}" alt="{{translate('logo')}}" class="logo">
-        </div>
-        <div class="header-information">
-            <div class="w-100 header-info-inner">
-                <div class="header-info-item">
-                    <span class="name">{{translate('Name')}} :</span>
-                    <span class="datas">{{ $dm->full_name }}</span>
-                </div>
-                <div class="header-info-item">
-                    <span class="name">{{translate('Phone Number')}} :</span>
-                    <span class="datas">{{ $dm->phone }}</span>
-                </div>
-                <div class="header-info-item">
-                    <span class="name">{{translate('Deliveryman Type')}} :</span>
-                    <span class="datas">@if($dm->earning) {{translate('Freelance')}} @else {{ translate('Salary Based') }} @endif</span>
-                </div>
-                <div class="header-info-item">
-                    <span class="name">{{translate('Download Date')}} :</span>
-                    <span class="datas">{{ \Carbon\Carbon::parse(now())->format('d-M-Y') }}</span>
-                </div>
-                <div class="header-info-item">
-                    <span class="name">{{translate('Statement Period')}} :</span>
-                    <span class="datas">{{ $startDate }} @if($endDate) {{translate('to')}} @endif {{ $endDate }}</span>
-                </div>
-            </div>
-            <div class="w-100 header-info-inner">
-                <h3 class="header-info-item">{{translate('Summery')}}</h3>
-                <div class="header-info-item">
-                    <span class="name">{{translate('Total Earning')}} :</span>
-                    <span class="datas">{{ \App\CentralLogics\Helpers::format_currency($earnings->sum('original_delivery_charge') + $earnings->sum('dm_tips')) }}</span>
-                </div>
-                <div class="header-info-item">
-                    <span class="name">{{translate('Delivery Fee')}} :</span>
-                    <span class="datas">{{ \App\CentralLogics\Helpers::format_currency($earnings->sum('original_delivery_charge'))}}</span>
-                </div>
-                <div class="header-info-item">
-                    <span class="name">{{translate('Delivery Tips')}} :</span>
-                    <span class="datas">{{ \App\CentralLogics\Helpers::format_currency($earnings->sum('dm_tips'))}}</span>
-                </div>
-                <div class="header-info-item">
-                    <span class="name">{{translate('Admin Incentive')}} :</span>
-                    <span class="datas">8745.00$</span>
-                </div>
-            </div>
-        </div>
+    <div class="invoice-space">        
+        <table class=" table w-100">
+            <tr>
+                <td>
+                    <h3>{{translate('Earning Statement')}}</h3>                    
+                </td>
+                <td class="text-right">
+                    <img src="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','favicon')}}" alt="{{translate('logo')}}" class="logo">                
+                </td>
+            </tr>
+        </table>
+        <table class="table w-100 header-information">
+            <tr>
+                <td>
+                    <div class="header-info-inner">
+                        <div class="header-info-item">
+                            <span class="name">{{translate('Name')}} :</span>
+                            <span class="datas">{{ $dm->full_name }}</span>
+                        </div>
+                        <div class="header-info-item">
+                            <span class="name">{{translate('Phone Number')}} :</span>
+                            <span class="datas">{{ $dm->phone }}</span>
+                        </div>
+                        <div class="header-info-item">
+                            <span class="name">{{translate('Deliveryman Type')}} :</span>
+                            <span class="datas">@if($dm->earning) {{translate('Freelance')}} @else {{ translate('Salary Based') }} @endif</span>
+                        </div>
+                        <div class="header-info-item">
+                            <span class="name">{{translate('Download Date')}} :</span>
+                            <span class="datas">{{ \Carbon\Carbon::parse(now())->format('d-M-Y') }}</span>
+                        </div>
+                        <div class="header-info-item">
+                            <span class="name">{{translate('Statement Period')}} :</span>
+                            <span class="datas">{{ $startDate }} @if($endDate) {{translate('to')}} @endif {{ $endDate }}</span>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="text-left header-info-right header-info-inner">
+                        <h3 class="header-info-item">{{translate('Summery')}}</h3>
+                        <div class="header-info-item">
+                            <span class="name">{{translate('Total Earning')}} :</span>
+                            <span class="datas">{{ \App\CentralLogics\Helpers::format_currency($earnings->sum('original_delivery_charge') + $earnings->sum('dm_tips')) }}</span>
+                        </div>
+                        <div class="header-info-item">
+                            <span class="name">{{translate('Delivery Fee')}} :</span>
+                            <span class="datas">{{ \App\CentralLogics\Helpers::format_currency($earnings->sum('original_delivery_charge'))}}</span>
+                        </div>
+                        <div class="header-info-item">
+                            <span class="name">{{translate('Delivery Tips')}} :</span>
+                            <span class="datas">{{ \App\CentralLogics\Helpers::format_currency($earnings->sum('dm_tips'))}}</span>
+                        </div>
+                        <div class="header-info-item">
+                            <span class="name">{{translate('Admin Incentive')}} :</span>
+                            <span class="datas">8745.00$</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
         <table dir="{{ $site_direction }}" class="table w-100 main-table">
             <thead>
             <tr>
@@ -304,11 +298,19 @@
         </table>
         <p class="thanks-service text-center fs-10 mt-0 mb-0 py-6">{{translate('Thanks for using our service.')}}</p>
     </div>
-    <div class="invoice-footer">
-        <span>{{ $businessData['app_url']  }}</span>
-        <span>{{ $businessData['phone']  }}</span>
-        <span>{{ $businessData['email_address'] }}</span>
-    </div>
+    <table class="table w-100 invoice-footer">
+        <tr>
+            <td class="text-left">
+                <span>{{ $businessData['app_url']  }}</span>
+            </td>
+            <td class="text-center">
+                <span>{{ $businessData['phone']  }}</span>
+            </td>
+            <td class="text-right">
+                <span>{{ $businessData['email_address'] }}</span>
+            </td>
+        </tr>
+    </table>
 </div>
 </body>
 </html>
