@@ -408,7 +408,7 @@
                                 $store_flash_discount_amount = $order['flash_store_discount_amount'];
                                 $del_c = $order['delivery_charge'];
                                 $additional_charge = $order['additional_charge'];
-                                $total_tax_amount = 0;
+                                $total_tax_amount = $order['total_tax_amount'];
                                 $total_addon_price = 0;
                                 $coupon_discount_amount = 0;
                                 $deliverman_tips = $order['dm_tips'];
@@ -882,34 +882,36 @@
                                         <dd class="col-6">
                                             - {{ \App\CentralLogics\Helpers::format_currency($coupon_discount_amount) }}
                                         </dd>
-                                        @if ($ref_bonus_amount > 0)
-                                            <dt class="col-6">{{ translate('messages.Referral_Discount') }}:</dt>
-                                            <dd class="col-6">
-                                                - {{ \App\CentralLogics\Helpers::format_currency($ref_bonus_amount) }}
-                                            </dd>
-                                        @endif
-                                        @if ($order->tax_status == 'excluded' || $order->tax_status == null  )
+                                            @if ($ref_bonus_amount > 0)
+                                                <dt class="col-6">{{ translate('messages.Referral_Discount') }}:</dt>
+                                                <dd class="col-6">
+                                                    - {{ \App\CentralLogics\Helpers::format_currency($ref_bonus_amount) }}
+                                                </dd>
+                                            @endif
+                                    @endif
+                                        @if ($order->tax_status == 'excluded' && $total_tax_amount > 0 || $order->tax_status == null  )
                                             {{-- @php($tax_a=0) --}}
                                             <dt class="col-6">{{ translate('messages.vat/tax') }}:</dt>
                                             <dd class="col-6 text-right">
                                                 +
                                                 {{ \App\CentralLogics\Helpers::format_currency($total_tax_amount) }}
                                             </dd>
+
                                         @endif
-                                        <dt class="col-6">{{ translate('messages.delivery_fee') }}
-                                            @if ($order->free_delivery_by == 'admin')
-                                            <i class="tio-info-outined" data-toggle="tooltip" title="{{ translate('Delivery fee is applicable and will be covered by the admin.') }}"></i>
+                                         @if (!$parcel_order)
+                                            <dt class="col-6">{{ translate('messages.delivery_fee') }}
+                                                @if ($order->free_delivery_by == 'admin')
+                                                <i class="tio-info-outined" data-toggle="tooltip" title="{{ translate('Delivery fee is applicable and will be covered by the admin.') }}"></i>
 
-                                            @elseif ($order->free_delivery_by == 'vendor')
-                                            <i class="tio-info-outined" data-toggle="tooltip" title="{{ translate('Delivery fee is applicable and will be covered by the Vendor.') }}"></i>
-                                            @endif
-                                                :</dt>
-                                        <dd class="col-6">
-                                            + {{ \App\CentralLogics\Helpers::format_currency($del_c) }}
-                                            <hr>
-                                        </dd>
-                                    @endif
-
+                                                @elseif ($order->free_delivery_by == 'vendor')
+                                                <i class="tio-info-outined" data-toggle="tooltip" title="{{ translate('Delivery fee is applicable and will be covered by the Vendor.') }}"></i>
+                                                @endif
+                                                    :</dt>
+                                            <dd class="col-6">
+                                                + {{ \App\CentralLogics\Helpers::format_currency($del_c) }}
+                                                <hr>
+                                            </dd>
+                                        @endif
                                     <dt class="col-6">{{ translate('messages.delivery_man_tips') }}</dt>
                                     <dd class="col-6">
                                         + {{ \App\CentralLogics\Helpers::format_currency($deliverman_tips) }}</dd>
@@ -925,7 +927,7 @@
                                         </dd>
                                     @endif
 
-                                    <dt class="col-6">{{ translate('messages.total') }}:</dt>
+                                    <dt class="col-6">{{ translate('messages.total') }} {{ $parcel_order && $order->tax_status == 'included' ? '('.translate('messages.TAX_Included').')'  :'' }} : </dt>
                                     <dd class="col-6">
 
                                         {{ \App\CentralLogics\Helpers::format_currency($product_price + $del_c + $total_tax_amount + $total_addon_price + $deliverman_tips + $additional_charge - $coupon_discount_amount - $store_discount_amount - $admin_flash_discount_amount - $store_flash_discount_amount - $ref_bonus_amount +$extra_packaging_amount )  }}

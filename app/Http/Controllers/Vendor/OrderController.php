@@ -475,7 +475,7 @@ class OrderController extends Controller
       $discount_on_product_by = $order->discount_on_product_by ?? 'vendor' ;
 
         $store_discount = Helpers::get_store_discount($store);
-
+        $store_discount =  $store_discount ? $store_discount : ['discount' => 0, 'max_discount' => 0, 'min_purchase' => 0];
         $admin_discount = Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $store_discount['discount'], max_discount: $store_discount['max_discount'], min_purchase: $store_discount['min_purchase']);
 
         $discount = max($discount, $admin_discount);
@@ -527,56 +527,34 @@ class OrderController extends Controller
 
             // extra packaging charge
 
-            $order->extra_packaging_amount =  (!empty($extra_packaging_data) && $request?->extra_packaging_amount > 0 && $store && ($extra_packaging_data[$store->module->module_type] == '1') && ($store?->storeConfig?->extra_packaging_status == '1')) ? $store?->storeConfig?->extra_packaging_amount : 0;
+            // $order->extra_packaging_amount =  (!empty($extra_packaging_data) && $request?->extra_packaging_amount > 0 && $store && ($extra_packaging_data[$store->module->module_type] == '1') && ($store?->storeConfig?->extra_packaging_status == '1')) ? $store?->storeConfig?->extra_packaging_amount : 0;
 
-            if ($order->extra_packaging_amount > 0) {
-                $additionalCharges['tax_on_packaging_charge'] =  $order->extra_packaging_amount;
-            }
+            // if ($order->extra_packaging_amount > 0) {
+            //     $additionalCharges['tax_on_packaging_charge'] =  $order->extra_packaging_amount;
+            // }
 
+            $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
+                    amount: $total_price,
+                    productIds: [],
+                    categoryIds: [],
+                    quantity: [],
+                    taxPayer: 'prescription',
+                    storeData: true,
+                    additionalCharges: $additionalCharges,
+                    addonIds: [],
+                    addonQuantity: [],
+                    addonCategoryIds: [],
+                    orderId: null,
+                    storeId:  $store->id
+                );
 
+                $tax_amount = $taxData['totalTaxamount'];
+                $tax_included = $taxData['include'];
+                $orderTaxIds = $taxData['orderTaxIds'] ?? [];
+                $tax_status = $tax_included ?  'included' : 'excluded';
 
-
-
-        $tax = $store->tax;
-        $order->tax_status = 'excluded';
-        $tax_included = BusinessSetting::where(['key' => 'tax_included'])->first() ?  BusinessSetting::where(['key' => 'tax_included'])->first()->value : 0;
-        if ($tax_included ==  1) {
-            $order->tax_status = 'included';
-        }
-
-        $total_tax_amount = Helpers::product_tax($total_price, $tax, $order->tax_status == 'included');
-        $tax_a = $order->tax_status == 'included' ? 0 : $total_tax_amount;
-
-
-
-
-
-
-
-                // $totalDiscount = $store_discount_amount  + $coupon_discount_amount +  $order->ref_bonus_amount;
-
-
-
-                // $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount,
-                // $product_price + $total_addon_price, $store->id);
-                // $tax_amount = $finalCalculatedTax['tax_amount'];
-                // $tax_status = $finalCalculatedTax['tax_status'];
-                // $taxMap = $finalCalculatedTax['taxMap'];
-                // $orderTaxIds = data_get($finalCalculatedTax ,'taxData.orderTaxIds',[] );
-
-                // $order->tax_status = $tax_status;
-
-
-
-
-
-
-
-
-
-
-
-
+                $order->total_tax_amount = round($tax_amount, config('round_up_to_digit'));
+                $order->tax_status = $tax_status;
 
         $free_delivery_over = BusinessSetting::where('key', 'free_delivery_over')->first()->value;
         if (isset($free_delivery_over)) {
@@ -605,12 +583,17 @@ class OrderController extends Controller
         $order->coupon_discount_title = $coupon ? $coupon->title : '';
 
         $order->store_discount_amount = round($store_discount_amount, config('round_up_to_digit'));
-        $order->total_tax_amount = round($total_tax_amount, config('round_up_to_digit'));
-        $order->order_amount = round($total_price + $tax_a + $order->additional_charge + $order->delivery_charge, config('round_up_to_digit'));
+        $order->order_amount = round($total_price + $order->total_tax_amount + $order->additional_charge + $order->delivery_charge, config('round_up_to_digit'));
         $order->free_delivery_by = $free_delivery_by;
         $order->order_amount = $order->order_amount + $order->dm_tips;
         $order->save();
-
+            $order?->orderTaxes()?->delete();
+            if (count($orderTaxIds)) {
+                \Modules\TaxModule\Services\CalculateTaxService::updateOrderTaxData(
+                    orderId: $order->id,
+                    orderTaxIds: $orderTaxIds,
+                );
+            }
         Toastr::success(translate('messages.order_amount_updated'));
         return back();
     }
@@ -641,24 +624,81 @@ class OrderController extends Controller
         }
         $order->store_discount_amount = round($request->discount_amount, config('round_up_to_digit'));
 
+        $order->discount_on_product_by= 'vendor';
+
+        $settings = BusinessSetting::whereIn('key', [
+                'dm_tips_status',
+                'additional_charge_status',
+                'additional_charge',
+                'extra_packaging_data',
+            ])->pluck('value', 'key');
+
+            $dm_tips_manage_status     = $settings['dm_tips_status'] ?? null;
+            $additional_charge_status  = $settings['additional_charge_status'] ?? null;
+            $additional_charge         = $settings['additional_charge'] ?? null;
+
+            $extra_packaging_data_raw  = $settings['extra_packaging_data'] ?? '';
+            $extra_packaging_data      = json_decode($extra_packaging_data_raw, true) ?? [];
 
 
-        $tax = $order->store->tax;
+            //Added DM TIPS
+            $order->dm_tips = 0;
+            if ($dm_tips_manage_status == 1) {
+                $order->dm_tips = $request->dm_tips ?? 0;
+            }
 
-        $order->tax_status = 'excluded';
-        $tax_included = BusinessSetting::where(['key' => 'tax_included'])->first() ?  BusinessSetting::where(['key' => 'tax_included'])->first()->value : 0;
-        if ($tax_included ==  1) {
-            $order->tax_status = 'included';
-        }
+            //Added service charge
+            $order->additional_charge =$order->additional_charge;
 
-        $total_tax_amount = Helpers::product_tax(($product_price -$order->store_discount_amount), $tax, $order->tax_status == 'included');
-        $tax_a = $order->tax_status == 'included' ? 0 : $total_tax_amount;
+            if ($additional_charge_status == 1) {
+                $order->additional_charge = $additional_charge ?? 0;
+                $additionalCharges['tax_on_additional_charge'] = $order->additional_charge;
+            }
 
-        $order->total_tax_amount = round($total_tax_amount, config('round_up_to_digit'));
+            // // extra packaging charge
 
-        $order->order_amount = $product_price+$order['delivery_charge']+ $tax_a +$order['dm_tips'] + $order->additional_charge  -$order->store_discount_amount;
+            // $order->extra_packaging_amount =  (!empty($extra_packaging_data) && $request?->extra_packaging_amount > 0 && $store && ($extra_packaging_data[$store->module->module_type] == '1') && ($store?->storeConfig?->extra_packaging_status == '1')) ? $store?->storeConfig?->extra_packaging_amount : 0;
+
+            // if ($order->extra_packaging_amount > 0) {
+            //     $additionalCharges['tax_on_packaging_charge'] =  $order->extra_packaging_amount;
+            // }
+
+
+
+         $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
+                    amount: $product_price-$request->discount_amount,
+                    productIds: [],
+                    categoryIds: [],
+                    quantity: [],
+                    taxPayer: 'prescription',
+                    storeData: true,
+                    additionalCharges: $additionalCharges,
+                    addonIds: [],
+                    addonQuantity: [],
+                    addonCategoryIds: [],
+                    orderId: null,
+                    storeId:  $order->store_id
+                );
+
+                $tax_amount = $taxData['totalTaxamount'];
+                $tax_included = $taxData['include'];
+                $orderTaxIds = $taxData['orderTaxIds'] ?? [];
+                $tax_status = $tax_included ?  'included' : 'excluded';
+
+                $order->total_tax_amount = round($tax_amount, config('round_up_to_digit'));
+                $order->tax_status = $tax_status;
+
+
+
+        $order->order_amount = $product_price+$order['delivery_charge']+ $order->total_tax_amount +$order['dm_tips'] + $order->additional_charge  -$order->store_discount_amount;
         $order->save();
-
+        $order?->orderTaxes()?->delete();
+            if (count($orderTaxIds)) {
+                \Modules\TaxModule\Services\CalculateTaxService::updateOrderTaxData(
+                    orderId: $order->id,
+                    orderTaxIds: $orderTaxIds,
+                );
+            }
         Toastr::success(translate('messages.discount_amount_updated'));
         return back();
     }

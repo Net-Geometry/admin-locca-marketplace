@@ -33,7 +33,7 @@ use App\Models\AddOn;
 trait PlaceNewOrder
 {
 
-    public function new_place_order(Request $request, $is_pescription = false)
+    public function new_place_order(Request $request, $is_prescription = false)
     {
         $validator = Validator::make($request->all(), [
             // 'order_amount' => 'required',
@@ -53,7 +53,7 @@ trait PlaceNewOrder
             'contact_person_number' => $request->user ? 'nullable' : 'required',
             'contact_person_email' => $request->user ? 'nullable' : 'required',
             'password' => $request->create_new_user ? ['required', Password::min(8)] : 'nullable',
-            'order_attachment' => $is_pescription ? ['required'] : 'nullable',
+            'order_attachment' => $is_prescription ? ['required'] : 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -234,7 +234,7 @@ trait PlaceNewOrder
             $order->created_at = now();
             $order->updated_at = now();
             $order->charge_payer = $request->charge_payer;
-            $order->prescription_order = $is_pescription ? 1 : 0;
+            $order->prescription_order = $is_prescription ? 1 : 0;
             $additionalCharges = [];
 
 
@@ -278,7 +278,7 @@ trait PlaceNewOrder
             }
 
             if ($request->order_type !== 'parcel') {
-                if ($is_pescription === false) {
+                if ($is_prescription === false) {
 
                     $carts = Cart::where('user_id', $order->user_id)->where('is_guest', $order->is_guest)->where('module_id', $request->header('moduleId'))
                         ->when(isset($request->is_buy_now) && $request->is_buy_now == 1 && $request->cart_id, function ($query) use ($request) {
@@ -295,7 +295,7 @@ trait PlaceNewOrder
                         $carts = json_decode($request['cart'], true);
                     }
 
-                    if (count($carts) == 0 && !$is_pescription) {
+                    if (count($carts) == 0 && !$is_prescription) {
                         DB::rollBack();
                         return response()->json([
                             'errors' => [
@@ -362,7 +362,7 @@ trait PlaceNewOrder
 
                 $order->tax_status = $tax_status;
 
-                if (!$is_pescription  && $store->minimum_order > $product_price + $total_addon_price) {
+                if (!$is_prescription  && $store->minimum_order > $product_price + $total_addon_price) {
                     DB::rollBack();
                     return response()->json([
                         'errors' => [
@@ -436,7 +436,7 @@ trait PlaceNewOrder
                 $tax_included = $taxData['include'];
                 $orderTaxIds = $taxData['orderTaxIds'] ?? [];
                 $tax_status = $tax_included ?  'included' : 'excluded';
-
+                $order->total_tax_amount = round($tax_amount, config('round_up_to_digit'));
 
                 $order->tax_status = $tax_status;
                 $order->order_amount = round($order->delivery_charge + $tax_amount, config('round_up_to_digit'));
@@ -494,12 +494,7 @@ trait PlaceNewOrder
                 }
 
                 OrderDetail::insert($order_details);
-                if (count($orderTaxIds)) {
-                    \Modules\TaxModule\Services\CalculateTaxService::updateOrderTaxData(
-                        orderId: $order->id,
-                        orderTaxIds: $orderTaxIds,
-                    );
-                }
+
                 if (count($product_data) > 0) {
                     foreach ($product_data as $item) {
                         ProductLogic::update_stock($item['item'], $item['quantity'], $item['variant'])->save();
@@ -508,9 +503,15 @@ trait PlaceNewOrder
                 }
                 $store->increment('total_order');
             }
+            if (count($orderTaxIds)) {
+                \Modules\TaxModule\Services\CalculateTaxService::updateOrderTaxData(
+                    orderId: $order->id,
+                    orderTaxIds: $orderTaxIds,
+                );
+            }
             if (!isset($request->is_buy_now) || (isset($request->is_buy_now) && $request->is_buy_now == 0)) {
-                foreach ($carts as $cart) {
-                    $cart->delete();
+                foreach ($carts ?? [] as $cart) {
+                    $cart?->delete();
                 }
             }
             if ($request->user) {
@@ -554,6 +555,7 @@ trait PlaceNewOrder
                 'user_id' => (int) $order->user_id,
             ], 200);
         } catch (\Exception $exception) {
+
             info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
             DB::rollBack();
             return response()->json([$exception], 403);
@@ -906,7 +908,7 @@ trait PlaceNewOrder
             $original_delivery_charge = $original_delivery_charge + $extra_charges;
             $delivery_charge = $delivery_charge + $extra_charges;
         } else {
-            $parcel_category = ParcelCategory::first($request->parcel_category_id);
+            $parcel_category = ParcelCategory::find($request->parcel_category_id);
             if ($parcel_category?->parcel_minimum_shipping_charge) {
                 $per_km_shipping_charge = $parcel_category->parcel_per_km_shipping_charge;
                 $minimum_shipping_charge = $parcel_category->parcel_minimum_shipping_charge;
@@ -1514,16 +1516,16 @@ trait PlaceNewOrder
     public function getCalculatedTax($request)
     {
 
-        if ($request->order_type == 'parcel') {
-            $data = [
-                'tax_amount' => 0,
-                'tax_status' => null,
-                'tax_included' => 'included',
-            ];
-            return response()->json($data, 200);
-        }
+
+        $product_price = $request->order_amount ?? 0;
         $coupon = null;
         $ref_bonus_amount = 0;
+        $total_addon_price = 0;
+        $store_discount_amount = 0;
+        $flash_sale_admin_discount_amount = 0;
+        $flash_sale_vendor_discount_amount = 0;
+        $coupon_discount_amount = 0;
+        $order_details = [];
 
 
         $order = new Order();
@@ -1531,21 +1533,7 @@ trait PlaceNewOrder
         $order->is_guest = $request->user ? 0 : 1;
         $order->store_id = $request['store_id'];
 
-        $store = $store = Store::with(['discount', 'store_sub'])->where('id', $request->store_id)->first();
 
-        if ($request->order_type !== 'parcel') {
-            $couponData = $this->getCouponData($request);
-            if (data_get($couponData, 'status_code') === 403) {
-
-                return response()->json([
-                    'errors' => [
-                        ['code' => data_get($couponData, 'code'), 'message' => data_get($couponData, 'message')]
-                    ]
-                ], data_get($couponData, 'status_code'));
-            } else {
-                $coupon = data_get($couponData, 'coupon');
-            }
-        }
 
         $additionalCharges = [];
         $settings = BusinessSetting::whereIn('key', [
@@ -1565,47 +1553,64 @@ trait PlaceNewOrder
             $additionalCharges['tax_on_additional_charge'] = $additional_charge ?? 0;
         }
 
-        $extra_packaging_amount =  (!empty($extra_packaging_data) && $request?->extra_packaging_amount > 0 && $store && ($extra_packaging_data[$store->module->module_type] == '1') && ($store?->storeConfig?->extra_packaging_status == '1')) ? $store?->storeConfig?->extra_packaging_amount : 0;
 
-        if ($extra_packaging_amount > 0) {
-            $additionalCharges['tax_on_packaging_charge'] =  $extra_packaging_amount;
+        if ($request->order_type !== 'parcel') {
+
+            $store = Store::with(['discount', 'store_sub'])->where('id', $request->store_id)->first();
+
+            $couponData = $this->getCouponData($request);
+            if (data_get($couponData, 'status_code') === 403) {
+
+                return response()->json([
+                    'errors' => [
+                        ['code' => data_get($couponData, 'code'), 'message' => data_get($couponData, 'message')]
+                    ]
+                ], data_get($couponData, 'status_code'));
+            } else {
+                $coupon = data_get($couponData, 'coupon');
+            }
+            $extra_packaging_amount =  (!empty($extra_packaging_data) && $request?->extra_packaging_amount > 0 && $store && ($extra_packaging_data[$store->module->module_type] == '1') && ($store?->storeConfig?->extra_packaging_status == '1')) ? $store?->storeConfig?->extra_packaging_amount : 0;
+
+            if ($extra_packaging_amount > 0) {
+                $additionalCharges['tax_on_packaging_charge'] =  $extra_packaging_amount;
+            }
+
+            $carts = Cart::where('user_id', $order->user_id)->where('is_guest', $order->is_guest)->where('module_id', $request->header('moduleId'))
+                ->when(isset($request->is_buy_now) && $request->is_buy_now == 1 && $request->cart_id, function ($query) use ($request) {
+                    return $query->where('id', $request->cart_id);
+                })
+                ->get()->map(function ($data) {
+                    $data->add_on_ids = json_decode($data->add_on_ids, true);
+                    $data->add_on_qtys = json_decode($data->add_on_qtys, true);
+                    $data->variation = json_decode($data->variation, true);
+                    return $data;
+                });
+
+            if (isset($request->is_buy_now) && $request->is_buy_now == 1) {
+                $carts = json_decode($request['cart'], true);
+            }
+            $order_details = $this->makeOrderDetails($carts, $request, $order, $store);
+            if (data_get($order_details, 'status_code') === 403) {
+
+                return response()->json([
+                    'errors' => [
+                        ['code' => data_get($order_details, 'code'), 'message' => data_get($order_details, 'message')]
+                    ]
+                ], data_get($order_details, 'status_code'));
+            }
+
+            $total_addon_price = $order_details['total_addon_price'];
+            $product_price = $order_details['product_price'];
+            $store_discount_amount = $order_details['store_discount_amount'];
+            $flash_sale_admin_discount_amount = $order_details['flash_sale_admin_discount_amount'];
+            $flash_sale_vendor_discount_amount = $order_details['flash_sale_vendor_discount_amount'];
+            $order_details = $order_details['order_details'];
+
+            $coupon_discount_amount = $coupon ? CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount) : 0;
         }
-
-        $carts = Cart::where('user_id', $order->user_id)->where('is_guest', $order->is_guest)->where('module_id', $request->header('moduleId'))
-            ->when(isset($request->is_buy_now) && $request->is_buy_now == 1 && $request->cart_id, function ($query) use ($request) {
-                return $query->where('id', $request->cart_id);
-            })
-            ->get()->map(function ($data) {
-                $data->add_on_ids = json_decode($data->add_on_ids, true);
-                $data->add_on_qtys = json_decode($data->add_on_qtys, true);
-                $data->variation = json_decode($data->variation, true);
-                return $data;
-            });
-
-        if (isset($request->is_buy_now) && $request->is_buy_now == 1) {
-            $carts = json_decode($request['cart'], true);
-        }
-
-        $order_details = $this->makeOrderDetails($carts, $request, $order, $store);
-        if (data_get($order_details, 'status_code') === 403) {
-
-            return response()->json([
-                'errors' => [
-                    ['code' => data_get($order_details, 'code'), 'message' => data_get($order_details, 'message')]
-                ]
-            ], data_get($order_details, 'status_code'));
-        }
-
-        $total_addon_price = $order_details['total_addon_price'];
-        $product_price = $order_details['product_price'];
-        $store_discount_amount = $order_details['store_discount_amount'];
-        $flash_sale_admin_discount_amount = $order_details['flash_sale_admin_discount_amount'];
-        $flash_sale_vendor_discount_amount = $order_details['flash_sale_vendor_discount_amount'];
-        $order_details = $order_details['order_details'];
-
-        $coupon_discount_amount = $coupon ? CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount) : 0;
 
         $total_price = $product_price + $total_addon_price - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount  - $coupon_discount_amount;
+
 
         if ($order->is_guest  == 0 && $order->user_id) {
             $user = User::withcount('orders')->find($order->user_id);
@@ -1618,14 +1623,43 @@ trait PlaceNewOrder
 
         $totalDiscount = $store_discount_amount + $flash_sale_admin_discount_amount + $flash_sale_vendor_discount_amount  + $coupon_discount_amount +  $ref_bonus_amount;
 
-        $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount, $product_price + $total_addon_price, $store->id, false);
+        if ($request->order_type !== 'parcel') {
 
-        $data = [
-            'tax_amount' => $finalCalculatedTax['tax_amount'],
-            'tax_status' => $finalCalculatedTax['tax_status'],
-            'tax_included' => $finalCalculatedTax['tax_included'],
-            // 'taxData' =>  $finalCalculatedTax['taxData']
-        ];
+            $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount, $product_price + $total_addon_price, $order->store_id, false);
+            $data = [
+                'tax_amount' => $finalCalculatedTax['tax_amount'],
+                'tax_status' => $finalCalculatedTax['tax_status'],
+                'tax_included' => $finalCalculatedTax['tax_included'],
+            ];
+        }
+
+
+        if ($request->order_type == 'parcel') {
+
+            $finalCalculatedTax =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
+                amount: $product_price,
+                productIds: [],
+                categoryIds: [],
+                quantity: [],
+                taxPayer: 'parcel',
+                storeData: true,
+                additionalCharges: $additionalCharges,
+                addonIds: [],
+                addonQuantity: [],
+                addonCategoryIds: [],
+                orderId: null,
+                storeId: null
+            );
+            $data = [
+                'tax_amount' => $finalCalculatedTax['totalTaxamount'],
+                'tax_included' => $finalCalculatedTax['include'],
+                'tax_status' => $finalCalculatedTax['include'] ?  'included' : 'excluded'
+            ];
+        }
+
+
+
+
         return response()->json($data, 200);
     }
     public function setPosCalculatedTax($store, $storeData = false)

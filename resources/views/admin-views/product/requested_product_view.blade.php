@@ -229,13 +229,7 @@
                                     <strong> {{ $product->discount_type == 'percent' ? $product->discount .'%' :  \App\CentralLogics\Helpers::format_currency($product['discount']) }} </strong>
                                 </span>
 
-                                @php($tax_included = \App\Models\BusinessSetting::where('key', 'tax_included')->first()?->value)
-
-                                <span class="d-block mb-1">
-                                    <span>{{ translate('messages.tax') }}</span>
-                                    <span>:</span>
-                                    <strong> {{ $product?->store?->tax .'%' }}  ({{  $tax_included == 1 ? translate('included') :  translate('excluded')}})</strong>
-                                </span>
+             
 
                             </td>
 

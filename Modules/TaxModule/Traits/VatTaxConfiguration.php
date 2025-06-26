@@ -24,11 +24,17 @@ trait VatTaxConfiguration
         $allProjects = [
             '6ammart' => [
                 'tax_calculate_from' => ['Calculate_Tax_on_Billing_Address_Location'],
+
                 'tax_calculate_on' => ['order_wise', 'product_wise', 'category_wise'],
-                'additional_tax' => ['tax_on_additional_charge', 'tax_on_packaging_charge'],
                 'tax_calculate_on_rental_provider' => ['trip_wise'],
                 'tax_calculate_on_parcel' => ['order_wise'],
+                'tax_calculate_on_prescription' => ['order_wise'],
+
+                'additional_tax' => ['tax_on_additional_charge', 'tax_on_packaging_charge'],
                 'additional_tax_rental_provider' => ['tax_on_additional_charge'],
+                'additional_tax_parcel' => ['tax_on_additional_charge'],
+                'additional_tax_prescription' => ['tax_on_additional_charge','tax_on_packaging_charge'],
+
                 'payer_types'=> [ 'vendor','rental_provider','parcel', 'prescription'],
 
             ],
