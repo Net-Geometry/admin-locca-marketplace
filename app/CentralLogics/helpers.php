@@ -4719,6 +4719,24 @@ class Helpers
     }
 
 
+    public static function getTaxSystemType($getTaxVatList = true){
+        if (addon_published_status('TaxModule')) {
+            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
+            if(!$SystemTaxVat){
+                 return [ 'productWiseTax' => false ,'categoryWiseTax'=> false,  'taxVats' =>  []];
+            }
+            if($getTaxVatList){
+                $taxVats =  \Modules\TaxModule\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
+            }
+
+            if ($SystemTaxVat?->tax_type == 'product_wise') {
+                $productWiseTax = true;
+            } elseif ($SystemTaxVat?->tax_type == 'category_wise') {
+                $categoryWiseTax = true;
+            }
+        }
+        return [ 'productWiseTax' => $productWiseTax?? false ,'categoryWiseTax'=> $categoryWiseTax?? false,  'taxVats' => $taxVats ?? []];
+    }
 
 }
 

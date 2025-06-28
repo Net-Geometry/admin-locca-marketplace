@@ -44,15 +44,10 @@ class ItemController extends Controller
     {
         $categories = Category::where(['position' => 0])->get();
 
-        $productWiseTax = false;
-        $taxVats = [];
-        if (addon_published_status('TaxModule')) {
-            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
-            if ($SystemTaxVat?->tax_type == 'product_wise') {
-                $productWiseTax = true;
-                $taxVats =  \Modules\TaxModule\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
-            }
-        }
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
+        $taxVats = $taxData['taxVats'];
+
         return view('admin-views.product.index', compact('categories', 'productWiseTax', 'taxVats'));
     }
 
@@ -415,18 +410,11 @@ class ItemController extends Controller
             $sub_category = null;
         }
 
-        $productWiseTax = false;
-        $taxVats = [];
-        $taxVatIds = [];
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
+        $taxVats = $taxData['taxVats'];
+        $taxVatIds = $productWiseTax ? $product->taxVats()->pluck('tax_id')->toArray() : [];
 
-        if (addon_published_status('TaxModule')) {
-            $taxVatIds = $product->taxVats()->pluck('tax_id')->toArray();
-            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
-            if ($SystemTaxVat?->tax_type == 'product_wise') {
-                $productWiseTax = true;
-                $taxVats =  \Modules\TaxModule\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
-            }
-        }
 
         return view('admin-views.product.edit', compact('product', 'sub_category', 'category', 'temp_product', 'productWiseTax', 'taxVats', 'taxVatIds'));
     }
@@ -1106,7 +1094,10 @@ class ItemController extends Controller
         $condition = $condition_id != 'all' ? CommonCondition::findOrFail($condition_id) : [];
         $brand = $brand_id != 'all' ? Brand::findOrFail($brand_id) : [];
 
-        return view('admin-views.product.list', compact('items', 'store', 'category', 'type', 'sub_categories', 'condition'));
+        $taxData = Helpers::getTaxSystemType(getTaxVatList: false);
+        $productWiseTax = $taxData['productWiseTax'];
+
+        return view('admin-views.product.list', compact('items', 'store', 'category', 'type', 'sub_categories', 'condition','productWiseTax'));
     }
 
     public function remove_image(Request $request)
@@ -1632,12 +1623,17 @@ class ItemController extends Controller
             $typ = 'Food';
         }
 
+
+
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
         $data = [
             'sub_tab' => $request?->sub_tab,
             'data' => $foods,
             'search' => $request['search'] ?? null,
             'zone' => Helpers::get_zones_name($store->zone_id),
             'store_name' => $store->name,
+            'productWiseTax' => $productWiseTax
         ];
         if ($request->type == 'csv') {
             return Excel::download(new StoreItemExport($data), $typ . 'List.csv');
@@ -1705,6 +1701,9 @@ class ItemController extends Controller
             $format_type = 'Food';
         }
 
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
+
         $data = [
             'table' => $request?->table,
             'data' => $item,
@@ -1712,6 +1711,7 @@ class ItemController extends Controller
             'store' => $store_id != 'all' ? Store::findOrFail($store_id)?->name : null,
             'category' => $category_id != 'all' ? Category::findOrFail($category_id)?->name : null,
             'module_name' => Helpers::get_module_name(Config::get('module.current_module_id')),
+            'productWiseTax' => $productWiseTax
         ];
         if ($request->type == 'csv') {
             return Excel::download(new ItemListExport($data), $format_type . 'List.csv');

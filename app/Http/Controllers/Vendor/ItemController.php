@@ -47,15 +47,10 @@ class ItemController extends Controller
         })->get();
         $module_data = config('module.' . Helpers::get_store_data()->module->module_type);
 
-        $productWiseTax = false;
-        $taxVats = [];
-        if (addon_published_status('TaxModule')) {
-            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
-            if ($SystemTaxVat?->tax_type == 'product_wise') {
-                $productWiseTax = true;
-                $taxVats =  \Modules\TaxModule\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
-            }
-        }
+
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
+        $taxVats = $taxData['taxVats'];
 
         return view('vendor-views.product.index', compact('categories', 'module_data', 'conditions', 'brands', 'productWiseTax', 'taxVats'));
     }
@@ -475,18 +470,11 @@ class ItemController extends Controller
             $query->where('module_id', Helpers::get_store_data()->module_id)->orWhere('module_id', null);
         })->get();
 
-        $productWiseTax = false;
-        $taxVats = [];
-        $taxVatIds = [];
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
+        $taxVats = $taxData['taxVats'];
+        $taxVatIds =  $productWiseTax ? $product->taxVats()->pluck('tax_id')->toArray(): [];
 
-        if (addon_published_status('TaxModule')) {
-            $taxVatIds = $product->taxVats()->pluck('tax_id')->toArray();
-            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
-            if ($SystemTaxVat?->tax_type == 'product_wise') {
-                $productWiseTax = true;
-                $taxVats =  \Modules\TaxModule\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
-            }
-        }
         return view('vendor-views.product.edit', compact('product', 'product_category', 'categories', 'module_data', 'temp_product', 'conditions', 'brands', 'productWiseTax', 'taxVats', 'taxVatIds'));
     }
 
@@ -965,8 +953,12 @@ class ItemController extends Controller
             ->type($type)->latest()->paginate(config('default_pagination'));
         $sub_categories = $category_id != 'all' ? Category::where('parent_id', $category_id)->get(['id', 'name']) : [];
 
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
+
+
         $category = $category_id != 'all' ? Category::findOrFail($category_id) : null;
-        return view('vendor-views.product.list', compact('items', 'category', 'type', 'sub_categories'));
+        return view('vendor-views.product.list', compact('items', 'category', 'type', 'sub_categories','productWiseTax'));
     }
 
     public function search(Request $request)

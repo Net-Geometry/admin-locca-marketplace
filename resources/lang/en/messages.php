@@ -7767,4 +7767,5 @@ Smartly or Earn. ',
   'Create_Taxes' => 'Create Taxes',
   'Setup_Taxes' => 'Setup Taxes',
   'Trip_Id' => 'Trip Id',
+  'The password must be at least 8 characters.' => 'The password must be at least 8 characters.',
 );
