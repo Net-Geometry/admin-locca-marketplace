@@ -7780,4 +7780,5 @@ Smartly or Earn. ',
   'with_this_react_website_your_customers_will_experience_your_system_in_a_more_attractive_and_seamless_way' => 'With this react website your customers will experience your system in a more attractive and seamless way',
   'want_to_Turn_ON_the_Deliveryman_App_addon?' => 'Want to Turn ON the Deliveryman App addon?',
   'want_to_Turn_OFF_the_Deliveryman_App_addon?' => 'Want to Turn OFF the Deliveryman App addon?',
+  'Activation_failed' => 'Activation failed',
 );

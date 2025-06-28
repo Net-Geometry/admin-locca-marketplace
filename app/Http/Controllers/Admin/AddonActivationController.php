@@ -28,7 +28,7 @@ class AddonActivationController extends Controller
     {
         $data = $this->addonService->addonActivationProcess(request: $request);
         if ($data['status']) {
-            Helpers::businessUpdateOrInsert(['key' => 'addon_activation_delivery_man_app'], [
+            Helpers::businessUpdateOrInsert(['key' => $request['key']], [
                 'value' => json_encode([
                     'activation_status' => $request['status'] ?? 0,
                     'username' => $request['username'],

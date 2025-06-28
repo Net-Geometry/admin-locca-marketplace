@@ -23,6 +23,7 @@
                 <input type="hidden" name="addon_name" value="vendor_app">
                 <input type="hidden" name="software_type" value="addon">
                 <input type="hidden" name="software_id" value="MzY3NzIxNzM=">
+                <input type="hidden" name="key" value="addon_activation_vendor_app">
                 <div class="card-body p-20">
                     <div class="row align-items-center">
                         <div class="col-xxl-8 col-md-6 mb-md-0 mb-2">
@@ -40,7 +41,7 @@
                                 <div class="mb-0">
                                     <label class="toggle-switch toggle-switch-sm mb-0">
                                             <input type="checkbox"
-                                                    data-id="admin_free_delivery_status"
+                                                    data-id="addon_activation_vendor_app_status"
                                                     data-type="toggle"
                                                     data-image-on="{{ asset('/public/assets/admin/img/modal/free-delivery-on.png') }}"
                                                     data-image-off="{{ asset('/public/assets/admin/img/modal/free-delivery-off.png') }}"
@@ -49,7 +50,7 @@
 
                                                     class="status toggle-switch-input dynamic-checkbox-toggle"
 
-                                                name="admin_free_delivery_status" id="admin_free_delivery_status"
+                                                name="status" id="addon_activation_vendor_app_status"
                                                 value="1"
                                                 {{ isset($addon_activation_vendor_app['activation_status']) && $addon_activation_vendor_app['activation_status'] == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text mb-0">
@@ -103,6 +104,7 @@
                 <input type="hidden" name="addon_name" value="deliveryman_app">
                 <input type="hidden" name="software_type" value="addon">
                 <input type="hidden" name="software_id" value="MzY3NzIxNDg=">
+                <input type="hidden" name="key" value="addon_activation_delivery_man_app">
                 <div class="card-body p-20">
                     <div class="row align-items-center">
                         <div class="col-xxl-8 col-md-6 mb-md-0 mb-2">
@@ -120,7 +122,7 @@
                                 <div class="mb-0">
                                     <label class="toggle-switch toggle-switch-sm mb-0">
                                             <input type="checkbox"
-                                                    data-id="admin_free_delivery_status"
+                                                    data-id="addon_activation_delivery_man_app_status"
                                                     data-type="toggle"
                                                     data-image-on="{{ asset('/public/assets/admin/img/modal/free-delivery-on.png') }}"
                                                     data-image-off="{{ asset('/public/assets/admin/img/modal/free-delivery-off.png') }}"
@@ -129,7 +131,7 @@
 
                                                     class="status toggle-switch-input dynamic-checkbox-toggle"
 
-                                                name="admin_free_delivery_status" id="admin_free_delivery_status"
+                                                name="status" id="addon_activation_delivery_man_app_status"
                                                 value="1"
                                                 {{ isset($addon_activation_delivery_man_app['activation_status']) && $addon_activation_delivery_man_app['activation_status'] == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text mb-0">
@@ -183,6 +185,7 @@
                 <input type="hidden" name="addon_name" value="react_web">
                 <input type="hidden" name="software_type" value="addon">
                 <input type="hidden" name="software_id" value="NDUzNzAzNTE=">
+                <input type="hidden" name="key" value="addon_activation_react">
                 <div class="card-body p-20">
                     <div class="row align-items-center">
                         <div class="col-xxl-8 col-md-6 mb-md-0 mb-2">
@@ -200,7 +203,7 @@
                                 <div class="mb-0">
                                     <label class="toggle-switch toggle-switch-sm mb-0">
                                             <input type="checkbox"
-                                                    data-id="admin_free_delivery_status"
+                                                    data-id="addon_activation_react_status"
                                                     data-type="toggle"
                                                     data-image-on="{{ asset('/public/assets/admin/img/modal/free-delivery-on.png') }}"
                                                     data-image-off="{{ asset('/public/assets/admin/img/modal/free-delivery-off.png') }}"
@@ -209,7 +212,7 @@
 
                                                     class="status toggle-switch-input dynamic-checkbox-toggle"
 
-                                                name="admin_free_delivery_status" id="admin_free_delivery_status"
+                                                name="status" id="addon_activation_react_status"
                                                 value="1"
                                                 {{ isset($addon_activation_react['activation_status']) && $addon_activation_react['activation_status'] == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text mb-0">
