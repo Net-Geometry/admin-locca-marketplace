@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Maatwebsite\Excel\Facades\Excel;
 
-class VendoTaxReportController extends Controller
+class VendorTaxReportController extends Controller
 {
     public function __construct()
     {

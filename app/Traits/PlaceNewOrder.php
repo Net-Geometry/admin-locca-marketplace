@@ -1568,13 +1568,15 @@ trait PlaceNewOrder
             } else {
                 $coupon = data_get($couponData, 'coupon');
             }
-            $extra_packaging_amount =  (!empty($extra_packaging_data) && $request?->extra_packaging_amount > 0 && $store && ($extra_packaging_data[$store->module->module_type] == '1') && ($store?->storeConfig?->extra_packaging_status == '1')) ? $store?->storeConfig?->extra_packaging_amount : 0;
 
-            if ($extra_packaging_amount > 0) {
-                $additionalCharges['tax_on_packaging_charge'] =  $extra_packaging_amount;
-            }
 
-            if($request->is_prescription !== true){
+            if(!$request->is_prescription){
+
+                $extra_packaging_amount =  (!empty($extra_packaging_data) && $request?->extra_packaging_amount > 0 && $store && ($extra_packaging_data[$store->module->module_type] == '1') && ($store?->storeConfig?->extra_packaging_status == '1')) ? $store?->storeConfig?->extra_packaging_amount : 0;
+
+                if ($extra_packaging_amount > 0) {
+                    $additionalCharges['tax_on_packaging_charge'] =  $extra_packaging_amount;
+                }
 
                 $carts = Cart::where('user_id', $order->user_id)->where('is_guest', $order->is_guest)->where('module_id', $request->header('moduleId'))
                     ->when(isset($request->is_buy_now) && $request->is_buy_now == 1 && $request->cart_id, function ($query) use ($request) {
@@ -1626,7 +1628,7 @@ trait PlaceNewOrder
 
         $totalDiscount = $store_discount_amount + $flash_sale_admin_discount_amount + $flash_sale_vendor_discount_amount  + $coupon_discount_amount +  $ref_bonus_amount;
 
-        if ($request->order_type !== 'parcel' && $request->is_prescription !== true) {
+        if ($request->order_type !== 'parcel' && !$request->is_prescription) {
 
             $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount, $product_price + $total_addon_price, $order->store_id, false);
             $data = [
@@ -1637,7 +1639,7 @@ trait PlaceNewOrder
         }
 
 
-        if ($request->order_type == 'parcel'|| $request->is_prescription === true) {
+        if ($request->order_type == 'parcel'|| $request->is_prescription == true) {
             $finalCalculatedTax =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                 amount: $product_price,
                 productIds: [],
