@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
-    Route::group(['middleware' => ['admin', 'current-module']], function () {
+    Route::group(['middleware' => ['admin', 'current-module', 'actch:admin_panel']], function () {
         Route::get('/test', function () {
             return view('admin-views.test.VendorPanel-tax-report');
         });
@@ -285,7 +285,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
 
 
-        Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.', 'middleware' => ['module:settings', 'actch']], function () {
+        Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.', 'middleware' => ['module:settings']], function () {
             Route::get('business-setup/{tab?}', 'BusinessSettingsController@business_index')->name('business-setup');
             Route::get('react-setup', 'BusinessSettingsController@react_setup')->name('react-setup');
             Route::post('react-update', 'BusinessSettingsController@react_update')->name('react-update');
@@ -340,6 +340,11 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::group(['prefix' => 'login-settings', 'as' => 'login-settings.'], function () {
                 Route::get('login-setup', 'BusinessSettingsController@login_settings')->name('index');
                 Route::post('login-setup/update', 'BusinessSettingsController@login_settings_update')->name('update');
+            });
+
+            Route::group(['prefix' => 'addon-activation', 'as' => 'addon-activation.'], function () {
+                Route::get('', 'AddonActivationController@index')->name('index');
+                Route::post('activation', 'AddonActivationController@activation')->name('activation');
             });
 
             Route::get('login-url-setup', 'BusinessSettingsController@login_url_page')->name('login_url_page');

@@ -349,13 +349,13 @@
                             </a>
                         </li>
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/react*') ? 'active' : '' }}">
+                        {{-- <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/react*') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.business-settings.react-setup') }}"
                                title="{{ translate('messages.react_site') }}">
                                 <span class="tio-rear-window-defrost nav-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.react_site') }}</span>
                             </a>
-                        </li>
+                        </li> --}}
                         @if (addon_published_status('Rental'))
 
                             <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/rental-email-setup*') || Request::is('admin/business-settings/email-setup*') ? 'active' : '' }}">
@@ -411,7 +411,13 @@
                             </a>
                         </li>
 
-
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/addon-activation*') ? 'active' : '' }}">
+                            <a class="nav-link " href="{{ route('admin.business-settings.addon-activation.index') }}"
+                               title="{{ translate('messages.Addon_Activation') }}">
+                                <span class="tio-appointment nav-icon"></span>
+                                <span class="text-truncate">{{ translate('messages.Addon_Activation') }}</span>
+                            </a>
+                        </li>
 
 
                         @if (addon_published_status('Rental'))

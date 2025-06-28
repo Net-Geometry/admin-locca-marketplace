@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\CentralLogics\Helpers;
 use App\Traits\ActivationClass;
 use Closure;
 use Illuminate\Http\Request;
@@ -20,10 +19,18 @@ class ActivationCheckMiddleware
      * @param \Closure $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next, $area = null): mixed
     {
-        if (!$this->actch()) {
-            return Redirect::away(base64_decode('aHR0cHM6Ly82YW10ZWNoLmNvbS9zb2Z0d2FyZS1hY3RpdmF0aW9u'))->send();
+        $response = $this->checkActivationCache(app: $area);
+        if (!$response) {
+            if (!strpos(url()->current(), '/api')) {
+                return Redirect::away(route(base64_decode('c3lzdGVtLmFjdGl2YXRpb24tY2hlY2s=')))->send();
+            }
+
+            return response()->json([
+                'code' => 503,
+                'message' => 'Please check activation for '. str_replace('_', ' ', $area),
+            ], 503);
         }
         return $next($request);
     }
