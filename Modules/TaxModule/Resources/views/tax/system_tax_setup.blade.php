@@ -337,8 +337,7 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <div id=""
-                                                    class="{{ !$systemTaxVatForPrescription || in_array($systemTaxVatForPrescription?->tax_type, ['order_wise', 'trip_wise']) ? '' : 'd-none' }}">
+                                                <div>
                                                     <span
                                                         class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
                                                     <select

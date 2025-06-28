@@ -8,6 +8,7 @@ use Modules\Rental\Http\Controllers\Api\Provider\ConversationController;
 use Modules\Rental\Http\Controllers\Api\Provider\CouponController;
 use Modules\Rental\Http\Controllers\Api\Provider\DriverController;
 use Modules\Rental\Http\Controllers\Api\Provider\ProviderController;
+use Modules\Rental\Http\Controllers\Api\Provider\ProviderTaxReportController;
 use Modules\Rental\Http\Controllers\Api\Provider\VehicleController;
 use Modules\Rental\Http\Controllers\Api\Provider\ProviderTripController;
 use Modules\Rental\Http\Controllers\Api\Public\CouponController as Coupon;
@@ -102,6 +103,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
             Route::put('assign-driver', [ProviderTripController::class, 'assignDriver']);
             Route::put('edit-trip', [ProviderTripController::class, 'editTrip']);
         });
+        Route::get('get-tax-report',[ProviderTaxReportController::class, 'providerTax'])->name('providerTax');
 
         Route::get('category/list', [ProviderController::class, 'categoryList']);
         Route::get('brand/list', [ProviderController::class, 'brandList']);

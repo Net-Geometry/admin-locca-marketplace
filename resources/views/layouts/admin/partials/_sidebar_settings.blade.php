@@ -474,20 +474,20 @@
                                    <li class="navbar-vertical-aside-has-menu @yield('tax_setup')">
                                        <a class="js-navbar-vertical-aside-menu-link nav-link"
                                        href="{{route('taxvat.index')}}"
-                                       title="{{translate('Taxes')}}">
+                                       title="{{translate('Create_Taxes')}}">
                                            <i class="tio-chart-line-up nav-icon"></i>
                                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                       {{translate('Taxes')}}
+                                       {{translate('Create_Taxes')}}
                                    </span>
                                        </a>
                                    </li>
                                    <li class="navbar-vertical-aside-has-menu @yield('tax_system_setup')">
                                        <a class="js-navbar-vertical-aside-menu-link nav-link"
                                        href="{{route('taxvat.systemTaxvat',['type' => 'vendor'])}}"
-                                       title="{{translate('System_Taxes')}}">
+                                       title="{{translate('Setup_Taxes')}}">
                                            <i class="tio-calculator nav-icon"></i>
                                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                       {{translate('System_Taxes')}}
+                                       {{translate('Setup_Taxes')}}
                                    </span>
                                        </a>
                                    </li>

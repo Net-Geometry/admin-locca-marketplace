@@ -188,7 +188,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         });
 
         Route::get('get-expense', 'ReportController@expense_report');
-         Route::get('get-tax-report', 'ReportController@vendorTax');
+        Route::get('get-tax-report', 'ReportController@vendorTax');
 
         Route::get('get-disbursement-report', 'ReportController@disbursement_report');
         Route::get('subscription-transaction', 'SubscriptionController@transaction');

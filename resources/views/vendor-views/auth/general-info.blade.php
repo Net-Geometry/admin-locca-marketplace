@@ -423,8 +423,7 @@
                                             <div class="card __card bg-F8F9FC rounded p-20 h-100">
                                                 <div class="card-body">
                                                     <div class="form-group mb-3">
-                                                        <label class="input-label mb-2 d-block title-clr fw-normal" for="exampleFormControlInput1">{{translate('Taxpayer
-                                                Identification Number(TIN)')}} <span class="text-danger">*</span></label>
+                                                        <label class="input-label mb-2 d-block title-clr fw-normal" for="exampleFormControlInput1">{{translate('Taxpayer Identification Number(TIN)')}} <span class="text-danger">*</span></label>
                                                         <input type="number" name="tin" placeholder="{{translate('Type Your Taxpayer Identification Number(TIN)')}}" class=" form-control __form-control" required>
                                                     </div>
                                                     <div class="form-group mb-0">
