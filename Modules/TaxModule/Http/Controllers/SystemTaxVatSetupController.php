@@ -52,9 +52,7 @@ class SystemTaxVatSetupController extends Controller
             ->first();
 
         if ($this->getProjectName() == '6ammart' && $systemTaxVat?->tax_payer == 'vendor') {
-            $systemTaxVatForPrescription = $this->systemTaxVat->with('additionalData')->when($this->getCountryType() == 'single', function ($query) {
-                $query->where('is_default', true);
-            }, function ($query) use ($request) {
+            $systemTaxVatForPrescription = $this->systemTaxVat->with('additionalData')->when($this->getCountryType() !== 'single', function ($query) use($request) {
                 $query->where('country_code', $request->country_code);
             })
                 ->where('tax_payer', 'prescription')
@@ -147,9 +145,7 @@ class SystemTaxVatSetupController extends Controller
         if ($systemTaxVat?->tax_payer == 'vendor' && $this->getProjectName() == '6ammart') {
 
             if ($request->prescription_system_id == null) {
-                $systemTaxVatForPrescription = $this->systemTaxVat->when($this->getCountryType() == 'single', function ($query) {
-                    $query->where('is_default', true);
-                }, function ($query) use ($request) {
+                $systemTaxVatForPrescription = $this->systemTaxVat->when($this->getCountryType() !== 'single', function ($query) use($request) {
                     $query->where('country_code', $request->country_code);
                 })
                     ->where('tax_payer', 'prescription')
@@ -160,11 +156,10 @@ class SystemTaxVatSetupController extends Controller
 
             if (!$systemTaxVatForPrescription) {
                 $systemTaxVatForPrescription = new $this->systemTaxVat;
-                $systemTaxVatForPrescription->is_default = $systemTaxVat->is_default;
+                $systemTaxVatForPrescription->is_default = false;
                 $systemTaxVatForPrescription->is_included =  $systemTaxVat->is_included;
                 if ($this->getCountryType() !== 'single') {
                     $systemTaxVatForPrescription->country_code =  $systemTaxVat->country_code;
-                    $systemTaxVatForPrescription->is_default = $systemTaxVat->is_default;
                 }
                 $systemTaxVatForPrescription->tax_payer = 'prescription';
                 $systemTaxVatForPrescription->tax_type = $systemTaxVat->tax_type;
