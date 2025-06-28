@@ -173,7 +173,9 @@ class CategoryLogic
             $query = $query->when($filter&&in_array('discounted',$filter),function ($qurey){
                 return $qurey->Discounted()->orderBy('discount','desc');
             });
-
+            $query = $query->when($filter && in_array('available_now', $filter), function ($qurey) {
+                $qurey->whereRaw('CURTIME() BETWEEN available_time_starts AND available_time_ends');
+            });
             if ($category_sub_category_item_default_status != '1'){
                 $query = $query->latest();
             } else {

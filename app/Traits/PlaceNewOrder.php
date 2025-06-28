@@ -1516,7 +1516,6 @@ trait PlaceNewOrder
     public function getCalculatedTax($request)
     {
 
-
         $product_price = $request->order_amount ?? 0;
         $coupon = null;
         $ref_bonus_amount = 0;
@@ -1575,36 +1574,40 @@ trait PlaceNewOrder
                 $additionalCharges['tax_on_packaging_charge'] =  $extra_packaging_amount;
             }
 
-            $carts = Cart::where('user_id', $order->user_id)->where('is_guest', $order->is_guest)->where('module_id', $request->header('moduleId'))
-                ->when(isset($request->is_buy_now) && $request->is_buy_now == 1 && $request->cart_id, function ($query) use ($request) {
-                    return $query->where('id', $request->cart_id);
-                })
-                ->get()->map(function ($data) {
-                    $data->add_on_ids = json_decode($data->add_on_ids, true);
-                    $data->add_on_qtys = json_decode($data->add_on_qtys, true);
-                    $data->variation = json_decode($data->variation, true);
-                    return $data;
-                });
+            if($request->is_prescription !== true){
 
-            if (isset($request->is_buy_now) && $request->is_buy_now == 1) {
-                $carts = json_decode($request['cart'], true);
+                $carts = Cart::where('user_id', $order->user_id)->where('is_guest', $order->is_guest)->where('module_id', $request->header('moduleId'))
+                    ->when(isset($request->is_buy_now) && $request->is_buy_now == 1 && $request->cart_id, function ($query) use ($request) {
+                        return $query->where('id', $request->cart_id);
+                    })
+                    ->get()->map(function ($data) {
+                        $data->add_on_ids = json_decode($data->add_on_ids, true);
+                        $data->add_on_qtys = json_decode($data->add_on_qtys, true);
+                        $data->variation = json_decode($data->variation, true);
+                        return $data;
+                    });
+
+                if (isset($request->is_buy_now) && $request->is_buy_now == 1) {
+                    $carts = json_decode($request['cart'], true);
+                }
+
+                $order_details = $this->makeOrderDetails($carts, $request, $order, $store);
+                if (data_get($order_details, 'status_code') === 403) {
+
+                    return response()->json([
+                        'errors' => [
+                            ['code' => data_get($order_details, 'code'), 'message' => data_get($order_details, 'message')]
+                        ]
+                    ], data_get($order_details, 'status_code'));
+                }
+
+                $total_addon_price = $order_details['total_addon_price'];
+                $product_price = $order_details['product_price'];
+                $store_discount_amount = $order_details['store_discount_amount'];
+                $flash_sale_admin_discount_amount = $order_details['flash_sale_admin_discount_amount'];
+                $flash_sale_vendor_discount_amount = $order_details['flash_sale_vendor_discount_amount'];
+                $order_details = $order_details['order_details'];
             }
-            $order_details = $this->makeOrderDetails($carts, $request, $order, $store);
-            if (data_get($order_details, 'status_code') === 403) {
-
-                return response()->json([
-                    'errors' => [
-                        ['code' => data_get($order_details, 'code'), 'message' => data_get($order_details, 'message')]
-                    ]
-                ], data_get($order_details, 'status_code'));
-            }
-
-            $total_addon_price = $order_details['total_addon_price'];
-            $product_price = $order_details['product_price'];
-            $store_discount_amount = $order_details['store_discount_amount'];
-            $flash_sale_admin_discount_amount = $order_details['flash_sale_admin_discount_amount'];
-            $flash_sale_vendor_discount_amount = $order_details['flash_sale_vendor_discount_amount'];
-            $order_details = $order_details['order_details'];
 
             $coupon_discount_amount = $coupon ? CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount) : 0;
         }
@@ -1623,7 +1626,7 @@ trait PlaceNewOrder
 
         $totalDiscount = $store_discount_amount + $flash_sale_admin_discount_amount + $flash_sale_vendor_discount_amount  + $coupon_discount_amount +  $ref_bonus_amount;
 
-        if ($request->order_type !== 'parcel') {
+        if ($request->order_type !== 'parcel' && $request->is_prescription !== true) {
 
             $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount, $product_price + $total_addon_price, $order->store_id, false);
             $data = [
@@ -1634,14 +1637,13 @@ trait PlaceNewOrder
         }
 
 
-        if ($request->order_type == 'parcel') {
-
+        if ($request->order_type == 'parcel'|| $request->is_prescription === true) {
             $finalCalculatedTax =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                 amount: $product_price,
                 productIds: [],
                 categoryIds: [],
                 quantity: [],
-                taxPayer: 'parcel',
+                taxPayer: $request->is_prescription === true ? 'prescription' : 'parcel',
                 storeData: true,
                 additionalCharges: $additionalCharges,
                 addonIds: [],
