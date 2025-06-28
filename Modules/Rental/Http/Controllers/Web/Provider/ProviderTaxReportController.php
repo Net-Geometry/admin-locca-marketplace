@@ -3,23 +3,20 @@
 
 namespace Modules\Rental\Http\Controllers\Web\Provider;
 
-use App\Exports\VendorTaxExport;
-use App\Exports\VendorWiseTaxExport;
 use App\Http\Controllers\Controller;
-use App\Models\Order;
-use App\Models\Store;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Maatwebsite\Excel\Facades\Excel;
 use App\CentralLogics\Helpers;
-use Modules\TaxModule\Entities\OrderTax;
+use Modules\Rental\Entities\Trips;
+use Modules\Rental\Exports\ProviderTaxExport;
 
 class ProviderTaxReportController extends Controller
 {
 
-    public function vendorTax(Request $request)
+    public function providerTax(Request $request)
     {
 
         $dateRange = $request->dates ?? now()->subDays(6)->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
@@ -49,10 +46,10 @@ class ProviderTaxReportController extends Controller
         // dd("Query took {$time} seconds", $stores);
 
 
-        return view('vendor-views.report.tax-report.vendor-tax-detail-report', compact('totalOrders', 'totalOrderAmount', 'totalTax', 'store', 'orders', 'startDate', 'endDate', 'taxSummary'));
+        return view('rental::provider.report.tax-report.vendor-tax-detail-report', compact('totalOrders', 'totalOrderAmount', 'totalTax', 'store', 'orders', 'startDate', 'endDate', 'taxSummary','dateRange'));
     }
 
-    public function vendorTaxExport(Request $request)
+    public function providerTaxExport(Request $request)
     {
         $dateRange = $request->dates ?? now()->subDays(6)->format('m/d/Y') . ' - ' . now()->format('m/d/Y');
         $key = explode(' ', $request['search']);
@@ -87,48 +84,48 @@ class ProviderTaxReportController extends Controller
         ];
         // dd($request->export_type);
         if ($request->export_type == 'excel') {
-            return Excel::download(new VendorTaxExport($data), $store->name . 's TaxExport.xlsx');
+            return Excel::download(new ProviderTaxExport($data), $store->name . 's TaxExport.xlsx');
         } else if ($request->export_type == 'csv') {
-            return Excel::download(new VendorTaxExport($data),  $store->name . 's TaxExport.csv');
+            return Excel::download(new ProviderTaxExport($data),  $store->name . 's TaxExport.csv');
         }
     }
 
     private function getVendortaxData($store_id, $startDate, $endDate, $search, $export = false)
     {
-        $summary = DB::table('orders')
-            ->where('store_id', $store_id)
-            ->whereIn('order_status', ['delivered', 'refund_requested', 'refund_request_canceled'])
+        $summary = DB::table('trips')
+            ->where('provider_id', $store_id)
+            ->whereIn('trip_status', ['completed', 'refund_requested', 'refund_request_canceled'])
             ->when($startDate && $endDate, fn($q) => $q->whereBetween('created_at', [$startDate, $endDate]))
             ->when(count($search), fn($q) => $q->where(function ($q) use ($search) {
                 foreach ($search as $value) {
                     $q->orWhere('id', 'like', "%{$value}%");
                 }
             }))
-            ->selectRaw('COUNT(*) as total_orders, SUM(order_amount) as total_order_amount, SUM(total_tax_amount) as total_tax')
+            ->selectRaw('COUNT(*) as total_orders, SUM(trip_amount) as total_order_amount, SUM(tax_amount) as total_tax')
             ->first();
 
-        $orders = Order::with([
+        $orders = Trips::with([
             'orderTaxes' => function (MorphMany $query) {
-                $query->where('order_type', Order::class)
+                $query->where('order_type', Trips::class)
                     ->select('id', 'order_id', 'tax_name', 'tax_amount', 'tax_type');
             }
         ])
 
-            ->where('store_id', $store_id)
+            ->where('provider_id', $store_id)
             ->when(count($search), fn($q) => $q->where(function ($q) use ($search) {
                 foreach ($search as $value) {
                     $q->orWhere('id', 'like', "%{$value}%");
                 }
             }))
-            ->whereIn('order_status', ['delivered', 'refund_requested', 'refund_request_canceled'])
+            ->whereIn('trip_status', ['completed', 'refund_requested', 'refund_request_canceled'])
             ->when($startDate && $endDate, fn($q) => $q->whereBetween('created_at', [$startDate, $endDate]))
-            ->select(['id', 'order_amount', 'total_tax_amount', 'order_type', 'created_at', 'order_status', 'payment_status'])
+            ->select(['id', 'trip_amount', 'tax_amount', 'trip_type', 'created_at', 'trip_status', 'payment_status'])
             ->latest('created_at');
 
         if(!$export){
             $taxSummary = DB::table('order_taxes')
                 ->select('tax_name', DB::raw('SUM(tax_amount) as total_tax'))
-                ->where('order_type', Order::class)
+                ->where('order_type', Trips::class)
                 ->when(count($search), fn($q) => $q->where(function ($q) use ($search) {
                     foreach ($search as $value) {
                         $q->orWhere('order_id', 'like', "%{$value}%");

@@ -9,6 +9,7 @@ use Modules\Rental\Http\Controllers\Web\Provider\ReportController;
 use Modules\Rental\Http\Controllers\Web\Provider\VehicleController;
 use Modules\Rental\Http\Controllers\Web\Provider\TripController;
 use Modules\Rental\Http\Controllers\Web\Provider\ProviderDashBoardController;
+use Modules\Rental\Http\Controllers\Web\Provider\ProviderTaxReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -110,6 +111,10 @@ Route::group([ 'middleware' => ['vendor', 'provider-rental-module']], function (
     Route::group(['prefix' => 'report', 'as' => 'report.', 'middleware' => ['module:report']], function () {
         Route::get('trip-report', [ReportController::class, 'tripReport'])->name('trip-report');
         Route::get('trip-report-export', [ReportController::class, 'tripReportExport'])->name('trip-report-export');
+
+        Route::get('provider-tax-report',[ProviderTaxReportController::class, 'providerTax'])->name('providerTax');
+        Route::get('provider-tax-export', [ProviderTaxReportController::class, 'providerTaxExport'])->name('providerTaxExport');
+
     });
 
     Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:employee']], function () {

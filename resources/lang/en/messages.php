@@ -7764,4 +7764,7 @@ Smartly or Earn. ',
   'Tax on Trip Commission' => 'Tax on Trip Commission',
   'Tax_Details_Report' => 'Tax Details Report',
   'Admin_Tax_Report' => 'Admin Tax Report',
+  'Create_Taxes' => 'Create Taxes',
+  'Setup_Taxes' => 'Setup Taxes',
+  'Trip_Id' => 'Trip Id',
 );
