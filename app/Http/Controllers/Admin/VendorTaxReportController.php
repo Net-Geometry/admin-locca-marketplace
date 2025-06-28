@@ -92,7 +92,8 @@ class VendorTaxReportController extends Controller
                             stores.name as store_name,
                             stores.phone as store_phone,
                             COUNT(DISTINCT orders.id) as total_orders,
-                            SUM(orders.order_amount) as total_order_amount ')
+                            SUM(orders.order_amount) as total_order_amount,
+                            SUM(orders.total_tax_amount) as total_tax_amount ')
             ->join('orders as orders', function ($join) use ($startDate, $endDate) {
                 $join->on('orders.store_id', '=', 'stores.id')
                     ->whereIn('orders.order_status', ['delivered', 'refund_requested', 'refund_request_canceled']);
@@ -143,6 +144,7 @@ class VendorTaxReportController extends Controller
                     'store_id' => $store->store_id,
                     'store_name' => $store->store_name,
                     'store_phone' => $store->store_phone,
+                    'store_total_tax_amount' => $store->total_tax_amount,
                     'total_orders' => (int)$store->total_orders,
                     'total_order_amount' => (float)$store->total_order_amount,
                     'tax_data' => $taxGrouped[$store->store_id] ?? [],
@@ -157,6 +159,7 @@ class VendorTaxReportController extends Controller
                 'store_name' => $store->store_name,
                 'store_phone' => $store->store_phone,
                 'total_orders' => (int)$store->total_orders,
+                'store_total_tax_amount' => $store->total_tax_amount,
                 'total_order_amount' => (float)$store->total_order_amount,
                 'tax_data' => $taxGrouped[$store->store_id] ?? [],
             ];

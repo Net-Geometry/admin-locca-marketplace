@@ -15,7 +15,7 @@
                 <form action="" method="get">
                     <div class="row g-lg-4 g-3 align-items-end">
                         <div class="col-lg-4 col-md-6">
- 
+
                             <label class="form-label">{{ translate('Date Range') }}</label>
                             <div class="position-relative">
                                 <i class="tio-calendar-month icon-absolute-on-right"></i>
@@ -168,10 +168,18 @@
                                         {{ \App\CentralLogics\Helpers::format_currency($store->total_order_amount) }}
                                     </td>
                                     <td>
+
+                                        @php($sum_tax_amount=collect($store->tax_data)->sum('total_tax_amount'))
+
                                         <div class="d-flex flex-column gap-1">
                                             <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                                {{ translate('Total:') }} <span>
-                                                    {{ \App\CentralLogics\Helpers::format_currency(collect($store->tax_data)->sum('total_tax_amount')) }}</span>
+                                              {{ translate('Previous Tax Amount:') }} <span>
+                                                    {{ \App\CentralLogics\Helpers::format_currency($store->store_total_tax_amount - $sum_tax_amount) }}</span>
+                                            </div>
+                                            @if ($sum_tax_amount > 0 )
+                                            <div class="d-flex fz-14 gap-3 align-items-center title-clr">
+                                                {{ translate('Sum of Taxes:') }} <span>
+                                                    {{ \App\CentralLogics\Helpers::format_currency($sum_tax_amount) }}</span>
                                             </div>
                                             @foreach ($store->tax_data as $tax)
                                                 <div class="d-flex fz-11 gap-3 align-items-center">
@@ -180,6 +188,8 @@
                                                     </span>
                                                 </div>
                                             @endforeach
+
+                                            @endif
                                         </div>
                                     </td>
                                     <td class="text-end">

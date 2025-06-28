@@ -443,7 +443,9 @@
                             </div>
                         </div>
                             <div class="card-body">
-                    <div class="mb-3">
+
+                    <div class="bg--secondary rounded p-20 mobile-space-0">
+                          <div class="mb-3">
                         <h6 class="fz--14px mb-1">
                             {{ translate('messages.Trip Type') }}
                         </h6>
@@ -451,7 +453,6 @@
                             {{ translate('messages.Choose the trip type you prefer.') }}
                         </p>
                     </div>
-                    <div class="bg--secondary rounded p-20 mobile-space-0">
                         <div class="bg-white rounded p-15 border">
                             <div class="row g-3">
 
@@ -463,7 +464,7 @@
                                                         value="hourly" {{ $vehicle->trip_hourly == 1 ? 'checked' : '' }}>
                                                 <span class="form-check-label ml-2 mt-1">
                                                     <span class="title-clr d-block fz--14px">{{translate('Hourly')}}</span>
-                                                    <p class="fz-12px mb-0 text-wrap">{{translate('Set your hourly rental price.')}}</p>
+                                                    <p class="fz-12px mb-0">{{translate('Set your hourly rental price.')}}</p>
                                                 </span>
                                             </label>
                                         </div>
@@ -477,7 +478,7 @@
                                                 <input class="form-check-input single-select" {{ $vehicle->trip_day_wise == 1 ? 'checked' : ''}} type="checkbox" name="trip_day_wise" value="trip_day_wise">
                                                 <span class="form-check-label ml-2 mt-1">
                                                     <span class="title-clr d-block fz--14px">{{ translate('Per Day') }}</span>
-                                                    <p class="fz-12px mb-0 text-wrap">{{translate('Set your Per Day rental price.')}}</p>
+                                                    <p class="fz-12px mb-0">{{translate('Set your Per Day rental price.')}}</p>
                                                 </span>
                                             </label>
                                         </div>
@@ -492,7 +493,7 @@
                                                         value="distance_wise" {{ $vehicle->trip_distance == 1 ? 'checked' : ''}}>
                                                 <span class="form-check-label ml-2 mt-1">
                                                     <span class="title-clr d-block fz--14px">{{translate('Distance Wise')}}</span>
-                                                    <p class="fz-12px mb-0 text-wrap">{{translate('Set your distance wise rental price.')}}</p>
+                                                    <p class="fz-12px mb-0">{{translate('Set your distance wise rental price.')}}</p>
                                                 </span>
                                             </label>
                                         </div>

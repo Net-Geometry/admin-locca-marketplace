@@ -802,9 +802,9 @@
         "moduleType": [],
         "isModified": false
     },
- 
+
     {
-        "routeName": "Day Wise Report",
+        "routeName": "Transaction Report",
         "URI": "admin/transactions/report/day-wise-report",
         "keywords": "Transaction Report Transection Report Search Data Select Modules All Modules All Zones Select Store All Stores All Time This Year Previous Year This Month This Week Custom Start Date End Date Filter Completed Transaction When The Order Is Successfully Delivered Full Order Amount Goes To This Section Refunded Transaction If The Order Is Successfully Refunded The Full Order Amount Goes To This Section Without The Delivery Fee And Delivery Tips Admin Earning Deducting The Admin Discount From The Admin Earning Amount And Goes To This Section Store Earning Adding Store Earning Amount With Vat/tax Amount Deliveryman Earning Deducting The Admin Commission On The Delivery Fee The Delivery Fee & Tips Amount Goes To Earning Section Order Transactions Search By Order ID Export Download Options Excel Csv Sl Order Id Store Customer Name Total Item Amount Item Discount Coupon Discount Referral Discount Discounted Amount Vat/tax Delivery Charge Order Amount Admin Discount Store Discount Admin Commission Additional Charge Extra Packaging Amount Commision On Delivery Charge Admin Net Income Store Net Income Amount Received By Payment Method Payment Status Action Parcel Order Invalid Customer Data Admin Delivery Man Freelance Restaurant Refunded Completed No Data Found",
         "bladePath": "admin-views/report/day-wise-report",
