@@ -52,17 +52,18 @@ class ReportController extends Controller
     {
         $key = explode(' ', $request['search']);
 
-        if (session()->has('from_date') == false) {
-            session()->put('from_date', date('Y-m-01'));
-            session()->put('to_date', date('Y-m-30'));
+        $from =  null;
+        $to = null;
+        $filter = $request->query('filter', 'all_time');
+        if($filter == 'custom'){
+            $from = $request->from ?? null;
+            $to = $request->to ?? null;
         }
-        $from = session('from_date');
-        $to = session('to_date');
+
         $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
         $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
         $store_id = $request->query('store_id', 'all');
         $store = is_numeric($store_id) ? Store::findOrFail($store_id) : null;
-        $filter = $request->query('filter', 'all_time');
 
         $order_transactions = OrderTransaction::with('order', 'order.details', 'order.customer', 'order.store')->when(isset($zone), function ($query) use ($zone) {
             return $query->where('zone_id', $zone->id);
@@ -256,24 +257,24 @@ class ReportController extends Controller
                 return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
             })->orderBy('created_at', 'desc')
             ->sum(DB::raw('original_delivery_charge + dm_tips'));
-        return view('admin-views.report.day-wise-report', compact('order_transactions', 'zone', 'store', 'filter', 'admin_earned', 'admin_earned_delivery_commission', 'store_earned', 'deliveryman_earned','key'));
+        return view('admin-views.report.day-wise-report', compact('order_transactions', 'zone', 'store', 'filter', 'admin_earned', 'admin_earned_delivery_commission', 'store_earned', 'deliveryman_earned','key','from','to'));
     }
 
     public function day_wise_export(Request $request)
     {
         $key = explode(' ', $request['search']);
 
-        if (session()->has('from_date') == false) {
-            session()->put('from_date', date('Y-m-01'));
-            session()->put('to_date', date('Y-m-30'));
+         $from =  null;
+        $to = null;
+        $filter = $request->query('filter', 'all_time');
+        if($filter == 'custom'){
+            $from = $request->from ?? null;
+            $to = $request->to ?? null;
         }
-        $from = session('from_date');
-        $to = session('to_date');
         $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
         $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
         $store_id = $request->query('store_id', 'all');
         $store = is_numeric($store_id) ? Store::findOrFail($store_id) : null;
-        $filter = $request->query('filter', 'all_time');
 
         $order_transactions = OrderTransaction::when(isset($zone), function ($query) use ($zone) {
             return $query->where('zone_id', $zone->id);
@@ -2868,7 +2869,7 @@ class ReportController extends Controller
     }
 
 
-    
+
     public function low_stock_wise_export(Request $request)
     {
         $key = explode(' ', $request['search']);

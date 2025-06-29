@@ -591,7 +591,7 @@
                         </div>
                         <div class="card-body">
                                 <span class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
-                                <select name="tax_ids[]" id="tax__rate" class="form-control js-select2-custom"
+                                <select name="tax_ids[]" required id="tax__rate" class="form-control js-select2-custom"
                                     multiple="multiple" placeholder="Type & Select Tax Rate">
                                     @foreach ($taxVats as $taxVat)
                                         <option {{ in_array($taxVat->id, $taxVatIds) ? 'selected' : '' }} value="{{ $taxVat->id }}"> {{ $taxVat->name }}

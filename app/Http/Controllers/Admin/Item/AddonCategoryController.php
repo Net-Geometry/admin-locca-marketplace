@@ -64,7 +64,7 @@ class AddonCategoryController extends Controller
         }
         Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'AddonCategory', data_id: $addonCategory->id, data_value: $addonCategory->name);
 
-        Toastr::success(translate('messages.AddonCategory_added_successfully'));
+        Toastr::success(translate('messages.Addon_Category_added_successfully'));
         return back();
     }
 
@@ -125,7 +125,7 @@ class AddonCategoryController extends Controller
         $addonCategory?->translations()->delete();
         $addonCategory?->taxVats()->delete();
         $addonCategory->delete();
-        Toastr::success(translate('messages.AddonCategory_deleted_successfully'));
+        Toastr::success(translate('messages.Addon_Category_deleted_successfully'));
         return back();
     }
 

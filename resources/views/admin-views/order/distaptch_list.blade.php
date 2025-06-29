@@ -329,16 +329,19 @@
                             @endforeach
                         </select>
                     </div>
+                    @if (!$parcel_order)
+
                     <hr class="my-4">
                     <small class="text-cap mb-3">{{translate('messages.store')}}</small>
                     <div class="mb-2 initial--21">
                         <select name="vendor[]" id="vendor_ids" class="form-control js-select2-custom"
                                 multiple="multiple">
-                            @foreach(\App\Models\Store::whereIn('id', $vendor_ids)->get() as $store)
+                            @foreach(\App\Models\Store::whereIn('id', $vendor_ids)->get(['id','name']) as $store)
                                 <option value="{{$store->id}}" selected>{{$store->name}}</option>
                             @endforeach
                         </select>
                     </div>
+                    @endif
 
                     <hr class="my-4">
                     @if($status == 'all')
@@ -522,7 +525,7 @@
 
                     $('#vendor_ids').select2({
                         ajax: {
-                            url: '{{url('/')}}/admin/store/get-restaurants',
+                            url: '{{url('/')}}/admin/store/get-stores',
                             data: function (params) {
                                 return {
                                     q: params.term, // search term

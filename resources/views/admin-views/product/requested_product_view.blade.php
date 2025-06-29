@@ -226,10 +226,10 @@
                                 <span class="d-block mb-1">
                                     <span>{{ translate('messages.discount') }}</span>
                                     <span>:</span>
-                                    <strong> {{ $product->discount_type == 'percent' ? $product->discount .'%' :  \App\CentralLogics\Helpers::format_currency($product['discount']) }} </strong>
+                                    <strong> {{ $product->discount_type == 'percent' ? $product->discount .' %' :  \App\CentralLogics\Helpers::format_currency($product['discount']) }} </strong>
                                 </span>
 
-             
+
 
                             </td>
 

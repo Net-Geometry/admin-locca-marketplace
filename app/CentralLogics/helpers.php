@@ -415,7 +415,14 @@ class Helpers
             }
 
             $data->store['self_delivery_system'] = (int) $data->store->sub_self_delivery;
+            $data['tax_data'] = $data?->taxVats ?$data?->taxVats()->pluck('tax_id')->toArray(): [] ;
 
+            $data['tax_data']= \Modules\TaxModule\Entities\Tax::whereIn('id', $data['tax_data'])->get(['id', 'name', 'tax_rate']);
+            unset($data['taxVats']);
+
+            if (!$trans) {
+                unset($data['translations']);
+            }
             unset($data['pharmacy_item_details']);
             unset($data['store']);
             unset($data['rating']);

@@ -383,9 +383,12 @@ class ItemController extends Controller
 
     public function view($id)
     {
-        $product = Item::withoutGlobalScope(StoreScope::class)->where(['id' => $id])->firstOrFail();
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
+        $product = Item::withoutGlobalScope(StoreScope::class)->with($productWiseTax ? ['taxVats.tax'] : [])->where(['id' => $id])->firstOrFail();
+
         $reviews = Review::where(['item_id' => $id])->latest()->paginate(config('default_pagination'));
-        return view('admin-views.product.view', compact('product', 'reviews'));
+        return view('admin-views.product.view', compact('product', 'reviews', 'productWiseTax'));
     }
 
     public function edit(Request $request, $id)
@@ -2029,8 +2032,8 @@ class ItemController extends Controller
         if (addon_published_status('TaxModule')) {
             $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
             if ($SystemTaxVat?->tax_type == 'product_wise') {
-                \Modules\TaxModule\Entities\Taxable::where('data_type', 'App\Models\TempProduct')->where('data_id', $data->id)
-                    ->update(['data_type' => 'App\Models\Item', 'data_id' => $item->id]);
+                \Modules\TaxModule\Entities\Taxable::where('taxable_type', 'App\Models\TempProduct')->where('taxable_id', $data->id)
+                    ->update(['taxable_type' => 'App\Models\Item', 'taxable_id' => $item->id]);
             }
         }
 

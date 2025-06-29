@@ -6,7 +6,7 @@
 @endpush
 
 @section('content')
-    <div class="content container-fluid">
+    <div id="content-disable" class="content container-fluid ">
         <!-- Page Header -->
         <div class="page-header">
             <h1 class="page-header-title">
@@ -20,7 +20,7 @@
         </div>
         <!-- End Page Header -->
 
-        <div class="card">
+        <div  class="card">
             <div class="card-body">
                 <form action="{{ route('admin.addon.addon-category-store') }}" method="post">
                     @csrf
@@ -286,6 +286,7 @@
         $(document).on('click', '.data-info-show', function() {
             let id = $(this).data('id');
             let url = $(this).data('url');
+            $('#content-disable').addClass('disabled');
             fetch_data(id, url)
         })
 
@@ -339,6 +340,7 @@
              $('.offcanvas-close, #offcanvasOverlay').on('click', function () {
         $('.custom-offcanvas').removeClass('open');
         $('#offcanvasOverlay').removeClass('show');
+         $('#content-disable').removeClass('disabled');
             });
         }
     </script>

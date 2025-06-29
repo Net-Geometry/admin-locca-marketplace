@@ -15,7 +15,7 @@
             <div class="bg--secondary rounded p-20 mb-20">
                 <div class="mb-15">
                     <h4 class="mb-0">{{ translate('Availability') }}</h4>
-                    <p class="fz-12px">{{ translate('If_you_turn_off_this_status_your_tax_calculation_will_effect') }}
+                    <p class="fz-12px">{{ translate('If_you_turn_off_this_status_this_addon_category_will_not_be_available') }}
                     </p>
                 </div>
                 <label class="border d-flex align-items-center bg-white-n justify-content-between rounded p-10px px-3">
