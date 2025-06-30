@@ -7799,4 +7799,5 @@ Smartly or Earn. ',
   'Select Calculate Tax' => 'Select Calculate Tax',
   'Generate Tax Report' => 'Generate Tax Report',
   'Search by Tax Name' => 'Search by Tax Name',
+  'The tin certificate image field is required.' => 'The tin certificate image field is required.',
 );
