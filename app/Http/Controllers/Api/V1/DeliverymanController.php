@@ -12,6 +12,7 @@ use App\Library\Receiver;
 use App\Models\DeliveryMan;
 use App\Models\Notification;
 use App\Models\OrderPayment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
@@ -1159,11 +1160,15 @@ class DeliverymanController extends Controller
         $baseQuery = OrderTransaction::with(['order:id,payment_method'])->where('delivery_man_id', $dm['id']);
 
         if ($request->start_date && $request->end_date) {
-            $baseQuery->whereBetween('created_at', [$request->start_date, $request->end_date]);
+            $start = Carbon::parse($request->start_date)->startOfDay();
+            $end = Carbon::parse($request->end_date)->endOfDay();
+            $baseQuery->whereBetween('created_at', [$start, $end]);
         } elseif ($request->start_date) {
-            $baseQuery->whereDate('created_at', '>=', $request->start_date);
+            $start = Carbon::parse($request->start_date)->startOfDay();
+            $baseQuery->where('created_at', '>=', $start);
         } elseif ($request->end_date) {
-            $baseQuery->whereDate('created_at', '<=', $request->end_date);
+            $end = Carbon::parse($request->end_date)->endOfDay();
+            $baseQuery->where('created_at', '<=', $end);
         }
 
         if ($type === 'delivery_fee') {
