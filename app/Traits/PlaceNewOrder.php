@@ -975,6 +975,7 @@ trait PlaceNewOrder
         $product_data = [];
         $order_details = [];
         $variations = [];
+        $discount_type = '';
         $discount_on_product_by = 'vendor';
         foreach ($carts as $c) {
             $isCampaign = false;
@@ -1107,7 +1108,7 @@ trait PlaceNewOrder
         $discount = $store_discount_amount;
         $storeDiscount = Helpers::get_store_discount($store);
         if (isset($storeDiscount) && $discount_type != 'flash_sale') {
-            $admin_discount = Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase']);
+            $admin_discount = Helpers::checkAdminDiscount(price: $product_price , discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase']);
 
             $discount = max($discount, $admin_discount);
 
@@ -1117,8 +1118,8 @@ trait PlaceNewOrder
                     $order_details[$key]['discount_on_product_by'] = $discount_on_product_by;
                     $order_details[$key]['discount_type'] = 'precentage';
                     $order_details[$key]['discount_percentage'] = $storeDiscount['discount'];
-                    $order_details[$key]['discount_on_item'] =  Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $detail_data['price'] * $detail_data['quantity']);
-                    $order_details[$key]['addon_discount'] =  Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $detail_data['total_add_on_price']);
+                    $order_details[$key]['discount_on_item'] =  Helpers::checkAdminDiscount(price: $product_price , discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $detail_data['price'] * $detail_data['quantity']);
+                    // $order_details[$key]['addon_discount'] = 0 ?? Helpers::checkAdminDiscount(price: $product_price , discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $detail_data['total_add_on_price']);
                 }
             }
         }
@@ -1284,7 +1285,7 @@ trait PlaceNewOrder
         $discount = $store_discount_amount;
         $storeDiscount = Helpers::get_store_discount($store);
         if (isset($storeDiscount) && $discount_type != 'flash_sale') {
-            $admin_discount = Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase']);
+            $admin_discount = Helpers::checkAdminDiscount(price: $product_price , discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase']);
 
             $discount = max($discount, $admin_discount);
 
@@ -1294,9 +1295,9 @@ trait PlaceNewOrder
                     $order_details[$key]['discount_on_product_by'] = $discount_on_product_by;
                     $order_details[$key]['discount_type'] = 'precentage';
                     $order_details[$key]['discount_percentage'] = $storeDiscount['discount'];
-                    $order_details[$key]['discount_on_item'] =  Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $detail_data['price'] * $detail_data['quantity']);
+                    $order_details[$key]['discount_on_item'] =  Helpers::checkAdminDiscount(price: $product_price , discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $detail_data['price'] * $detail_data['quantity']);
 
-                    $order_details[$key]['addon_discount'] =  Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $total_addon_price);
+                    // $order_details[$key]['addon_discount'] =  Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $total_addon_price);
                 }
             }
         }
@@ -1463,7 +1464,7 @@ trait PlaceNewOrder
         $discount = $store_discount_amount;
         $storeDiscount = Helpers::get_store_discount($store);
         if (isset($storeDiscount) && $discount_type != 'flash_sale') {
-            $admin_discount = Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase']);
+            $admin_discount = Helpers::checkAdminDiscount(price: $product_price , discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase']);
 
             $discount = max($discount, $admin_discount);
 
@@ -1473,9 +1474,9 @@ trait PlaceNewOrder
                     $order_details[$key]['discount_on_product_by'] = $discount_on_product_by;
                     $order_details[$key]['discount_type'] = 'precentage';
                     $order_details[$key]['discount_percentage'] = $storeDiscount['discount'];
-                    $order_details[$key]['discount_on_item'] =  Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $detail_data['price'] * $detail_data['quantity']);
+                    $order_details[$key]['discount_on_item'] =  Helpers::checkAdminDiscount(price: $product_price , discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $detail_data['price'] * $detail_data['quantity']);
 
-                    $order_details[$key]['addon_discount'] =  Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $total_addon_price);
+                    // $order_details[$key]['addon_discount'] =  Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $total_addon_price);
                 }
             }
         }
@@ -1510,7 +1511,13 @@ trait PlaceNewOrder
 
     public function getCalculatedTax($request)
     {
-
+        if(gettype($request->is_prescription) == "string") {
+            if($request->is_prescription == "true") {
+                $request->is_prescription = true;
+            } else {
+                $request->is_prescription = false;
+            }
+        }
         $product_price = $request->order_amount ?? 0;
         $coupon = null;
         $ref_bonus_amount = 0;
@@ -1623,7 +1630,7 @@ trait PlaceNewOrder
 
         $totalDiscount = $store_discount_amount + $flash_sale_admin_discount_amount + $flash_sale_vendor_discount_amount  + $coupon_discount_amount +  $ref_bonus_amount;
 
-        if ($request->order_type !== 'parcel' && !$request->is_prescription) {
+        if ($request->order_type != 'parcel' && $request->is_prescription == false) {
 
             $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount, $product_price + $total_addon_price, $order->store_id, false);
             $data = [
@@ -1633,12 +1640,11 @@ trait PlaceNewOrder
             ];
         }
 
-
         if ($request->order_type == 'parcel'|| $request->is_prescription == true) {
             $finalCalculatedTax =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                 amount: $product_price,
                 productIds: [],
-                taxPayer: $request->is_prescription === true ? 'prescription' : 'parcel',
+                taxPayer: $request->is_prescription == true ? 'prescription' : 'parcel',
                 storeData: true,
                 additionalCharges: $additionalCharges,
                 addonIds: [],
@@ -1651,7 +1657,6 @@ trait PlaceNewOrder
                 'tax_status' => $finalCalculatedTax['include'] ?  'included' : 'excluded'
             ];
         }
-
 
 
 

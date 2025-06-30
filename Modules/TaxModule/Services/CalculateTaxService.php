@@ -26,8 +26,8 @@ class CalculateTaxService
     ) {
         $systemTaxVat = SystemTaxSetup::with('additionalData')
             ->when($countryCode, fn($query) => $query->where('country_code', $countryCode))
-            ->when(!$countryCode, fn($query) => $query->where('is_default', 1))
             ->where('tax_payer', $taxPayer)
+            ->where('is_active',1)
             ->first();
 
         if (!$systemTaxVat || !$systemTaxVat->is_active) {
@@ -301,13 +301,13 @@ class CalculateTaxService
     public static function getProductwiseData(array $productIds, $isInclude, $totalTaxPercent)
     {
         $result = [];
-        foreach ($productIds as $productId => $price) {
+        foreach ($productIds as $product) {
             $result[] = [
                 'include'         => $isInclude,
                 'totalTaxPercent' => $totalTaxPercent,
-                'totalTaxamount'  => self::getTaxAmount($price, $totalTaxPercent, $isInclude)['taxAmount'],
+                'totalTaxamount'  => self::getTaxAmount($product['after_discount_final_price'], $totalTaxPercent, $isInclude)['taxAmount'],
                 'orderTaxIds'     => [],
-                'product_id'      => $productId,
+                'product_id'      => $product['id'],
             ];
         }
 

@@ -4617,44 +4617,90 @@ class Helpers
 
   public static function getFinalCalculatedTax($details_data, $additionalCharges, $totalDiscount, $price, $storeId, $storeData = true)
     {
-
         $addonIds = [];
         $products=[];
+        $tempList = [];
 
+        $productDiscountTotal = 0;
+        $addonDiscountTotal = 0;
+        $totalAfterOwnDiscounts = 0;
         if (addon_published_status('TaxModule')) {
+
             foreach ($details_data as $item) {
-                 if($item['item_id']){
-                    $item_id=$item['item_id'];
-                } else{
-                    $item_id=$item['item_campaign_id'];
-                }
-                $products[]=[
-                    'id'=>$item_id,
-                    'original_price'=>$item['price'],
-                    'quantity'=>$item['quantity'],
-                    'category_id'=>$item['category_id'],
-                    'discount'=>$item['discount_on_item'],
-                    'discount_type'=>$item['discount_type'],
-                    'after_discount_final_price'=>$item['discount_type'] == 'product_discount' ?  ($item['price'] - $item['discount_on_item']) * $item['quantity'] : ($item['price'] * $item['quantity'] )- $item['discount_on_item'],
+                $item_id = $item['item_id'] ?? $item['item_campaign_id'];
+                $itemWiseDiscount = $item['discount_type'] === 'product_discount'  ? $item['discount_on_item'] * $item['quantity'] : $item['discount_on_item'];
+                $productDiscountTotal += $itemWiseDiscount;
+
+                $itemTotal = $item['price'] * $item['quantity'];
+                $itemFinal = $itemTotal - $itemWiseDiscount;
+
+                $tempList[] = [
+                    'type' => 'product',
+                    'id' => $item_id,
+                    'original_price' => $item['price'],
+                    'quantity' => $item['quantity'],
+                    'category_id' => $item['category_id'],
+                    'discount' => $item['discount_on_item'],
+                    'discount_type' => $item['discount_type'],
+                    'base_final' => $itemFinal,
                 ];
 
-                $addons= json_decode($item['add_ons'],true) ?? [];
+                $totalAfterOwnDiscounts += $itemFinal;
+
+                // --- Addons
+                $addons = json_decode($item['add_ons'], true) ?? [];
+                $addonDiscount = $item['addon_discount'] ?? 0;
+                $addonTotalPrice = $item['total_add_on_price'] ?? 1; // Avoid division by zero
+
+                $addonDiscountTotal += $addonDiscount;
 
                 foreach ($addons as $addon) {
-                    $price = $addon['price'] * $addon['quantity'];
-                    $proportion = $price / $item['total_add_on_price'];
-                    $discountShare = $item['addon_discount'] * $proportion;
-                    $discountedPrice = $price - $discountShare;
+                    $addonPrice = $addon['price'] * $addon['quantity'];
+                    $discountPart = $addonDiscount * ($addonPrice / $addonTotalPrice);
+                    $addonFinal = $addonPrice - $discountPart;
 
-                    $addonIds[] = [
+                    $tempList[] = [
+                        'type' => 'addon',
                         'addon_id' => $addon['id'],
                         'item_id' => $item_id,
                         'quantity' => $addon['quantity'],
                         'category_id' => $addon['category_id'] ?? null,
                         'original_price' => $addon['price'],
-                        'after_discount_final_price' => $discountedPrice,
-                        'total_addon_addon_price' => $item['total_add_on_price'],
-                        'total_addon_discount' => $item['addon_discount'],
+                        'base_final' => $addonFinal,
+                        'total_addon_addon_price' => $addonTotalPrice,
+                        'total_addon_discount' => $addonDiscount,
+                    ];
+
+                    $totalAfterOwnDiscounts += $addonFinal;
+                }
+            }
+
+            $otherDiscounts = $totalDiscount - ($productDiscountTotal + $addonDiscountTotal);
+
+            foreach ($tempList as $entry) {
+                $share = ($entry['base_final'] / $totalAfterOwnDiscounts) * $otherDiscounts;
+                $finalPrice = $entry['base_final'] - $share;
+
+                if ($entry['type'] === 'product') {
+                    $products[] = [
+                        'id' => $entry['id'],
+                        'original_price' => $entry['original_price'],
+                        'quantity' => $entry['quantity'],
+                        'category_id' => $entry['category_id'],
+                        'discount' => $entry['discount'],
+                        'discount_type' => $entry['discount_type'],
+                        'after_discount_final_price' => $finalPrice,
+                    ];
+                } else {
+                    $addonIds[] = [
+                        'addon_id' => $entry['addon_id'],
+                        'item_id' => $entry['item_id'],
+                        'quantity' => $entry['quantity'],
+                        'category_id' => $entry['category_id'],
+                        'original_price' => $entry['original_price'],
+                        'after_discount_final_price' => $finalPrice,
+                        'total_addon_addon_price' => $entry['total_addon_addon_price'],
+                        'total_addon_discount' => $entry['total_addon_discount'],
                     ];
                 }
             }
@@ -4669,8 +4715,7 @@ class Helpers
                 orderId: null,
                 storeId: $storeId
             );
-
-        //    dd($taxData,$products,$addonIds);
+            // dd($taxData,$products,$addonIds);
             $tax_amount = $taxData['totalTaxamount'];
             $tax_included = $taxData['include'];
             $tax_status = $tax_included ?  'included' : 'excluded';
@@ -4679,7 +4724,11 @@ class Helpers
                 $taxMap[$key] = $item;
             }
         }
-
+        // info($taxData);
+        // info('-----------');
+        // info($products);
+        // info('-----------addon');
+        // info($addonIds);
         return [
             'tax_amount' => $tax_amount ?? 0,
             'tax_included' => $tax_included ?? null,
@@ -4692,19 +4741,10 @@ class Helpers
     public static function sendStoreEmployeeNotification($order, $data)
     {
         $employees = VendorEmployee::where('store_id', $order->store->id)->get();
-//        $notificationData = [];
         foreach ($employees as $employee) {
             self::send_push_notif_to_device($employee->firebase_token, $data);
-
-//            $notificationData[] = [
-//                'data' => json_encode($data),
-//                'vendor_id' => $order->store->vendor_id,
-//                'created_at' => now(),
-//                'updated_at' => now()
-//            ];
         }
 
-//        DB::table('user_notifications')->insert($notificationData);
     }
 
 

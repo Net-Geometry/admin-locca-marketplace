@@ -7814,4 +7814,6 @@ Smartly or Earn. ',
   'Paid By' => 'Paid By',
   'Admin Commission' => 'Admin Commission',
   'Thanks for using our service.' => 'Thanks for using our service.',
+  'Delivery fee is applicable and will be covered by the admin.' => 'Delivery fee is applicable and will be covered by the admin.',
+  'estimated_day_is_required_when_rental_type_is_day_wise' => 'Estimated day is required when rental type is day wise',
 );
