@@ -1660,7 +1660,6 @@ trait PlaceNewOrder
 
 
 
-
         return response()->json($data, 200);
     }
     public function setPosCalculatedTax($store, $storeData = false)

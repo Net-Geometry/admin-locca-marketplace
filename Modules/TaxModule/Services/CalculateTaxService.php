@@ -26,8 +26,8 @@ class CalculateTaxService
     ) {
         $systemTaxVat = SystemTaxSetup::with('additionalData')
             ->when($countryCode, fn($query) => $query->where('country_code', $countryCode))
-            ->when(!$countryCode, fn($query) => $query->where('is_default', 1))
             ->where('tax_payer', $taxPayer)
+            ->where('is_active',1)
             ->first();
 
         if (!$systemTaxVat || !$systemTaxVat->is_active) {

@@ -352,9 +352,25 @@ trait TripLogicTrait
             }
         }
 
+        $providerDiscount = self::applyProviderDiscount(
+            $provider,
+            $trip,
+            $totalPrice,
+            $isUpdated,
+            $discountOnTrip,
+            $taxMap
+        );
 
-        $finalCalculatedTax =   self::getFinalCalculatedTax($details, $additionalCharges, $discountOnTrip, $totalPrice - $discountOnTrip, $provider->id, $isUpdated);
+        $finalPricing = self::calculateFinalPricing(
+            $trip,
+            $totalPrice,
+            $providerDiscount['isAdminDiscount'] == true  ? $providerDiscount['discount'] : $discountOnTrip,
+            0,
+        );
 
+        $totalDiscount = $finalPricing['totalDiscount'];
+
+        $finalCalculatedTax =   self::getFinalCalculatedTax($details, $additionalCharges, $totalDiscount, $totalPrice - $totalDiscount, $provider->id, $isUpdated);
         $taxAmount = $finalCalculatedTax['tax_amount'];
         $tax_included = $finalCalculatedTax['tax_included'];
         $tax_status = $finalCalculatedTax['tax_status'];
@@ -381,22 +397,7 @@ trait TripLogicTrait
             }
         }
 
-
-        $providerDiscount = self::applyProviderDiscount(
-            $provider,
-            $trip,
-            $totalPrice,
-            $isUpdated,
-            $discountOnTrip,
-            $taxMap
-        );
-
-        $finalPricing = self::calculateFinalPricing(
-            $trip,
-            $totalPrice,
-            $providerDiscount['isAdminDiscount'] == true  ? $providerDiscount['discount'] : $discountOnTrip,
-            $taxAmount,
-        );
+        $finalPricing['taxAmount'] = $taxAmount;
 
         if ($isUpdated) {
             self::updateCashback($trip, $finalPricing['tripAmount']);
@@ -467,7 +468,7 @@ trait TripLogicTrait
     }
 
 
-    public static function calculateFinalPricing($trip, $totalPrice, $discount, $taxAmount): array
+    public static function calculateFinalPricing($trip, $totalPrice, $discount, $taxAmount=0): array
     {
         $price = $totalPrice - $discount;
         $couponDiscount = self::calculateCouponDiscount($trip, $price);
@@ -476,7 +477,7 @@ trait TripLogicTrait
         $refBonus = self::calculateReferralBonus($trip, $price);
         $refBonus = Helpers::minDiscountCheck(productPrice: $price, discount: $refBonus)['discount_applied'];
         $finalPrice = max(0, $price - $refBonus);
-
+        $totalDiscount = $discount + $couponDiscount + $refBonus;
         return [
             'subTotal' => $totalPrice,
             'tripAmount' => max(0, $finalPrice + $taxAmount + self::getAdditionalCharge()),
@@ -484,7 +485,8 @@ trait TripLogicTrait
             'couponDiscount' => $couponDiscount,
             'refBonus' => $refBonus,
             'taxAmount' => $taxAmount,
-            'additionalCharge' => self::getAdditionalCharge()
+            'additionalCharge' => self::getAdditionalCharge(),
+            'totalDiscount' => $totalDiscount
         ];
     }
 
@@ -753,13 +755,12 @@ trait TripLogicTrait
 
         if (addon_published_status('TaxModule')) {
 
-
-
             foreach ($details_data as $item) {
                 $item_id = $item['vehicle_id'] ;
                 $itemWiseDiscount = $item['discount_on_trip_by'] === 'admin'  ? $item['discount_on_trip'] : $item['discount_on_trip']  * $item['quantity'];
                 $productDiscountTotal += $itemWiseDiscount;
-                $itemFinal = (($item['original_price'] * $item['quantity']) ==  $item['price'] ? $item['price'] : $item['calculated_price'] ) - $itemWiseDiscount;
+                $itemFinal = (($item['original_price'] * $item['quantity']) ==  $item['price'] ? $item['price'] : $item['calculated_price']  -  $itemWiseDiscount);
+                $is_edited= (($item['original_price'] * $item['quantity']) ==  $item['price'] ? false : true);
                 $tempList[] = [
                     'id' => $item_id,
                     'original_price' => $item['price'],
@@ -768,6 +769,7 @@ trait TripLogicTrait
                     'discount' => $item['discount_on_trip'],
                     'discount_on_trip_by' => $item['discount_on_trip_by'],
                     'base_final' => $itemFinal,
+                    'is_edited' => $is_edited
                 ];
 
                 $totalAfterOwnDiscounts += $itemFinal;
@@ -778,34 +780,17 @@ trait TripLogicTrait
 
             foreach ($tempList as $entry) {
                 $share = ($entry['base_final'] / $totalAfterOwnDiscounts) * $otherDiscounts;
-                $finalPrice = $entry['base_final'] - $share;
+                $finalPrice =  $entry['is_edited'] ? $entry['base_final'] : $entry['base_final'] - $share;
                     $products[] = [
                         'id' => $entry['id'],
                         'original_price' => $entry['original_price'],
                         'quantity' => $entry['quantity'],
                         'category_id' => $entry['category_id'],
                         'discount' => $entry['discount'],
-                        'discount_type' => $entry['discount_type'],
                         'after_discount_final_price' => $finalPrice,
                     ];
             }
 
-
-
-
-            // foreach ($details_data as $item) {
-            //     $productIds[$item['vehicle_id']] = $item['original_price'];
-            //     $productPrice[$item['vehicle_id']] = ($item['original_price'] * $item['quantity']) ==  $item['price'] ? $item['price'] : $item['calculated_price'];
-            //     $categoryIds[$item['vehicle_id']] = $item->vehicle->category_id;
-            //     $quantities[$item['vehicle_id']] = $item['quantity'];
-            // }
-            // $totalPriceBeforeDiscount = array_sum($productPrice);
-            // foreach ($productPrice as $key => $productWisePrice) {
-            //     $proportion = $productWisePrice / $totalPriceBeforeDiscount;
-            //     $discountShare = $totalDiscount * $proportion;
-            //     $discountedPrice = $productWisePrice - $discountShare;
-            //     $productIds[$key] = $discountedPrice;
-            // }
 
             $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                 amount: $price,
