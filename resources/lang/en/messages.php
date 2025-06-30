@@ -7788,4 +7788,6 @@ Smartly or Earn. ',
   'pdf, doc, jpg. File size : max 2 MB' => 'Pdf, doc, jpg. File size : max 2 MB',
   'Turn On The Status?' => 'Turn On The Status?',
   'product_not_found' => 'Product not found',
+  'Delivery fee is applicable and will be covered by the admin.' => 'Delivery fee is applicable and will be covered by the admin.',
+  'estimated_day_is_required_when_rental_type_is_day_wise' => 'Estimated day is required when rental type is day wise',
 );
