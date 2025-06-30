@@ -15,7 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\CentralLogics\Helpers;
 use Modules\TaxModule\Entities\OrderTax;
 
-class VendoTaxReportController extends Controller
+class VendorTaxReportController extends Controller
 {
 
     public function vendorTax(Request $request)

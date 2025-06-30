@@ -575,7 +575,7 @@ $(document).ready(function () {
             quantity = maxQuantity;
             $this.val(maxQuantity);
 
-            let maxQuantityMsg = $('#app-data').data('max-quantity-msg');
+            let maxQuantityMsg = $('#max_quantity_msg').data('max-quantity-msg');
             toastr.warning(maxQuantityMsg + ' ' + maxQuantity);
         }
 

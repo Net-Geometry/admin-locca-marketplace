@@ -397,7 +397,7 @@
                                             <!-- Upload box -->
                                             <div class="d-flex justify-content-center" id="pdf-container">
                                                 <div class="document-upload-wrapper" id="doc-upload-wrapper">
-                                                    <input type="file" name="tin_certificate" class="document_input" accept=".doc, .pdf, .jpg, .png, .jpeg">
+                                                    <input type="file" name="tin_certificate_image" class="document_input" accept=".doc, .pdf, .jpg, .png, .jpeg">
                                                     <div class="textbox">
                                                         <img width="40" height="40" class="svg"
                                                              src="{{ asset('public/assets/admin/img/doc-uploaded.png') }}"
@@ -712,57 +712,6 @@
         $("#floating--date").removeClass('active');
         $("#time_view").val(min+' to '+max+' '+type);
 
-    })
-
-    // ---- file upload with textbox
-    {{--$(document).ready(function () {--}}
-    {{--    function previewFile(inputSelector, previewImgSelector, textBoxSelector, previewContainerSelector = null) {--}}
-    {{--        const input = $(inputSelector);--}}
-    {{--        const imagePreview = $(previewImgSelector);--}}
-    {{--        const textBox = $(textBoxSelector);--}}
-    {{--        const container = previewContainerSelector ? $(previewContainerSelector) : null;--}}
-
-    {{--        input.on('change', function () {--}}
-    {{--            const file = this.files[0];--}}
-    {{--            if (!file) return;--}}
-
-    {{--            const fileType = file.type;--}}
-    {{--            const fileName = file.name;--}}
-    {{--            const fileExt = fileName.split('.').pop().toLowerCase();--}}
-    {{--            const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];--}}
-
-    {{--            if (validImageTypes.includes(fileType)) {--}}
-    {{--                const reader = new FileReader();--}}
-    {{--                reader.onload = function (e) {--}}
-    {{--                    imagePreview.attr('src', e.target.result).removeClass('display-none');--}}
-    {{--                    textBox.hide();--}}
-    {{--                    if (container) container.find('.uploaded-file-info').remove();--}}
-    {{--                };--}}
-    {{--                reader.readAsDataURL(file);--}}
-    {{--            } else {--}}
-    {{--                // Show placeholder icon--}}
-    {{--                const iconPath = getFileIconByExt(fileExt);--}}
-    {{--                imagePreview.attr('src', iconPath).removeClass('display-none');--}}
-    {{--                textBox.hide();--}}
-
-    {{--                if (container) {--}}
-    {{--                    container.find('.uploaded-file-info').remove(); // Remove old file info--}}
-    {{--                    container.append(`<div class="uploaded-file-info mt-2 small text-muted">${fileName}</div>`);--}}
-    {{--                }--}}
-    {{--            }--}}
-    {{--        });--}}
-
-    {{--        function getFileIconByExt(ext) {--}}
-    {{--            switch (ext) {--}}
-    {{--                case 'pdf': return '{{ asset("public/assets/admin/img/pdf-icon.png") }}';--}}
-    {{--                case 'doc':--}}
-    {{--                case 'docx': return '{{ asset("public/assets/admin/img/doc-icon.png") }}';--}}
-    {{--                default: return '{{ asset("public/assets/admin/img/file-icon.png") }}';--}}
-    {{--            }--}}
-    {{--        }--}}
-    {{--    }--}}
-
-    {{--    previewFile('#tin_certificate_image', '#logoImageViewer2', '.upload-file__textbox', '.image--border' );--}}
-    {{--});--}}
+    });
 </script>
 @endpush

@@ -19,7 +19,7 @@
                     {{ translate('messages.add_new_item') }}
                 </span>
             </h1>
-            <div class="d-flex align-items-end flex-wrap">
+            <div class="  align-items-end flex-wrap">
                 <div class="text--primary-2 d-flex flex-wrap align-items-center mr-2">
                     <a href="{{ route('admin.item.product_gallery') }}" class="btn btn-outline-primary btn--primary d-flex align-items-center bg-not-hover-primary-ash rounded-8 gap-2">
                         <img src="{{ asset('public/assets/admin/img/product-gallery.png') }}" class="w--22" alt="">
@@ -519,7 +519,7 @@
                         </div>
                         <div class="card-body">
                                 <span class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
-                                <select name="tax_ids[]" id="tax__rate" class="form-control js-select2-custom"
+                                <select name="tax_ids[]" required id="tax__rate" class="form-control js-select2-custom"
                                     multiple="multiple" placeholder="Type & Select Tax Rate">
                                     @foreach ($taxVats as $taxVat)
                                         <option value="{{ $taxVat->id }}"> {{ $taxVat->name }}

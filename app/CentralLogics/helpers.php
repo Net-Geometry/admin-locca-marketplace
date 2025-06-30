@@ -415,7 +415,14 @@ class Helpers
             }
 
             $data->store['self_delivery_system'] = (int) $data->store->sub_self_delivery;
+            $data['tax_data'] = $data?->taxVats ?$data?->taxVats()->pluck('tax_id')->toArray(): [] ;
 
+            $data['tax_data']= \Modules\TaxModule\Entities\Tax::whereIn('id', $data['tax_data'])->get(['id', 'name', 'tax_rate']);
+            unset($data['taxVats']);
+
+            if (!$trans) {
+                unset($data['translations']);
+            }
             unset($data['pharmacy_item_details']);
             unset($data['store']);
             unset($data['rating']);
@@ -4610,78 +4617,105 @@ class Helpers
 
   public static function getFinalCalculatedTax($details_data, $additionalCharges, $totalDiscount, $price, $storeId, $storeData = true)
     {
-        $productIds = [];
-        $productPrice = [];
-        $categoryIds = [];
-        $quantities = [];
-
         $addonIds = [];
-        $addonPrice = [];
-        $addonQuantity = [];
-        $addonCategoryIds = [];
+        $products=[];
+        $tempList = [];
 
+        $productDiscountTotal = 0;
+        $addonDiscountTotal = 0;
+        $totalAfterOwnDiscounts = 0;
         if (addon_published_status('TaxModule')) {
+
             foreach ($details_data as $item) {
-                 if($item['item_id']){
-                    $item_id=$item['item_id'];
-                } else{
-                    $item_id=$item['item_campaign_id'];
-                }
+                $item_id = $item['item_id'] ?? $item['item_campaign_id'];
+                $itemWiseDiscount = $item['discount_type'] === 'product_discount'  ? $item['discount_on_item'] * $item['quantity'] : $item['discount_on_item'];
+                $productDiscountTotal += $itemWiseDiscount;
 
-                $productIds[$item_id] = $item['price'];
-                $productPrice[$item_id] = $item['price'] * $item['quantity'] ;
-                $categoryIds[$item_id] = $item['category_id'];
-                $quantities[$item_id] = $item['quantity'];
+                $itemTotal = $item['price'] * $item['quantity'];
+                $itemFinal = $itemTotal - $itemWiseDiscount;
 
+                $tempList[] = [
+                    'type' => 'product',
+                    'id' => $item_id,
+                    'original_price' => $item['price'],
+                    'quantity' => $item['quantity'],
+                    'category_id' => $item['category_id'],
+                    'discount' => $item['discount_on_item'],
+                    'discount_type' => $item['discount_type'],
+                    'base_final' => $itemFinal,
+                ];
 
+                $totalAfterOwnDiscounts += $itemFinal;
 
-                $addons= json_decode($item['add_ons'],true) ?? [];
+                // --- Addons
+                $addons = json_decode($item['add_ons'], true) ?? [];
+                $addonDiscount = $item['addon_discount'] ?? 0;
+                $addonTotalPrice = $item['total_add_on_price'] ?? 1; // Avoid division by zero
+
+                $addonDiscountTotal += $addonDiscount;
+
                 foreach ($addons as $addon) {
-                    $addonIds[$addon['id']] = $addon['price'];
-                    $addonPrice[$addon['id']] = $addon['price'] * $addon['quantity'];
-                    $addonQuantity[$addon['id']] = $addon['quantity'];
-                    $addonCategoryIds[$addon['id']] = $addon['category_id'];
-                }
+                    $addonPrice = $addon['price'] * $addon['quantity'];
+                    $discountPart = $addonDiscount * ($addonPrice / $addonTotalPrice);
+                    $addonFinal = $addonPrice - $discountPart;
 
+                    $tempList[] = [
+                        'type' => 'addon',
+                        'addon_id' => $addon['id'],
+                        'item_id' => $item_id,
+                        'quantity' => $addon['quantity'],
+                        'category_id' => $addon['category_id'] ?? null,
+                        'original_price' => $addon['price'],
+                        'base_final' => $addonFinal,
+                        'total_addon_addon_price' => $addonTotalPrice,
+                        'total_addon_discount' => $addonDiscount,
+                    ];
+
+                    $totalAfterOwnDiscounts += $addonFinal;
+                }
             }
 
-            try {
-                $totalAddonPriceBeforeDiscount = array_sum($addonPrice);
-                foreach ($addonPrice as $key => $addonWisePrice) {
-                    $proportion = $addonWisePrice / $totalAddonPriceBeforeDiscount;
-                    $discountShare = $item['addon_discount'] * $proportion;
-                    $discountedPrice = $addonWisePrice - $discountShare;
-                    $addonIds[$key] = $discountedPrice/$addonQuantity[$key];
-                }
+            $otherDiscounts = $totalDiscount - ($productDiscountTotal + $addonDiscountTotal);
 
-                $totalPriceBeforeDiscount = array_sum($productPrice);
-                foreach ($productPrice as $key => $productWisePrice) {
-                    $proportion = $productWisePrice / $totalPriceBeforeDiscount;
-                    $discountShare = $totalDiscount * $proportion;
-                    $discountedPrice = $productWisePrice - $discountShare;
-                    $productIds[$key] = $discountedPrice/$quantities[$key];
+            foreach ($tempList as $entry) {
+                $share = ($entry['base_final'] / $totalAfterOwnDiscounts) * $otherDiscounts;
+                $finalPrice = $entry['base_final'] - $share;
+
+                if ($entry['type'] === 'product') {
+                    $products[] = [
+                        'id' => $entry['id'],
+                        'original_price' => $entry['original_price'],
+                        'quantity' => $entry['quantity'],
+                        'category_id' => $entry['category_id'],
+                        'discount' => $entry['discount'],
+                        'discount_type' => $entry['discount_type'],
+                        'after_discount_final_price' => $finalPrice,
+                    ];
+                } else {
+                    $addonIds[] = [
+                        'addon_id' => $entry['addon_id'],
+                        'item_id' => $entry['item_id'],
+                        'quantity' => $entry['quantity'],
+                        'category_id' => $entry['category_id'],
+                        'original_price' => $entry['original_price'],
+                        'after_discount_final_price' => $finalPrice,
+                        'total_addon_addon_price' => $entry['total_addon_addon_price'],
+                        'total_addon_discount' => $entry['total_addon_discount'],
+                    ];
                 }
-            }catch (\Exception $exception){
-                info(['error_creating_trip_transaction', $exception->getMessage()]);
             }
 
-//            dd($proportion,$totalDiscount,$productWisePrice,$totalPriceBeforeDiscount,$discountedPrice,'fgsdfg',$price,$productIds,$categoryIds,$quantities,$storeData,$additionalCharges,$addonIds,$addonQuantity,$addonCategoryIds,$storeId);
             $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                 amount: $price,
-                productIds: $productIds,
-                categoryIds: $categoryIds,
-                quantity: $quantities,
+                productIds: $products,
                 taxPayer: 'vendor',
                 storeData: $storeData,
                 additionalCharges: $additionalCharges,
                 addonIds: $addonIds,
-                addonQuantity: $addonQuantity,
-                addonCategoryIds: $addonCategoryIds,
                 orderId: null,
                 storeId: $storeId
             );
-
-//            dd($taxData);
+            // dd($taxData,$products,$addonIds);
             $tax_amount = $taxData['totalTaxamount'];
             $tax_included = $taxData['include'];
             $tax_status = $tax_included ?  'included' : 'excluded';
@@ -4690,7 +4724,11 @@ class Helpers
                 $taxMap[$key] = $item;
             }
         }
-
+        // info($taxData);
+        // info('-----------');
+        // info($products);
+        // info('-----------addon');
+        // info($addonIds);
         return [
             'tax_amount' => $tax_amount ?? 0,
             'tax_included' => $tax_included ?? null,
@@ -4703,22 +4741,31 @@ class Helpers
     public static function sendStoreEmployeeNotification($order, $data)
     {
         $employees = VendorEmployee::where('store_id', $order->store->id)->get();
-//        $notificationData = [];
         foreach ($employees as $employee) {
             self::send_push_notif_to_device($employee->firebase_token, $data);
-
-//            $notificationData[] = [
-//                'data' => json_encode($data),
-//                'vendor_id' => $order->store->vendor_id,
-//                'created_at' => now(),
-//                'updated_at' => now()
-//            ];
         }
 
-//        DB::table('user_notifications')->insert($notificationData);
     }
 
 
+    public static function getTaxSystemType($getTaxVatList = true){
+        if (addon_published_status('TaxModule')) {
+            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
+            if(!$SystemTaxVat){
+                 return [ 'productWiseTax' => false ,'categoryWiseTax'=> false,  'taxVats' =>  []];
+            }
+            if($getTaxVatList){
+                $taxVats =  \Modules\TaxModule\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
+            }
+
+            if ($SystemTaxVat?->tax_type == 'product_wise') {
+                $productWiseTax = true;
+            } elseif ($SystemTaxVat?->tax_type == 'category_wise') {
+                $categoryWiseTax = true;
+            }
+        }
+        return [ 'productWiseTax' => $productWiseTax?? false ,'categoryWiseTax'=> $categoryWiseTax?? false,  'taxVats' => $taxVats ?? []];
+    }
 
 }
 

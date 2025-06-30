@@ -15657,3 +15657,8 @@ img{
         max-width: 220px;
     }
 }
+
+.select-class-closest {
+    position: relative;
+    /*z-index: 1;*/
+}

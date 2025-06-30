@@ -8,6 +8,7 @@
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
+
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
@@ -15,9 +16,9 @@
                 </span>
                 <span>
                     {{ translate('messages.transection_report') }}
-                    @if (isset($filter) && $filter != 'all_time')
+                    @if ( $from && $to)
                     <span class="mb-0 h6 badge badge-soft-success ml-2"
-                        id="itemCount">( {{ session('from_date') }} - {{ session('to_date') }} )</span>
+                        id="itemCount">( {{ $from }} - {{ $to  }} )</span>
                         @endif
                 </span>
             </h1>
@@ -26,7 +27,7 @@
         <div class="card mb-20">
             <div class="card-body">
                 <h4 class="">{{ translate('Search Data') }}</h4>
-                <form action="{{ route('admin.transactions.report.set-date') }}" method="post">
+                <form >
                     @csrf
                     <div class="row g-3">
                         <div class="col-sm-6 col-md-3">
@@ -87,15 +88,14 @@
                             <div class="col-sm-6 col-md-3">
 
                                 <input type="date" name="from" id="from_date" class="form-control"
-                                    placeholder="{{ translate('Start Date') }}"
-                                    {{ session()->has('from_date') ? 'value=' . session('from_date') : '' }} required>
+                                    placeholder="{{ translate('Start Date') }}" value="{{ $from ?? '' }}" required>
 
                             </div>
                             <div class="col-sm-6 col-md-3">
 
                                 <input type="date" name="to" id="to_date" class="form-control"
                                     placeholder="{{ translate('End Date') }}"
-                                    {{ session()->has('to_date') ? 'value=' . session('to_date') : '' }} required>
+                                    value="{{ $to ?? '' }}" required>
 
                             </div>
                         @endif
@@ -108,8 +108,8 @@
             </div>
         </div>
         @php
-            $from = session('from_date') . ' 00:00:00';
-            $to = session('to_date') . ' 23:59:59';
+            $from = $from . ' 00:00:00';
+            $to = $to  . ' 23:59:59';
             $total = \App\Models\Order::when(isset($zone), function ($query) use ($zone) {
                 return $query->where('zone_id', $zone->id);
             })

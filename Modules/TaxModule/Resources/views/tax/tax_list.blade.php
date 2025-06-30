@@ -103,7 +103,7 @@
                                             class="toggle-switch ml-auto confirmStatus justify-content-end toggle-switch-sm"
                                             data-url="{{ route('taxvat.status', $taxVat->id) }}"
                                             data-id="{{ $taxVat->id }}" data-is_active="{{ $taxVat->is_active }}"
-                                            data-on_title="{{ translate('messages.Turn ON The Status?') }}"
+                                            data-on_title="{{ translate('messages.Turn On The Status?') }}"
                                             data-off_title="{{ translate('messages.Turn Off The Status?') }}"
                                             data-on_message= "{{ translate('Are you sure, do you want to turn ON the VAT status from your system. It will  effect on tax calculation & report') }}"
                                             data-off_message= "{{ translate('Are you sure, do you want to turn off the VAT status from your system. It will  effect on tax calculation & report') }}"
@@ -188,12 +188,12 @@
                     </div>
                     <div class="bg--secondary rounded p-20 mb-20">
                         <div class="form-group">
-                            <label class="mb-2 fz--14px d-block">{{ translate('messages.tax_name') }}</label>
+                            <label class="mb-2 fz--14px d-block">{{ translate('messages.tax_name') }} <span class="text-danger">*</span></label>
                             <input type="text" name="name" class="form-control h--45px border-0 pl-unset" required
                                 placeholder="Type tax name" value="{{ old('name') }}" maxlength="50">
                         </div>
                         <div class="form-group mb-0">
-                            <label class="mb-2 fz--14px d-block">{{ translate('messages.tax_rate') }}</label>
+                            <label class="mb-2 fz--14px d-block">{{ translate('messages.tax_rate') }} <span class="text-danger">*</span></label>
                             <div class="custom-group-btn border">
                                 <div class="flex-sm-grow-1">
                                     <input type="number" value="{{ old('tax_rate') }}" required name="tax_rate"
@@ -201,9 +201,7 @@
                                         class="form-control h--45px border-0 pl-unset" placeholder="Ex: 5">
                                 </div>
                                 <div class="flex-shrink-0">
-                                    <select id="discount_type" class="custom-select ltr border-0">
-                                        <option value="percent">%</option>
-                                    </select>
+                                    <span class="input-group-text ltr border-0"> % </span>
                                 </div>
                             </div>
                         </div>
@@ -251,22 +249,20 @@
                     </div>
                     <div class="bg--secondary rounded p-20 mb-20">
                         <div class="form-group">
-                            <label class="mb-2 fz--14px d-block">{{ translate('messages.tax_name') }}</label>
+                            <label class="mb-2 fz--14px d-block">{{ translate('messages.tax_name') }} <span class="text-danger">*</span></label>
                             <input type="text" name="name" readonly class="form-control h--45px border-0 pl-unset"
                                 placeholder="VAT" id="tax_name">
                         </div>
                         <div class="form-group mb-0">
-                            <label class="mb-2 fz--14px d-block">{{ translate('messages.tax_rate') }}</label>
+                            <label class="mb-2 fz--14px d-block">{{ translate('messages.tax_rate') }} <span class="text-danger">*</span></label>
                             <div class="custom-group-btn border">
                                 <div class="flex-sm-grow-1">
                                     <input type="number" name="tax_rate" id="tax_rate" required name="tax_rate"
                                         min="0.001" step="0.001" max="100"
                                         class="form-control h--45px border-0 pl-unset" placeholder="10">
                                 </div>
-                                <div class="flex-shrink-0">
-                                    <select readonly id="discount_type" class="custom-select ltr border-0">
-                                        <option value="percent">%</option>
-                                    </select>
+                                 <div class="flex-shrink-0">
+                                    <span class="input-group-text ltr border-0"> % </span>
                                 </div>
                             </div>
                         </div>
@@ -321,7 +317,7 @@
                 </div>
                 <div class="modal-footer justify-content-center border-0 pt-0 gap-2">
                     <button type="button" class="btn min-w-120px btn--secondary"
-                        data-dismiss="modal">{{ translate('NO') }}</button>
+                        data-dismiss="modal">{{ translate('No') }}</button>
                     <button type="button" id="seturl" data-url=""
                         class="btn min-w-120px btn--primary">{{ translate('Yes') }}</button>
                 </div>

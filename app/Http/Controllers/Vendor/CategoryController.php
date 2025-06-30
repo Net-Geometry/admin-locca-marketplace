@@ -27,7 +27,10 @@ class CategoryController extends Controller
             });
         })
         ->latest()->paginate(config('default_pagination'));
-        return view('vendor-views.category.index',compact('categories'));
+
+        $taxData = Helpers::getTaxSystemType();
+        $categoryWiseTax = $taxData['categoryWiseTax'];
+        return view('vendor-views.category.index',compact('categories','categoryWiseTax'));
     }
 
     public function get_all(Request $request){
@@ -103,10 +106,12 @@ class CategoryController extends Controller
         })
         ->latest()->get();
 
-
+        $taxData = Helpers::getTaxSystemType();
+        $categoryWiseTax = $taxData['categoryWiseTax'];
         $data=[
             'data' =>$categories,
             'search' =>$request['search'] ?? null,
+            'categoryWiseTax' => $categoryWiseTax
         ];
         if($request->type == 'csv'){
             return Excel::download(new StoreCategoryExport($data), 'Categories.csv');

@@ -8,10 +8,8 @@
 
 @section('content')
     <div class="content container-fluid">
-
-
         <!--- Admin Tax Report -->
-        <h2 class="mb-20">{{ translate('messages.Admin Tax Report') }}</h3>
+        <h2 class="mb-20">{{ translate('messages.Generate Tax Report') }}</h3>
             <div class="card p-20 mb-20">
                 <div class="mb-20">
                     <h3 class="mb-1">{{ translate('messages.Admin Tax Report') }}</h3>
@@ -28,7 +26,8 @@
                                         <span
                                             class="mb-2 d-block title-clr fw-normal">{{ translate('messages.Date Range Type') }}</span>
                                         <select name="date_range_type" id="date_range_type"
-                                            class="custom-select custom-select-color border rounded w-100">
+                                                class="custom-select custom-select-color border rounded w-100">
+                                            <option value="">{{ translate('Select Date Range') }}</option>
                                             <option value="this_fiscal_year"
                                                 {{ $date_range_type == 'this_fiscal_year' ? 'selected' : '' }}>
                                                 {{ translate('This Fiscal Year') }}
@@ -44,7 +43,7 @@
                                         <div class="position-relative">
                                             <i class="tio-calendar-month icon-absolute-on-right"></i>
                                             <input type="text" class="form-control h-45 position-relative bg-transparent"
-                                                name="dates" placeholder="{{ translate('messages.Select_Date') }}">
+                                                   name="dates" placeholder="{{ translate('messages.Select_Date') }}">
                                         </div>
                                     </div>
 
@@ -52,51 +51,55 @@
                                         <span
                                             class="mb-2 d-block title-clr fw-normal">{{ translate('Select How to calculate tax') }}</span>
                                         <select name="calculate_tax_on" id="calculate_tax_on"
-                                            class="custom-select custom-select-color border rounded w-100">
+                                                class="custom-select custom-select-color border rounded w-100">
+                                            <option value="">{{ translate('Select Calculate Tax') }}</option>
                                             <option {{ $calculate_tax_on == 'all_source' ? 'selected' : '' }}
-                                                value="all_source">
+                                                    value="all_source">
                                                 {{ translate('messages.Same Tax for All Income Source') }}
                                             </option>
                                             <option {{ $calculate_tax_on == 'individual_source' ? 'selected' : '' }}
-                                                value="individual_source">
+                                                    value="individual_source">
                                                 {{ translate('Different Tax for Different Income Source') }}
                                             </option>
 
                                         </select>
                                     </div>
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
-                                        id="calculate_commission_tax">
-                                        <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Order Commission') }}</span>
-                                        <select name="tax_on_order_commission[]" id="select_customer_fiscal1"
-                                            class="form-control js-select2-custom" multiple="multiple"
-                                            placeholder="Type & Select Tax Rate">
+                                         id="calculate_commission_tax">
+                                        <span class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Order Commission') }}</span>
+                                        <div class="select-class-closest">
+                                            <select name="tax_on_order_commission[]" id="select_customer_fiscal1"
+                                                    class="form-control js-select2-custom" multiple="multiple"
+                                                    placeholder="Type & Select Tax Rate">
 
-                                        </select>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
-                                        id="calculate_delivery_charge_tax">
-                                        <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Delivery Charge Commission') }}</span>
-                                        <select name="tax_on_delivery_charge_commission[]" id="select_customer_fiscal2"
-                                            class="form-control js-select2-custom" multiple="multiple"
-                                            placeholder="Type & Select Tax Rate">
+                                         id="calculate_delivery_charge_tax">
+                                        <span class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Delivery Charge Commission') }}</span>
+                                        <div class="select-class-closest">
+                                            <select name="tax_on_delivery_charge_commission[]" id="select_customer_fiscal2"
+                                                    class="form-control js-select2-custom" multiple="multiple"
+                                                    placeholder="Type & Select Tax Rate">
 
-                                        </select>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="d-flex flex-column gap-lg-4 gap-3">
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
-                                        id="calculate_service_charge_tax">
-                                        <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Service charge') }}</span>
-                                        <select name="tax_on_service_charge[]" id="select_customer_fiscal-3"
-                                            class="form-control js-select2-custom" multiple="multiple"
-                                            placeholder="Type & Select Tax Rate">
+                                         id="calculate_service_charge_tax">
+                                        <span class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Service charge') }}</span>
+                                        <div class="select-class-closest">
+                                            <select name="tax_on_service_charge[]" id="select_customer_fiscal-3"
+                                                    class="form-control js-select2-custom" multiple="multiple"
+                                                    placeholder="Type & Select Tax Rate">
 
-                                        </select>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 {{-- <div class="d-flex flex-column gap-lg-4 gap-3">
@@ -111,29 +114,31 @@
                                         </select>
                                     </div>
                                 </div> --}}
-                                <div class="d-flex flex-column gap-lg-4 gap-3">
+                                <div class="d-flex flex-column gap-lg-4 gap-3 mt-3">
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
-                                        id="calculate_subscription_tax">
-                                        <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Subscription') }}</span>
-                                        <select name="tax_on_subscription[]" id="select_customer_fiscal-6"
-                                            class="form-control js-select2-custom" multiple="multiple"
-                                            placeholder="Type & Select Tax Rate">
+                                         id="calculate_subscription_tax">
+                                        <span class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Subscription') }}</span>
+                                        <div class="select-class-closest">
+                                            <select name="tax_on_subscription[]" id="select_customer_fiscal-6"
+                                                    class="form-control js-select2-custom" multiple="multiple"
+                                                    placeholder="Type & Select Tax Rate">
 
-                                        </select>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="d-flex flex-column gap-lg-4 gap-3">
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? 'd-none' : '' }}"
-                                        id="calculate_tax_rate">
-                                        <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rates') }}</span>
-                                        <select {{ $calculate_tax_on == 'individual_source' ? '' : 'required' }}
-                                            name="tax_rate[]" id="select_customer_fiscal-5"
-                                            class="form-control js-select2-custom" multiple="multiple"
-                                            placeholder="Type & Select Tax Rate">
+                                         id="calculate_tax_rate">
+                                        <span class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rates') }}</span>
+                                        <div class="select-class-closest">
+                                            <select {{ $calculate_tax_on == 'individual_source' ? '' : 'required' }}
+                                                    name="tax_rate[]" id="select_customer_fiscal-5"
+                                                    class="form-control js-select2-custom" multiple="multiple"
+                                                    placeholder="Type & Select Tax Rate">
 
-                                        </select>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -141,7 +146,7 @@
                 </div>
                 <div class="d-flex align-items-center justify-content-end gap-2">
                     <button type="reset" id="reset_button_id"
-                        class="btn bg--secondary h--42px title-clr px-4">{{ translate('Reset') }}</button>
+                            class="btn bg--secondary h--42px title-clr px-4">{{ translate('Reset') }}</button>
                     <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
                 </div>
                 </form>
@@ -188,24 +193,24 @@
                         </div>
                         <div class="hs-unfold mr-2">
                             <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle h--40px"
-                                href="javascript:;"
-                                data-hs-unfold-options='{
+                               href="javascript:;"
+                               data-hs-unfold-options='{
                             "target": "#usersExportDropdown__admin", "type": "css-animation" }'>
                                 <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
                             </a>
                             <div id="usersExportDropdown__admin"
-                                class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
+                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
                                 <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                                 <a id="export-excel" class="dropdown-item" href="{{ route('admin.transactions.report.adminTaxReportExport',['export_type' => 'excel', request()->getQueryString()]) }}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
-                                        alt="Image Description">
+                                         src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
+                                         alt="Image Description">
                                     {{ translate('messages.excel') }}
                                 </a>
                                 <a id="export-csv" class="dropdown-item" href="{{ route('admin.transactions.report.adminTaxReportExport',['export_type' => 'csv', request()->getQueryString()]) }}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
-                                        alt="Image Description">
+                                         src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                         alt="Image Description">
                                     .{{ translate('messages.csv') }}
                                 </a>
                             </div>
@@ -215,83 +220,83 @@
                 <!-- Table -->
                 <div class="table-responsive datatable-custom">
                     <table id="datatable"
-                        class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table fz--14px">
+                           class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table fz--14px">
                         <thead class="thead-light">
-                            <tr>
-                                <th class="border-0">{{ translate('messages.sl') }}</th>
-                                <th class="border-0">{{ translate('Income Source') }}</th>
-                                <th class="border-0">{{ translate('Total Income') }}</th>
-                                <th class="border-0">{{ translate('Total Tax') }}</th>
-                                <th class="border-0 text-center">{{ translate('Action') }}</th>
-                            </tr>
+                        <tr>
+                            <th class="border-0">{{ translate('messages.sl') }}</th>
+                            <th class="border-0">{{ translate('Income Source') }}</th>
+                            <th class="border-0">{{ translate('Total Income') }}</th>
+                            <th class="border-0">{{ translate('Total Tax') }}</th>
+                            <th class="border-0 text-center">{{ translate('Action') }}</th>
+                        </tr>
                         </thead>
 
                         <tbody>
-                            @php
-                                $count = 1;
-                            @endphp
-                            @forelse ($combinedResults as $key => $item)
-                                <tr>
-                                    <td>
-                                        {{ $count++ }}
+                        @php
+                            $count = 1;
+                        @endphp
+                        @forelse ($combinedResults as $key => $item)
+                            <tr>
+                                <td>
+                                    {{ $count++ }}
 
-                                    </td>
-                                    <td>
-                                        {{ translate($key) }}
-                                    </td>
-                                    <td>
+                                </td>
+                                <td>
+                                    {{ translate($key) }}
+                                </td>
+                                <td>
 
-                                        {{ \App\CentralLogics\Helpers::format_currency($item['total_base_amount']) }}
-                                    </td>
-                                    <td>
-                                        @php
-                                            $totalTaxAmount = collect($item['taxes'] ?? [])
-                                                ->flatten(1)
-                                                ->sum('total_tax_amount');
-                                            $totalTax = collect($item['taxes'] ?? [])
-                                                ->flatten(1)
-                                                ->sum('tax_rate');
-                                        @endphp
-                                        <div class="d-flex flex-column gap-1">
-                                            <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                                {{ translate('Total') }} ({{ $totalTax }}%): <span>
+                                    {{ \App\CentralLogics\Helpers::format_currency($item['total_base_amount']) }}
+                                </td>
+                                <td>
+                                    @php
+                                        $totalTaxAmount = collect($item['taxes'] ?? [])
+                                            ->flatten(1)
+                                            ->sum('total_tax_amount');
+                                        $totalTax = collect($item['taxes'] ?? [])
+                                            ->flatten(1)
+                                            ->sum('tax_rate');
+                                    @endphp
+                                    <div class="d-flex flex-column gap-1">
+                                        <div class="d-flex fz-14 gap-3 align-items-center title-clr">
+                                            {{ translate('Total') }} ({{ $totalTax }}%): <span>
                                                     {{ \App\CentralLogics\Helpers::format_currency($totalTaxAmount) }}</span>
-                                            </div>
+                                        </div>
 
-                                            @foreach ($item['taxes'] as $taxName => $taxItems)
-                                                @foreach ($taxItems as $tax)
-                                                    <div class="d-flex fz-11 gap-3 align-items-center">
-                                                        {{ $taxName }} ({{ $tax['tax_rate'] }}%) :
-                                                        <span>{{ \App\CentralLogics\Helpers::format_currency($tax['total_tax_amount']) }}</span>
-                                                    </div>
-                                                @endforeach
+                                        @foreach ($item['taxes'] as $taxName => $taxItems)
+                                            @foreach ($taxItems as $tax)
+                                                <div class="d-flex fz-11 gap-3 align-items-center">
+                                                    {{ $taxName }} ({{ $tax['tax_rate'] }}%) :
+                                                    <span>{{ \App\CentralLogics\Helpers::format_currency($tax['total_tax_amount']) }}</span>
+                                                </div>
                                             @endforeach
+                                        @endforeach
 
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="d-flex gap-2 justify-content-center">
-                                            <a class="btn btn-sm theme-border action-btn theme-hover theme-clr"
-                                                href="{{ route('admin.transactions.report.getTaxDetails',['source'=> $key , request()->getQueryString()]) }}">
-                                                <i class="tio-invisible"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="py-5">
-                                        <div class="text-center max-w-700 mx-auto py-5">
-                                            <img src="{{ asset('/public/assets/admin/img/tax-error.png') }}"
-                                                alt="img" class="mb-20">
-                                            <h4 class="mb-2">{{ translate('No Tax Report Generated') }}</h4>
-                                            <p class="mb-0 fz-12px">
-                                                {{ translate('To generate your tax report please select & input above field and submit for the result') }}
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <a class="btn btn-sm theme-border action-btn theme-hover theme-clr"
+                                           href="{{ route('admin.transactions.report.getTaxDetails',['source'=> $key , request()->getQueryString()]) }}">
+                                            <i class="tio-invisible"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="py-5">
+                                    <div class="text-center max-w-700 mx-auto py-5">
+                                        <img src="{{ asset('/public/assets/admin/img/tax-error.png') }}"
+                                             alt="img" class="mb-20">
+                                        <h4 class="mb-2">{{ translate('No Tax Report Generated') }}</h4>
+                                        <p class="mb-0 fz-12px">
+                                            {{ translate('To generate your tax report please select & input above field and submit for the result') }}
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
 
                         </tbody>
                     </table>
@@ -368,22 +373,26 @@
                     $select.append(option);
                 });
                 $select.trigger('change');
-                $select.select2({
-                    ajax: {
-                        url: '{{ route('admin.transactions.report.getTaxList') }}',
-                        data: function(params) {
-                            return {
-                                q: params.term,
-                                page: params.page
-                            };
-                        },
-                        processResults: function(data) {
-                            return {
-                                results: data
-                            };
+                setTimeout(function () {
+                    $select.select2({
+                        placeholder: "Select Tax Rate",
+                        dropdownParent: $select.closest('.select-class-closest'),
+                        ajax: {
+                            url: '{{ route('admin.transactions.report.getTaxList') }}',
+                            data: function(params) {
+                                return {
+                                    q: params.term,
+                                    page: params.page
+                                };
+                            },
+                            processResults: function(data) {
+                                return {
+                                    results: data
+                                };
+                            }
                         }
-                    }
-                });
+                    });
+                }, 5);
             });
         });
     </script>

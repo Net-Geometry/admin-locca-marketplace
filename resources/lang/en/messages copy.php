@@ -124,7 +124,7 @@
   'current' => 'Current',
   'customer_not_found' => 'Customer not found!',
   'dashboard' => 'Dashboard',
-  'day_wise_report' => 'Day Wise Report',
+  'day_wise_report' => 'Per Day Report',
   'item_wise_report' => 'Item Wise Report',
   'deleted' => 'deleted',
   'delivered' => 'Delivered',

@@ -53,9 +53,11 @@ class AddonController extends Controller
         $directories = self::getDirectories($dir);
         $addons = [];
         foreach ($directories as $directory) {
-            $sub_dirs = self::getDirectories('Modules/' . $directory);
-            if (in_array('Addon', $sub_dirs)) {
-                $addons[] = 'Modules/' . $directory;
+            if($directory !== 'TaxModule'){
+                $sub_dirs = self::getDirectories('Modules/' . $directory);
+                if (in_array('Addon', $sub_dirs)) {
+                    $addons[] = 'Modules/' . $directory;
+                }
             }
         }
         return view('admin-views.system.addon.index', compact('addons'));

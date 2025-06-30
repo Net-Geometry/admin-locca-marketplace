@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Item;
 
+use App\CentralLogics\Helpers;
 use App\Contracts\Repositories\AddonRepositoryInterface;
 use App\Contracts\Repositories\StoreRepositoryInterface;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
@@ -71,15 +72,9 @@ class AddonController extends BaseController
             $query->where('module_id', Config::get('module.current_module_id'))->orWhereNull('module_id');
         })->where('status', 1)->select('id', 'name')->get();
 
-        $productWiseTax = false;
-        $taxVats = [];
-        if (addon_published_status('TaxModule')) {
-            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
-            if ($SystemTaxVat?->tax_type == 'product_wise') {
-                $productWiseTax = true;
-                $taxVats =  \Modules\TaxModule\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
-            }
-        }
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
+        $taxVats = $taxData['taxVats'];
 
         return view(AddonViewPath::INDEX[VIEW], compact('addons', 'store', 'language', 'addonCategories', 'productWiseTax', 'taxVats'));
     }
@@ -113,18 +108,13 @@ class AddonController extends BaseController
     {
         $addon = $this->addonRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
         $language = getWebConfig('language');
-        $productWiseTax = false;
-        $taxVats = [];
-        $taxVatIds = [];
-        if (addon_published_status('TaxModule')) {
-            $taxVatIds = $addon->taxVats()->pluck('tax_id')->toArray();
 
-            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
-            if ($SystemTaxVat?->tax_type == 'product_wise') {
-                $productWiseTax = true;
-                $taxVats =  \Modules\TaxModule\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
-            }
-        }
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
+        $taxVats = $taxData['taxVats'];
+        $taxVatIds =  $productWiseTax ? $addon->taxVats()->pluck('tax_id')->toArray(): [];
+
+
         $addonCategories = AddonCategory::where(function ($query) {
             $query->where('module_id', Config::get('module.current_module_id'))->orWhereNull('module_id');
         })->where('status', 1)->select('id', 'name')->get();
@@ -184,10 +174,15 @@ class AddonController extends BaseController
             storeId: $storeId
         );
         $store = $storeId != 'all' ? $this->storeRepo->getFirstWhere(params: ['id' => $storeId]) : null;
+
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
+
         $data = [
             'data' => $addons,
             'search' => $request['search'] ?? null,
             'store' => $store,
+            'productWiseTax' => $productWiseTax
         ];
 
         if ($request['type'] == 'csv') {

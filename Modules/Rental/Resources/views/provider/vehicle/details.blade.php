@@ -303,12 +303,12 @@
                                             </div>
                                         @endif
                                          @if($vehicle->trip_day_wise)
-                                        <div class="d-flex"><span class="min-w-110px">{{ translate('Day Wise')}}</span>
+                                        <div class="d-flex"><span class="min-w-110px">{{ translate('Per Day')}}</span>
                                             <span class="font-semibold">:{{\App\CentralLogics\Helpers::format_currency($vehicle['day_wise_price'])}}</span>
                                         </div>
                                         @endif
                                         <div class="d-flex"><span class="min-w-110px">{{translate('Discount')}}</span><span
-                                                class="font-semibold">: {{ $vehicle->discount_price }} {{ $vehicle->discount_type == 'percent' ? '%' : '$' }}</span></div>
+                                                class="font-semibold">: {{ $vehicle->discount_type == 'percent' ? $vehicle->discount_price.' %' : \App\CentralLogics\Helpers::format_currency($vehicle->discount_price) }}</span></div>
                                     </div>
                                 </td>
                                 <td>

@@ -870,38 +870,57 @@ class TripController extends Controller
     private function getFinalCalculatedTax($details_data, $additionalCharges, $totalDiscount, $price, $provider_id, $storeData = true)
     {
 
-        $productIds = [];
-        $productPrice = [];
-        $categoryIds = [];
-        $quantities = [];
-
+        $products = [];
+        $tempList = [];
+        $productDiscountTotal = 0;
+        $totalAfterOwnDiscounts = 0;
         if (addon_published_status('TaxModule')) {
-            foreach ($details_data as $item) {
-                $productIds[$item['vehicle_id']] = $item['original_price'];
-                $productPrice[$item['vehicle_id']] = $item['original_price'] * $item['quantity'];
-                $categoryIds[$item['vehicle_id']] = $item['category_id'];
-                $quantities[$item['vehicle_id']] = $item['quantity'];
+
+          foreach ($details_data as $item) {
+                $item_id = $item['vehicle_id'] ;
+                $itemWiseDiscount = $item['discount_on_trip_by'] === 'admin'  ? $item['discount_on_trip'] : $item['discount_on_trip']  * $item['quantity'];
+                $productDiscountTotal += $itemWiseDiscount;
+                $itemFinal = $item['price']  - $itemWiseDiscount;
+                $tempList[] = [
+                    'id' => $item_id,
+                    'original_price' => $item['price'],
+                    'quantity' => $item['quantity'],
+                    'category_id' => $item['category_id'],
+                    'discount' => $item['discount_on_trip'],
+                    'discount_on_trip_by' => $item['discount_on_trip_by'],
+                    'base_final' => $itemFinal,
+                ];
+
+                $totalAfterOwnDiscounts += $itemFinal;
+
             }
-            $totalPriceBeforeDiscount = array_sum($productPrice);
-            foreach ($productPrice as $key => $productWisePrice) {
-                $proportion = $productWisePrice / $totalPriceBeforeDiscount;
-                $discountShare = $totalDiscount * $proportion;
-                $discountedPrice = $productWisePrice - $discountShare;
-                $productIds[$key] = $discountedPrice;
+
+            $otherDiscounts = $totalDiscount - $productDiscountTotal ;
+
+            foreach ($tempList as $entry) {
+                $share = ($entry['base_final'] / $totalAfterOwnDiscounts) * $otherDiscounts;
+                $finalPrice = $entry['base_final'] - $share;
+                    $products[] = [
+                        'id' => $entry['id'],
+                        'original_price' => $entry['original_price'],
+                        'quantity' => $entry['quantity'],
+                        'category_id' => $entry['category_id'],
+                        'discount' => $entry['discount'],
+                        'discount_on_trip_by' => $entry['discount_on_trip_by'],
+                        'after_discount_final_price' => $finalPrice,
+                    ];
             }
 
             $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                 amount: $price,
-                productIds: $productIds,
-                categoryIds: $categoryIds,
-                quantity: $quantities,
+                productIds: $products,
                 storeData: $storeData,
                 additionalCharges: $additionalCharges,
                 taxPayer: 'rental_provider',
                 orderId: null,
                 storeId: $provider_id
             );
-
+            // info($taxData);
             $tax_amount = $taxData['totalTaxamount'];
             $tax_included = $taxData['include'];
             $tax_status = $tax_included ?  'included' : 'excluded';

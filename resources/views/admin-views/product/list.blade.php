@@ -213,6 +213,11 @@
                         @endif
                         <th class="border-0">{{translate('messages.store')}}</th>
                         <th class="border-0 text-center">{{translate('messages.price')}}</th>
+
+                        @if ($productWiseTax)
+                        <th  class="border-0 ">{{ translate('messages.Vat/Tax') }}</th>
+                        @endif
+
                         <th class="border-0 text-center">{{translate('messages.status')}}</th>
                         <th class="border-0 text-center">{{translate('messages.action')}}</th>
                     </tr>
@@ -258,6 +263,23 @@
                                     {{\App\CentralLogics\Helpers::format_currency($item['price'])}}
                                 </div>
                             </td>
+
+                            @if ($productWiseTax)
+                                <td>
+                                    <span class="d-block font-size-sm text-body">
+                                        @forelse ($item?->taxVats?->pluck('tax.name', 'tax.tax_rate')->toArray() as $key => $tax)
+                                            <span> {{ $tax }} : <span class="font-bold">
+                                                    ({{ $key }}%)
+                                                </span> </span>
+                                            <br>
+                                        @empty
+                                            <span> {{ translate('messages.no_tax') }} </span>
+                                        @endforelse
+                                    </span>
+                                </td>
+                                @endif
+
+
                             <td>
                                 <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$item->id}}">
                                     <input type="checkbox" class="toggle-switch-input redirect-url" data-url="{{route('admin.item.status',[$item['id'],$item->status?0:1])}}" id="stocksCheckbox{{$item->id}}" {{$item->status?'checked':''}}>

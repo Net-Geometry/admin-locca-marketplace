@@ -195,7 +195,7 @@
                                     @endif
                                     @if($vehicle->trip_day_wise)
                                         <div>
-                                            <span class="opacity-lg">{{translate('Day Wise')}}: </span>
+                                            <span class="opacity-lg">{{translate('Per Day')}}: </span>
                                             <span class="font-semibold">{{\App\CentralLogics\Helpers::format_currency($vehicle['day_wise_price'])}}</span>
                                         </div>
                                     @endif

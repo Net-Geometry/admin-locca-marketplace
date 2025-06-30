@@ -1034,14 +1034,10 @@ class VendorController extends Controller
                     $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                     amount: $total_price,
                     productIds: [],
-                    categoryIds: [],
-                    quantity: [],
                     taxPayer: 'prescription',
                     storeData: true,
                     additionalCharges: $additionalCharges,
                     addonIds: [],
-                    addonQuantity: [],
-                    addonCategoryIds: [],
                     orderId: null,
                     storeId:  $store->id
                 );
@@ -1159,14 +1155,10 @@ class VendorController extends Controller
                     $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                     amount: $product_price,
                     productIds: [],
-                    categoryIds: [],
-                    quantity: [],
                     taxPayer: 'prescription',
                     storeData: true,
                     additionalCharges: $additionalCharges,
                     addonIds: [],
-                    addonQuantity: [],
-                    addonCategoryIds: [],
                     orderId: null,
                     storeId:  $order->store_id
                 );

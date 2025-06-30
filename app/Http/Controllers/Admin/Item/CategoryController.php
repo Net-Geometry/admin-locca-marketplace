@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Item;
 
+use App\CentralLogics\Helpers;
 use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
 use App\Enums\ExportFileNames\Admin\Category;
@@ -64,15 +65,9 @@ class CategoryController extends BaseController
         );
 
         $language = getWebConfig('language');
-        $categoryWiseTax= false;
-        $taxVats= [];
-        if(addon_published_status('TaxModule')){
-            $SystemTaxVat= \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active',1)->where('is_default',1)->first();
-            if($SystemTaxVat?->tax_type == 'category_wise'){
-                $categoryWiseTax= true;
-                $taxVats=  \Modules\TaxModule\Entities\Tax::where('is_active',1)->where('is_default',1)->get(['id','name','tax_rate']);
-            }
-        }
+        $taxData = Helpers::getTaxSystemType();
+        $categoryWiseTax = $taxData['categoryWiseTax'];
+        $taxVats = $taxData['taxVats'];
 
         return view($this->categoryService->getViewByPosition($request['position']), compact('categories','language','mainCategories','categoryWiseTax','taxVats'));
     }
@@ -114,18 +109,11 @@ class CategoryController extends BaseController
     {
         $category = $this->categoryRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
         $language = getWebConfig('language');
-        $categoryWiseTax= false;
-        $taxVats= [];
-        $taxVatIds= [];
 
-        if(addon_published_status('TaxModule')){
-           $taxVatIds = $category->taxVats()->pluck('tax_id')->toArray();
-            $SystemTaxVat= \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active',1)->where('is_default',1)->first();
-            if($SystemTaxVat?->tax_type == 'category_wise'){
-                $categoryWiseTax= true;
-                $taxVats=  \Modules\TaxModule\Entities\Tax::where('is_active',1)->where('is_default',1)->get(['id','name','tax_rate']);
-            }
-        }
+        $taxData = Helpers::getTaxSystemType();
+        $categoryWiseTax = $taxData['categoryWiseTax'];
+        $taxVats = $taxData['taxVats'];
+        $taxVatIds = $categoryWiseTax ? $category->taxVats()->pluck('tax_id')->toArray(): [];
 
         return view(CategoryViewPath::UPDATE['view'], compact('category','language','categoryWiseTax','taxVats','taxVatIds'));
     }
@@ -286,9 +274,14 @@ class CategoryController extends BaseController
     public function exportList(Request $request): BinaryFileResponse
     {
         $categories = $this->categoryRepo->getExportList(request: $request);
+
+        $taxData = Helpers::getTaxSystemType();
+        $categoryWiseTax = $taxData['categoryWiseTax'];
+
         $data = [
             'data' => $categories,
             'search' => $request['search'] ?? null,
+            'categoryWiseTax' => $categoryWiseTax
         ];
 
         if ($request['type'] == 'csv') {

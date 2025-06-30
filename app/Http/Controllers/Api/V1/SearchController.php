@@ -126,6 +126,9 @@ class SearchController extends Controller
             })
             ->when($filter && in_array('discounted', $filter), function ($qurey) {
                 $qurey->Discounted();
+            })
+            ->when($filter && in_array('available_now', $filter), function ($qurey) {
+                $qurey->whereRaw('CURTIME() BETWEEN available_time_starts AND available_time_ends');
             });
 
         $item_categories =  $items->pluck('category_id')->toArray();

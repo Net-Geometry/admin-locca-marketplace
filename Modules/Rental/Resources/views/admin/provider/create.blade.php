@@ -525,7 +525,7 @@
                                                 <!-- Upload box -->
                                                 <div class="d-flex justify-content-center" id="pdf-container">
                                                     <div class="document-upload-wrapper" id="doc-upload-wrapper">
-                                                        <input type="file" name="tin_certificate" class="document_input" accept=".doc, .pdf, .jpg, .png, .jpeg">
+                                                        <input type="file" name="tin_certificate_image" class="document_input" accept=".doc, .pdf, .jpg, .png, .jpeg">
                                                         <div class="textbox">
                                                             <img width="40" height="40" class="svg"
                                                                  src="{{ asset('public/assets/admin/img/doc-uploaded.png') }}"

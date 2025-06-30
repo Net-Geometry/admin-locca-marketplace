@@ -275,6 +275,9 @@ class ProductLogic
         ->when($filter && in_array('discounted',$filter),function ($qurey){
             $qurey->Discounted()->orderBy('discount','desc');
         })
+        ->when($filter && in_array('available_now', $filter), function ($qurey) {
+            $qurey->whereRaw('CURTIME() BETWEEN available_time_starts AND available_time_ends');
+        })
 
         ->select(['items.*'])
         ->selectSub(function ($subQuery) {
@@ -781,6 +784,9 @@ class ProductLogic
             ->when($filter && in_array('popular',$filter),function ($qurey){
                 $qurey->popular();
             })
+            ->when($filter && in_array('available_now', $filter), function ($qurey) {
+                $qurey->whereRaw('CURTIME() BETWEEN available_time_starts AND available_time_ends');
+            })
             ->when($filter && in_array('high',$filter),function ($qurey){
                 $qurey->orderBy('price', 'desc');
             })
@@ -895,6 +901,9 @@ class ProductLogic
                 })
                 ->when($filter && in_array('low',$filter),function ($qurey){
                     return $qurey->orderBy('price', 'asc');
+                })
+                ->when($filter && in_array('available_now', $filter), function ($qurey) {
+                    return $qurey->whereRaw('CURTIME() BETWEEN available_time_starts AND available_time_ends');
                 })
                 ->when($filter && in_array('discounted',$filter),function ($qurey){
                     return $qurey->Discounted()->orderBy('discount','desc');

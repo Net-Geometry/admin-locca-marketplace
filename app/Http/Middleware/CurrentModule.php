@@ -50,7 +50,7 @@ class CurrentModule
             Config::set('module.current_module_id', null);
             Config::set('module.current_module_type', 'dispatch');
         }
-        if (Request::is('admin/business-settings/*')) {
+        if (Request::is('admin/business-settings/*') || Request::is('taxvat/*')) {
             Config::set('module.current_module_id', null);
             Config::set('module.current_module_type', 'settings');
         }

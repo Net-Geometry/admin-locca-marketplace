@@ -16,16 +16,12 @@ class AddonCategoryController extends Controller
 
     public function index(Request   $request)
     {
-        $categoryWiseTax = false;
         $key = explode(' ', $request['search']);
-        $taxVats = [];
-        if (addon_published_status('TaxModule')) {
-            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
-            if ($SystemTaxVat?->tax_type == 'category_wise') {
-                $categoryWiseTax = true;
-                $taxVats =  \Modules\TaxModule\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
-            }
-        }
+
+        $taxData = Helpers::getTaxSystemType();
+        $categoryWiseTax = $taxData['categoryWiseTax'];
+        $taxVats = $taxData['taxVats'];
+
         $categories = AddonCategory::where('module_id', Config::get('module.current_module_id'))
             ->when(isset($key), function ($q) use ($key) {
                 $q->where(function ($q) use ($key) {
@@ -68,25 +64,18 @@ class AddonCategoryController extends Controller
         }
         Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'AddonCategory', data_id: $addonCategory->id, data_value: $addonCategory->name);
 
-        Toastr::success(translate('messages.AddonCategory_added_successfully'));
+        Toastr::success(translate('messages.Addon_Category_added_successfully'));
         return back();
     }
 
     public function edit(Request $request)
     {
         $addonCategory = AddonCategory::withoutGlobalScope('translate')->with('translations')->findOrfail($request->id);
-        $categoryWiseTax = false;
-        $taxVats = [];
-        $taxVatIds = [];
-        if (addon_published_status('TaxModule')) {
-            $taxVatIds = $addonCategory->taxVats()->pluck('tax_id')->toArray();
+        $taxData = Helpers::getTaxSystemType();
+        $categoryWiseTax = $taxData['categoryWiseTax'];
+        $taxVats = $taxData['taxVats'];
+        $taxVatIds = $categoryWiseTax ? $addonCategory->taxVats()->pluck('tax_id')->toArray() : [];
 
-            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
-            if ($SystemTaxVat?->tax_type == 'category_wise') {
-                $categoryWiseTax = true;
-                $taxVats =  \Modules\TaxModule\Entities\Tax::where('is_active', 1)->where('is_default', 1)->get(['id', 'name', 'tax_rate']);
-            }
-        }
         $language = getWebConfig('language');
         return response()->json([
             'view' => view('admin-views.addon.addon-category._edit', compact('addonCategory', 'taxVats', 'categoryWiseTax', 'language', 'taxVatIds'))->render(),
@@ -96,7 +85,7 @@ class AddonCategoryController extends Controller
     {
         $addonCategory = AddonCategory::findOrfail($request->id);
         $addonCategory->name = $request->name[array_search('default', $request->lang)];
-        $addonCategory->status = $request->status??0;
+        $addonCategory->status = $request->status ?? 0;
 
         if (addon_published_status('TaxModule')) {
             $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
@@ -136,36 +125,41 @@ class AddonCategoryController extends Controller
         $addonCategory?->translations()->delete();
         $addonCategory?->taxVats()->delete();
         $addonCategory->delete();
-        Toastr::success(translate('messages.AddonCategory_deleted_successfully'));
+        Toastr::success(translate('messages.Addon_Category_deleted_successfully'));
         return back();
     }
 
 
-    public function exportAddonCategories(Request $request){
-        try{
-                $key = explode(' ', $request['search']);
-                   $categories = AddonCategory::where('module_id', Config::get('module.current_module_id'))
-            ->when(isset($key), function ($q) use ($key) {
-                $q->where(function ($q) use ($key) {
-                    foreach ($key as $value) {
-                        $q->orWhere('name', 'like', "%{$value}%");
-                    }
-                });
-            })
-            ->with('taxVats.tax')->get();
-                $data=[
-                    'data' =>$categories,
-                    'search' =>$request['search'] ?? null,
-                ];
-                if($request->type == 'csv'){
-                    return Excel::download(new AddonCategoryExport($data), 'AddonCategories.csv');
-                }
-                return Excel::download(new AddonCategoryExport($data), 'AddonCategories.xlsx');
-            } catch(\Exception $e) {
-                Toastr::error("line___{$e->getLine()}",$e->getMessage());
-                info(["line___{$e->getLine()}",$e->getMessage()]);
-                return back();
-            }
-    }
+    public function exportAddonCategories(Request $request)
+    {
+        try {
+            $key = explode(' ', $request['search']);
+            $categories = AddonCategory::where('module_id', Config::get('module.current_module_id'))
+                ->when(isset($key), function ($q) use ($key) {
+                    $q->where(function ($q) use ($key) {
+                        foreach ($key as $value) {
+                            $q->orWhere('name', 'like', "%{$value}%");
+                        }
+                    });
+                })
+                ->with('taxVats.tax')->get();
+            $taxData = Helpers::getTaxSystemType();
+            $categoryWiseTax = $taxData['categoryWiseTax'];
 
+
+            $data = [
+                'data' => $categories,
+                'search' => $request['search'] ?? null,
+                'categoryWiseTax' => $categoryWiseTax
+            ];
+            if ($request->type == 'csv') {
+                return Excel::download(new AddonCategoryExport($data), 'AddonCategories.csv');
+            }
+            return Excel::download(new AddonCategoryExport($data), 'AddonCategories.xlsx');
+        } catch (\Exception $e) {
+            Toastr::error("line___{$e->getLine()}", $e->getMessage());
+            info(["line___{$e->getLine()}", $e->getMessage()]);
+            return back();
+        }
+    }
 }

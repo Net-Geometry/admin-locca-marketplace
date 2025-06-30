@@ -1,4 +1,53 @@
 "use strict";
+
+function getApplicablePrice() {
+    let prices = [];
+
+    if ($('input[name="trip_hourly"]').is(':checked')) {
+        const hourlyInput = $('input[name="hourly_price"]');
+        const val = parseFloat(hourlyInput.val());
+        if (!isNaN(val)) prices.push(val);
+    }
+
+    if ($('input[name="trip_day_wise"]').is(':checked')) {
+        const dayInput = $('input[name="day_wise_price"]');
+        const val = parseFloat(dayInput.val());
+        if (!isNaN(val)) prices.push(val);
+    }
+
+    if ($('input[name="trip_distance"]').is(':checked')) {
+        const distanceInput = $('input[name="distance_price"]');
+        const val = parseFloat(distanceInput.val());
+        if (!isNaN(val)) prices.push(val);
+    }
+
+    return prices.length ? Math.min(...prices) : 0;
+}
+
+function validateDiscount() {
+    const $input = $('#discount_input');
+    const discountType = $('#discount_type').val();
+    const inputValue = parseFloat($input.val());
+    const applicablePrice = getApplicablePrice();
+
+    if (isNaN(inputValue)) return;
+
+    if (discountType === 'percent' && inputValue >= 100) {
+        $input.val(99);
+    } else if (discountType === 'amount' && inputValue > applicablePrice) {
+        $input.val(applicablePrice);
+    }
+}
+
+$(document).ready(function () {
+    $('#discount_input').on('input', validateDiscount);
+    $('#discount_type').on('change', validateDiscount);
+
+    $('input[name="trip_hourly"], input[name="trip_day_wise"], input[name="trip_distance"], input[name="hourly_price"], input[name="day_wise_price"], input[name="distance_price"]').on('change input', function () {
+        setTimeout(validateDiscount, 10); // slight delay so value updates are captured
+    });
+});
+
 $(document).ready(function () {
     $('.single_file_input').on('change', function (event) {
         var file = event.target.files[0];
@@ -46,46 +95,6 @@ $(document).ready(function () {
         });
     });
 });
-
-$(document).ready(function () {
-   function getApplicablePrice() {
-    let prices = [];
-
-    if ($('input[name="trip_hourly"]').is(':checked')) {
-        let price = parseFloat($('input[name="hourly_price"]').val());
-        if (!isNaN(price)) prices.push(price);
-    }
-
-    if ($('input[name="trip_distance"]').is(':checked')) {
-        let price = parseFloat($('input[name="distance_price"]').val());
-        if (!isNaN(price)) prices.push(price);
-    }
-
-    if ($('input[name="trip_day_wise"]').is(':checked')) {
-        let price = parseFloat($('input[name="day_wise_price"]').val());
-        if (!isNaN(price)) prices.push(price);
-    }
-
-    return prices.length ? Math.min(...prices) : 0;
-}
-
-    $('#discount_input').on('input', function () {
-        let discountType = $('#discount_type').val();
-        let inputValue = parseFloat($(this).val());
-        let applicablePrice = getApplicablePrice();
-
-        if (discountType === 'percent' && inputValue >= 100) {
-            $(this).val(99);
-        } else if (discountType === 'amount' && inputValue > applicablePrice) {
-            $(this).val(applicablePrice);
-        }
-    });
-
-    $('input[name="trip_hourly"], input[name="trip_day_wise"], input[name="day_wise_price"], input[name="trip_distance"], input[name="hourly_price"], input[name="distance_price"]').on('change input', function () {
-        $('#discount_input').trigger('input');
-    });
-});
-
 
 document.addEventListener("DOMContentLoaded", function () {
     const MAX_FILE_SIZE_MB = 1;
@@ -515,7 +524,7 @@ const $tripHourly = $('input[name="trip_hourly"]');
             input.prop('disabled', false);
             parentDiv.removeClass('col-12 col-6 col-4').addClass(colClass).show();
         } else {
-            input.prop('disabled', true).val('');
+            input.prop('disabled', true);
             parentDiv.hide();
         }
     });

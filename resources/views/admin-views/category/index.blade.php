@@ -83,7 +83,7 @@
                             @if ($categoryWiseTax)
                                 <span class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
                                 <select name="tax_ids[]" id="tax__rate" class="form-control js-select2-custom"
-                                    multiple="multiple" placeholder="Type & Select Tax Rate">
+                                    multiple="multiple" required placeholder="Type & Select Tax Rate">
                                     @foreach ($taxVats as $taxVat)
                                         <option value="{{ $taxVat->id }}"> {{ $taxVat->name }}
                                             ({{ $taxVat->tax_rate }}%)
@@ -199,6 +199,9 @@
                                 <th class="border-0 w--1">{{ translate('messages.name') }}</th>
                                 <th class="border-0 text-center">{{ translate('messages.status') }}</th>
                                 <th class="border-0 text-center">{{ translate('messages.featured') }}</th>
+                                @if ($categoryWiseTax)
+                                <th  class="border-0 ">{{ translate('messages.Vat/Tax') }}</th>
+                                @endif
                                 <th class="border-0 text-center">{{ translate('messages.priority') }}</th>
                                 <th class="border-0 text-center">{{ translate('messages.action') }}</th>
                             </tr>
@@ -240,6 +243,26 @@
                                             </span>
                                         </label>
                                     </td>
+
+
+                                @if ($categoryWiseTax)
+                                <td>
+                                    <span class="d-block font-size-sm text-body">
+                                        @forelse ($category?->taxVats?->pluck('tax.name', 'tax.tax_rate')->toArray() as $key => $tax)
+                                            <span> {{ $tax }} : <span class="font-bold">
+                                                    ({{ $key }}%)
+                                                </span> </span>
+                                            <br>
+                                        @empty
+                                            <span> {{ translate('messages.no_tax') }} </span>
+                                        @endforelse
+                                    </span>
+                                </td>
+                                @endif
+
+
+
+
                                     <td>
 
                                         <form action="{{ route('admin.category.priority', $category->id) }}"
