@@ -4617,15 +4617,9 @@ class Helpers
 
   public static function getFinalCalculatedTax($details_data, $additionalCharges, $totalDiscount, $price, $storeId, $storeData = true)
     {
-        $productIds = [];
-        $productPrice = [];
-        $categoryIds = [];
-        $quantities = [];
 
         $addonIds = [];
-        $addonPrice = [];
-        $addonQuantity = [];
-        $addonCategoryIds = [];
+        $products=[];
 
         if (addon_published_status('TaxModule')) {
             foreach ($details_data as $item) {
@@ -4634,61 +4628,49 @@ class Helpers
                 } else{
                     $item_id=$item['item_campaign_id'];
                 }
-
-                $productIds[$item_id] = $item['price'];
-                $productPrice[$item_id] = $item['price'] * $item['quantity'] ;
-                $categoryIds[$item_id] = $item['category_id'];
-                $quantities[$item_id] = $item['quantity'];
-
-
+                $products[]=[
+                    'id'=>$item_id,
+                    'original_price'=>$item['price'],
+                    'quantity'=>$item['quantity'],
+                    'category_id'=>$item['category_id'],
+                    'discount'=>$item['discount_on_item'],
+                    'discount_type'=>$item['discount_type'],
+                    'after_discount_final_price'=>$item['discount_type'] == 'product_discount' ?  ($item['price'] - $item['discount_on_item']) * $item['quantity'] : ($item['price'] * $item['quantity'] )- $item['discount_on_item'],
+                ];
 
                 $addons= json_decode($item['add_ons'],true) ?? [];
+
                 foreach ($addons as $addon) {
-                    $addonIds[$addon['id']] = $addon['price'];
-                    $addonPrice[$addon['id']] = $addon['price'] * $addon['quantity'];
-                    $addonQuantity[$addon['id']] = $addon['quantity'];
-                    $addonCategoryIds[$addon['id']] = $addon['category_id'];
-                }
-
-            }
-
-            try {
-                $totalAddonPriceBeforeDiscount = array_sum($addonPrice);
-                foreach ($addonPrice as $key => $addonWisePrice) {
-                    $proportion = $addonWisePrice / $totalAddonPriceBeforeDiscount;
+                    $price = $addon['price'] * $addon['quantity'];
+                    $proportion = $price / $item['total_add_on_price'];
                     $discountShare = $item['addon_discount'] * $proportion;
-                    $discountedPrice = $addonWisePrice - $discountShare;
-                    $addonIds[$key] = $discountedPrice/$addonQuantity[$key];
-                }
+                    $discountedPrice = $price - $discountShare;
 
-                $totalPriceBeforeDiscount = array_sum($productPrice);
-                foreach ($productPrice as $key => $productWisePrice) {
-                    $proportion = $productWisePrice / $totalPriceBeforeDiscount;
-                    $discountShare = $totalDiscount * $proportion;
-                    $discountedPrice = $productWisePrice - $discountShare;
-                    $productIds[$key] = $discountedPrice/$quantities[$key];
+                    $addonIds[] = [
+                        'addon_id' => $addon['id'],
+                        'item_id' => $item_id,
+                        'quantity' => $addon['quantity'],
+                        'category_id' => $addon['category_id'] ?? null,
+                        'original_price' => $addon['price'],
+                        'after_discount_final_price' => $discountedPrice,
+                        'total_addon_addon_price' => $item['total_add_on_price'],
+                        'total_addon_discount' => $item['addon_discount'],
+                    ];
                 }
-            }catch (\Exception $exception){
-                info(['error_creating_trip_transaction', $exception->getMessage()]);
             }
 
-//            dd($proportion,$totalDiscount,$productWisePrice,$totalPriceBeforeDiscount,$discountedPrice,'fgsdfg',$price,$productIds,$categoryIds,$quantities,$storeData,$additionalCharges,$addonIds,$addonQuantity,$addonCategoryIds,$storeId);
             $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                 amount: $price,
-                productIds: $productIds,
-                categoryIds: $categoryIds,
-                quantity: $quantities,
+                productIds: $products,
                 taxPayer: 'vendor',
                 storeData: $storeData,
                 additionalCharges: $additionalCharges,
                 addonIds: $addonIds,
-                addonQuantity: $addonQuantity,
-                addonCategoryIds: $addonCategoryIds,
                 orderId: null,
                 storeId: $storeId
             );
 
-//            dd($taxData);
+        //    dd($taxData,$products,$addonIds);
             $tax_amount = $taxData['totalTaxamount'];
             $tax_included = $taxData['include'];
             $tax_status = $tax_included ?  'included' : 'excluded';

@@ -877,24 +877,41 @@ class TripController extends Controller
 
         if (addon_published_status('TaxModule')) {
             foreach ($details_data as $item) {
-                $productIds[$item['vehicle_id']] = $item['original_price'];
-                $productPrice[$item['vehicle_id']] = $item['original_price'] * $item['quantity'];
-                $categoryIds[$item['vehicle_id']] = $item['category_id'];
-                $quantities[$item['vehicle_id']] = $item['quantity'];
+            //     $productIds[$item['vehicle_id']] = $item['original_price'];
+            //     $productPrice[$item['vehicle_id']] = $item['original_price'] * $item['quantity'];
+            //     $categoryIds[$item['vehicle_id']] = $item['category_id'];
+            //     $quantities[$item['vehicle_id']] = $item['quantity'];
+            // }
+            // $totalPriceBeforeDiscount = array_sum($productPrice);
+            // foreach ($productPrice as $key => $productWisePrice) {
+            //     $proportion = $productWisePrice / $totalPriceBeforeDiscount;
+            //     $discountShare = $totalDiscount * $proportion;
+            //     $discountedPrice = $productWisePrice - $discountShare;
+            //     $productIds[$key] = $discountedPrice;
+
+
+      $products[]=[
+                    'id'=>$item['vehicle_id'],
+                    'original_price'=>$item['original_price'],
+                    'quantity'=>$item['quantity'],
+                    'category_id'=>$item['category_id'],
+                    'discount'=>$item['discount_on_trip'],
+                    'discount_on_trip_by'=>$item['discount_on_trip_by'],
+                    // 'after_discount_final_price'=>$item['discount_on_trip_by'] == 'product_discount' ?  ($item['price'] - $item['discount_on_trip']) * $item['quantity'] : ($item['price'] * $item['quantity'] )- $item['discount_on_trip'],
+                ];
+
+
+
+
             }
-            $totalPriceBeforeDiscount = array_sum($productPrice);
-            foreach ($productPrice as $key => $productWisePrice) {
-                $proportion = $productWisePrice / $totalPriceBeforeDiscount;
-                $discountShare = $totalDiscount * $proportion;
-                $discountedPrice = $productWisePrice - $discountShare;
-                $productIds[$key] = $discountedPrice;
-            }
+
+
+
+
 
             $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                 amount: $price,
                 productIds: $productIds,
-                categoryIds: $categoryIds,
-                quantity: $quantities,
                 storeData: $storeData,
                 additionalCharges: $additionalCharges,
                 taxPayer: 'rental_provider',

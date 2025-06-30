@@ -419,14 +419,10 @@ trait PlaceNewOrder
                 $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                     amount: $order->order_amount,
                     productIds: [],
-                    categoryIds: [],
-                    quantity: [],
                     taxPayer: 'parcel',
                     storeData: true,
                     additionalCharges: $additionalCharges,
                     addonIds: [],
-                    addonQuantity: [],
-                    addonCategoryIds: [],
                     orderId: null,
                     storeId: null
                 );
@@ -1122,8 +1118,7 @@ trait PlaceNewOrder
                     $order_details[$key]['discount_type'] = 'precentage';
                     $order_details[$key]['discount_percentage'] = $storeDiscount['discount'];
                     $order_details[$key]['discount_on_item'] =  Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $detail_data['price'] * $detail_data['quantity']);
-
-                    $order_details[$key]['addon_discount'] =  Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $total_addon_price);
+                    $order_details[$key]['addon_discount'] =  Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase'], item_wise_price: $detail_data['total_add_on_price']);
                 }
             }
         }
@@ -1643,14 +1638,10 @@ trait PlaceNewOrder
             $finalCalculatedTax =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
                 amount: $product_price,
                 productIds: [],
-                categoryIds: [],
-                quantity: [],
                 taxPayer: $request->is_prescription === true ? 'prescription' : 'parcel',
                 storeData: true,
                 additionalCharges: $additionalCharges,
                 addonIds: [],
-                addonQuantity: [],
-                addonCategoryIds: [],
                 orderId: null,
                 storeId: null
             );

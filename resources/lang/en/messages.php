@@ -7787,4 +7787,5 @@ Smartly or Earn. ',
   'TIN Certificate' => 'TIN Certificate',
   'pdf, doc, jpg. File size : max 2 MB' => 'Pdf, doc, jpg. File size : max 2 MB',
   'Turn On The Status?' => 'Turn On The Status?',
+  'product_not_found' => 'Product not found',
 );
