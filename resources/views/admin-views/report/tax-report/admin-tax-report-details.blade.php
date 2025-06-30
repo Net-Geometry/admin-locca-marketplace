@@ -105,7 +105,9 @@
                                     </td>
                                     <td>
                                         <h6>{{ \App\CentralLogics\Helpers::format_currency($item->order_amount) }}</h6>
-                                         <small>#{{ $item->order_id }} </small>
+                                        <a href="{{ route($item->order->order_type == 'parcel' ? 'admin.parcel.order.details' : 'admin.order.details', ['id' => $item->order_id]) }}">
+                                            <small>#{{ $item->order_id }} </small>
+                                        </a>
                                     </td>
                                     <td>
                                         @if ($taxSource =='admin_commission' )

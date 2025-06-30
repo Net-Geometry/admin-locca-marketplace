@@ -89,18 +89,26 @@
                                     </td>
                                     <td>
                                         <div class="d-flex flex-column gap-1">
-                                            <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                                {{ translate('Total:') }} <span>
-                                                    {{ \App\CentralLogics\Helpers::format_currency($order->total_tax_amount) }}</span>
-                                            </div>
-                                            @foreach ($order->orderTaxes as $tax)
-                                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                                    {{ $tax['tax_name'] }}:
-                                                    <span>{{ \App\CentralLogics\Helpers::format_currency($tax['tax_amount']) }}
-                                                    </span>
+                                            @if (count($order->orderTaxes) > 0)
+                                                @php($sum_tax_amount = collect($order->orderTaxes)->sum('tax_amount'))
+                                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
+                                                    {{ translate('Sum of Taxes:') }} <span>
+                                                    {{ \App\CentralLogics\Helpers::format_currency($sum_tax_amount) }}</span>
                                                 </div>
-                                            @endforeach
 
+                                                @foreach ($order->orderTaxes as $tax)
+                                                    <div class="d-flex fz-11 gap-3 align-items-center">
+                                                        {{ $tax['tax_name'] }}:
+                                                        <span>{{ \App\CentralLogics\Helpers::format_currency($tax['tax_amount']) }}
+                                                    </span>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
+                                                    {{ translate('Previous Tax Amount:') }} <span>
+                                                    {{ \App\CentralLogics\Helpers::format_currency($order->tax_amount) }}</span>
+                                                </div>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

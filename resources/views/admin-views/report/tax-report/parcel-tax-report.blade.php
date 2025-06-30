@@ -17,9 +17,12 @@
                         <div class="col-lg-4 col-md-6">
                             <label class="form-label">{{ translate('Date Range') }}</label>
                             <div class="position-relative">
+                                @php
+                                    $dataRange = Carbon\Carbon::parse($startDate)->format('m/d/Y') . ' - ' . Carbon\Carbon::parse($endDate)->format('m/d/Y');
+                                @endphp
                                 <i class="tio-calendar-month icon-absolute-on-right"></i>
-                                <input type="text" class="form-control h-45 position-relative bg-transparent"
-                                    name="dates" placeholder="{{ translate('messages.Select_Date') }}">
+                                <input type="text" data-title="{{ translate('Select_Date_Range') }}" name="dates" value="{{ $dataRange  ?? null }}" class="date-range-picker form-control">
+
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6">
@@ -114,28 +117,36 @@
                             @foreach ($orders as $key => $order)
                                 <tr>
                                     <td>
-                                        {{ $order->created_at }}
                                         {{ $key + $orders->firstItem() }}
                                     </td>
                                     <td>
-                                        {{ $order->id }}
+                                        <a href="{{ route('admin.parcel.order.details', ['id' => $order['id']]) }}">{{ $order->id }}</a>
                                     </td>
                                     <td>
                                         {{ \App\CentralLogics\Helpers::format_currency($order->order_amount) }}
                                     </td>
                                     <td>
                                         <div class="d-flex flex-column gap-1">
-                                            <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                                {{ translate('Total:') }} <span>
-                                                    {{ \App\CentralLogics\Helpers::format_currency($order->total_tax_amount) }}</span>
-                                            </div>
-                                            @foreach ($order->orderTaxes as $tax)
-                                                <div class="d-flex fz-11 gap-3 align-items-center">
-                                                    {{ $tax['tax_name'] }}:
-                                                    <span>{{ \App\CentralLogics\Helpers::format_currency($tax['tax_amount']) }}
-                                                    </span>
+                                            @if (count($order->orderTaxes) > 0)
+                                                @php($sum_tax_amount = collect($order->orderTaxes)->sum('tax_amount'))
+                                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
+                                                    {{ translate('Sum of Taxes:') }} <span>
+                                                    {{ \App\CentralLogics\Helpers::format_currency($sum_tax_amount) }}</span>
                                                 </div>
-                                            @endforeach
+
+                                                @foreach ($order->orderTaxes as $tax)
+                                                    <div class="d-flex fz-11 gap-3 align-items-center">
+                                                        {{ $tax['tax_name'] }}:
+                                                        <span>{{ \App\CentralLogics\Helpers::format_currency($tax['tax_amount']) }}
+                                                    </span>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
+                                                    {{ translate('Previous Tax Amount:') }} <span>
+                                                    {{ \App\CentralLogics\Helpers::format_currency($order->total_tax_amount) }}</span>
+                                                </div>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -167,18 +178,7 @@
 
 @push('script_2')
     <script>
-
         "use strict";
-        $(function() {
-            $('input[name="dates"]').daterangepicker({
-                startDate: moment('{{ $startDate }}'),
-                endDate: moment('{{ $endDate }}'),
-                maxDate: moment(),
-                locale: {
-                    format: 'MM/DD/YYYY'
-                }
-            });
-        });
 
         $(document).on('ready', function() {
             $('.js-data-example-ajax').select2({
