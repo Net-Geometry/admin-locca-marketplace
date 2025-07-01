@@ -19,7 +19,7 @@
                     {{ translate('messages.add_new_item') }}
                 </span>
             </h1>
-            <div class="  align-items-end flex-wrap">
+            <div class=" d-flex flex-sm-nowrap flex-wrap  align-items-end">
                 <div class="text--primary-2 d-flex flex-wrap align-items-center mr-2">
                     <a href="{{ route('admin.item.product_gallery') }}" class="btn btn-outline-primary btn--primary d-flex align-items-center bg-not-hover-primary-ash rounded-8 gap-2">
                         <img src="{{ asset('public/assets/admin/img/product-gallery.png') }}" class="w--22" alt="">

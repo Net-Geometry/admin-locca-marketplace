@@ -132,7 +132,7 @@
                 </div>
                 <!-- End Table -->
             @else
-                <div class="bg--F6F6F6 tax-error__table w-100 py-5">
+                <div class="bg--F6F6F6 tax-error__table w-100 h225-vh py-5">
                     <div class="max-349 text-center mx-auto my-5">
                         <img src="{{ asset('Modules/TaxModule/public/assets/admin/img/tax-error.png') }}" alt="img"
                             class="mb-20">

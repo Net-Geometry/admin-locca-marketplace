@@ -14,9 +14,11 @@
             </div>
             <div class="chat-user-info-content">
                 <h5 class="mb-0 d-flex justify-content-between">
-                    <span class=" mr-3">{{$user['f_name'].' '.$user['l_name']}}</span> <span
-                        class="{{$unchecked ? 'badge badge-info' : ''}}">{{$unchecked ? $unchecked : ''}}</span>
-                        <small>{{date(config('timeformat'),strtotime($conv->last_message?->created_at))}}</small>
+                    <span>
+                        <span class=" mr-2">{{$user['f_name'].' '.$user['l_name']}}</span> <span
+                            class="{{$unchecked ? 'badge badge-info' : ''}}">{{$unchecked ? $unchecked : ''}}</span>
+                    </span>
+                    <small>{{date(config('timeformat'),strtotime($conv->last_message?->created_at))}}</small>
                 </h5>
                 <small>{{ $user['phone'] }}</small>
                 <div class="text-title">{{ Str::limit($conv->last_message?->message ??'', 35, '...') }}</div>

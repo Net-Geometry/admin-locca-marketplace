@@ -441,7 +441,7 @@
                                                         <p class="fz-12px mb-0">{{translate('pdf, doc, jpg. File size : max 2 MB')}}</p>
                                                     </div>
                                                     <div class="d-flex gap-3 align-items-center">
-                                                        <button type="button" id="doc_edit_btn" class="w-30px h-30 rounded d-flex align-items-center justify-content-center btn-primary btn px-3 icon-btn">
+                                                        <button type="button" id="doc_edit_btn" class="w-30px h-30 min-w-30px rounded d-flex align-items-center justify-content-center action-btn btn cmn--btn px-3 icon-btn">
                                                             <i class="tio-edit"></i>
                                                         </button>
                                                     </div>

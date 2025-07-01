@@ -240,7 +240,7 @@
 
     </div>
     <div class="row pt-3 g-3">
-        <div class="col-lg-6">
+        <div class="col-xxl-6">
             <div class="card h-100">
                 <div class="card-header">
                     <h5 class="card-title m-0 d-flex align-items-center">
@@ -251,8 +251,8 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="resturant--info-address">
-                        <div class="pdf-single" data-pdf-url="{{ $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png') }}">
+                    <div class="resturant--info-address flex-sm-nowrap flex-wrap gap-2">
+                        <div class="pdf-single  cus-document-responsive" data-pdf-url="{{ $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png') }}">
                             <div class="pdf-frame">
                                 @php($imgPath =  $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png'))
                                 @if(Str::endsWith($imgPath, ['.pdf', '.doc', '.docx']))
@@ -278,11 +278,11 @@
                             </div>
                         </div>
                         <ul class="address-info address-info-2 list-unstyled list-unstyled-py-3 text-dark">
-                            <li>
-                                <span><strong>{{ translate('Taxpayer Identification Number(TIN)') }}: </strong></span>
+                            <li class="d-inline-flex align-items-center gap-1">
+                                <span class="text-custom-nowrap text-wrap"><strong>{{ translate('Taxpayer Identification Number(TIN)') }}: </strong></span>
                                 <span class="pl-1">{{$store->tin}}</span>
                             </li>
-                            <li>
+                            <li class="justify-content-sm-start justify-content-between">
                                 <span><strong>{{ translate('Expire Date') }}: </strong></span>
                                 <span class="pl-1">{{$store->tin_expire_date}}</span>
                             </li>

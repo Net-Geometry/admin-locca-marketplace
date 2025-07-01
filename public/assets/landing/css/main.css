@@ -4067,4 +4067,6 @@ input[type=text] ~ .show-password .icon-1 {
   height: 30px;
 }
 
-w
+.min-w-30px{
+    min-width: 30px;
+}

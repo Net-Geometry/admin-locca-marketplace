@@ -38,22 +38,22 @@ $(document).ready(function () {
                 const iconSrc = fileType.startsWith("image/") ? pictureIcon : documentIcon;
 
                 const pdfSingle = $(`
-                    <div class="pdf-single" data-file-name="${file.name}" data-file-url="${fileURL}">
-                        <div class="pdf-frame">
-                            <canvas class="pdf-preview d--none"></canvas>
-                            <img class="pdf-thumbnail" src="${blankThumbnail}" alt="File Thumbnail">
-                        </div>
-                        <div class="overlay">
-                            <div class="pdf-info">
-                                <img src="${iconSrc}" width="34" alt="File Type Logo">
-                                <div class="file-name-wrapper">
-                                    <span class="file-name js-filename-truncate">${file.name}</span>
-                                    <span class="opacity-50">Click to view the file</span>
-                                </div>
+                <div class="pdf-single" data-file-name="${file.name}" data-file-url="${fileURL}">
+                    <div class="pdf-frame">
+                        <canvas class="pdf-preview d--none"></canvas>
+                        <img class="pdf-thumbnail" src="${blankThumbnail}" alt="File Thumbnail">
+                    </div>
+                    <div class="overlay">
+                        <div class="pdf-info">
+                            <img src="${iconSrc}" width="34" alt="File Type Logo">
+                            <div class="file-name-wrapper">
+                                <span class="file-name js-filename-truncate">${file.name}</span>
+                                <span class="opacity-50">Click to view the file</span>
                             </div>
                         </div>
                     </div>
-                `);
+                </div>
+            `);
 
                 pdfContainer.append(pdfSingle);
                 renderFileThumbnail(pdfSingle, fileType);
@@ -104,12 +104,41 @@ $(document).ready(function () {
         }
     }
 
+// $("#doc_edit_btn").on("click", function () {
+//     $(".pdf-single").remove();
+//     uploadedFiles.clear();
+//     documentUploadWrapper.show();
+//     $(".document_input").val("").click();
+// });
+
     $("#doc_edit_btn").on("click", function () {
-        $(".pdf-single").remove();
-        uploadedFiles.clear();
-        documentUploadWrapper.show();
-        $(".document_input").val("").click();
+        const input = $(".document_input");
+
+        // Temporarily bind a one-time change handler
+        input.one("change", function (e) {
+            const files = Array.from(this.files);
+            if (files.length > 0) {
+                // Remove old preview and reset state
+                $(".pdf-single").remove();
+                uploadedFiles.clear();
+                documentUploadWrapper.hide();
+
+                // Trigger the input change again to upload new files
+                $(this).trigger("change");
+            } else {
+                // If no file is selected, reset input
+                this.value = "";
+            }
+        });
+
+        // Clear file input before opening dialog (to allow same file re-selection)
+        input.val("");
+        input[0].click(); // open file dialog
     });
+
+
+
+
 
     $("#doc_download_btn").on("click", function () {
         const pdfSingle = pdfContainer.find(".pdf-single").first();
@@ -143,5 +172,4 @@ $(document).ready(function () {
         uploadedFiles.clear();
         documentUploadWrapper.show();
     });
-
 });

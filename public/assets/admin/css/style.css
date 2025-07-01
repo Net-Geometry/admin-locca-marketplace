@@ -5879,8 +5879,14 @@ textarea.form-control.h--45 {
 }
 
 .js-hs-unfold-invoker.dropdown-toggle:not(:hover) {
-    color: var(--primary-clr) !important;
-    border-color: rgba(36, 186, 195, 0.3137254902) !important;
+    color: #47566B !important;
+    border-color: #99A7BA !important;
+    border-radius: 6px !important;
+}
+.js-hs-unfold-invoker.dropdown-toggle:hover {
+    color: #47566B !important;
+    border-color: var(--primary-clr) !important;
+    border-radius: 6px !important;
 }
 
 #location_map_canvas #pac-input,
@@ -15662,3 +15668,21 @@ img{
     position: relative;
     /*z-index: 1;*/
 }
+
+.h225-vh{
+    height: calc(100vh - 225px);
+}
+.cus-document-responsive{
+    @media screen and (max-width: 1399px) {
+        min-width: 235px !important;
+        .address-info{
+            font-size: 14px;
+        }
+    }
+}
+@media screen and (max-width: 1399px) {
+    .address-info li {
+        font-size: 13px !important;
+    }
+}
+
