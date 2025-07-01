@@ -659,3 +659,23 @@ $(document).ready(function () {
         }, 2000);
     });
 });
+
+$(document).on('mouseenter', '.js-filename-truncate', function () {
+    const originalText = $(this).text();
+    const shortName = truncateImageName(originalText, 15);
+    $(this).text(shortName);
+});
+function truncateImageName(filename, maxLength = 15) {
+    const extensionIndex = filename.lastIndexOf('.');
+    const extension = filename.slice(extensionIndex);
+    const nameOnly = filename.slice(0, extensionIndex);
+
+    if (filename.length <= maxLength) {
+        return filename;
+    }
+
+    const trimmedLength = maxLength - extension.length - 3; // 3 for "..."
+    const trimmedName = nameOnly.slice(0, trimmedLength);
+
+    return trimmedName + '...' + extension;
+}

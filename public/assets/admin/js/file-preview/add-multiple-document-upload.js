@@ -47,7 +47,7 @@ $(document).ready(function () {
                             <div class="pdf-info">
                                 <img src="${iconSrc}" width="34" alt="File Type Logo">
                                 <div class="file-name-wrapper">
-                                    <span class="file-name">${file.name}</span>
+                                    <span class="file-name js-filename-truncate">${file.name}</span>
                                     <span class="opacity-50">Click to view the file</span>
                                 </div>
                             </div>

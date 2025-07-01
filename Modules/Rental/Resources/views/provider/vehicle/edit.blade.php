@@ -640,7 +640,7 @@
                                                     <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34"
                                                         alt="Document Logo">
                                                     <div class="fs-13 text--title d-flex flex-column">
-                                                        <span class="file-name">demo.pdf</span>
+                                                        <span class="file-name js-filename-truncate">demo.pdf</span>
                                                         <span class="opacity-50">{{translate('Click to view the file')}}</span>
                                                     </div>
                                                 </div>

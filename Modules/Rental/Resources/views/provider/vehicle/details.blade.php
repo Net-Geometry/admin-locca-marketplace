@@ -409,7 +409,7 @@
                                 <div class="pdf-info d-flex gap-10px align-items-center">
                                     <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34" alt="{{translate('Document Logo')}}">
                                     <div class="fs-13 text--title d-flex flex-column">
-                                        <span class="file-name"></span>
+                                        <span class="file-name js-filename-truncate"></span>
                                         <span class="opacity-50">{{translate('Click to view the file')}}</span>
                                     </div>
                                 </div>

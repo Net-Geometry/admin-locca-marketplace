@@ -451,7 +451,7 @@
                                                                 <img src="{{ asset('public/assets/admin/img/picture.svg') }}" width="34" alt="File Type Logo">
                                                             @endif
                                                             <div class="file-name-wrapper">
-                                                                <span class="file-name">{{ $store->tin_certificate_image }}</span>
+                                                                <span class="file-name js-filename-truncate">{{ $store->tin_certificate_image }}</span>
                                                                 <span class="opacity-50">Click to view the file</span>
                                                             </div>
                                                         </div>
@@ -768,9 +768,7 @@
         $("#time_view").val(min+' to '+max+' '+type);
 
     })
-
-    // ---- file upload with textbox
-    $(document).ready(function () {
+        $(document).ready(function () {
             function previewFile(inputSelector, previewImgSelector, textBoxSelector) {
                 const input = $(inputSelector);
                 const imagePreview = $(previewImgSelector);
