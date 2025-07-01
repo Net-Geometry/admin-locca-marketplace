@@ -369,6 +369,54 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-12">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title m-0 d-flex align-items-center">
+                                    <span class="ml-1">{{translate('Business TIN')}}</span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="resturant--info-address">
+                                    <div class="pdf-single" data-pdf-url="{{ $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png') }}">
+                                        <div class="pdf-frame">
+                                            @php($imgPath =  $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png'))
+                                            @if(Str::endsWith($imgPath, ['.pdf', '.doc', '.docx']))
+                                                <canvas class="pdf-preview"></canvas>
+                                            @endif
+                                            <img class="pdf-thumbnail" src="{{ $imgPath }}" alt="File Thumbnail">
+                                        </div>
+                                        <div class="overlay">
+                                            <a href="javascript:void(0);" class="download-btn" title="">
+                                                <i class="tio-download-to"></i>
+                                            </a>
+                                            <div class="pdf-info d-flex gap-10px align-items-center">
+                                                @if(Str::endsWith($imgPath, ['.pdf', '.doc', '.docx']))
+                                                    <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34" alt="File Type Logo">
+                                                @else
+                                                    <img src="{{ asset('public/assets/admin/img/picture.svg') }}" width="34" alt="File Type Logo">
+                                                @endif
+                                                <div class="fs-13 text--title d-flex flex-column">
+                                                    <span class="file-name js-filename-truncate"></span>
+                                                    <span class="opacity-50">{{ translate('Click to view the file') }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="address-info address-info-2 list-unstyled list-unstyled-py-3 text-dark">
+                                        <li>
+                                            <span><strong>{{ translate('Taxpayer Identification Number(TIN)') }}: </strong></span>
+                                            <span class="pl-1">{{$store->tin}}</span>
+                                        </li>
+                                        <li>
+                                            <span><strong>{{ translate('Expire Date') }}: </strong></span>
+                                            <span class="pl-1">{{$store->tin_expire_date}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -488,6 +536,7 @@
 
 @push('script_2')
     <!-- Page level plugins -->
+    <script src="{{ asset('public/assets/admin/js/file-preview/details-multiple-document-upload.js') }}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&callback=initMap&v=3.45.8"></script>
     <script src="{{asset('Modules/Rental/public/assets/js/admin/view-pages/provider-overview.js')}}"></script>
 

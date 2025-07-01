@@ -1144,7 +1144,7 @@ class DeliverymanController extends Controller
             'offset' => 'required|integer',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
-            'type' => 'nullable|in:all,delivery_charge,delivery_tips',
+            'type' => 'nullable|in:all,delivery_fee,delivery_tips',
         ]);
 
         if ($validator->fails()) {
@@ -1157,7 +1157,12 @@ class DeliverymanController extends Controller
 
         $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
 
-        $baseQuery = OrderTransaction::with(['order:id,payment_method'])->where('delivery_man_id', $dm['id']);
+        $baseQuery = OrderTransaction::with(['order:id,payment_method'])
+            ->where('delivery_man_id', $dm['id'])
+            ->where(function ($query) {
+                $query->where('original_delivery_charge', '>', 0)
+                    ->orWhere('dm_tips', '>', 0);
+            });
 
         if ($request->start_date && $request->end_date) {
             $start = Carbon::parse($request->start_date)->startOfDay();

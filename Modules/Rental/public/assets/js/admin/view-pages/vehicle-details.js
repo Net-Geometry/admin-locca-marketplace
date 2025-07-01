@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     $(document).on("click", ".download-btn", function (event) {
-        event.stopPropagation(); 
+        event.stopPropagation();
 
         const fileUrl = $(this).closest(".pdf-single").data("pdf-url");
         const link = document.createElement("a");
