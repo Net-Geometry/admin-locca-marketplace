@@ -395,7 +395,7 @@
                                     <div class="bg--secondary rounded p-20 h-100">
                                         <div class="form-group">
                                             <label class="input-label mb-2 d-block title-clr fw-normal" for="exampleFormControlInput1">{{translate('Taxpayer Identification Number(TIN)')}} <span class="text-danger">*</span></label>
-                                            <input type="number" name="tin" placeholder="{{translate('Type Your Taxpayer Identification Number(TIN)')}}" class="form-control"
+                                            <input type="text" name="tin" placeholder="{{translate('Type Your Taxpayer Identification Number(TIN)')}}" class="form-control"
                                                    value="{{$store->tin}}"  required>
                                         </div>
                                         <div class="form-group mb-0">
