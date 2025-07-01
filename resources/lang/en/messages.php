@@ -7831,4 +7831,5 @@ Smartly or Earn. ',
   'estimated_day_is_required_when_rental_type_is_day_wise' => 'Estimated day is required when rental type is day wise',
   'TIN' => 'TIN',
   'The selected type is invalid.' => 'The selected type is invalid.',
+  'Text Bmw' => 'Text Bmw',
 );

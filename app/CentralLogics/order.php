@@ -54,6 +54,7 @@ class OrderLogic
         $ref_bonus_amount=0;
         $subscription_mode = 0;
         $commission_percentage = 0;
+        $store_amount = 0;
 
         $store= $order?->store;
         $store_sub = $order?->store?->store_sub;
@@ -97,7 +98,7 @@ class OrderLogic
             $comission = \App\Models\BusinessSetting::where('key','parcel_commission_dm')->first();
             $dm_tips = $dm_tips_manage_status ? $order->dm_tips : 0;
             $comission = isset($comission) ? $comission->value : 0;
-            $order_amount = $order->order_amount - $dm_tips - $order->additional_charge - $order->extra_packaging_amount;
+            $order_amount = $order->order_amount - $dm_tips - $order->additional_charge - $order->extra_packaging_amount - $order->total_tax_amount;
             $dm_commission = $comission?($order_amount/ 100) * $comission:0;
             $comission_amount = $order_amount - $dm_commission;
         }
@@ -160,6 +161,7 @@ class OrderLogic
                 if($order->store->sub_self_delivery)
                 {
                     $comission_on_actual_delivery_fee = 0;
+                    $store_amount = $order->original_delivery_charge ?? 0;
                 }else{
                     $comission_on_actual_delivery_fee = ($order->original_delivery_charge > 0) ? $comission_on_delivery : 0;
                 }
@@ -179,7 +181,7 @@ class OrderLogic
             $comission_amount = $comission_on_store_amount + $comission_on_actual_delivery_fee;
             $dm_commission = $order->original_delivery_charge - $comission_on_actual_delivery_fee;
         }
-        $store_amount = $order_amount + $order->total_tax_amount + $order->extra_packaging_amount - $comission_on_store_amount - $store_coupon_discount_subsidy - $flash_store_discount_amount;
+        $store_amount = $store_amount+ $order_amount + $order->total_tax_amount + $order->extra_packaging_amount - $comission_on_store_amount - $store_coupon_discount_subsidy - $flash_store_discount_amount;
         try{
             OrderTransaction::insert([
                 'vendor_id' =>$type=='parcel'?null:$order->store->vendor->id,
