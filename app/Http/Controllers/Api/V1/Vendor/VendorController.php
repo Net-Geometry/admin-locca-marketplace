@@ -964,16 +964,16 @@ class VendorController extends Controller
             $store_discount_amount = $order->store_discount_amount;
 
 
-        $discount=$order->store_discount_amount;
+        // $discount=$order->store_discount_amount;
         $discount_on_product_by = $order->discount_on_product_by ?? 'vendor' ;
 
         $store_discount = Helpers::get_store_discount($store);
         $store_discount =  $store_discount ? $store_discount : ['discount' => 0, 'max_discount' => 0, 'min_purchase' => 0];
         $admin_discount = Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $store_discount['discount'], max_discount: $store_discount['max_discount'], min_purchase: $store_discount['min_purchase']);
 
-        $discount = max($discount, $admin_discount);
+        $discount =$admin_discount;
 
-        if($admin_discount > 0 && $discount == $admin_discount ){
+        if($admin_discount > 0 ){
                 $discount_on_product_by =  'admin' ;
             }
 
@@ -983,8 +983,12 @@ class VendorController extends Controller
 
 
         $coupon_discount_amount = $coupon ? CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount) : 0;
+
+
         $total_price = $product_price + $total_addon_price - $store_discount_amount - $coupon_discount_amount;
+
         $total_price = max($total_price, 0);
+
 
 
              $settings = BusinessSetting::whereIn('key', [
@@ -1028,7 +1032,7 @@ class VendorController extends Controller
 
 
                     $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
-                    amount: $total_price,
+                    amount: $total_price ,
                     productIds: [],
                     taxPayer: 'prescription',
                     storeData: true,
@@ -1079,7 +1083,7 @@ class VendorController extends Controller
 
             $order->order_amount = round($total_price + $order->total_tax_amount + $order->delivery_charge, config('round_up_to_digit'));
             $order->free_delivery_by = $free_delivery_by;
-            $order->order_amount = $order->order_amount + $order->dm_tips;
+            $order->order_amount = $order->order_amount + $order->dm_tips + $order->additional_charge;
             $order->save();
         }
 
@@ -1095,7 +1099,9 @@ class VendorController extends Controller
                 ], 403);
             }
             $order = Order::find($request->order_id);
-            $product_price = $order['order_amount']-$order['delivery_charge']-$order['total_tax_amount']-$order['dm_tips']+$order->store_discount_amount;
+            $product_price = $order['order_amount'] + $order->store_discount_amount -$order['delivery_charge']-$order['total_tax_amount']-$order['dm_tips'] - $order->additional_charge;
+
+
             if($request->discount_amount > $product_price)
             {
                 return response()->json([
@@ -1149,7 +1155,7 @@ class VendorController extends Controller
 
 
                     $taxData =  \Modules\TaxModule\Services\CalculateTaxService::getCalculatedTax(
-                    amount: $product_price,
+                    amount: $product_price-$request->discount_amount,
                     productIds: [],
                     taxPayer: 'prescription',
                     storeData: true,
@@ -1167,13 +1173,9 @@ class VendorController extends Controller
                 $order->total_tax_amount = round($tax_amount, config('round_up_to_digit'));
                 $order->tax_status = $tax_status;
 
-
-
                 $order->discount_on_product_by= 'vendor';
-
-
             $order->store_discount_amount = round($request->discount_amount, config('round_up_to_digit'));
-            $order->order_amount = $product_price+$order['delivery_charge']+$order['total_tax_amount']+$order['dm_tips'] -$order->store_discount_amount;
+            $order->order_amount = $product_price+$order['delivery_charge']+$order['total_tax_amount']+$order['dm_tips'] -$order->store_discount_amount  +$order->additional_charge;
             $order->save();
         }
             $order?->orderTaxes()?->delete();
