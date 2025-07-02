@@ -173,9 +173,15 @@ class CategoryLogic
             $query = $query->when($filter&&in_array('discounted',$filter),function ($qurey){
                 return $qurey->Discounted()->orderBy('discount','desc');
             });
-            $query = $query->when($filter && in_array('available_now', $filter), function ($qurey) {
-                $qurey->whereRaw('CURTIME() BETWEEN available_time_starts AND available_time_ends');
+            $query = $query->when($filter && in_array('available_now', $filter), function ($query) {
+                $query->where(function ($q) {
+                    $currentTime = now()->format('H:i:s');
+
+                    $q->whereRaw("(available_time_starts < available_time_ends AND TIME(?) BETWEEN available_time_starts AND available_time_ends)", [$currentTime])
+                    ->orWhereRaw("(available_time_starts > available_time_ends AND (TIME(?) >= available_time_starts OR TIME(?) <= available_time_ends))", [$currentTime, $currentTime]);
+                });
             });
+
             if ($category_sub_category_item_default_status != '1'){
                 $query = $query->latest();
             } else {

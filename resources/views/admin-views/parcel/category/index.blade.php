@@ -124,7 +124,9 @@
                             <input type="number" step=".01" min="0" placeholder="{{translate('messages.minimum_shipping_charge')}}" class="form-control" name="parcel_minimum_shipping_charge">
                         </div>
                     </div>
-                        @if ($categoryWiseTax)
+                    @if ($categoryWiseTax)
+                    <div class="col-md-6">
+
                                 <span class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
                                 <select name="tax_ids[]" id="tax__rate" class="form-control js-select2-custom"
                                     multiple="multiple" required placeholder="Type & Select Tax Rate">
@@ -134,6 +136,7 @@
                                         </option>
                                     @endforeach
                                 </select>
+                            </div>
                             @endif
                     <div class="col-12">
                         <div class="btn--container justify-content-end">

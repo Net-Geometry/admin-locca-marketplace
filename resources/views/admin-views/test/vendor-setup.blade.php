@@ -13,18 +13,18 @@
         <div class="row g-md-3 g-2 justify-content-between">
             <div class="col-md-8">
                 <h3 class="mb-1">Allow Tax Calculation For Vendor ? </h3>
-                <p class="fz-12 mb-0">To active tax calculation turn on the status.</p>
+                <p class="fz-12 mb-0">To active tax calculation Turn On The Status.</p>
             </div>
             <div class="col-md-4 col-xxl-3">
                 <label class="border d-flex align-items-center justify-content-between rounded p-10px px-3">
-                    Status 
+                    Status
                     <div class="toggle-switch ml-auto justify-content-end toggle-switch-sm" for="status">
                         <input type="checkbox" class="toggle-switch-input" id="status">
                             <span class="toggle-switch-label">
                             <span class="toggle-switch-indicator"></span>
                         </span>
                     </div>
-                </label> 
+                </label>
             </div>
         </div>
     </div>
@@ -132,7 +132,7 @@
                             </defs>
                         </svg>
                         <span>
-                            When you change <span class="font-semibold title-clr">Tax Type</span> it will effects on all your tax calculation. Please make sure when you change Tax Type.  
+                            When you change <span class="font-semibold title-clr">Tax Type</span> it will effects on all your tax calculation. Please make sure when you change Tax Type.
                         </span>
                     </div>
                 </div>
@@ -141,7 +141,7 @@
                         <div>
                             <span class="mb-2 d-block title-clr fw-normal">Select Tax Type</span>
                             <select class="custom-select custom-select-color border rounded w-100">
-                                <option>                                    
+                                <option>
                                     Category Wise
                                 </option>
                                 <option>
@@ -172,7 +172,7 @@
                                 </defs>
                             </svg>
                             <span>
-                                Please specify the tax rate while creating a category from <span class="font-semibold theme-clr text-decoration-underline">Category List.</span> If you already created category without tax then go to category edit & update tax.                                
+                                Please specify the tax rate while creating a category from <span class="font-semibold theme-clr text-decoration-underline">Category List.</span> If you already created category without tax then go to category edit & update tax.
                             </span>
                         </div>
                     </div>
@@ -229,7 +229,7 @@
         <button type="button" class="btn btn--primary">Save Information</button>
     </div>
 
-    
+
 
 </div>
 

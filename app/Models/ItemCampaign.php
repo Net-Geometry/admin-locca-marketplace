@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\TaxModule\Entities\Taxable;
 
 class ItemCampaign extends Model
 {
@@ -200,5 +201,9 @@ class ItemCampaign extends Model
             }
         }
         return $slug;
+    }
+         public function taxVats()
+    {
+        return $this->morphMany(Taxable::class, 'taxable');
     }
 }

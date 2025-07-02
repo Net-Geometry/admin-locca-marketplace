@@ -115,6 +115,13 @@
                             </div>
                             <div class="check-item">
                                 <div class="form-group form-check form--check">
+                                    <input type="checkbox" name="modules[]" value="advertisement" class="form-check-input"
+                                           id="advertisement"  {{in_array('advertisement',(array)json_decode($role['modules']))?'checked':''}}>
+                                    <label class="form-check-label qcont text-dark" for="advertisement">{{translate('messages.advertisement')}}</label>
+                                </div>
+                            </div>
+                            <div class="check-item">
+                                <div class="form-group form-check form--check">
                                     <input type="checkbox" name="modules[]" value="banner" class="form-check-input"
                                            id="banner"  {{in_array('banner',(array)json_decode($role['modules']))?'checked':''}}>
                                     <label class="form-check-label qcont text-dark" for="banner">{{translate('messages.banner')}}</label>
@@ -161,6 +168,13 @@
                                     <input type="checkbox" name="modules[]" value="deliveryman" class="form-check-input"
                                            id="deliveryman"  {{in_array('deliveryman',(array)json_decode($role['modules']))?'checked':''}}>
                                     <label class="form-check-label qcont text-dark" for="deliveryman">{{translate('messages.deliveryman')}}</label>
+                                </div>
+                            </div>
+                            <div class="check-item">
+                                <div class="form-group form-check form--check">
+                                    <input type="checkbox" name="modules[]" value="disbursement" class="form-check-input"
+                                           id="disbursement"  {{in_array('disbursement',(array)json_decode($role['modules']))?'checked':''}}>
+                                    <label class="form-check-label qcont text-dark" for="disbursement">{{translate('messages.disbursement')}}</label>
                                 </div>
                             </div>
                             <div class="check-item">

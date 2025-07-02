@@ -906,7 +906,7 @@
                                 <div class="form-group text-title">
                                     <label class="input-label font-semibold" for="trip-schedule">{{translate('Trip Schedule')}}</label>
                                     <div class="position-relative w-100 d-flex align-items-center">
-                                        <input type="datetime-local" name="schedule_at" id="trip-schedule"
+                                        <input type="datetime-local" name="schedule_at" id="trip-schedule" readonly
                                                value="{{ $trip->schedule_at }}" class="form-control pr-2 opacity-lg"
                                                placeholder="Enter your destination location">
                                     </div>

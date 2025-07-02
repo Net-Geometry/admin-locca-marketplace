@@ -29,6 +29,7 @@ class ProductLogic
 
     public static function get_latest_products($zone_id, $limit, $offset, $store_id, $category_id, $type, $min=false, $max=false, $product_id=null, $filter = null, $rating_count = null)
     {
+        // info($filter);
 
         $latest_items_default_status = 1;
         // $latest_items_default_status =BusinessSetting::where('key', 'latest_items_default_status')->first()?->value ?? 1;
@@ -94,9 +95,14 @@ class ProductLogic
         ->when($rating_count, function($query) use ($rating_count){
             $query->where('avg_rating', '>=' , $rating_count);
         })
-        ->when($filter && in_array('available_now', $filter), function ($qurey) {
-            $qurey->whereRaw('CURTIME() BETWEEN available_time_starts AND available_time_ends');
+        ->when($filter && in_array('available_now', $filter), function ($query) {
+            $query->where(function ($q) {
+                $currentTime = now()->format('H:i:s');
+                $q->whereRaw("(available_time_starts < available_time_ends AND TIME(?) BETWEEN available_time_starts AND available_time_ends)", [$currentTime])
+                ->orWhereRaw("(available_time_starts > available_time_ends AND (TIME(?) >= available_time_starts OR TIME(?) <= available_time_ends))", [$currentTime, $currentTime]);
+            });
         });
+
 
         if ($latest_items_default_status == '1'){
             $query = $query->latest();
@@ -294,8 +300,12 @@ class ProductLogic
         ->when($filter && in_array('discounted',$filter),function ($qurey){
             $qurey->Discounted()->orderBy('discount','desc');
         })
-        ->when($filter && in_array('available_now', $filter), function ($qurey) {
-            $qurey->whereRaw('CURTIME() BETWEEN available_time_starts AND available_time_ends');
+       ->when($filter && in_array('available_now', $filter), function ($query) {
+            $query->where(function ($q) {
+                $currentTime = now()->format('H:i:s');
+                $q->whereRaw("(available_time_starts < available_time_ends AND TIME(?) BETWEEN available_time_starts AND available_time_ends)", [$currentTime])
+                ->orWhereRaw("(available_time_starts > available_time_ends AND (TIME(?) >= available_time_starts OR TIME(?) <= available_time_ends))", [$currentTime, $currentTime]);
+            });
         })
 
         ->select(['items.*'])
@@ -803,9 +813,13 @@ class ProductLogic
             ->when($filter && in_array('popular',$filter),function ($qurey){
                 $qurey->popular();
             })
-            ->when($filter && in_array('available_now', $filter), function ($qurey) {
-                $qurey->whereRaw('CURTIME() BETWEEN available_time_starts AND available_time_ends');
-            })
+            ->when($filter && in_array('available_now', $filter), function ($query) {
+                    $query->where(function ($q) {
+                        $currentTime = now()->format('H:i:s');
+                        $q->whereRaw("(available_time_starts < available_time_ends AND TIME(?) BETWEEN available_time_starts AND available_time_ends)", [$currentTime])
+                        ->orWhereRaw("(available_time_starts > available_time_ends AND (TIME(?) >= available_time_starts OR TIME(?) <= available_time_ends))", [$currentTime, $currentTime]);
+                    });
+                })
             ->when($filter && in_array('high',$filter),function ($qurey){
                 $qurey->orderBy('price', 'desc');
             })
@@ -921,9 +935,13 @@ class ProductLogic
                 ->when($filter && in_array('low',$filter),function ($qurey){
                     return $qurey->orderBy('price', 'asc');
                 })
-                ->when($filter && in_array('available_now', $filter), function ($qurey) {
-                    return $qurey->whereRaw('CURTIME() BETWEEN available_time_starts AND available_time_ends');
-                })
+                ->when($filter && in_array('available_now', $filter), function ($query) {
+                        $query->where(function ($q) {
+                            $currentTime = now()->format('H:i:s');
+                            $q->whereRaw("(available_time_starts < available_time_ends AND TIME(?) BETWEEN available_time_starts AND available_time_ends)", [$currentTime])
+                            ->orWhereRaw("(available_time_starts > available_time_ends AND (TIME(?) >= available_time_starts OR TIME(?) <= available_time_ends))", [$currentTime, $currentTime]);
+                        });
+                    })
                 ->when($filter && in_array('discounted',$filter),function ($qurey){
                     return $qurey->Discounted()->orderBy('discount','desc');
                 });

@@ -257,10 +257,7 @@
                             <span class="name">{{translate('Delivery Tips')}} :</span>
                             <span class="datas">{{ \App\CentralLogics\Helpers::format_currency($earnings->sum('dm_tips'))}}</span>
                         </div>
-                        <div class="header-info-item">
-                            <span class="name">{{translate('Admin Incentive')}} :</span>
-                            <span class="datas">{{ \App\CentralLogics\Helpers::format_currency($earnings->sum('delivery_fee_comission'))}}</span>
-                        </div>
+
                     </div>
                 </td>
             </tr>
@@ -273,7 +270,6 @@
                 <th class="fs-10">{{translate('Order')}}</th>
                 <th class="fs-10">{{translate('Delivery Fee')}}</th>
                 <th class="fs-10">{{translate('Delivery Tips')}}</th>
-                <th class="fs-10">{{translate('Admin Commission')}}</th>
                 <th class="fs-10">{{translate('Total')}}</th>
             </tr>
             </thead>
@@ -297,9 +293,7 @@
                 <td>
                     <span>{{ $earning->dm_tips }}</span>
                 </td>
-                <td>
-                    <span>{{ $earning->delivery_fee_comission }}</span>
-                </td>
+
                 <td>
                     <span>{{ $earning->original_delivery_charge + $earning->dm_tips }}</span>
                 </td>

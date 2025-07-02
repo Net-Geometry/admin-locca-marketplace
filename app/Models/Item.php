@@ -16,7 +16,7 @@ use Modules\TaxModule\Entities\Taxable;
 
 class Item extends Model
 {
-    use HasFactory , ReportFilter;
+    use HasFactory, ReportFilter;
     protected $guarded = ['id'];
     protected $casts = [
         'tax' => 'float',
@@ -33,24 +33,24 @@ class Item extends Model
         'organic' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'veg'=>'integer',
-        'images'=>'array',
-        'module_id'=>'integer',
-        'is_approved'=>'integer',
-        'stock'=>'integer',
+        'veg' => 'integer',
+        'images' => 'array',
+        'module_id' => 'integer',
+        'is_approved' => 'integer',
+        'stock' => 'integer',
         "min_price" => 'float',
         "max_price" => 'float',
-        'order_count'=>'integer',
-        'rating_count'=>'integer',
-        'unit_id'=>'integer',
-        'is_halal'=>'integer',
+        'order_count' => 'integer',
+        'rating_count' => 'integer',
+        'unit_id' => 'integer',
+        'is_halal' => 'integer',
     ];
 
-    protected $appends = ['unit_type','image_full_url','images_full_url'];
+    protected $appends = ['unit_type', 'image_full_url', 'images_full_url'];
 
     public function scopeRecommended($query)
     {
-        return $query->where('recommended',1);
+        return $query->where('recommended', 1);
     }
 
     public function carts()
@@ -60,12 +60,30 @@ class Item extends Model
 
     public function temp_product()
     {
-        return $this->hasOne(TempProduct::class,'item_id')->with('translations');
+        return $this->hasOne(TempProduct::class, 'item_id')->with('translations');
     }
 
     public function scopeDiscounted($query)
     {
-        return $query->where('discount','>',0);
+        // return $query->where('discount','>',0);
+
+        $nowDate = now()->format('Y-m-d');
+        $nowTime = now()->format('H:i');
+
+        return $query->where(function ($query) use ($nowDate, $nowTime) {
+            $query->where('discount', '>', 0)
+                ->orWhereHas('store.discount', function ($q) use ($nowDate, $nowTime) {
+                    $q->whereDate('start_date', '<=', $nowDate)
+                        ->whereDate('end_date', '>=', $nowDate)
+                        ->whereTime('start_time', '<=', $nowTime)
+                        ->whereTime('end_time', '>=', $nowTime);
+                })
+                ->orWhereHas('flashSaleItems.flashSale', function ($q) use ($nowDate, $nowTime) {
+                    $q->where('is_publish', 1)
+                        ->whereDate('start_date', '<=', $nowDate)
+                        ->whereDate('end_date', '>=', $nowDate);
+                });
+        });
     }
 
     public function translations()
@@ -88,16 +106,16 @@ class Item extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('status', 1)->where('is_approved',1)
-        ->whereHas('store', function($query) {
-            $query->where('status', 1)
-                    ->where(function($query) {
+        return $query->where('status', 1)->where('is_approved', 1)
+            ->whereHas('store', function ($query) {
+                $query->where('status', 1)
+                    ->where(function ($query) {
                         $query->where('store_business_model', 'commission')
-                                ->orWhereHas('store_sub', function($query) {
-                                    $query->where(function($query) {
-                                        $query->where('max_order', 'unlimited')->orWhere('max_order', '>', 0);
-                                    });
+                            ->orWhereHas('store_sub', function ($query) {
+                                $query->where(function ($query) {
+                                    $query->where('max_order', 'unlimited')->orWhere('max_order', '>', 0);
                                 });
+                            });
                     });
             });
     }
@@ -107,7 +125,7 @@ class Item extends Model
     }
     public function scopeApproved($query)
     {
-        return $query->where('is_approved',1 );
+        return $query->where('is_approved', 1);
     }
 
     public function reviews()
@@ -122,12 +140,12 @@ class Item extends Model
 
     public function unit()
     {
-        return $this->belongsTo(Unit::class,'unit_id');
+        return $this->belongsTo(Unit::class, 'unit_id');
     }
 
     public function module()
     {
-        return $this->belongsTo(Module::class,'module_id');
+        return $this->belongsTo(Module::class, 'module_id');
     }
 
     // public function scopeHasRunningFlashSale($query)
@@ -146,10 +164,11 @@ class Item extends Model
 
     public function getUnitTypeAttribute()
     {
-        return $this->unit?$this->unit->unit:null;
+        return $this->unit ? $this->unit->unit : null;
     }
 
-    public function getNameAttribute($value){
+    public function getNameAttribute($value)
+    {
         if (count($this->translations) > 0) {
             foreach ($this->translations as $translation) {
                 if ($translation['key'] == 'name') {
@@ -161,7 +180,8 @@ class Item extends Model
         return $value;
     }
 
-    public function getDescriptionAttribute($value){
+    public function getDescriptionAttribute($value)
+    {
         if (count($this->translations) > 0) {
             foreach ($this->translations as $translation) {
                 if ($translation['key'] == 'description') {
@@ -172,29 +192,31 @@ class Item extends Model
 
         return $value;
     }
-    public function getImageFullUrlAttribute(){
+    public function getImageFullUrlAttribute()
+    {
         $value = $this->image;
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'image') {
-                    return Helpers::get_full_url('product',$value,$storage['value']);
+                    return Helpers::get_full_url('product', $value, $storage['value']);
                 }
             }
         }
 
-        return Helpers::get_full_url('product',$value,'public');
+        return Helpers::get_full_url('product', $value, 'public');
     }
-    public function getImagesFullUrlAttribute(){
+    public function getImagesFullUrlAttribute()
+    {
         $images = [];
         $value = is_array($this->images)
             ? $this->images
             : ($this->images && is_string($this->images) && $this->isValidJson($this->images)
                 ? json_decode($this->images, true)
                 : []);
-        if ($value){
-            foreach ($value as $item){
-                $item = is_array($item)?$item:(is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
-                $images[] = Helpers::get_full_url('product',$item['img'],$item['storage']);
+        if ($value) {
+            foreach ($value as $item) {
+                $item = is_array($item) ? $item : (is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true) : ['img' => $item, 'storage' => 'public']);
+                $images[] = Helpers::get_full_url('product', $item['img'], $item['storage']);
             }
         }
 
@@ -234,8 +256,7 @@ class Item extends Model
 
     protected static function booted()
     {
-        if(auth('vendor')->check() || auth('vendor_employee')->check())
-        {
+        if (auth('vendor')->check() || auth('vendor_employee')->check()) {
             static::addGlobalScope(new StoreScope);
         }
 
@@ -245,7 +266,7 @@ class Item extends Model
         });
 
         static::addGlobalScope('translate', function (Builder $builder) {
-            $builder->with(['translations' => function($query){
+            $builder->with(['translations' => function ($query) {
                 return $query->where('locale', app()->getLocale());
             }]);
         });
@@ -254,21 +275,18 @@ class Item extends Model
 
     public function scopeType($query, $type)
     {
-        if($type == 'veg')
-        {
+        if ($type == 'veg') {
             return $query->where('veg', true);
-        }
-        else if($type == 'non_veg')
-        {
+        } else if ($type == 'non_veg') {
             return $query->where('veg', false);
         }
         return $query;
     }
 
-    public function scopeAvailable($query,$time)
+    public function scopeAvailable($query, $time)
     {
-        $query->where(function($q)use($time){
-            $q->where('available_time_starts','<=',$time)->where('available_time_ends','>=',$time);
+        $query->where(function ($q) use ($time) {
+            $q->where('available_time_starts', '<=', $time)->where('available_time_ends', '>=', $time);
         });
     }
 
@@ -282,7 +300,7 @@ class Item extends Model
     }
     public function generic()
     {
-        return $this->belongsToMany(GenericName::class,'item_generic_names');
+        return $this->belongsToMany(GenericName::class, 'item_generic_names');
     }
     public function nutritions()
     {
@@ -300,7 +318,7 @@ class Item extends Model
             $item->save();
         });
         static::saved(function ($model) {
-            if($model->isDirty('image')){
+            if ($model->isDirty('image')) {
                 $value = Helpers::getDisk();
 
                 DB::table('storages')->updateOrInsert([
@@ -313,7 +331,7 @@ class Item extends Model
                     'updated_at' => now(),
                 ]);
             }
-            if($model->isDirty('images')){
+            if ($model->isDirty('images')) {
                 $value = Helpers::getDisk();
 
                 DB::table('storages')->updateOrInsert([
@@ -331,21 +349,21 @@ class Item extends Model
     private function generateSlug($name)
     {
         $slug = Str::slug($name);
-        if ($max_slug = static::where('slug', 'like',"{$slug}%")->latest('id')->value('slug')) {
+        if ($max_slug = static::where('slug', 'like', "{$slug}%")->latest('id')->value('slug')) {
 
-            if($max_slug == $slug) return "{$slug}-2";
+            if ($max_slug == $slug) return "{$slug}-2";
 
-            $max_slug = explode('-',$max_slug);
+            $max_slug = explode('-', $max_slug);
             $count = array_pop($max_slug);
             if (isset($count) && is_numeric($count)) {
-                $max_slug[]= ++$count;
+                $max_slug[] = ++$count;
                 return implode('-', $max_slug);
             }
         }
         return $slug;
     }
 
-     public function taxVats()
+    public function taxVats()
     {
         return $this->morphMany(Taxable::class, 'taxable');
     }

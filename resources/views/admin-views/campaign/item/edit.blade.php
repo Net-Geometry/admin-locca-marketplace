@@ -339,6 +339,33 @@
                         </div>
                     </div>
                 </div>
+                       @if ($productWiseTax)
+                <div class="col-lg-12">
+                    <div class="card shadow--card-2 border-0">
+                        <div class="card-header flex-wrap">
+                            <h5 class="card-title">
+                                <span class="card-header-icon mr-2">
+                                    <i class="tio-canvas-text"></i>
+                                </span>
+                                <span>{{ translate('messages.Tax_Information') }}</span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                                <span class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
+                                <select name="tax_ids[]" required id="tax__rate" class="form-control js-select2-custom"
+                                    multiple="multiple" placeholder="Type & Select Tax Rate">
+                                    @foreach ($taxVats as $taxVat)
+                                        <option {{ in_array($taxVat->id, $taxVatIds) ? 'selected' : '' }} value="{{ $taxVat->id }}"> {{ $taxVat->name }}
+                                            ({{ $taxVat->tax_rate }}%)
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    @endif
 
                 <div class="col-lg-12" id="food_variation_section">
                     <div class="card">

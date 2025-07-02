@@ -304,8 +304,11 @@ class Helpers
                     ->where(['item_id' => $item['id']])->first();
                 $item['flash_sale'] =(int) ((($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? 1 :0));
                 $item['stock'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->available_stock : $item['stock'];
-                $item['discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount : $item['discount'];
-                $item['discount_type'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount_type : $item['discount_type'];
+                $discount_data= self::product_discount_calculate($item, $item['price'], $item->store , true);
+
+                $item['discount'] = $discount_data['discount_percentage'];
+                $item['discount_type'] = $discount_data['original_discount_type'];
+
                 $item['store_discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? 0 : (self::get_store_discount($item->store) ? $item->store?->discount->discount : 0);
                 $item['schedule_order'] = $item->store?->schedule_order;
                 $item['delivery_time'] = $item->store?->delivery_time;
@@ -389,8 +392,16 @@ class Helpers
                 ->where(['item_id' => $data['id']])->first();
             $data['flash_sale'] =(int) (($running_flash_sale) ? 1 :0);
             $data['stock'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->available_stock : $data['stock'];
-            $data['discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount : $data['discount'];
-            $data['discount_type'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount_type : $data['discount_type'];
+
+
+            // $data['discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount : $data['discount'];
+            // $data['discount_type'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount_type : $data['discount_type'];
+            $discount_data= self::product_discount_calculate($data, $data['price'], $data->store , true);
+            $data['discount'] = $discount_data['discount_percentage'];
+            $data['discount_type'] = $discount_data['original_discount_type'];
+
+
+
             $data['store_discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? 0 : (self::get_store_discount($data->store) ? $data->store?->discount->discount : 0);
             $data['schedule_order'] = $data->store->schedule_order;
             $data['rating_count'] = (int)($data->rating ? array_sum(json_decode($data->rating, true)) : 0);
@@ -1382,14 +1393,15 @@ class Helpers
         $discount_percentage=0;
         $store_discount_percentage=0;
         $store_discount= null;
+
         $running_flash_sale = FlashSaleItem::Active()->whereHas('flashSale', function ($query) {
             $query->Active()->Running();
         })
             ->where(['item_id' => $product->id])->first();
 
         if($running_flash_sale){
+            $discount_percentage=$running_flash_sale['discount'];
             if ($running_flash_sale['discount_type'] == 'percent') {
-                $discount_percentage=$running_flash_sale['discount'];
                 $price_discount = ($price / 100) * $running_flash_sale['discount'];
             } else {
                 $price_discount = $running_flash_sale['discount'];
@@ -1399,7 +1411,8 @@ class Helpers
                 'discount_amount'=> $price_discount,
                 'admin_discount_amount'=> ($price_discount*$running_flash_sale->flashSale->admin_discount_percentage)/100,
                 'vendor_discount_amount'=> ($price_discount*$running_flash_sale->flashSale->vendor_discount_percentage)/100,
-                'discount_percentage'=> $discount_percentage ?? 0
+                'discount_percentage'=> $discount_percentage ?? 0,
+                'original_discount_type'=>$running_flash_sale['discount_type'],
             ];
         }
         $store_price_discount=0;
@@ -1407,21 +1420,25 @@ class Helpers
             $store_discount = self::get_store_discount($store);
             if (isset($store_discount)) {
                 $store_price_discount = ($price / 100) * $store_discount['discount'];
-                $store_discount_percentage = $product['discount'];
+                $store_discount_percentage = $store_discount['discount'];
             }
         }
+        $discount_percentage = $product['discount'];
         if ($product['discount_type'] == 'percent') {
-            $discount_percentage = $product['discount'];
             $price_discount = ($price / 100) * $product['discount'];
         } else {
             $price_discount = $product['discount'];
         }
+
         $discount_percentage=isset($store_discount) && $price_discount == $store_price_discount?$store_discount_percentage:$discount_percentage??0;
+
         $price_discount = max($store_price_discount,$price_discount);
+        $discount_type=isset($store_discount) && $price_discount == $store_price_discount?'store_discount':'product_discount';
         return [
-            'discount_type'=>isset($store_discount) && $price_discount == $store_price_discount?'store_discount':'product_discount',
+            'discount_type'=>$discount_type,
             'discount_amount'=> $price_discount,
-            'discount_percentage'=> $discount_percentage ?? 0
+            'discount_percentage'=> $discount_type == 'store_discount'? $store_discount['discount'] :$product['discount'],
+            'original_discount_type'=> $discount_type == 'store_discount'? 'percent': $product['discount_type'],
         ];
     }
 
@@ -4750,9 +4767,10 @@ class Helpers
     }
 
 
-    public static function getTaxSystemType($getTaxVatList = true){
+    public static function getTaxSystemType($getTaxVatList = true,$tax_payer='vendor'){
         if (addon_published_status('TaxModule')) {
-            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
+            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)
+                ->where('tax_payer', $tax_payer)->where('is_default', 1)->first();
             if(!$SystemTaxVat){
                  return [ 'productWiseTax' => false ,'categoryWiseTax'=> false,  'taxVats' =>  []];
             }

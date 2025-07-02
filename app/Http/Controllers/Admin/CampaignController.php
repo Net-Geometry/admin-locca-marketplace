@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\DB;
 use App\Exports\ItemCampaignExport;
 use App\Exports\BasicCampaignExport;
 use App\Http\Controllers\Controller;
-use App\Models\ItemCampaignCampaign;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -28,7 +27,10 @@ class CampaignController extends Controller
 {
     function index($type)
     {
-        return view('admin-views.campaign.'.$type.'.index');
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
+        $taxVats = $taxData['taxVats'];
+        return view('admin-views.campaign.'.$type.'.index', compact('productWiseTax', 'taxVats'));
     }
 
     function list(Request $request, $type)
@@ -58,7 +60,11 @@ class CampaignController extends Controller
             ->latest()->paginate(config('default_pagination'));
         }
 
-        return view('admin-views.campaign.'.$type.'.list', compact('campaigns'));
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
+        $taxVats = $taxData['taxVats'];
+
+        return view('admin-views.campaign.'.$type.'.list', compact('campaigns','productWiseTax', 'taxVats'));
     }
 
     public function storeBasic(Request $request)
@@ -434,6 +440,24 @@ class CampaignController extends Controller
             $campaign->generic()->sync($generic_ids);
         }
 
+
+        if (addon_published_status('TaxModule')) {
+            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
+            if ($SystemTaxVat?->tax_type == 'product_wise') {
+                foreach ($request['tax_ids'] ?? [] as $tax_id) {
+                    \Modules\TaxModule\Entities\Taxable::create(
+                        [
+                            'taxable_type' => ItemCampaign::class,
+                            'taxable_id' => $campaign->id,
+                            'system_tax_setup_id' => $SystemTaxVat->id,
+                            'tax_id' => $tax_id
+                        ],
+                    );
+                }
+            }
+        }
+
+
         $data = [];
         $default_lang = str_replace('_', '-', app()->getLocale());
         foreach ($request->lang as $index => $key) {
@@ -683,6 +707,23 @@ class CampaignController extends Controller
         }
         $default_lang = str_replace('_', '-', app()->getLocale());
 
+        if (addon_published_status('TaxModule')) {
+            $SystemTaxVat = \Modules\TaxModule\Entities\SystemTaxSetup::where('is_active', 1)->where('is_default', 1)->first();
+            if ($SystemTaxVat?->tax_type == 'product_wise') {
+                $campaign->taxVats()->delete();
+                foreach ($request['tax_ids'] ?? [] as $tax_id) {
+                    \Modules\TaxModule\Entities\Taxable::create(
+                        [
+                            'taxable_type' => ItemCampaign::class,
+                            'taxable_id' => $campaign->id,
+                            'system_tax_setup_id' => $SystemTaxVat->id,
+                            'tax_id' => $tax_id
+                        ],
+                    );
+                }
+            }
+        }
+
         foreach ($request->lang as $index => $key) {
             if($default_lang == $key && !($request->title[$index])){
                 if ($key != 'default') {
@@ -763,7 +804,12 @@ class CampaignController extends Controller
                 $category = $temp;
                 $sub_category = null;
             }
-            return view('admin-views.campaign.'.$type.'.edit', compact('campaign','sub_category','category'));
+
+        $taxData = Helpers::getTaxSystemType();
+        $productWiseTax = $taxData['productWiseTax'];
+        $taxVats = $taxData['taxVats'];
+        $taxVatIds = $productWiseTax ? $campaign->taxVats()->pluck('tax_id')->toArray() : [];
+            return view('admin-views.campaign.'.$type.'.edit', compact('campaign','sub_category','category','taxVats', 'productWiseTax', 'taxVatIds'));
         }
 
     }
@@ -824,6 +870,7 @@ class CampaignController extends Controller
         Helpers::check_and_delete('campaign/' , $campaign->image);
 
         $campaign->translations()->delete();
+        $campaign?->taxVats()->delete();
         $campaign?->carts()?->delete();
         $campaign->delete();
         Toastr::success(translate('messages.campaign_deleted_successfully'));

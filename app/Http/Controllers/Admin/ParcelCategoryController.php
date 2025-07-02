@@ -21,7 +21,7 @@ class ParcelCategoryController extends Controller
     public function index(Request $request)
     {
         $module_id = Config::get('module.current_module_id');
-        $taxData = Helpers::getTaxSystemType();
+        $taxData = Helpers::getTaxSystemType(getTaxVatList: true, tax_payer: 'parcel');
         $categoryWiseTax = $taxData['categoryWiseTax'];
         $parcel_categories = ParcelCategory::
         when($module_id, function($query)use($module_id){
@@ -169,7 +169,7 @@ class ParcelCategoryController extends Controller
     {
         $parcel_category= ParcelCategory::withoutGlobalScope('translate')->findOrFail($id);
 
-        $taxData = Helpers::getTaxSystemType();
+        $taxData = Helpers::getTaxSystemType(getTaxVatList: true, tax_payer: 'parcel');
         $categoryWiseTax = $taxData['categoryWiseTax'];
         $taxVats = $taxData['taxVats'];
         $taxVatIds =  $categoryWiseTax ? $parcel_category->taxVats()->pluck('tax_id')->toArray(): [];

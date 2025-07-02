@@ -51,14 +51,14 @@
                     <div class="col-md-8">
                         <h3 class="mb-1 text-capitalize">
                             {{ translate('messages.Allow Tax Calculation For') . ' ' . translate($tax_payer) }} ?</h3>
-                        <p class="fz-12 mb-0">{{ translate('messages.To active tax calculation turn on the status.') }}</p>
+                        <p class="fz-12 mb-0">{{ translate('messages.To active tax calculation Turn On The Status.') }}</p>
                     </div>
                     <div class="col-md-4 col-xxl-3">
                         <label class="border d-flex align-items-center justify-content-between rounded p-10px px-3">
                             {{ translate('messages.Status') }}
                             <div class="toggle-switch ml-auto justify-content-end toggle-switch-sm confirmStatus"
                                 data-id="{{ $systemTaxVat?->id }}"
-                                data-on_title="{{ translate('messages.Turn ON The Status?') }}"
+                                data-on_title="{{ translate('messages.Turn On The Status?') }}"
                                 data-off_title="{{ translate('messages.Turn Off The Status?') }}"
                                 data-on_message= "{{ translate('Are you sure, do you want to turn ON the VAT status from your system. It will  effect on tax calculation & report') }}"
                                 data-off_message= "{{ translate('Are you sure, do you want to turn off the VAT status from your system. It will  effect on tax calculation & report') }}"
@@ -442,7 +442,7 @@
                 </div>
                 <div class="modal-footer justify-content-center border-0 pt-0 gap-2">
                     <button type="button" class="btn min-w-120px btn--secondary"
-                        data-dismiss="modal">{{ translate('NO') }}</button>
+                        data-dismiss="modal">{{ translate('No') }}</button>
                     <button type="button" id="seturl" data-url=""
                         class="btn min-w-120px btn--primary">{{ translate('Yes') }}</button>
                 </div>

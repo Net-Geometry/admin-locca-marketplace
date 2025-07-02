@@ -59,9 +59,9 @@ class ProviderTaxReportController extends Controller
             'limit' => $limit,
             'offset' => $offset,
             'taxSummary' => $taxSummary,
-            'totalOrders' => $totalOrders,
-            'totalOrderAmount' => $totalOrderAmount,
-            'totalTax' => $totalTax,
+            'totalOrders' => (int) $totalOrders,
+            'totalOrderAmount' => (float) $totalOrderAmount,
+            'totalTax' =>(float) $totalTax,
             'orders' => $orders->items()
         ];
         return response()->json($data, 200);
@@ -103,7 +103,11 @@ class ProviderTaxReportController extends Controller
 
 
         $taxSummary = DB::table('order_taxes')
-            ->select('tax_name', DB::raw('SUM(tax_amount) as total_tax'))
+            ->select(
+                'tax_name',
+                DB::raw('SUM(tax_amount) as total_tax'),
+                DB::raw("CONCAT(tax_rate) as tax_label")
+            )
             ->where('order_type', Trips::class)
             ->when(count($search), fn($q) => $q->where(function ($q) use ($search) {
                 foreach ($search as $value) {
@@ -114,7 +118,7 @@ class ProviderTaxReportController extends Controller
             ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('created_at', [$startDate, $endDate]);
             })
-            ->groupBy('tax_name')
+            ->groupBy('tax_name','tax_rate')
             ->get();
 
 

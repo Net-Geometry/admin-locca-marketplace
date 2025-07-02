@@ -154,8 +154,7 @@
                             </div>
                         </div>
                         @if ($categoryWiseTax)
-
-                                <div class="col-12">
+                                <div class="col-6">
                                     <span
                                         class="mb-2 d-block title-clr fw-normal">{{ translate('Select Tax Rate') }}</span>
                                     <select name="tax_ids[]" required id=""

@@ -70,7 +70,7 @@
                         </li>
                     @endif
                     <!-- End withdraw -->
-                    @if (\App\CentralLogics\Helpers::module_permission_check('account'))
+                    @if (\App\CentralLogics\Helpers::module_permission_check('disbursement'))
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/store-disbursement*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
@@ -82,7 +82,7 @@
                             </a>
                         </li>
                     @endif
-                    @if (\App\CentralLogics\Helpers::module_permission_check('account'))
+                    @if (\App\CentralLogics\Helpers::module_permission_check('disbursement'))
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/dm-disbursement*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"

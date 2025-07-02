@@ -1188,6 +1188,7 @@ class DeliverymanController extends Controller
 
         $paginated_orders = (clone $baseQuery)
             ->select(['id','order_id', 'delivery_man_id', 'dm_tips', 'original_delivery_charge','delivery_fee_comission','created_at'])
+            ->latest()
             ->paginate($limit, ['*'], 'page', $offset);
 
         $paginated_orders->getCollection()->transform(function ($item) {

@@ -50,9 +50,9 @@
                                     <div>
                                         <span
                                             class="mb-2 d-block title-clr fw-normal">{{ translate('Select How to calculate tax') }}</span>
-                                        <select name="calculate_tax_on" id="calculate_tax_on"
+                                        <select name="calculate_tax_on" id="calculate_tax_on" required
                                                 class="custom-select custom-select-color border rounded w-100">
-                                            <option value="">{{ translate('Select Calculate Tax') }}</option>
+                                            <option disabled selected value="">{{ translate('Select Calculate Tax') }}</option>
                                             <option {{ $calculate_tax_on == 'all_source' ? 'selected' : '' }}
                                                     value="all_source">
                                                 {{ translate('messages.Same Tax for All Income Source') }}
@@ -102,18 +102,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div class="d-flex flex-column gap-lg-4 gap-3">
-                                    <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
-                                        id="calculate_packaging_charge_tax">
-                                        <span
-                                            class="mb-2 d-block title-clr fw-normal">{{ translate('Tax on Packaging Charge') }}</span>
-                                        <select name="tax_on_packaging_charge[]" id="select_customer_fiscal-4"
-                                            class="form-control js-select2-custom" multiple="multiple"
-                                            placeholder="Type & Select Tax Rate">
-
-                                        </select>
-                                    </div>
-                                </div> --}}
+        
                                 <div class="d-flex flex-column gap-lg-4 gap-3 mt-3">
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
                                          id="calculate_subscription_tax">

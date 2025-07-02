@@ -151,7 +151,7 @@
                     <hr>
                 @endif
                 <div class="page-area">
-                    {!! $taxData->links() !!}
+                    {!! $taxData->withQueryString()->links() !!}
                 </div>
                 @if (count($taxData) === 0)
                     <div class="empty--data">
