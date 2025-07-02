@@ -27,7 +27,7 @@ trait VatTaxConfiguration
 
                 'tax_calculate_on' => ['order_wise', 'product_wise', 'category_wise'],
                 'tax_calculate_on_rental_provider' => ['trip_wise'],
-                'tax_calculate_on_parcel' => ['order_wise'],
+                'tax_calculate_on_parcel' => ['order_wise','category_wise'],
                 'tax_calculate_on_prescription' => ['order_wise'],
 
                 'additional_tax' => ['tax_on_additional_charge', 'tax_on_packaging_charge'],
@@ -88,6 +88,8 @@ trait VatTaxConfiguration
                 'store' =>  'App\Models\Store',
                 'order' =>  'App\Models\Order',
                 'trip' =>  'Modules\Rental\Entities\Trips',
+                'parcel_category' =>  'App\Models\ParcelCategory',
+                'campaign_product' =>  'App\Models\ItemCampaign',
             ],
             'stackfood' => [
                 'product' => 'App\Models\Food',

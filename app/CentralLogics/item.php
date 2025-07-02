@@ -27,7 +27,7 @@ class ProductLogic
         ->first();
     }
 
-    public static function get_latest_products($zone_id, $limit, $offset, $store_id, $category_id, $type, $min=false, $max=false, $product_id=null)
+    public static function get_latest_products($zone_id, $limit, $offset, $store_id, $category_id, $type, $min=false, $max=false, $product_id=null, $filter = null, $rating_count = null)
     {
 
         $latest_items_default_status = 1;
@@ -77,7 +77,26 @@ class ProductLogic
                 ->from('stores')
                 ->whereColumn('stores.id', 'items.store_id');
         }, 'temp_available')
-        ->active()->type($type);
+        ->active()->type($type)
+
+        ->when($filter && in_array('popular', $filter), function ($qurey) {
+            $qurey->popular();
+        })
+        ->when($filter && in_array('high', $filter), function ($qurey) {
+            $qurey->orderBy('price', 'DESC');
+        })
+        ->when($filter && in_array('low', $filter), function ($qurey) {
+            $qurey->orderBy('price', 'asc');
+        })
+        ->when($filter && in_array('discounted', $filter), function ($qurey) {
+            $qurey->Discounted();
+        })
+        ->when($rating_count, function($query) use ($rating_count){
+            $query->where('avg_rating', '>=' , $rating_count);
+        })
+        ->when($filter && in_array('available_now', $filter), function ($qurey) {
+            $qurey->whereRaw('CURTIME() BETWEEN available_time_starts AND available_time_ends');
+        });
 
         if ($latest_items_default_status == '1'){
             $query = $query->latest();

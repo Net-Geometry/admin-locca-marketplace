@@ -312,7 +312,7 @@
     <table class="table w-100 invoice-footer">
         <tr>
             <td class="text-left">
-                <span>{{ $businessData['app_url']  }}</span>
+                <span>{{ url('/')  }}</span>
             </td>
             <td class="text-center">
                 <span>{{ $businessData['phone']  }}</span>

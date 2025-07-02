@@ -50,8 +50,11 @@ class ItemController extends Controller
         $product_id = $request->query('product_id')??null;
         $min = $request->query('min_price');
         $max = $request->query('max_price');
+        $filter = $request['filter'] ? (is_array($request['filter']) ? $request['filter'] : str_getcsv(trim($request['filter'], "[]"), ',')) : '';
 
-        $items = ProductLogic::get_latest_products($zone_id, $request['limit'], $request['offset'], $request['store_id'], $request['category_id'], $type,$min,$max,$product_id);
+        $rating_count = $request->query('rating_count');
+
+        $items = ProductLogic::get_latest_products($zone_id, $request['limit'], $request['offset'], $request['store_id'], $request['category_id'], $type,$min,$max,$product_id,$filter,$rating_count);
         $items['categories'] = $items['categories'];
         $items['products'] = Helpers::product_data_formatting($items['products'], true, false, app()->getLocale());
         return response()->json($items, 200);

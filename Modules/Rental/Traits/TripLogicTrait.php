@@ -736,9 +736,9 @@ trait TripLogicTrait
                     'discount_percentage' => $providerDiscount['discount'],
                     'discount_on_trip' => $itemDiscount,
 
-                    'tax_amount' =>  $tax_amount,
-                    'tax_status' => $tax_status,
-                    'tax_percentage' => $tax_percentage,
+                    'tax_amount' =>  $tax_amount ?? 0,
+                    'tax_status' => $tax_status ?? 'excluded',
+                    'tax_percentage' => $tax_percentage?? 0,
                 ])->save();
             }
         }

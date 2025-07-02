@@ -4643,6 +4643,7 @@ class Helpers
                     'discount' => $item['discount_on_item'],
                     'discount_type' => $item['discount_type'],
                     'base_final' => $itemFinal,
+                    'is_campaign_item' => $item['item_campaign_id'] ? true : false,
                 ];
 
                 $totalAfterOwnDiscounts += $itemFinal;
@@ -4690,6 +4691,7 @@ class Helpers
                         'discount' => $entry['discount'],
                         'discount_type' => $entry['discount_type'],
                         'after_discount_final_price' => $finalPrice,
+                        'is_campaign_item' => $entry['is_campaign_item'],
                     ];
                 } else {
                     $addonIds[] = [

@@ -7832,4 +7832,5 @@ Smartly or Earn. ',
   'TIN' => 'TIN',
   'The selected type is invalid.' => 'The selected type is invalid.',
   'Text Bmw' => 'Text Bmw',
+  'parcel_category_added_successfully' => 'Parcel category added successfully',
 );
