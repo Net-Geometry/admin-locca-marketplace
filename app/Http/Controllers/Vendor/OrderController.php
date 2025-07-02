@@ -471,14 +471,14 @@ class OrderController extends Controller
         $total_addon_price = 0;
         $store_discount_amount = $order->store_discount_amount;
 
-        $discount=$order->store_discount_amount;
-      $discount_on_product_by = $order->discount_on_product_by ?? 'vendor' ;
+        // $discount=$order->store_discount_amount;
+        $discount_on_product_by = $order->discount_on_product_by ?? 'vendor' ;
 
         $store_discount = Helpers::get_store_discount($store);
         $store_discount =  $store_discount ? $store_discount : ['discount' => 0, 'max_discount' => 0, 'min_purchase' => 0];
         $admin_discount = Helpers::checkAdminDiscount(price: $product_price + $total_addon_price, discount: $store_discount['discount'], max_discount: $store_discount['max_discount'], min_purchase: $store_discount['min_purchase']);
 
-        $discount = max($discount, $admin_discount);
+        $discount = $admin_discount;
 
         if($admin_discount > 0 && $discount == $admin_discount ){
                 $discount_on_product_by =  'admin' ;

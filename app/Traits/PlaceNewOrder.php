@@ -1203,7 +1203,7 @@ trait PlaceNewOrder
                         $foodVariation = true;
                         $product_variations = json_decode($product->food_variations, true);
 
-                        if (count($product_variations)) {
+                        if ($product_variations && count($product_variations)) {
                             $variation_data = Helpers::get_varient($product_variations, $c['variations']);
                             $price = $product['price'] + $variation_data['price'];
                             $variations = $variation_data['variations'];
@@ -1699,9 +1699,9 @@ trait PlaceNewOrder
         $additional_charge_status  = $settings['additional_charge_status'] ?? null;
         $additional_charge         = $settings['additional_charge'] ?? null;
 
-        if ($additional_charge_status == 1) {
-            $additionalCharges['tax_on_additional_charge'] = $additional_charge ?? 0;
-        }
+        // if ($additional_charge_status == 1) {
+        //     $additionalCharges['tax_on_additional_charge'] = $additional_charge ?? 0;
+        // }
 
         $carts = session()->get('cart');
         $order_details = $this->makePosOrderDetails($carts, null, $store);

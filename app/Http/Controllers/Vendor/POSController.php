@@ -661,9 +661,9 @@ class POSController extends Controller
         $additional_charge_status  = $settings['additional_charge_status'] ?? null;
         $additional_charge         = $settings['additional_charge'] ?? null;
 
-        if ($additional_charge_status == 1) {
-            $additionalCharges['tax_on_additional_charge'] = $additional_charge ?? 0;
-        }
+        // if ($additional_charge_status == 1) {
+        //     $additionalCharges['tax_on_additional_charge'] = $additional_charge ?? 0;
+        // }
 
         $order_details = $this->makePosOrderDetails($cart, null, $store);
 

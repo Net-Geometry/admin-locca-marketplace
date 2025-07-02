@@ -965,7 +965,7 @@ class VendorController extends Controller
 
 
         $discount=$order->store_discount_amount;
-      $discount_on_product_by = $order->discount_on_product_by ?? 'vendor' ;
+        $discount_on_product_by = $order->discount_on_product_by ?? 'vendor' ;
 
         $store_discount = Helpers::get_store_discount($store);
         $store_discount =  $store_discount ? $store_discount : ['discount' => 0, 'max_discount' => 0, 'min_purchase' => 0];
@@ -977,13 +977,9 @@ class VendorController extends Controller
                 $discount_on_product_by =  'admin' ;
             }
 
-
         $order->discount_on_product_by= $discount_on_product_by;
         $store_discount_amount=$discount;
         $additionalCharges=[];
-
-
-
 
 
         $coupon_discount_amount = $coupon ? CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount) : 0;
