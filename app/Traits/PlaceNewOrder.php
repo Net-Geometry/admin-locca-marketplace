@@ -1643,7 +1643,7 @@ trait PlaceNewOrder
 
         if ($request->order_type != 'parcel' && $request->is_prescription == false) {
 
-            $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount, $product_price + $total_addon_price, $order->store_id, false);
+            $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount, $total_price, $order->store_id, false);
             $data = [
                 'tax_amount' => $finalCalculatedTax['tax_amount'],
                 'tax_status' => $finalCalculatedTax['tax_status'],
