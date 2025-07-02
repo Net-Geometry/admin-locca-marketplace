@@ -115,6 +115,7 @@ class ProviderTaxReportController extends Controller
                 }
             }))
             ->where('store_id', $store_id)
+            ->whereIn('order_id', $orders->pluck('id')->toArray())
             ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('created_at', [$startDate, $endDate]);
             })

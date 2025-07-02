@@ -18,13 +18,13 @@
                         <div class="col-lg-4 col-md-6">
                             <label class="form-label">{{ translate('Date Range') }}</label>
                             <div class="position-relative">
-                                @php
-                                    $dataRange = Carbon\Carbon::parse($startDate)->format('m/d/Y') . ' - ' . Carbon\Carbon::parse($endDate)->format('m/d/Y');
-                                @endphp
+
                                 <i class="tio-calendar-month icon-absolute-on-right"></i>
-                                <input type="text" data-title="{{ translate('Select_Date_Range') }}" name="dates" value="{{ $dataRange  ?? null }}" class="date-range-picker form-control">
+                                <input type="text" data-title="{{ translate('Select_Date_Range') }}" name="dates" value="{{ $dataRange  ?? null }}"
+                                class="form-control">
                             </div>
                         </div>
+
                         <div class="col-lg-4 col-md-6">
                             <div class="d-flex justify-content-end">
                                 <button type="submit"
@@ -38,7 +38,7 @@
                 <div class="row g-lg-4 g-3">
                     <div class="col-md-6 col-xl-3">
                         <div class="bg-opacity-warning-5 h-100 rounded p-24">
-                            <img src="{{ asset('/public/assets/admin/img/tax-report-pen.png') }}" alt="img"
+                            <img src="{{ asset('/public/assets/admin/img/tax/1.png') }}" alt="img"
                                 class="mb-20">
                             <h2 class="cus-warning-clr mb-1">{{ $totalOrders }}</h2>
                             <span class="font-medium mb-0">{{ translate('Total Orders') }}</span>
@@ -46,7 +46,7 @@
                     </div>
                     <div class="col-md-6 col-xl-3">
                         <div class="bg-opacity-primary-5 h-100 rounded p-24">
-                            <img src="{{ asset('/public/assets/admin/img/tax-report-pen.png') }}" alt="img"
+                            <img src="{{ asset('/public/assets/admin/img/tax/2.png') }}" alt="img"
                                 class="mb-20">
                             <h2 class="theme-clr mb-1"> {{ \App\CentralLogics\Helpers::format_currency($totalOrderAmount) }}
                             </h2>
@@ -56,7 +56,7 @@
                     <div class="col-lg-12 col-xl-6">
                         <div class="bg-opacity-warning-5 h-100 rounded p-24 d-flex flex-sm-nowrap flex-wrap gap-3">
                             <div class="w-xxl-100 w-sm-50">
-                                <img src="{{ asset('/public/assets/admin/img/tax-report-pen.png') }}" alt="img"
+                                <img src="{{ asset('/public/assets/admin/img/tax/3.png') }}" alt="img"
                                     class="mb-20">
                                 <h2 class="text-success mb-1">{{ \App\CentralLogics\Helpers::format_currency($totalTax) }}
                                 </h2>
@@ -184,7 +184,7 @@
                                                 @endforeach
                                             @else
                                                 <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                                    {{ translate('Previous Tax Amount:') }} <span>
+                                                    {{ translate('Tax Amount:') }} <span>
                                                     {{ \App\CentralLogics\Helpers::format_currency($order->total_tax_amount) }}</span>
                                                 </div>
                                             @endif
@@ -273,9 +273,33 @@
 @endsection
 
 @push('script_2')
+
     <script src="{{ asset('public/assets/admin') }}/js/offcanvas.js"></script>
     <script>
         "use strict";
+
+        $(function () {
+            $('input[name="dates"]').daterangepicker({
+                startDate: moment('{{ $startDate }}'),
+                endDate: moment('{{ $endDate }}'),
+                maxDate: moment(),
+                locale: {
+                    format: 'MM/DD/YYYY'
+                },
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [
+                        moment().subtract(1, 'month').startOf('month'),
+                        moment().subtract(1, 'month').endOf('month')
+                    ]
+                }
+            });
+        });
+
 
         document.querySelectorAll('[data-order_id]').forEach(button => {
             button.addEventListener('click', function() {

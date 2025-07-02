@@ -1081,7 +1081,7 @@ class VendorController extends Controller
 
             $order->store_discount_amount = round($store_discount_amount, config('round_up_to_digit'));
 
-            $order->order_amount = round($total_price + $$order->total_tax_amount + $order->delivery_charge, config('round_up_to_digit'));
+            $order->order_amount = round($total_price + $order->total_tax_amount + $order->delivery_charge, config('round_up_to_digit'));
             $order->free_delivery_by = $free_delivery_by;
             $order->order_amount = $order->order_amount + $order->dm_tips;
             $order->save();

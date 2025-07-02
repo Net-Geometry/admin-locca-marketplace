@@ -377,6 +377,12 @@ trait TripLogicTrait
         $taxMap = $finalCalculatedTax['taxMap'];
         $orderTaxIds = data_get($finalCalculatedTax, 'taxData.orderTaxIds', []);
 
+        $finalPricing = self::calculateFinalPricing(
+                $trip,
+                $totalPrice,
+                $providerDiscount['isAdminDiscount'] == true  ? $providerDiscount['discount'] : $discountOnTrip,
+                $taxAmount,
+        );
 
         if ($isUpdated) {
             foreach ($updatedTripDetails as $tripDetails) {
@@ -398,6 +404,7 @@ trait TripLogicTrait
         }
 
         $finalPricing['taxAmount'] = $taxAmount;
+
 
         if ($isUpdated) {
             self::updateCashback($trip, $finalPricing['tripAmount']);

@@ -46,7 +46,7 @@ class VendorTaxReportController extends Controller
 
         // $time = microtime(true) - $start;
         // dd("Query took {$time} seconds", $stores);
-
+// dd($startDate,$endDate);
 
         return view('vendor-views.report.tax-report.vendor-tax-detail-report', compact('totalOrders', 'totalOrderAmount', 'totalTax', 'store', 'orders', 'startDate', 'endDate', 'taxSummary'));
     }
@@ -133,6 +133,7 @@ class VendorTaxReportController extends Controller
                         $q->orWhere('order_id', 'like', "%{$value}%");
                     }
                 }))
+                ->whereIn('order_id', $orders->pluck('id')->toArray())
                 ->where('store_id', $store_id)
                 ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
                     $query->whereBetween('created_at', [$startDate, $endDate]);

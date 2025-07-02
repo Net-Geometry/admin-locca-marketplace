@@ -7833,4 +7833,5 @@ Smartly or Earn. ',
   'Text Bmw' => 'Text Bmw',
   'parcel_category_added_successfully' => 'Parcel category added successfully',
   'Variation price must be greater than discount amount' => 'Variation price must be greater than discount amount',
+  'Tax Amount:' => 'Tax Amount:',
 );
