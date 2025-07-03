@@ -84,7 +84,6 @@ class CalculateTaxService
                     countryCode: $countryCode,
                     storeId: $storeId
                 );
-
                 $orderWiseData['totalTaxamount'] += $totalTaxamount;
                 $orderWiseData['productWiseData'] = self::getProductwiseData($productIds, $systemTaxVat->is_included, $orderWiseData['totalTaxPercent']);
                 $orderWiseData['taxType'] = $taxType;

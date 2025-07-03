@@ -263,7 +263,7 @@ class OrderController extends Controller
                         }
                     });
                 })
-                ->latest()->paginate(10);
+                ->latest()->active()->paginate(10);
             $editing = false;
             if ($request->session()->has('order_cart')) {
                 $cart = session()->get('order_cart');
@@ -901,13 +901,17 @@ class OrderController extends Controller
             if (isset($request->cart_item_key)) {
                 $cart[$request->cart_item_key] = $data;
 
-                $this->setOrderEditCalculatedTax($product->store);
+               $this->setOrderEditCalculatedTax(store:$product->store, order_id:$request->order_id);
+
                 return response()->json([
                     'data' => 2
                 ]);
             } else {
                 $cart->push($data);
+              $this->setOrderEditCalculatedTax(store:$product->store, order_id:$request->order_id);
+
             }
+
         } else {
 
             $data = new OrderDetail();
@@ -992,16 +996,17 @@ class OrderController extends Controller
             $cart = $request->session()->get('order_cart', collect([]));
             if (isset($request->cart_item_key)) {
                 $cart[$request->cart_item_key] = $data;
-                $this->setOrderEditCalculatedTax($product->store);
+                $this->setOrderEditCalculatedTax(store: $product->store, order_id: $request->order_id);
                 return response()->json([
                     'data' => 2
                 ]);
             } else {
+                $this->setOrderEditCalculatedTax(store: $product->store, order_id: $request->order_id);
                 $cart->push($data);
             }
         }
 
-        $this->setOrderEditCalculatedTax($product->store);
+        $this->setOrderEditCalculatedTax(store: $product->store, order_id: $request->order_id);
 
         return response()->json([
             'data' => 0
@@ -1018,7 +1023,7 @@ class OrderController extends Controller
         $product = Item::withoutGlobalScope(StoreScope::class)->with('store')->find($item_id);
 
         if ($product && $product->store) {
-            $this->setOrderEditCalculatedTax($product->store);
+            $this->setOrderEditCalculatedTax(store:$product->store,order_id: $request->order_id);
         }
         return response()->json([], 200);
     }
@@ -1053,7 +1058,7 @@ class OrderController extends Controller
             session()->forget('order_cart');
         } else {
             $request->session()->put('order_cart', $cart);
-            $this->setOrderEditCalculatedTax($order->store);
+            $this->setOrderEditCalculatedTax(store:$order->store, order_id: $order->id);
         }
         return back();
     }
@@ -1216,9 +1221,7 @@ class OrderController extends Controller
             $order->additional_charge = $additional_charge ?? 0;
             $additionalCharges['tax_on_additional_charge'] = $order->additional_charge;
         }
-
         $order_details = $this->makeEditOrderDetails($cart, null, $store);
-//dd('ok',$cart, $order_details);
         if (data_get($order_details, 'status_code') === 403) {
             DB::rollBack();
             return response()->json([
@@ -1239,8 +1242,8 @@ class OrderController extends Controller
         $total_price = $product_price + $total_addon_price - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount - $coupon_discount_amount;
         $totalDiscount = $store_discount_amount + $flash_sale_admin_discount_amount + $flash_sale_vendor_discount_amount  + $coupon_discount_amount +  $order->ref_bonus_amount;
 
-        $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount, $product_price + $total_addon_price, $store->id);
 
+        $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount, $total_price, $store->id);
         $tax_amount = $finalCalculatedTax['tax_amount'];
         $tax_included = $finalCalculatedTax['tax_included'];
         $tax_status = $finalCalculatedTax['tax_status'];
@@ -1255,7 +1258,6 @@ class OrderController extends Controller
 
 
 
-        // $total_tax_amount = ($tax > 0) ? (($total_price * $tax) / 100) : 0;
         if ($store->minimum_order > $product_price + $total_addon_price) {
             Toastr::error(translate('messages.you_need_to_order_at_least', ['amount' => $store->minimum_order . ' ' . Helpers::currency_code()]));
             return back();

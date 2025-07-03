@@ -1338,7 +1338,7 @@ trait PlaceNewOrder
         $variations = [];
         $discount_on_product_by = 'vendor';
         foreach ($carts as $c) {
-            //            dd(!isset($c['status']) || $c['status'] !== false);
+
             if (!isset($c['status']) || $c['status'] !== false) {
                 $isCampaign = false;
                 if (isset($c['item_type']) && ($c['item_type'] === 'App\Models\ItemCampaign' || $c['item_type'] === 'AppModelsItemCampaign')) {
@@ -1347,6 +1347,7 @@ trait PlaceNewOrder
                 } else {
                     $product = Item::with('module')->active()->find($c['item_id'] ?? $c['id']);
                 }
+
                 if ($product) {
                     if ($product->store_id != $store->id) {
                         return [
@@ -1417,10 +1418,45 @@ trait PlaceNewOrder
                     }
 
                     $product = Helpers::product_data_formatting($product, false, false, app()->getLocale());
+
+
+                    $input = $c['add_ons'] ?? null;
+
+                    $addonIds = [];
+                    $addonQuantities = [];
+
+                    if (is_string($input)) {
+                        $decoded = json_decode($input, true);
+
+                        if (is_array($decoded)) {
+                            if (is_numeric($decoded[0])) {
+
+                                $addonIds = $decoded;
+                                $addonQuantities = $c['add_on_qtys'] ?? [];
+                            } else {
+
+                                $addonIds = array_column($decoded, 'id');
+                                $addonQuantities = array_column($decoded, 'quantity');
+                            }
+                        }
+                    } elseif (is_array($input)) {
+                        if (is_numeric($input[0])) {
+
+                            $addonIds = $input;
+                            $addonQuantities = $c['add_on_qtys'] ?? [];
+                        } else {
+
+                            $addonIds = array_column($input, 'id');
+                            $addonQuantities = array_column($input, 'quantity');
+                        }
+                    }
+
+                    $addonIds = array_unique($addonIds);
                     $addon_data = Helpers::calculate_addon_price(
-                        AddOn::whereIn('id', is_array($c['add_ons'] ?? null) ? $c['add_ons'] : [])->get(),
-                        is_array($c['add_on_qtys'] ?? null) ? $c['add_on_qtys'] : []
+                        AddOn::whereIn('id', $addonIds)->get(),
+                        $addonQuantities
                     );
+                  
                     $product_discount = Helpers::product_discount_calculate($product, $price, $store, false);
 
 
@@ -1732,8 +1768,12 @@ trait PlaceNewOrder
         ];
         return response()->json($data, 200);
     }
-    public function setOrderEditCalculatedTax($store, $storeData = false)
+    public function setOrderEditCalculatedTax($store, $storeData = false, $order_id = null)
     {
+        if ($order_id) {
+            $order = Order::find($order_id);
+        }
+        $coupon = null;
         $additionalCharges = [];
         $settings = BusinessSetting::whereIn('key', [
             'additional_charge_status',
@@ -1749,22 +1789,17 @@ trait PlaceNewOrder
         }
 
         $carts = session()->get('order_cart');
-        //        $filteredCarts = $carts->filter(function ($cart) {
-        //            return $cart->status !== false;
-        //        });
-        //
-        //        $items = $filteredCarts->map(function ($cart) {
-        //            return [
-        //                'id' => $cart->id,
-        //                'price' => (float) $cart->price,
-        //                'quantity' => (int) $cart->quantity,
-        //                'total' => (float) $cart->price * (int) $cart->quantity,
-        //            ];
-        //        });
-        //
-        //        dd($items->toArray());
 
         $order_details = $this->makeEditOrderDetails($carts, null, $store);
+
+        if (data_get($order_details, 'status_code') === 403) {
+
+            return response()->json([
+                'errors' => [
+                    ['code' => data_get($order_details, 'code'), 'message' => data_get($order_details, 'message')]
+                ]
+            ], data_get($order_details, 'status_code'));
+        }
 
         $total_addon_price = $order_details['total_addon_price'];
         $product_price = $order_details['product_price'];
@@ -1772,17 +1807,34 @@ trait PlaceNewOrder
         $flash_sale_admin_discount_amount = $order_details['flash_sale_admin_discount_amount'];
         $flash_sale_vendor_discount_amount = $order_details['flash_sale_vendor_discount_amount'];
         $order_details = $order_details['order_details'];
+        if ($order?->coupon_code) {
+            $coupon = Coupon::where(['code' => $order->coupon_code])->first();
+        }
 
-        $totalDiscount = $store_discount_amount + $flash_sale_admin_discount_amount + $flash_sale_vendor_discount_amount;
+        $store_discount = Helpers::get_store_discount($store);
+        if (isset($store_discount)) {
+            if ($product_price + $total_addon_price < $store_discount['min_purchase']) {
+                $store_discount_amount = 0;
+            }
+
+            if ($store_discount_amount > $store_discount['max_discount'] && $store_discount_amount > $store_discount['max_discount']) {
+                $store_discount_amount = $store_discount['max_discount'];
+            }
+        }
+
+        $coupon_discount_amount = $coupon ? CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount) : 0;
+
+        $totalDiscount = $store_discount_amount + $flash_sale_admin_discount_amount + $flash_sale_vendor_discount_amount + $coupon_discount_amount;
+
+        $price = $product_price + $total_addon_price - $totalDiscount;
         $finalCalculatedTax =  Helpers::getFinalCalculatedTax(
             $order_details,
             $additionalCharges,
             $totalDiscount,
-            $product_price + $total_addon_price,
+            $price,
             $store->id,
             $storeData
         );
-        //dd($finalCalculatedTax, $additionalCharges, $totalDiscount, $product_price + $total_addon_price, $store->id , $storeData);
         session()->put('edit_tax_amount', $finalCalculatedTax['tax_amount']);
         session()->put('edit_tax_included', $finalCalculatedTax['tax_included']);
         $data = [
@@ -1790,7 +1842,6 @@ trait PlaceNewOrder
             'tax_status' => $finalCalculatedTax['tax_status'],
             'tax_included' => $finalCalculatedTax['tax_included'],
         ];
-        //        dd($data);
         return response()->json($data, 200);
     }
 }
