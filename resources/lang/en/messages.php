@@ -7859,4 +7859,5 @@ Smartly or Earn. ',
   'If you already created Products without tax then go to edit Product and update tax.' => 'If you already created Products without tax then go to edit Product and update tax.',
   'to product wise.vendors will have control to setup the taxes of their products.' => 'to product wise.vendors will have control to setup the taxes of their products.',
   'to product wise.Vendors will have control to setup the taxes of their products.' => 'To product wise.Vendors will have control to setup the taxes of their products.',
+  'Generic_Name' => 'Generic Name',
 );

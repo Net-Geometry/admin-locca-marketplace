@@ -1463,6 +1463,7 @@ trait PlaceNewOrder
                     $discount_type = $product_discount['discount_type'];
 
                     $or_d = [
+                        'cart_id' => $c['id'],
                         'item_id' => $isCampaign ? null : $c['item_id'],
                         'item_campaign_id' => $isCampaign ? $c['item_id'] : null,
                         'item_details' => json_encode($product),
@@ -1528,21 +1529,6 @@ trait PlaceNewOrder
             }
         }
 
-        //        $filtered = $carts->filter(function ($cart) {
-        //            return $cart->status !== false;
-        //        });
-        //
-        //        $items = $filtered->map(function ($cart) {
-        //            return [
-        //                'id' => $cart->id,
-        //                'price' => (float) $cart->price,
-        //                'quantity' => (int) $cart->quantity,
-        //                'total' => (float) $cart->price * (int) $cart->quantity,
-        //            ];
-        //        });
-        //
-        //
-        //        dd($product_price, $items->toArray());
         return [
             'order_details' => $order_details,
             'total_addon_price' => $total_addon_price,
@@ -1806,6 +1792,8 @@ trait PlaceNewOrder
         $store_discount_amount = $order_details['store_discount_amount'];
         $flash_sale_admin_discount_amount = $order_details['flash_sale_admin_discount_amount'];
         $flash_sale_vendor_discount_amount = $order_details['flash_sale_vendor_discount_amount'];
+
+        $discount_on_product_by= $order_details['discount_on_product_by'];
         $order_details = $order_details['order_details'];
         if ($order?->coupon_code) {
             $coupon = Coupon::where(['code' => $order->coupon_code])->first();
@@ -1837,10 +1825,14 @@ trait PlaceNewOrder
         );
         session()->put('edit_tax_amount', $finalCalculatedTax['tax_amount']);
         session()->put('edit_tax_included', $finalCalculatedTax['tax_included']);
+        session()->put('discount_on_product_by_session', $discount_on_product_by == 'admin' ? 'store_discount' : 'vendor');
+
         $data = [
             'tax_amount' => $finalCalculatedTax['tax_amount'],
             'tax_status' => $finalCalculatedTax['tax_status'],
             'tax_included' => $finalCalculatedTax['tax_included'],
+            'store_discount_amount'=>$store_discount_amount,
+            'discount_on_product_by'=>$discount_on_product_by == 'admin' ? 'store_discount' : 'vendor',
         ];
         return response()->json($data, 200);
     }

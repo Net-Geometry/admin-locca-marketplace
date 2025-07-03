@@ -1090,7 +1090,9 @@ class OrderController extends Controller
         if ($order->coupon_code) {
             $coupon = Coupon::where(['code' => $order->coupon_code])->first();
         }
+
         foreach ($cart as $c) {
+
             try {
                 if ($c['status'] == true) {
                     unset($c['status']);
@@ -1113,7 +1115,8 @@ class OrderController extends Controller
                                         'quantity' => $c->quantity,
                                         'price' => $c->price,
                                         'tax_amount' => $c->tax_amount,
-                                        'discount_on_item' => $c->discount_on_item,
+                                        'discount_on_item' => $c->discount_on_item * $c->quantity,
+                                        'discount_on_product_by' => $request->session()->has('discount_on_product_by_session') ? $request->session()->get('discount_on_product_by_session') : $c?->discount_on_product_by,
                                         'discount_type' => $c->discount_type,
                                         'variant' => $c->variant,
                                         'variation' => $c->variation,
@@ -1125,7 +1128,7 @@ class OrderController extends Controller
                             } else {
                                 $c->save();
                             }
-
+                            $order_details_ids[]=$c->id;
                             $total_addon_price += $c['total_add_on_price'];
                             $product_price += $price * $c['quantity'];
                             $store_discount_amount += $c['discount_on_item'] * $c['quantity'];
@@ -1138,6 +1141,7 @@ class OrderController extends Controller
                         unset($c['item_campaign']);
                         $product = Item::find($c['item_id']);
                         if ($product) {
+
                             $price = $c['price'];
 
                             $product = Helpers::product_data_formatting($product);
@@ -1153,7 +1157,8 @@ class OrderController extends Controller
                                         'quantity' => $c->quantity,
                                         'price' => $c->price,
                                         'tax_amount' => $c->tax_amount,
-                                        'discount_on_item' => $c->discount_on_item,
+                                        'discount_on_item' => $c->discount_on_item * $c->quantity,
+                                        'discount_on_product_by' => $request->session()->has('discount_on_product_by_session') ? $request->session()->get('discount_on_product_by_session') : $c?->discount_on_product_by,
                                         'discount_type' => $c->discount_type,
                                         'variant' => $c->variant,
                                         'variation' => $c->variation,
@@ -1165,7 +1170,7 @@ class OrderController extends Controller
                             } else {
                                 $c->save();
                             }
-
+                            $order_details_ids[]=$c->id;
                             $total_addon_price += $c['total_add_on_price'];
                             $product_price += $price * $c['quantity'];
                             $store_discount_amount += $c['discount_on_item'] * $c['quantity'];
@@ -1222,6 +1227,20 @@ class OrderController extends Controller
             $additionalCharges['tax_on_additional_charge'] = $order->additional_charge;
         }
         $order_details = $this->makeEditOrderDetails($cart, null, $store);
+
+            foreach($order_details['order_details'] as $key => $order_de){
+
+                $order->details()->where('id', $order_de['cart_id'])->update([
+                    'discount_on_item' => $order_de['discount_on_item'],
+                    'discount_on_product_by' =>  $order_de['discount_on_product_by'],
+                    'discount_type' => $order_de['discount_type'],
+                ]);
+            }
+
+
+ 
+
+
         if (data_get($order_details, 'status_code') === 403) {
             DB::rollBack();
             return response()->json([

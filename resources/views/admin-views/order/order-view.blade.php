@@ -645,8 +645,11 @@
                                             </tr>
 
                                             @php($product_price += $amount)
-                                            @php($store_discount_amount += $detail['discount_on_item'] * $detail['quantity'])
+{{-- @dd($detail['discount_on_product_by']) --}}
+                                            @php($store_discount_amount += $detail['discount_on_item']  * ( $detail['discount_on_product_by'] == 'store_discount' ? 1 :$detail['quantity']  ))
                                             <!-- End Media -->
+
+
                                         @elseif(isset($detail->item_campaign_id) && $detail->status)
                                                 <?php
                                                 if (!$editing) {
@@ -781,11 +784,14 @@
                                             </tr>
 
                                             @php($product_price += $amount)
-                                            @php($store_discount_amount += $detail['discount_on_item'] * $detail['quantity'])
+
+                                            @php($store_discount_amount += $detail['discount_on_item'] *  ( $detail['discount_on_product_by'] == 'store_discount' ?  1:$detail['quantity'] ))
                                             <!-- End Media -->
+
                                         @endif
                                     @endforeach
                                     </tbody>
+
                                 </table>
                             </div>
                                 <?php
@@ -800,6 +806,7 @@
                                 $deliverman_tips = $order['dm_tips'];
 
                                 if ($editing) {
+
                                     $store_discount = \App\CentralLogics\Helpers::get_store_discount($order->store);
                                     if (isset($store_discount)) {
                                         if ($product_price + $total_addon_price < $store_discount['min_purchase']) {
@@ -810,6 +817,7 @@
                                             $store_discount_amount = $store_discount['max_discount'];
                                         }
                                     }
+
                                     $coupon_discount_amount = $coupon ? \App\CentralLogics\CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount ) : $order['coupon_discount_amount'];
 //                                    session()->forget('edit_tax_amount');
                                     $tax_amount = session()->get('edit_tax_amount');
