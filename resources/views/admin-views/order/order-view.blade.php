@@ -796,7 +796,7 @@
                             </div>
                                 <?php
                                 $coupon_discount_amount = $order['coupon_discount_amount'];
-
+                                $old_store_discount_amount =0;
                                 $total_price = $product_price + $total_addon_price - $store_discount_amount - $coupon_discount_amount - $admin_flash_discount_amount - $ref_bonus_amount - $store_flash_discount_amount - $extra_packaging_amount;
 
                                 $total_tax_amount = $order['total_tax_amount'];
@@ -814,8 +814,10 @@
                                         }
 
                                         if ($store_discount_amount > $store_discount['max_discount'] && $store_discount_amount > $store_discount['max_discount']) {
+                                            $old_store_discount_amount = $store_discount_amount;
                                             $store_discount_amount = $store_discount['max_discount'];
                                         }
+                                      $store_discount_amount=  max($store_discount_amount,$old_store_discount_amount);
                                     }
 
                                     $coupon_discount_amount = $coupon ? \App\CentralLogics\CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount ) : $order['coupon_discount_amount'];
