@@ -193,6 +193,7 @@ class ReportController extends Controller
                     $q->orWhere('order_id', 'like', "%{$value}%");
                 }
             }))
+            ->whereIn('order_id', $orders->pluck('id')->toArray())
             ->where('store_id', $store_id)
             ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('created_at', [$startDate, $endDate]);

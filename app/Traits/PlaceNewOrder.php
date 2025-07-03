@@ -1429,7 +1429,7 @@ trait PlaceNewOrder
                         $decoded = json_decode($input, true);
 
                         if (is_array($decoded)) {
-                            if (is_numeric($decoded[0])) {
+                            if (is_numeric(data_get($decoded,0))) {
 
                                 $addonIds = $decoded;
                                 $addonQuantities = $c['add_on_qtys'] ?? [];
@@ -1440,7 +1440,7 @@ trait PlaceNewOrder
                             }
                         }
                     } elseif (is_array($input)) {
-                        if (is_numeric($input[0])) {
+                        if (is_numeric(data_get($input,0))) {
 
                             $addonIds = $input;
                             $addonQuantities = $c['add_on_qtys'] ?? [];
@@ -1456,7 +1456,7 @@ trait PlaceNewOrder
                         AddOn::whereIn('id', $addonIds)->get(),
                         $addonQuantities
                     );
-                  
+
                     $product_discount = Helpers::product_discount_calculate($product, $price, $store, false);
 
 

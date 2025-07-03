@@ -218,8 +218,13 @@ class Helpers
             ->where(['item_id' => $data['id']])->first();
         $data['flash_sale'] =(int) (($running_flash_sale) ? 1 :0);
         $data['stock'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->available_stock : $data['stock'];
-        $data['discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount : $data['discount'];
-        $data['discount_type'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount_type : $data['discount_type'];
+ 
+             $discount_data= self::product_discount_calculate($data, $data['price'], $data->store , true);
+
+                $data['discount'] = $discount_data['discount_percentage'];
+                $data['discount_type'] = $discount_data['original_discount_type'];
+
+
         $data['store_discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? 0 : (self::get_store_discount($data->store) ? $data->store?->discount->discount : 0);
         $data['schedule_order'] = $data->store->schedule_order;
         $data['rating_count'] = (int)($data->rating ? array_sum(json_decode($data->rating, true)) : 0);
@@ -331,6 +336,13 @@ class Helpers
                 $item['nutritions_name']= $item?->nutritions ? Nutrition::whereIn('id',$item?->nutritions->pluck('id') )->pluck('nutrition') : null;
                 $item['allergies_name']= $item?->allergies ?Allergy::whereIn('id',$item?->allergies->pluck('id') )->pluck('allergy') : null;
                 $item['generic_name']= $item?->generic ? GenericName::whereIn('id',$item?->generic->pluck('id') )->pluck('generic_name'): null ;
+
+
+                $item['tax_data'] = $item?->taxVats ?$item?->taxVats()->pluck('tax_id')->toArray(): [] ;
+
+                $item['tax_data']= \Modules\TaxModule\Entities\Tax::whereIn('id', $item['tax_data'])->get(['id', 'name', 'tax_rate']);
+                unset($item['taxVats']);
+
 
                 unset($item['nutritions']);
                 unset($item['allergies']);
