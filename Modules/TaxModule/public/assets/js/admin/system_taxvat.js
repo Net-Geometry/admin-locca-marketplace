@@ -72,7 +72,7 @@ document.getElementById('seturl').addEventListener('click', function () {
             $('#tax__rate').attr('required', true);
         }
     }
-    
+
 $(document).ready(function () {
     $('input[name="tax_status"]').on('change', function () {
         handleTaxStatusChange(this.value);
@@ -86,10 +86,11 @@ $(document).ready(function () {
         handleTaxStatusChange(currentValue);
     }
     $('#tax_type').on('change', function () {
-        if (this.value == this.dataset.current_seclected) {
-            $('#tax_type_change_alert').removeClass('d-flex').addClass('d-none');
-        } else {
+
+        if (this.value == 'product_wise') {
             $('#tax_type_change_alert').removeClass('d-none').addClass('d-flex');
+        } else {
+            $('#tax_type_change_alert').removeClass('d-flex').addClass('d-none');
         }
 
 

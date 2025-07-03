@@ -279,23 +279,23 @@
                 <td>
                     <span>{{ \Carbon\Carbon::parse($earning->delivered)->format('d-M-Y') }}</span>
                 </td>
-                <td>
-                    <span>{{ $earning?->order?->payment_method }}</span>
+                <td style="text-align: center">
+                    <span>{{ translate($earning?->order?->payment_method) }}</span>
                 </td>
                 <td>
                     <span class="secondary-clr">
-                        {{translate('Order ID')}} : <span class="text-clr">{{ $earning->order_id }}</span>
+                        {{translate('Order ID #')}} <span class="text-clr">{{ $earning->order_id }}</span>
                     </span>
                 </td>
                 <td>
-                    <span>{{ ucwords(str_replace('_', ' ', $earning?->order?->payment_method)) }}</span>
+                    <span>{{ \App\CentralLogics\Helpers::format_currency($earning->original_delivery_charge) }}</span>
                 </td>
                 <td>
-                    <span>{{ $earning->dm_tips }}</span>
+                    <span>{{ \App\CentralLogics\Helpers::format_currency($earning->dm_tips) }}</span>
                 </td>
 
                 <td>
-                    <span>{{ $earning->original_delivery_charge + $earning->dm_tips }}</span>
+                    <span>{{ \App\CentralLogics\Helpers::format_currency( $earning->original_delivery_charge + $earning->dm_tips) }}</span>
                 </td>
             </tr>
             @endforeach

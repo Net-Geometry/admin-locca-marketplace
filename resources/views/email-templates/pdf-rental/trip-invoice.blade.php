@@ -90,7 +90,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                     {{ translate('Vehicle') }}
                                                                 </th>
                                                                 <th class="text-left p-1 px-3">
-                                                                    {{ translate('Hour/Km') }}
+                                                                    {{ translate('Hour/Km/Day') }}
                                                                 </th>
                                                                 <th class="text-right p-1 px-3">{{ translate('Fare') }}
                                                                 </th>

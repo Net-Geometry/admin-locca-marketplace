@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
-    Route::group(['middleware' => ['admin', 'current-module', 'actch:admin_panel']], function () {
+    Route::group(['middleware' => ['admin', 'current-module', 'actch:admin_panel' ]], function () {
         Route::get('/test', function () {
             return view('admin-views.test.VendorPanel-tax-report');
         });

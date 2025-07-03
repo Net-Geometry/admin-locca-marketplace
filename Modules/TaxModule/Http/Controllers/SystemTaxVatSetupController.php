@@ -162,7 +162,7 @@ class SystemTaxVatSetupController extends Controller
                     $systemTaxVatForPrescription->country_code =  $systemTaxVat->country_code;
                 }
                 $systemTaxVatForPrescription->tax_payer = 'prescription';
-                $systemTaxVatForPrescription->tax_type = $systemTaxVat->tax_type;
+                $systemTaxVatForPrescription->tax_type = 'order_wise';
             }
 
             if ($systemTaxVatForPrescription) {

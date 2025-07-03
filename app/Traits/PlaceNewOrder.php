@@ -352,7 +352,7 @@ trait PlaceNewOrder
                     $order_details,
                     $additionalCharges,
                     $totalDiscount,
-                    $product_price + $total_addon_price,
+                    $total_price,
                     $store->id
                 );
                 $tax_amount = $finalCalculatedTax['tax_amount'];

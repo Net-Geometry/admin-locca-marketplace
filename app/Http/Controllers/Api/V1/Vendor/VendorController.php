@@ -1007,9 +1007,11 @@ class VendorController extends Controller
 
 
             //Added DM TIPS
-            $order->dm_tips = 0;
+
             if ($dm_tips_manage_status == 1) {
-                $order->dm_tips = $request->dm_tips ?? 0;
+                $order->dm_tips = $order->dm_tips ?? $request->dm_tips ?? 0;
+            }else{
+                $order->dm_tips = 0;
             }
 
             //Added service charge
@@ -1129,11 +1131,13 @@ class VendorController extends Controller
             $extra_packaging_data      = json_decode($extra_packaging_data_raw, true) ?? [];
 
 
-            //Added DM TIPS
-            $order->dm_tips = 0;
+
             if ($dm_tips_manage_status == 1) {
-                $order->dm_tips = $request->dm_tips ?? 0;
+                $order->dm_tips =$order->dm_tips ?? $request->dm_tips ?? 0;
+            } else{
+                $order->dm_tips = 0;
             }
+
 
             //Added service charge
             $order->additional_charge =$order->additional_charge;

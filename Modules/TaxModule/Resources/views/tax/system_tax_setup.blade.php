@@ -158,7 +158,7 @@
                                             <span>
                                                 {{ translate('messages.When you change') }} <span
                                                     class="font-semibold title-clr">{{ translate('messages.Tax Type') }}</span>
-                                                {{ translate('messages.it will effects on all your tax calculation. Please make sure when you change Tax Type.') }}
+                                                {{ translate('to product wise.Vendors will have control to setup the taxes of their products.') }}
                                             </span>
                                         </div>
                                     </div>
@@ -250,10 +250,10 @@
                                                 <span
                                                     class="{{ $systemTaxVat?->tax_type == 'product_wise' ? '' : 'd-none' }}"
                                                     id="info_for_item">
-                                                    {{ translate('messages.Please specify the tax rate while creating a Item from') }}
+                                                    {{ translate('messages.Please specify the tax rate while creating a Product from') }}
                                                     <span
-                                                        class="font-semibold theme-clr text-decoration-underline">{{ translate('Items List') }}.</span>
-                                                    {{ translate('If you already created Items without tax then go to edit Item and update tax.') }}
+                                                        class="font-semibold theme-clr text-decoration-underline">{{ translate('Products List') }}.</span>
+                                                    {{ translate('If you already created Products without tax then go to edit Product and update tax.') }}
                                                 </span>
                                             </div>
                                         </div>

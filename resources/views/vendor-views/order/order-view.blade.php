@@ -1126,7 +1126,7 @@
                         <div class="form-group col-12">
                             <label for="order_amount">{{ translate('messages.order_amount') }}</label>
                             <input id="order_amount" type="number" class="form-control" name="order_amount" min="0"
-                                value="{{ round($order['order_amount'] - $order['total_tax_amount']  - $order['additional_charge'] -  $order['delivery_charge'] + $order['store_discount_amount'] ,6) }}" step=".01">
+                                value="{{ round($order['order_amount'] - $order['total_tax_amount']  - $order['additional_charge'] -  $order['delivery_charge'] + $order['store_discount_amount'] - $order['dm_tips'] ,6) }}" step=".01">
                         </div>
 
                         <div class="form-group col-sm-12">

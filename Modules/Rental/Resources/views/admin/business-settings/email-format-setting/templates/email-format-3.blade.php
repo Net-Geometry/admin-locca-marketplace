@@ -54,7 +54,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                                     <tr>
                                                         <th class="text-left p-1 px-3">{{ translate('#') }}</th>
                                                         <th class="text-left p-1 px-3">{{ translate('Vehicle') }}</th>
-                                                        <th class="text-left p-1 px-3">{{ translate('Hour/Km') }}</th>
+                                                        <th class="text-left p-1 px-3">{{ translate('Hour/Km/Day') }}</th>
                                                         <th class="text-right p-1 px-3">{{ translate('Fare') }}</th>
                                                     </tr>
                                                 </thead>

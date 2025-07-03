@@ -512,9 +512,10 @@ class OrderController extends Controller
 
 
             //Added DM TIPS
-            $order->dm_tips = 0;
             if ($dm_tips_manage_status == 1) {
-                $order->dm_tips = $request->dm_tips ?? 0;
+                $order->dm_tips =$order->dm_tips ?? $request->dm_tips ?? 0;
+            } else{
+                $order->dm_tips = 0;
             }
 
             //Added service charge
@@ -638,9 +639,10 @@ class OrderController extends Controller
 
 
             //Added DM TIPS
-            $order->dm_tips = 0;
             if ($dm_tips_manage_status == 1) {
-                $order->dm_tips = $request->dm_tips ?? 0;
+                $order->dm_tips =$order->dm_tips ?? $request->dm_tips ?? 0;
+            } else{
+                $order->dm_tips = 0;
             }
 
             //Added service charge
