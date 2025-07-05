@@ -7881,4 +7881,5 @@ Smartly or Earn. ',
   'Here you can see admin tax report only for Rental Module. You can view' => 'Here you can see admin tax report only for Rental Module. You can view',
   'All Module Combine Tax Report' => 'All Module Combine Tax Report',
   'Separately from here' => 'Separately from here',
+  'Please select items from' => 'Please select items from',
 );

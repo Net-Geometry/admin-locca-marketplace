@@ -264,7 +264,7 @@
                     </div>
 
                     <div class="d-flex justify-content-left flex-wrap">
-                        @php($addons = array_column(json_decode($cart_item['add_ons'], true), 'quantity', 'id'))
+                            @php($addons = array_column(json_decode($cart_item['add_ons'], true), 'quantity', 'id'))
                         @foreach (\App\Models\AddOn::withoutGlobalScope(\App\Scopes\StoreScope::class)->whereIn('id', $add_ons)->active()->get() as $key => $add_on)
                             @php($checked = array_key_exists($add_on->id, $addons))
                             <div class="flex-column pb-2">
@@ -276,15 +276,15 @@
                                     for="addon{{ $key }}">{{ Str::limit($add_on->name, 20, '...') }} <br>
                                     {{ \App\CentralLogics\Helpers::format_currency($add_on->price) }}</label>
                                 <label
-                                    class="input-group addon-quantity-input mx-1 shadow bg-white rounded px-1 @if ($checked) visiblity-visible @endif"
+                                    class="input-group addon-quantity-input mx-1 shadow bg-white rounded px-1  visiblity-visible @if (!$checked)d-none @endif"
                                     for="addon{{ $key }}">
-                                    <button class="btn btn-sm h-100 text-dark px-0 addon-stepup" type="button"><i
+                                    <button class="btn btn-sm h-100 text-dark px-0 addon-stepdown " type="button"><i
                                             class="tio-remove  font-weight-bold"></i></button>
                                     <input type="number" name="addon-quantity{{ $add_on->id }}"
                                         class="form-control text-center border-0 h-100" placeholder="1"
                                         value="{{ $checked ? $addons[$add_on->id] : 1 }}" min="1"
                                         max="100" readonly>
-                                    <button class="btn btn-sm h-100 text-dark px-0 addon-stepdown" type="button"><i
+                                    <button class="btn btn-sm h-100 text-dark px-0 addon-stepup" type="button"><i
                                             class="tio-add  font-weight-bold"></i></button>
                                 </label>
                             </div>
@@ -319,15 +319,41 @@
 </div>
 <script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
 <script type="text/javascript">
-    cartQuantityInitialize();
+
+
+  cartQuantityInitialize();
     getVariantPrice();
-    $('#add-to-cart-form input').on('change', function() {
+
+    // Update price when input changes (like variant selection)
+    $('#add-to-cart-form input').on('change', function () {
         getVariantPrice();
     });
-    $('.addon-stepup').on('change', function() {
-        this.parentNode.querySelector('input[type=number]').stepDown(), getVariantPrice()
+
+    // Handle "plus" (step up)
+    $('.addon-stepup').on('click', function () {
+        const input = this.parentNode.querySelector('input[type=number]');
+        input.stepUp();
+        input.dispatchEvent(new Event('change')); // manually trigger change
+        getVariantPrice();
     });
-    $('.addon-stepdown').on('change', function() {
-        this.parentNode.querySelector('input[type=number]').stepUp(), getVariantPrice()
+     document.querySelectorAll('.addon-chek').forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const id = this.getAttribute('id'); // e.g., addon3
+            const qtyLabel = document.querySelector(`label.addon-quantity-input[for="${id}"]`);
+            if (qtyLabel) {
+                qtyLabel.classList.toggle('d-none', !this.checked);
+            }
+        });
+         getVariantPrice();
     });
+
+    // Handle "minus" (step down)
+    $('.addon-stepdown').on('click', function () {
+        const input = this.parentNode.querySelector('input[type=number]');
+        input.stepDown();
+        input.dispatchEvent(new Event('change'));
+        getVariantPrice();
+    });
+
+
 </script>
