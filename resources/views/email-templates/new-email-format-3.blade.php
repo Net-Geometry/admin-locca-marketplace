@@ -528,6 +528,14 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
 
                                                                     <tr>
                                                                         <td style="width: 40%"></td>
+                                                                        <td class="p-1 px-3"> {{ translate('messages.delivery_man_tips') }}
+                                                                        </td>
+                                                                        <td class="text-right p-1 px-3">
+                                                                            {{ \App\CentralLogics\Helpers::format_currency($order->dm_tips ?? 0) }}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="width: 40%"></td>
                                                                         <td class="p-1 px-3">
                                                                             {{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name') ?? (\App\CentralLogics\Helpers::get_business_data('additional_charge_name') ?? translate('messages.additional_charge')) }}
                                                                         </td>

@@ -421,9 +421,9 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                                 </td>
                                                                                 <td class="text-right p-1 px-3">
                                                                                     <?php
-                                                                                    if($order->prescription_order == 1){
-                                                                                        $sub_total = $order->order_amount +$order->store_discount_amount+$order->coupon_discount_amount  +$order->ref_bonus_amount-$order->extra_packaging_amount -$order->total_tax_amount -$order->delivery_charge-$order->additional_charge -$order->dm_tips;
-                                                                                       $sub_total=max($sub_total,0);
+                                                                                    if ($order->prescription_order == 1) {
+                                                                                        $sub_total = $order->order_amount + $order->store_discount_amount + $order->coupon_discount_amount + $order->ref_bonus_amount - $order->extra_packaging_amount - $order->total_tax_amount - $order->delivery_charge - $order->additional_charge - $order->dm_tips;
+                                                                                        $sub_total = max($sub_total, 0);
                                                                                     }
                                                                                     ?>
                                                                                     {{ \App\CentralLogics\Helpers::format_currency($sub_total) }}
@@ -527,6 +527,19 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                                                 </td>
                                                                             </tr>
                                                                         @endif
+
+
+                                                                        <tr>
+                                                                            <td style="width: 40%"></td>
+                                                                            <td class="p-1 px-3">
+                                                                                {{ translate('messages.delivery_man_tips') }}
+                                                                            </td>
+                                                                            <td class="text-right p-1 px-3">
+                                                                                {{ \App\CentralLogics\Helpers::format_currency($order->dm_tips) }}
+                                                                            </td>
+                                                                        </tr>
+
+
 
                                                                         <tr>
                                                                             <td style="width: 40%"></td>

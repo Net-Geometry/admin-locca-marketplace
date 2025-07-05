@@ -616,9 +616,9 @@
                     </li>
                     <li class="navbar-vertical-aside-has-menu @yield('vendor_tax_report')">
                         <a class="nav-link " href="{{ route('vendor.report.vendorTax') }}"
-                           title="{{ translate('messages.Tax_Report') }}">
+                           title="{{ translate('Vat_Report') }}">
                             <span class="tio-saving nav-icon"></span>
-                            <span class="text-truncate">{{ translate('messages.Tax_Report') }}</span>
+                            <span class="text-truncate">{{ translate('messages.Vat_Report') }}</span>
                         </a>
                     </li>
                     @endif

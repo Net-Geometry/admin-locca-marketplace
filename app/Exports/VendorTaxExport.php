@@ -23,6 +23,7 @@ class VendorTaxExport implements  FromView, ShouldAutoSize, WithStyles,WithColum
     use Exportable;
     protected $data;
 
+
     public function __construct($data) {
         $this->data = $data;
     }
