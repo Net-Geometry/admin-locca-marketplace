@@ -77,7 +77,8 @@
                                     </td>
                                     <td>
 
-                                        <a  href="{{ route($order->order_type == 'parcel' ? 'admin.parcel.order.details' : 'admin.order.details', ['id' => $order['id']]) }}">
+                                        <a
+                                            href="{{ route($order->order_type == 'parcel' ? 'admin.parcel.order.details' : 'admin.order.details', ['id' => $order['id']]) }}">
                                             #{{ $order->id }}</a>
 
                                     </td>
@@ -86,48 +87,64 @@
                                     </td>
                                     <td>
 
-                                        {{ translate($order?->tax_type?? 'order_wise') }}
+                                        {{ translate($order?->tax_type ?? 'order_wise') }}
                                     </td>
                                     <td>
-{{--                                        <div class="d-flex flex-column gap-1">--}}
-{{--                                            <div class="d-flex fz-14 gap-3 align-items-center title-clr">--}}
-{{--                                                {{ translate('Total:') }} <span>--}}
-{{--                                                    {{ \App\CentralLogics\Helpers::format_currency($order->total_tax_amount) }}</span>--}}
-{{--                                            </div>--}}
-{{--                                            @foreach ($order->orderTaxes as $tax)--}}
-{{--                                                <div class="d-flex fz-11 gap-3 align-items-center">--}}
-{{--                                                    {{ $tax['tax_name'] }}:--}}
-{{--                                                    <span>{{ \App\CentralLogics\Helpers::format_currency($tax['tax_amount']) }}--}}
-{{--                                                    </span>--}}
-{{--                                                </div>--}}
-{{--                                            @endforeach--}}
+                                        <?php
+                                        if ($order?->tax_type == 'category_wise') {
+                                            $tax_type = 'category_tax';
+                                        } elseif ($order?->tax_type == 'product_wise') {
+                                            $tax_type = 'product_tax';
+                                        } else {
+                                            $tax_type = 'order_wise';
+                                        }
 
-{{--                                        </div>--}}
+                                        $taxLabels = [
+                                            'basic' => translate($tax_type),
+                                            'tax_on_additional_charge' => translate('Additional Charge'),
+                                            'tax_on_packaging_charge' => translate('Packaging Charge'),
+                                        ];
 
+                                        $groupedByTaxOn = $order->orderTaxes->groupBy('tax_on');
+                                        $totalTaxAmount = $order->orderTaxes->sum('tax_amount');
+                                        ?>
 
                                         <div class="d-flex flex-column gap-1">
                                             @if (count($order->orderTaxes) > 0)
-                                                @php($sum_tax_amount = collect($order->orderTaxes)->sum('tax_amount'))
-                                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                                    {{ translate('Sum of Taxes:') }} <span>
-                                                    {{ \App\CentralLogics\Helpers::format_currency($sum_tax_amount) }}</span>
+                                                <div class="fw-bold">
+                                                    {{ translate('Total Tax') }}:
+                                                    {{ \App\CentralLogics\Helpers::format_currency($totalTaxAmount) }}
                                                 </div>
 
-                                                @foreach ($order->orderTaxes as $tax)
-                                                    <div class="d-flex fz-11 gap-3 align-items-center">
-                                                        {{ $tax['tax_name'] }}:
-                                                        <span>{{ \App\CentralLogics\Helpers::format_currency($tax['tax_amount']) }}
-                                                    </span>
-                                                    </div>
+                                                @foreach ($groupedByTaxOn as $taxOn => $taxGroup)
+                                                    @if (isset($taxLabels[$taxOn]))
+                                                        <div class="mt-2 text-capitalize fw-semibold">
+                                                            {{ $taxLabels[$taxOn] }}:</div>
+
+                                                        @php
+
+                                                            $taxByName = $taxGroup
+                                                                ->groupBy('tax_name')
+                                                                ->map(function ($group) {
+                                                                    return $group->sum('tax_amount');
+                                                                });
+                                                        @endphp
+
+                                                        @foreach ($taxByName as $name => $amount)
+                                                            <div class="d-flex fz-11 gap-3 align-items-center">
+                                                                <span>{{ $name }}</span>
+                                                                <span>{{ \App\CentralLogics\Helpers::format_currency($amount) }}</span>
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
                                                 @endforeach
                                             @else
                                                 <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                                    {{ translate('Previous Tax Amount:') }} <span>
-                                                    {{ \App\CentralLogics\Helpers::format_currency($order->total_tax_amount) }}</span>
+                                                    {{ translate('Tax Amount:') }} <span>
+                                                        {{ \App\CentralLogics\Helpers::format_currency($order->total_tax_amount) }}</span>
                                                 </div>
                                             @endif
                                         </div>
-
                                     </td>
                                 </tr>
                             @endforeach

@@ -170,10 +170,12 @@
                                         @php($sum_tax_amount=collect($store->tax_data)->sum('total_tax_amount'))
 
                                         <div class="d-flex flex-column gap-1">
+                                            @if ($store->store_total_tax_amount - $sum_tax_amount > 0)
                                             <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                              {{ translate('Previous Tax Amount:') }} <span>
+                                              {{ translate('Total Tax:') }} <span>
                                                     {{ \App\CentralLogics\Helpers::format_currency($store->store_total_tax_amount - $sum_tax_amount) }}</span>
                                             </div>
+                                            @endif
                                             @if ($sum_tax_amount > 0 )
                                             <div class="d-flex fz-14 gap-3 align-items-center title-clr">
                                                 {{ translate('Sum of Taxes:') }} <span>

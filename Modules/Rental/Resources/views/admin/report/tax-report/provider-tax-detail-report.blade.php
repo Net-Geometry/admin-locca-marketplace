@@ -105,7 +105,7 @@
                                                 @endforeach
                                             @else
                                                 <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                                    {{ translate('Previous Tax Amount:') }} <span>
+                                                    {{ translate('Tax Amount:') }} <span>
                                                     {{ \App\CentralLogics\Helpers::format_currency($order->tax_amount) }}</span>
                                                 </div>
                                             @endif

@@ -107,7 +107,7 @@ class ProviderTaxReportController extends Controller
         $orders = Trips::with([
             'orderTaxes' => function (MorphMany $query) {
                 $query->where('order_type', Trips::class)
-                    ->select('id', 'order_id', 'tax_name', 'tax_amount', 'tax_type');
+                    ->select('id', 'order_id', 'tax_name', 'tax_amount','tax_on','tax_type','taxable_type');
             }
         ])
 

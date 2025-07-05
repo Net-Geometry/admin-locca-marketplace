@@ -380,7 +380,7 @@ class ParcelController extends Controller
     {
         $key = isset($request->search) ?explode(' ', $request->search): ($request['amp;search'] ? explode(' ', $request['amp;search']) : null) ;
         $module_id = $request->query('module_id', null);
-
+        $zone_ids=[];
         if (session()->has('order_filter')) {
             $request = json_decode(session('order_filter'));
             $zone_ids = isset($request->zone) ? $request->zone : 0;
