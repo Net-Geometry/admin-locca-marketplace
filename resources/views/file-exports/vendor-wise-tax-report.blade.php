@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-12 text-center ">
-        <h1>{{ translate('Vendor_Tax_Reports') }}</h1>
+        <h1>{{ translate('Vendor_Vat_Reports') }}</h1>
     </div>
     <div class="col-lg-12">
 
@@ -68,30 +68,32 @@
                         <td>
                             {{ \App\CentralLogics\Helpers::format_currency($store->total_order_amount) }}
                         </td>
-                        <td>
-                            @php($sum_tax_amount=collect($store->tax_data)->sum('total_tax_amount'))
+                         <td>
+                                        @php($sum_tax_amount=collect($store->tax_data)->sum('total_tax_amount'))
 
-                            <div class="d-flex flex-column gap-1">
-                                <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                    {{ translate('Previous Tax Amount:') }} <span>
+                                        <div class="d-flex flex-column gap-1">
+                                            @if ($store->store_total_tax_amount - $sum_tax_amount > 0)
+                                            <div class="d-flex fz-14 gap-3 align-items-center title-clr">
+                                              {{ translate('Total Tax:') }} <span>
                                                     {{ \App\CentralLogics\Helpers::format_currency($store->store_total_tax_amount - $sum_tax_amount) }}</span>
-                                </div>
-                                @if ($sum_tax_amount > 0 )
-                                    <div class="d-flex fz-14 gap-3 align-items-center title-clr">
-                                        {{ translate('Sum of Taxes:') }} <span>
+                                            </div> <br>
+                                            @endif
+                                            @if ($sum_tax_amount > 0 )
+                                            <div class="d-flex fz-14 gap-3 align-items-center title-clr">
+                                                {{ translate('Sum of Taxes:') }} <span>
                                                     {{ \App\CentralLogics\Helpers::format_currency($sum_tax_amount) }}</span>
-                                    </div>
-                                    @foreach ($store->tax_data as $tax)
-                                        <div class="d-flex fz-11 gap-3 align-items-center">
-                                            {{ $tax['tax_name'] }}:
-                                            <span>{{ \App\CentralLogics\Helpers::format_currency($tax['total_tax_amount']) }}
+                                            </div><br>
+                                            @foreach ($store->tax_data as $tax)
+                                                <div class="d-flex fz-11 gap-3 align-items-center">
+                                                    {{ $tax['tax_name'] }}:
+                                                    <span>{{ \App\CentralLogics\Helpers::format_currency($tax['total_tax_amount']) }}
                                                     </span>
-                                        </div>
-                                    @endforeach
+                                                </div> <br>
+                                            @endforeach
 
-                                @endif
-                            </div>
-                        </td>
+                                            @endif
+                                        </div>
+                                    </td>
 
                     </tr>
                 @endforeach
