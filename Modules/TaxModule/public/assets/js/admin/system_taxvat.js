@@ -5,17 +5,28 @@ document.addEventListener("DOMContentLoaded", () => {
         checkbox.addEventListener("click", e => {
             e.preventDefault();
 
-            const input = checkbox.querySelector(".toggle-switch-sm input");
-            const isChecked = input.checked;
-            const url = checkbox.dataset.url;
+            const env = checkbox.dataset["env"];
 
-            const title = checkbox.dataset[isChecked ? "off_title" : "on_title"];
-            const message = checkbox.dataset[isChecked ? "off_message" : "on_message"];
+            if(env == 'demo'){
+                toastr.info("Update option is disabled for demo!", {
+                    CloseButton: true,
+                    ProgressBar: true
+                });
+            }else{
 
-            $('#confirmationTitle').text(title);
-            $('#confirmationMessage').text(message);
-            document.getElementById('seturl').dataset.url = url;
-            $('#exampleModal').modal('show');
+                const input = checkbox.querySelector(".toggle-switch-sm input");
+                const isChecked = input.checked;
+                const url = checkbox.dataset.url;
+    
+                const title = checkbox.dataset[isChecked ? "off_title" : "on_title"];
+                const message = checkbox.dataset[isChecked ? "off_message" : "on_message"];
+    
+                $('#confirmationTitle').text(title);
+                $('#confirmationMessage').text(message);
+                document.getElementById('seturl').dataset.url = url;
+                $('#exampleModal').modal('show');
+            }
+
         });
     });
 
