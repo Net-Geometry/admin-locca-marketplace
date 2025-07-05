@@ -7873,4 +7873,5 @@ Smartly or Earn. ',
   ' Tax Amount:' => ' Tax Amount:',
   'BMW 3 Series' => 'BMW 3 Series',
   'Zachery Newton' => 'Zachery Newton',
+  'Email does not match.' => 'Email does not match.',
 );

@@ -158,6 +158,27 @@
                             <label class="form-check-label input-label " for="chat">{{translate('messages.chat')}}</label>
                         </div>
                     </div>
+                    <div class="check-item">
+                        <div class="form-group form-check form--check">
+                            <input type="checkbox" name="modules[]" value="banner" class="form-check-input"
+                                    id="banner">
+                            <label class="form-check-label input-label " for="banner">{{translate('messages.banner')}}</label>
+                        </div>
+                    </div>
+                    <div class="check-item">
+                        <div class="form-group form-check form--check">
+                            <input type="checkbox" name="modules[]" value="coupon" class="form-check-input"
+                                    id="coupon">
+                            <label class="form-check-label input-label " for="coupon">{{translate('messages.coupon')}}</label>
+                        </div>
+                    </div>
+                    <div class="check-item">
+                        <div class="form-group form-check form--check">
+                            <input type="checkbox" name="modules[]" value="report" class="form-check-input"
+                                    id="report">
+                            <label class="form-check-label input-label " for="report">{{translate('messages.report')}}</label>
+                        </div>
+                    </div>
                 </div>
                 <div class="btn--container justify-content-end mt-4">
                     <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>

@@ -180,6 +180,27 @@
                             <label class="form-check-label " for="chat">{{translate('messages.chat')}}</label>
                         </div>
                     </div>
+                    <div class="check-item">
+                        <div class="form-group form-check form--check">
+                            <input type="checkbox" name="modules[]" value="banner" class="form-check-input"
+                                    id="banner" {{in_array('banner',(array)json_decode($role['modules']))?'checked':''}}>
+                            <label class="form-check-label " for="banner">{{translate('messages.banner')}}</label>
+                        </div>
+                    </div>
+                    <div class="check-item">
+                        <div class="form-group form-check form--check">
+                            <input type="checkbox" name="modules[]" value="coupon" class="form-check-input"
+                                    id="coupon" {{in_array('coupon',(array)json_decode($role['modules']))?'checked':''}}>
+                            <label class="form-check-label " for="coupon">{{translate('messages.coupon')}}</label>
+                        </div>
+                    </div>
+                    <div class="check-item">
+                        <div class="form-group form-check form--check">
+                            <input type="checkbox" name="modules[]" value="report" class="form-check-input"
+                                    id="report" {{in_array('report',(array)json_decode($role['modules']))?'checked':''}}>
+                            <label class="form-check-label " for="report">{{translate('messages.report')}}</label>
+                        </div>
+                    </div>
                 </div>
                 <div class="btn--container justify-content-end mt-4">
                     <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
