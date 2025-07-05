@@ -386,6 +386,7 @@ class ParcelController extends Controller
             $zone_ids = isset($request->zone) ? $request->zone : 0;
         }
 
+
         Order::where(['checked' => 0])->update(['checked' => 1]);
 
         $orders = Order::with(['customer', 'store'])
@@ -404,10 +405,9 @@ class ParcelController extends Controller
             ->when(isset($module_id), function ($query) use ($module_id) {
                 return $query->module($module_id);
             })
-            ->when(isset($request->zone), function ($query) use ($request) {
-                return $query->whereHas('store', function ($query) use ($request) {
-                    return $query->whereIn('zone_id', $request->zone);
-                });
+            ->when(isset($request->zone), function ($query) use ($zone_ids) {
+                return $query->whereIn('zone_id', $zone_ids);
+
             })
             ->when($status == 'searching_for_deliverymen', function ($query) {
                 return $query->SearchingForDeliveryman();

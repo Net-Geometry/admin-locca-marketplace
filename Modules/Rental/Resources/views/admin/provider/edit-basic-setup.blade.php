@@ -489,7 +489,7 @@
                             <div class="card p-20">
                                 <div class="mb-20">
                                     <h3 class="mb-1">{{translate('Business TIN')}}</h3>
-                                    <p class="fz-12px mb-0">{{translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')}}</p>
+                                    {{-- <p class="fz-12px mb-0">{{translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')}}</p> --}}
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-md-8 col-xxl-9">

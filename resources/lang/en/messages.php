@@ -7860,4 +7860,6 @@ Smartly or Earn. ',
   'to product wise.vendors will have control to setup the taxes of their products.' => 'to product wise.vendors will have control to setup the taxes of their products.',
   'to product wise.Vendors will have control to setup the taxes of their products.' => 'To product wise.Vendors will have control to setup the taxes of their products.',
   'Generic_Name' => 'Generic Name',
+  'Vendor_Vat_Report' => 'Vendor Vat Report',
+  'Provider_Vat_Report' => 'Provider Vat Report',
 );

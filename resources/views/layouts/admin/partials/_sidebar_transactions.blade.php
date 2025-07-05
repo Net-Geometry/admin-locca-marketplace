@@ -198,15 +198,15 @@
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu @yield('tax_report')">
-                    <a class="nav-link " href="{{ route('admin.transactions.report.getTaxReport') }}" title="{{ translate('Tax_Report') }}">
+                    <a class="nav-link " href="{{ route('admin.transactions.report.getTaxReport') }}" title="{{ translate('Admin_Tax_Report') }}">
                         <span class="tio-albums nav-icon"></span>
-                        <span class="text-truncate text-capitalize">{{ translate('Tax_Report') }}</span>
+                        <span class="text-truncate text-capitalize">{{ translate('Admin_Tax_Report') }}</span>
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu @yield('vendor_tax_report')">
-                    <a class="nav-link " href="{{ route('admin.transactions.report.vendorWiseTaxes') }}" title="{{ translate('Vendor_Tax_Report') }}">
+                    <a class="nav-link " href="{{ route('admin.transactions.report.vendorWiseTaxes') }}" title="{{ translate('Vendor_Vat_Report') }}">
                         <span class="tio-american-express nav-icon"></span>
-                        <span class="text-truncate text-capitalize">{{ translate('Vendor_Tax_Report') }}</span>
+                        <span class="text-truncate text-capitalize">{{ translate('Vendor_Vat_Report') }}</span>
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu @yield('parcel_tax_report')">
@@ -275,10 +275,10 @@
                             </li>
                             <li class="navbar-vertical-aside-has-menu @yield('provider_tax_report')">
                                 <a class="nav-link " href="{{ route('admin.transactions.rental.report.providerWiseTaxes') }}"
-                                    title="{{ translate('Provider_Tax_Report') }}">
+                                    title="{{ translate('Provider_Vat_Report') }}">
                                     <span class="tio-american-express nav-icon"></span>
                                     <span
-                                        class="text-truncate text-capitalize">{{ translate('Provider_Tax_Report') }}</span>
+                                        class="text-truncate text-capitalize">{{ translate('Provider_Vat_Report') }}</span>
                                 </a>
                             </li>
                         @endif

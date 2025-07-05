@@ -85,7 +85,8 @@
                                         {{ \App\CentralLogics\Helpers::format_currency($order->order_amount) }}
                                     </td>
                                     <td>
-                                        {{ translate($order?->orderTaxes?->first()?->tax_type ?? 'order_wise') }}
+
+                                        {{ translate($order?->tax_type?? 'order_wise') }}
                                     </td>
                                     <td>
 {{--                                        <div class="d-flex flex-column gap-1">--}}

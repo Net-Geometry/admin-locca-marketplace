@@ -1209,7 +1209,6 @@ class OrderController extends Controller
             $order->delivery_charge = 0;
         }
 
-        $coupon_discount_amount = $coupon ? CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount) : 0;
         $additionalCharges = [];
         $settings = BusinessSetting::whereIn('key', [
             'additional_charge_status',
@@ -1238,9 +1237,6 @@ class OrderController extends Controller
             }
 
 
- 
-
-
         if (data_get($order_details, 'status_code') === 403) {
             DB::rollBack();
             return response()->json([
@@ -1249,7 +1245,6 @@ class OrderController extends Controller
                 ]
             ], data_get($order_details, 'status_code'));
         }
-
         $total_addon_price = $order_details['total_addon_price'];
         $product_price = $order_details['product_price'];
         $store_discount_amount = $order_details['store_discount_amount'];
@@ -1257,7 +1252,7 @@ class OrderController extends Controller
         $flash_sale_vendor_discount_amount = $order_details['flash_sale_vendor_discount_amount'];
         $product_data = $order_details['product_data'];
         $order_details = $order_details['order_details'];
-
+        $coupon_discount_amount = $coupon ? CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount) : 0;
         $total_price = $product_price + $total_addon_price - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount - $coupon_discount_amount;
         $totalDiscount = $store_discount_amount + $flash_sale_admin_discount_amount + $flash_sale_vendor_discount_amount  + $coupon_discount_amount +  $order->ref_bonus_amount;
 
@@ -1268,7 +1263,8 @@ class OrderController extends Controller
         $tax_status = $finalCalculatedTax['tax_status'];
         $taxMap = $finalCalculatedTax['taxMap'];
         $orderTaxIds = data_get($finalCalculatedTax ,'taxData.orderTaxIds',[] );
-
+        $taxType=  data_get($finalCalculatedTax ,'taxType');
+        $order->tax_type = $taxType;
         $order->tax_status = $tax_status;
 
         $total_tax_amount = $tax_amount;
@@ -1321,7 +1317,6 @@ class OrderController extends Controller
                 }
             }
 
-//            OrderDetail::insert($order_details);
             $order?->orderTaxes()?->delete();
             if (count($orderTaxIds)) {
                 \Modules\TaxModule\Services\CalculateTaxService::updateOrderTaxData(

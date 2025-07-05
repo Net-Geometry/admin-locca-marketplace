@@ -218,7 +218,7 @@ class Helpers
             ->where(['item_id' => $data['id']])->first();
         $data['flash_sale'] =(int) (($running_flash_sale) ? 1 :0);
         $data['stock'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->available_stock : $data['stock'];
- 
+
              $discount_data= self::product_discount_calculate($data, $data['price'], $data->store , true);
 
                 $data['discount'] = $discount_data['discount_percentage'];
@@ -4649,6 +4649,7 @@ class Helpers
         $addonIds = [];
         $products=[];
         $tempList = [];
+        $taxData = [];
 
         $productDiscountTotal = 0;
         $addonDiscountTotal = 0;
@@ -4746,7 +4747,6 @@ class Helpers
                 orderId: null,
                 storeId: $storeId
             );
-            // dd($taxData,$products,$addonIds);
             $tax_amount = $taxData['totalTaxamount'];
             $tax_included = $taxData['include'];
             $tax_status = $tax_included ?  'included' : 'excluded';
@@ -4755,16 +4755,13 @@ class Helpers
                 $taxMap[$key] = $item;
             }
         }
-        // info($taxData);
-        // info('-----------');
-        // info($products);
-        // info('-----------addon');
-        // info($addonIds);
+
         return [
             'tax_amount' => $tax_amount ?? 0,
             'tax_included' => $tax_included ?? null,
             'tax_status' => $tax_status ?? 'excluded',
             'taxMap' => $taxMap ?? [],
+            'taxType'=> data_get($taxData,'taxType'),
             'taxData' => $taxData ?? [],
         ];
     }

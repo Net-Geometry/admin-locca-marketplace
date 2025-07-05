@@ -220,14 +220,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group col-sm-6 col-lg-4">
-                                    <div class="form-group">
-                                        <label class="d-flex justify-content-between switch toggle-switch-sm text-dark" for="tax">
-                                            <span>{{translate('messages.vat/tax')}}(%)</span>
-                                        </label>
-                                        <input type="number" id="tax" min="0" max="100" step="0.01" name="tax" class="form-control" required value="{{$store->tax??'0'}}" {{isset($store->tax)?'':'readonly'}}>
-                                    </div>
-                                </div>
+                          
 
 
                                 <div class="col-12">

@@ -209,7 +209,7 @@
                                     </td>
                                     <td class="text-end">
                                         <div class="d-flex gap-2 justify-content-end">
-                                            <a class="btn btn-sm btn--primary action-btn btn-outline-primary"
+                                            <a class="btn btn-sm btn--primary action-btn btn-outline-primary" target="_blank"
                                                 href="{{ route('admin.transactions.rental.report.providerTax', ['id' => $store->store_id, 'dates' => $dateRange]) }}">
                                                 <i class="tio-invisible"></i>
                                             </a>

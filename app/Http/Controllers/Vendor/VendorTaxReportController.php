@@ -121,7 +121,7 @@ class VendorTaxReportController extends Controller
             }))
             ->whereIn('order_status', ['delivered', 'refund_requested', 'refund_request_canceled'])
             ->when($startDate && $endDate, fn($q) => $q->whereBetween('created_at', [$startDate, $endDate]))
-            ->select(['id', 'order_amount', 'total_tax_amount', 'order_type', 'created_at', 'order_status', 'payment_status'])
+            ->select(['id', 'order_amount', 'total_tax_amount', 'order_type','tax_type', 'created_at', 'order_status', 'payment_status'])
             ->latest('created_at');
 
         if(!$export){

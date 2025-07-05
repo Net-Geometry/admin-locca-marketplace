@@ -188,6 +188,9 @@
                                         <th class="border-0">{{ translate('messages.quantity') }}</th>
                                     @endif
                                     <th class="border-0">{{ translate('messages.price') }}</th>
+                                      @if ($productWiseTax)
+                                        <th  class="border-0 ">{{ translate('messages.Vat/Tax') }}</th>
+                                    @endif
                                     <th class="border-0">{{ translate('messages.status') }}</th>
                                     <th class="border-0 text-center">{{ translate('messages.action') }}</th>
                                 </tr>
@@ -221,6 +224,23 @@
                                                     {{ \App\CentralLogics\Helpers::format_currency($food['price']) }}
                                                 </div>
                                             </td>
+
+                                             @if ($productWiseTax)
+                                            <td>
+                                                <span class="d-block font-size-sm text-body">
+                                                    @forelse ($food?->taxVats?->pluck('tax.name', 'tax.tax_rate')->toArray() as $key => $tax)
+                                                        <span> {{ $tax }} : <span class="font-bold">
+                                                                ({{ $key }}%)
+                                                            </span> </span>
+                                                        <br>
+                                                    @empty
+                                                        <span> {{ translate('messages.no_tax') }} </span>
+                                                    @endforelse
+                                                </span>
+
+                                            </td>
+
+                                            @endif
                                             <td>
                                                 <div class="">
                                                     @if ($food->is_rejected == 1)
@@ -308,6 +328,21 @@
                                                 </td>
                                             @endif
                                             <td>{{ \App\CentralLogics\Helpers::format_currency($food['price']) }}</td>
+                                            @if ($productWiseTax)
+                                            <td>
+                                                <span class="d-block font-size-sm text-body">
+                                                    @forelse ($food?->taxVats?->pluck('tax.name', 'tax.tax_rate')->toArray() as $key => $tax)
+                                                        <span> {{ $tax }} : <span class="font-bold">
+                                                                ({{ $key }}%)
+                                                            </span> </span>
+                                                        <br>
+                                                    @empty
+                                                        <span> {{ translate('messages.no_tax') }} </span>
+                                                    @endforelse
+                                                </span>
+                                            </td>
+
+                                            @endif
                                             <td>
                                                 <label class="toggle-switch toggle-switch-sm"
                                                     for="stocksCheckbox{{ $food->id }}">

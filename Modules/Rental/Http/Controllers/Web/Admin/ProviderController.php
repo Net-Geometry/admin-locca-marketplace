@@ -717,7 +717,7 @@ class ProviderController extends Controller
             foreach ($collections as $key => $collection) {
                 if ($collection['OwnerFirstName'] === "" || $collection['ProviderName'] === "" || $collection['Phone'] === ""
                     || $collection['Email'] === "" || $collection['Latitude'] === "" || $collection['Longitude'] === ""
-                    || $collection['ZoneId'] === "" ||  $collection['PickupTime'] === ""  || $collection['Tax'] === "" || $collection['Logo'] === ""  ) {
+                    || $collection['ZoneId'] === "" ||  $collection['PickupTime'] === ""  || $collection['Logo'] === ""  ) {
                     Toastr::error(translate('messages.please_fill_all_required_fields'));
                     return back();
                 }
@@ -729,10 +729,7 @@ class ProviderController extends Controller
                     Toastr::error('messages.Comission_must_be_in_0_to_100');
                     return back();
                 }
-                if(isset($collection['Tax']) && ($collection['Tax'] < 0 ||  $collection['Tax'] > 100 )) {
-                    Toastr::error('messages.Tax_must_be_in_0_to_100');
-                    return back();
-                }
+
                 if(isset($collection['Latitude']) && ($collection['Latitude'] < -90 ||  $collection['Latitude'] > 90 )) {
                     Toastr::error('messages.latitude_must_be_in_-90_to_90');
                     return back();
@@ -767,7 +764,7 @@ class ProviderController extends Controller
                     'zone_id' => $collection['ZoneId'],
                     'module_id' => $collection['ModuleId'],
                     'comission' => $collection['Comission'],
-                    'tax' => $collection['Tax'],
+
                     'delivery_time' => (isset($collection['PickupTime']) && preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $collection['PickupTime'])) ? $collection['PickupTime'] : '30-40 min',
                     'schedule_order' => $collection['ScheduleTrip'] == 'yes' ? 1 : 0,
                     'status' => $collection['Status'] == 'active' ? 1 : 0,
@@ -841,7 +838,7 @@ class ProviderController extends Controller
         foreach ($collections as $key => $collection) {
             if ($collection['id'] === "" || $collection['OwnerId'] === "" || $collection['OwnerFirstName'] === "" || $collection['ProviderName'] === "" || $collection['Phone'] === ""
                 || $collection['Email'] === "" || $collection['Latitude'] === "" || $collection['Longitude'] === ""
-                || $collection['ZoneId'] === "" ||  $collection['PickupTime'] === ""  || $collection['Tax'] === "" || $collection['Logo'] === ""  ) {
+                || $collection['ZoneId'] === "" ||  $collection['PickupTime'] === ""  || $collection['Logo'] === ""  ) {
                 Toastr::error(translate('messages.please_fill_all_required_fields'));
                 return back();
             }
@@ -853,10 +850,7 @@ class ProviderController extends Controller
                 Toastr::error('messages.Comission_must_be_in_0_to_100');
                 return back();
             }
-            if(isset($collection['Tax']) && ($collection['Tax'] < 0 ||  $collection['Tax'] > 100 )) {
-                Toastr::error('messages.Tax_must_be_in_0_to_100');
-                return back();
-            }
+
             if(isset($collection['Latitude']) && ($collection['Latitude'] < -90 ||  $collection['Latitude'] > 90 )) {
                 Toastr::error('messages.latitude_must_be_in_-90_to_90');
                 return back();
@@ -890,7 +884,6 @@ class ProviderController extends Controller
                 'zone_id' => $collection['ZoneId'],
                 'module_id' => $collection['ModuleId'],
                 'comission' => $collection['Comission'],
-                'tax' => $collection['Tax'],
                 'delivery_time' => (isset($collection['PickupTime']) && preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $collection['PickupTime'])) ? $collection['PickupTime'] : '30-40 min',
                 'schedule_order' => $collection['ScheduleTrip'] == 'yes' ? 1 : 0,
                 'status' => $collection['Status'] == 'active' ? 1 : 0,
@@ -1294,13 +1287,11 @@ class ProviderController extends Controller
     public function updateSettings(Request $request, $id): RedirectResponse
     {
         $request->validate([
-            'tax'=>'required',
             'minimum_pickup_time' => 'required|min:1|max:2',
             'maximum_pickup_time' => 'required|min:1|max:2|gt:minimum_pickup_time',
         ]);
 
         $store = $this->store->findOrFail($id);
-        $store->tax = $request->tax;
         $store->delivery_time = $request->minimum_pickup_time .'-'. $request->maximum_pickup_time.' '.$request->pickup_time_type;
         $store->save();
 

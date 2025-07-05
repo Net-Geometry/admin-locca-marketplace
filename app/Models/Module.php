@@ -140,6 +140,10 @@ class Module extends Model
     {
         return $query->where('module_type', '!=' ,'parcel');
     }
+    public function scopeNotRental($query): mixed
+    {
+        return $query->where('module_type', '!=' ,'rental');
+    }
 
     /**
      * @param $query

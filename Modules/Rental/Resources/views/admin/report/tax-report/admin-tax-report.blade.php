@@ -251,7 +251,7 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex gap-2 justify-content-center">
-                                            <a class="btn btn-sm theme-border action-btn theme-hover theme-clr"
+                                            <a class="btn btn-sm theme-border action-btn theme-hover theme-clr" target="_blank"
                                                 href="{{ route('admin.transactions.rental.report.getTaxDetails',['source'=> $key , request()->getQueryString()]) }}">
                                                 <i class="tio-invisible"></i>
                                             </a>

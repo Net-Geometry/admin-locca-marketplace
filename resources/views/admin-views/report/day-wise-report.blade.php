@@ -35,7 +35,7 @@
                                 title="{{ translate('messages.select_modules') }}">
                                 <option value="" {{ !request('module_id') ? 'selected' : '' }}>
                                     {{ translate('messages.all_modules') }}</option>
-                                @foreach (\App\Models\Module::notParcel()->get() as $module)
+                                @foreach (\App\Models\Module::notRental()->get(['id', 'module_name']) as $module)
                                     <option value="{{ $module->id }}"
                                         {{ request('module_id') == $module->id ? 'selected' : '' }}>
                                         {{ $module['module_name'] }}
@@ -46,7 +46,7 @@
                         <div class="col-sm-6 col-md-3">
                             <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
                                 <option value="all">{{ translate('messages.All_Zones') }}</option>
-                                @foreach (\App\Models\Zone::orderBy('name')->get() as $z)
+                                @foreach (\App\Models\Zone::orderBy('name')->get(['id', 'name']) as $z)
                                     <option value="{{ $z['id'] }}"
                                         {{ isset($zone) && $zone->id == $z['id'] ? 'selected' : '' }}>
                                         {{ $z['name'] }}

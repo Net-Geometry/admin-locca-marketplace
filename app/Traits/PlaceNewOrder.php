@@ -355,12 +355,15 @@ trait PlaceNewOrder
                     $total_price,
                     $store->id
                 );
+
+                $taxType=  data_get($finalCalculatedTax ,'taxType');
                 $tax_amount = $finalCalculatedTax['tax_amount'];
                 $tax_status = $finalCalculatedTax['tax_status'];
                 $taxMap = $finalCalculatedTax['taxMap'];
                 $orderTaxIds = data_get($finalCalculatedTax, 'taxData.orderTaxIds', []);
 
                 $order->tax_status = $tax_status;
+                $order->tax_type = $taxType;
 
                 if (!$is_prescription  && $store->minimum_order > $product_price + $total_addon_price) {
                     DB::rollBack();
@@ -1508,13 +1511,13 @@ trait PlaceNewOrder
                 }
             }
         }
-
         $discount = $store_discount_amount;
         $storeDiscount = Helpers::get_store_discount($store);
         if (isset($storeDiscount) && $discount_type != 'flash_sale') {
             $admin_discount = Helpers::checkAdminDiscount(price: $product_price, discount: $storeDiscount['discount'], max_discount: $storeDiscount['max_discount'], min_purchase: $storeDiscount['min_purchase']);
 
             $discount = max($discount, $admin_discount);
+
 
             if ($admin_discount > 0 &&  $discount == $admin_discount) {
                 $discount_on_product_by = 'store_discount';
@@ -1528,7 +1531,6 @@ trait PlaceNewOrder
                 }
             }
         }
-
         return [
             'order_details' => $order_details,
             'total_addon_price' => $total_addon_price,
@@ -1799,16 +1801,6 @@ trait PlaceNewOrder
             $coupon = Coupon::where(['code' => $order->coupon_code])->first();
         }
 
-        $store_discount = Helpers::get_store_discount($store);
-        if (isset($store_discount)) {
-            if ($product_price + $total_addon_price < $store_discount['min_purchase']) {
-                $store_discount_amount = 0;
-            }
-
-            if ($store_discount_amount > $store_discount['max_discount'] && $store_discount_amount > $store_discount['max_discount']) {
-                $store_discount_amount = $store_discount['max_discount'];
-            }
-        }
 
         $coupon_discount_amount = $coupon ? CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount) : 0;
 

@@ -102,7 +102,7 @@
                                         </div>
                                     </div>
                                 </div>
-        
+
                                 <div class="d-flex flex-column gap-lg-4 gap-3 mt-3">
                                     <div class="{{ $calculate_tax_on == 'individual_source' ? '' : 'd-none' }}"
                                          id="calculate_subscription_tax">
@@ -265,7 +265,7 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex gap-2 justify-content-center">
-                                        <a class="btn btn-sm theme-border action-btn theme-hover theme-clr"
+                                        <a class="btn btn-sm theme-border action-btn theme-hover theme-clr" target="_blank"
                                            href="{{ route('admin.transactions.report.getTaxDetails',['source'=> $key , request()->getQueryString()]) }}">
                                             <i class="tio-invisible"></i>
                                         </a>

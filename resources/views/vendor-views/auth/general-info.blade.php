@@ -915,9 +915,6 @@
                 } else if ($('#longitude').val().length === 0) {
                     toastr.error("{{ translate('Must_click_on_the_map_for_lat/long') }}");
                     e.preventDefault();
-                } else if ($('#tax').val().length === 0) {
-                    toastr.error("{{ translate('tax_is_required') }}");
-                    e.preventDefault();
                 } else if ($('#minimum_delivery_time').val().length === 0) {
                     toastr.error("{{ translate('minimum_delivery_time_is_required') }}");
                     e.preventDefault();

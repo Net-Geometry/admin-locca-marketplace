@@ -841,6 +841,8 @@ class POSController extends Controller
         $tax_status = $finalCalculatedTax['tax_status'];
         $taxMap = $finalCalculatedTax['taxMap'];
         $orderTaxIds = data_get($finalCalculatedTax ,'taxData.orderTaxIds',[] );
+        $taxType=  data_get($finalCalculatedTax ,'taxType');
+        $order->tax_type = $taxType;
 
         $order->tax_status = $tax_status;
 

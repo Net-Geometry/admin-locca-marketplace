@@ -240,7 +240,7 @@
 
     </div>
     <div class="row pt-3 g-3">
-        <div class="col-xxl-6">
+        <div class="col-12">
             <div class="card h-100">
                 <div class="card-header">
                     <h5 class="card-title m-0 d-flex align-items-center">
@@ -277,16 +277,19 @@
                                 </div>
                             </div>
                         </div>
-                        <ul class="address-info address-info-2 list-unstyled list-unstyled-py-3 text-dark">
-                            <li class="d-inline-flex align-items-center gap-1">
-                                <span class="text-custom-nowrap text-wrap"><strong>{{ translate('Taxpayer Identification Number(TIN)') }}: </strong></span>
-                                <span class="pl-1">{{$store->tin}}</span>
-                            </li>
-                            <li class="justify-content-sm-start justify-content-between">
-                                <span><strong>{{ translate('Expire Date') }}: </strong></span>
+<div class="d-flex-column address-info address-info-2 list-unstyled list-unstyled-py-3">
+
+    <div class=" d-flex justify-content-start gap-1">
+           <span class="text-custom-nowrap text-wrap"><strong class=" text-dark"> {{ translate('Taxpayer Identification Number(TIN)') }}: </strong></span>
+            <span class="pl-1">{{$store->tin}}</span>
+    </div>
+
+<div class=" d-flex justify-content-start gap-1">
+    <span class="text-custom-nowrap text-wrap"><strong class=" text-dark">{{ translate('Expire Date') }}: </strong></span>
                                 <span class="pl-1">{{$store->tin_expire_date}}</span>
-                            </li>
-                        </ul>
+</div>
+</div>
+
                     </div>
                 </div>
             </div>

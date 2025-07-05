@@ -496,8 +496,10 @@ class VendorController extends Controller
                     })
                     ->latest()->paginate(25);
             }
+        $taxData = Helpers::getTaxSystemType(getTaxVatList: false);
+        $productWiseTax = $taxData['productWiseTax'];
 
-            return view('admin-views.vendor.view.product', compact('store','foods','sub_tab'));
+            return view('admin-views.vendor.view.product', compact('store','foods','sub_tab','productWiseTax'));
         }
         else if($tab == 'discount')
         {
@@ -1028,15 +1030,12 @@ class VendorController extends Controller
         }
         $request->validate([
             'minimum_order'=>'required',
-            // 'comission'=>'required',
-            'tax'=>'required',
             'minimum_delivery_time' => 'required|min:1|max:2',
             'maximum_delivery_time' => 'required|min:1|max:2|gt:minimum_delivery_time',
         ]);
 
 
         $store->minimum_order = $request->minimum_order;
-        $store->tax = $request->tax;
         $store->order_place_to_schedule_interval = $request->order_place_to_schedule_interval;
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->veg = (bool)($request->veg_non_veg == 'veg' || $request->veg_non_veg == 'both');
@@ -1477,7 +1476,7 @@ class VendorController extends Controller
             foreach ($collections as $key => $collection) {
                 if ($collection['ownerFirstName'] === "" || $collection['storeName'] === "" || $collection['phone'] === ""
                 || $collection['email'] === "" || $collection['latitude'] === "" || $collection['longitude'] === ""
-                || $collection['zone_id'] === "" ||  $collection['DeliveryTime'] === ""  || $collection['Tax'] === "" || $collection['logo'] === ""  ) {
+                || $collection['zone_id'] === "" ||  $collection['DeliveryTime'] === ""  ||  $collection['logo'] === ""  ) {
                     Toastr::error(translate('messages.please_fill_all_required_fields'));
                     return back();
                 }
@@ -1489,10 +1488,7 @@ class VendorController extends Controller
                     Toastr::error('messages.Comission_must_be_in_0_to_100');
                     return back();
                 }
-                if(isset($collection['Tax']) && ($collection['Tax'] < 0 ||  $collection['Tax'] > 100 )) {
-                    Toastr::error('messages.Tax_must_be_in_0_to_100');
-                    return back();
-                }
+
                 if(isset($collection['latitude']) && ($collection['latitude'] < -90 ||  $collection['latitude'] > 90 )) {
                     Toastr::error('messages.latitude_must_be_in_-90_to_90');
                     return back();
@@ -1544,7 +1540,7 @@ class VendorController extends Controller
                     'module_id' => $collection['module_id'],
                     'minimum_order' => $collection['MinimumOrderAmount'],
                     'comission' => $collection['Comission'],
-                    'tax' => $collection['Tax'],
+
                     'delivery_time' => (isset($collection['DeliveryTime']) && preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $collection['DeliveryTime'])) ? $collection['DeliveryTime'] :'30-40 min',
                     'minimum_shipping_charge' => $collection['MinimumDeliveryFee'],
                     'per_km_shipping_charge' => $collection['PerKmDeliveryFee'],
@@ -1629,7 +1625,7 @@ class VendorController extends Controller
             foreach ($collections as $key => $collection) {
                 if ($collection['id'] === "" || $collection['ownerId'] === "" || $collection['ownerFirstName'] === "" || $collection['storeName'] === "" || $collection['phone'] === ""
                 || $collection['email'] === "" || $collection['latitude'] === "" || $collection['longitude'] === ""
-                || $collection['zone_id'] === "" ||  $collection['DeliveryTime'] === ""  || $collection['Tax'] === "" || $collection['logo'] === ""  ) {
+                || $collection['zone_id'] === "" ||  $collection['DeliveryTime'] === ""  ||   $collection['logo'] === ""  ) {
                     Toastr::error(translate('messages.please_fill_all_required_fields'));
                     return back();
                 }
@@ -1641,10 +1637,7 @@ class VendorController extends Controller
                     Toastr::error('messages.Comission_must_be_in_0_to_100');
                     return back();
                 }
-                if(isset($collection['Tax']) && ($collection['Tax'] < 0 ||  $collection['Tax'] > 100 )) {
-                    Toastr::error('messages.Tax_must_be_in_0_to_100');
-                    return back();
-                }
+
                 if(isset($collection['latitude']) && ($collection['latitude'] < -90 ||  $collection['latitude'] > 90 )) {
                     Toastr::error('messages.latitude_must_be_in_-90_to_90');
                     return back();
@@ -1697,7 +1690,7 @@ class VendorController extends Controller
                     'module_id' => $collection['module_id'],
                     'minimum_order' => $collection['MinimumOrderAmount'],
                     'comission' => $collection['Comission'],
-                    'tax' => $collection['Tax'],
+        
                     'delivery_time' => (isset($collection['DeliveryTime']) && preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $collection['DeliveryTime'])) ? $collection['DeliveryTime'] :'30-40 min',
                     'minimum_shipping_charge' => $collection['MinimumDeliveryFee'],
                     'per_km_shipping_charge' => $collection['PerKmDeliveryFee'],
