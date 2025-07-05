@@ -1382,7 +1382,7 @@ trait PlaceNewOrder
                         $foodVariation = true;
                         $product_variations = json_decode($product->food_variations, true);
 
-                        if (count($product_variations)) {
+                        if ($product_variations && count($product_variations)) {
                             $variation_data = Helpers::get_edit_varient($product_variations, json_decode($c['variation'], true));
                             $price = $product['price'] + $variation_data['price'];
                             $variations = $variation_data['variations'];

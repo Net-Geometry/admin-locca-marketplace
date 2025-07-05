@@ -911,7 +911,7 @@ class ItemController extends Controller
                 }
             }
             $product_variations = json_decode($product->food_variations, true);
-            if ($request->variations && count($product_variations)) {
+            if ($request->variations && $product_variations && count($product_variations)) {
 
                 $price += Helpers::food_variation_price($product_variations, $request->variations);
             } else {

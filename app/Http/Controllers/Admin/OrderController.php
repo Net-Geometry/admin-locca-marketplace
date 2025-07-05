@@ -846,7 +846,7 @@ class OrderController extends Controller
             $variation_price = 0;
 
             $product_variations = json_decode($product->food_variations, true);
-            if ($request->variations && count($product_variations)) {
+            if ($request->variations && $product_variations && count($product_variations)) {
                 foreach ($request->variations  as $key => $value) {
 
                     if ($value['required'] == 'on' &&  isset($value['values']) == false) {
