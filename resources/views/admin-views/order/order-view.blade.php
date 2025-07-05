@@ -2,6 +2,22 @@
 
 @section('title', translate('Order Details'))
 
+@push('css_or_js')
+ 
+    <style type="text/css" media="print">
+  .addon-quantity-input {
+    display: none;
+}
+.visibility-visible {
+    display: flex !important;
+}
+
+    </style>
+@endpush
+
+
+
+
 @section('content')
     <?php
     $deliverman_tips = 0;
@@ -2051,6 +2067,30 @@
 
 @push('script_2')
     <script>
+        $(document).on("click", ".addon-quantity-input-toggle", function (event) {
+            let cb = $(event.target);
+            if (cb.is(":checked")) {
+                cb.siblings(".addon-quantity-input").css({ visibility: "visible" });
+            } else {
+                cb.siblings(".addon-quantity-input").css({ visibility: "hidden" });
+            }
+        });
+        $(document).on("click", ".decrease-button", function () {
+            let addonId = $(this).data("id");
+            let addon_quantity_input = $('input[name="addon-quantity' + addonId + '"]');
+            let currentValue = parseInt(addon_quantity_input.val(), 10);
+            if (currentValue > 1) {
+                addon_quantity_input.val(currentValue - 1);
+                getVariantPrice();
+            }
+        });
+        $(document).on("click", ".increase-button", function () {
+            let addonId = $(this).data("id");
+            let addon_quantity_input = $('input[name="addon-quantity' + addonId + '"]');
+            let currentValue = parseInt(addon_quantity_input.val(), 10);
+            addon_quantity_input.val(currentValue + 1);
+            getVariantPrice();
+        });
         $('#search-form').on('submit', function(e) {
             e.preventDefault();
             var keyword = $('#datatableSearch').val();
