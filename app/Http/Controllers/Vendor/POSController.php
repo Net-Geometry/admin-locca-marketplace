@@ -561,95 +561,6 @@ class POSController extends Controller
         $order->updated_at = now();
         $order->zone_id = $store->zone_id;
         $order->otp = rand(1000, 9999);
-        foreach ($cart as $c) {
-            if(is_array($c))
-            {
-                $product = Item::withoutGlobalScope(StoreScope::class)->find($c['id']);
-                if ($product) {
-                    if($product->module->module_type == 'food'){
-                        if ($product->food_variations) {
-                            $variation_data = Helpers::get_varient(json_decode($product->food_variations, true), $c['variations']);
-                            $variations = $variation_data['variations'];
-                        }else{
-                            $variations = [];
-                        }
-                        $price = $c['price'];
-                        $product = Helpers::product_data_formatting($product);
-                        $addon_data = Helpers::calculate_addon_price(\App\Models\AddOn::withOutGlobalScope(StoreScope::class)->whereIn('id', $c['add_ons'])->get(), $c['add_on_qtys']);
-                        $or_d = [
-                            'item_id' => $c['id'],
-                            'item_campaign_id' => null,
-                            'item_details' => json_encode($product),
-                            'quantity' => $c['quantity'],
-                            'price' => $price,
-                            'tax_amount' => Helpers::tax_calculate($product, $price),
-                            'discount_on_item' => Helpers::product_discount_calculate($product, $price, $product->store)['discount_amount'],
-                            'discount_type' => 'discount_on_product',
-                            'variant' => '',
-                            'variation' => isset($variations)?json_encode($variations):json_encode([]),
-                            // 'variation' => json_encode(count($c['variations']) ? $c['variations'] : []),
-                            'add_ons' => json_encode($addon_data['addons']),
-                            'total_add_on_price' => $addon_data['total_add_on_price'],
-                            'created_at' => now(),
-                            'updated_at' => now()
-                        ];
-                        $total_addon_price += $or_d['total_add_on_price'];
-                        $product_price += $price * $or_d['quantity'];
-                        $store_discount_amount += $or_d['discount_on_item'] * $or_d['quantity'];
-                        $order_details[] = $or_d;
-                    }else{
-
-                        if (count(json_decode($product['variations'], true)) > 0) {
-                            $variant_data = Helpers::variation_price($product, json_encode([$c['variations']]));
-                            $price = $variant_data['price'];
-                            $stock = $variant_data['stock'];
-                        } else {
-                            $price = $product['price'];
-                            $stock = $product->stock;
-                        }
-
-                        if(config('module.'.$product->module->module_type)['stock'])
-                        {
-                            if($c['quantity']>$stock)
-                            {
-                                Toastr::error(translate('messages.product_out_of_stock_warning',['item'=>$product->name]));
-                                return back();
-                            }
-
-                            $product_data[]=[
-                                'item'=>clone $product,
-                                'quantity'=>$c['quantity'],
-                                'variant'=>count($c['variations'])>0?$c['variations']['type']:null
-                            ];
-                        }
-
-                        $price = $c['price'];
-                        $product = Helpers::product_data_formatting($product);
-                        $addon_data = Helpers::calculate_addon_price(\App\Models\AddOn::whereIn('id',$c['add_ons'])->get(), $c['add_on_qtys']);
-                        $or_d = [
-                            'item_id' => $c['id'],
-                            'item_campaign_id' => null,
-                            'item_details' => json_encode($product),
-                            'quantity' => $c['quantity'],
-                            'price' => $price,
-                            'tax_amount' => Helpers::tax_calculate($product, $price),
-                            'discount_on_item' => Helpers::product_discount_calculate($product, $price, $store)['discount_amount'],
-                            'discount_type' => 'discount_on_product',
-                            'variant' => json_encode($c['variant']),
-                            'variation' => json_encode(count($c['variations']) ? [$c['variations']] : []),
-                            'add_ons' => json_encode($addon_data['addons']),
-                            'total_add_on_price' => $addon_data['total_add_on_price'],
-                            'created_at' => now(),
-                            'updated_at' => now()
-                        ];
-                        $total_addon_price += $or_d['total_add_on_price'];
-                        $product_price += $price*$or_d['quantity'];
-                        $store_discount_amount += $or_d['discount_on_item']*$or_d['quantity'];
-                        $order_details[] = $or_d;
-                    }
-                }
-            }
-        }
 
         $additionalCharges = [];
         $settings = BusinessSetting::whereIn('key', [
@@ -686,7 +597,7 @@ class POSController extends Controller
 
         $total_price = $product_price + $total_addon_price - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount;
         $totalDiscount = $store_discount_amount + $flash_sale_admin_discount_amount + $flash_sale_vendor_discount_amount;
-        $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount, $product_price + $total_addon_price, $store->id);
+        $finalCalculatedTax =  Helpers::getFinalCalculatedTax($order_details, $additionalCharges, $totalDiscount, $total_price, $store->id);
 
         $tax_amount = $finalCalculatedTax['tax_amount'];
         $tax_status = $finalCalculatedTax['tax_status'];
