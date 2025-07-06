@@ -127,7 +127,7 @@
                     <div class="col-12">
                         <div class="form-group">
                             <span class="mb-2 d-block title-clr fw-normal">{{ translate('Category') }}</span>
-                            <select name="category_id" required class="form-control js-select2-custom1"
+                            <select name="category_id" required class="form-control js-select2-custom"
                                 placeholder="Select Category">
                                 <option selected disabled value=""> {{ translate('messages.select_category') }}
                                 </option>
