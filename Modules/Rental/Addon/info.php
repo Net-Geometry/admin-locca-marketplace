@@ -4,4 +4,5 @@
   'is_published' => 1,
   'purchase_code' => '123456',
   'username' => 'user',
+  'version' => '1.2',
 );
