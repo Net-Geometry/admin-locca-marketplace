@@ -97,9 +97,10 @@ class InstallController extends Controller
             'purchase_key' => $request['purchase_key'],
             'domain' => preg_replace("#^[^:/.]*[:/]+#i", "", url('/')),
         ];
-        $response = $this->dmvf($post);
+        // $response = $this->dmvf($post);
 
-        return redirect($response.'?token='.bcrypt('step_3'));
+        // return redirect($response.'?token='.bcrypt('step_3'));
+        return redirect('step3?token='.bcrypt('step_3'));
     }
 
     public function system_settings(Request $request)
