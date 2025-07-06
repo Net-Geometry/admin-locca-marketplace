@@ -85,10 +85,15 @@ class AddonService
             softwareId: $request['software_id'] ?? SOFTWARE_ID,
             softwareType: $request['software_type'] ?? base64_decode('cHJvZHVjdA==')
         );
-        $this->updateActivationConfig(app: $request['addon_name'], response: $response);
 
         $status = $response['active'] ?? 0;
         $message = $response['message'] ?? translate('Activation_failed');
+        if($response['active'] == 1 && $request['status'] == 1){
+            $response['active'] = 1;
+        }else{
+            $response['active'] = 0;
+        }
+        $this->updateActivationConfig(app: $request['addon_name'], response: $response);
 
         if ((int)$status) {
             return [
