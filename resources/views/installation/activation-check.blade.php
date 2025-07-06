@@ -29,7 +29,7 @@
                                                 </span>
                                             </label>
                                             <input type="text" id="username" class="form-control" name="username"
-                                                   value="{{ '' }}"
+                                                   value="{{ env('BUYER_USERNAME') ??'' }}"
                                                    placeholder="{{ "Ex: John Doe" }}" required>
                                         </div>
                                     </div>
@@ -37,7 +37,7 @@
                                         <div class="from-group">
                                             <label for="purchase_key" class="mb-2">{{ "Purchase Code" }}</label>
                                             <input type="text" id="purchase_key" class="form-control"
-                                                   name="purchase_key" value="{{ '' }}"
+                                                   name="purchase_key" value="{{ env('PURCHASE_CODE')??'' }}"
                                                    placeholder="{{ "Ex: 19xxxxxx-ca5c-49c2-83f6-696a738b0000" }}"
                                                    required>
                                         </div>

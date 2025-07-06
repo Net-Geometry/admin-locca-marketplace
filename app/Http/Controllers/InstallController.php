@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Storage;
 use Madnest\Madzipper\Facades\Madzipper;
+use Illuminate\Support\Facades\Session;
 
 class InstallController extends Controller
 {
@@ -100,6 +101,8 @@ class InstallController extends Controller
         // $response = $this->dmvf($post);
 
         // return redirect($response.'?token='.bcrypt('step_3'));
+        Session::put(base64_decode('cHVyY2hhc2Vfa2V5'), $request[base64_decode('cHVyY2hhc2Vfa2V5')]);//pk
+        Session::put(base64_decode('dXNlcm5hbWU='), $request[base64_decode('dXNlcm5hbWU=')]);//un
         return redirect('step3?token='.bcrypt('step_3'));
     }
 
