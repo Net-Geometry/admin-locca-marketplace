@@ -47,9 +47,9 @@ class UpdateController extends Controller
 
         // $data = Helpers::requestSender();
         // if (!$data['active']) {
-        if (!$this->actch()) {
-            return redirect(base64_decode('aHR0cHM6Ly82YW10ZWNoLmNvbS9zb2Z0d2FyZS1hY3RpdmF0aW9u'));
-        }
+        // if (!$this->actch()) {
+        //     return redirect(base64_decode('aHR0cHM6Ly82YW10ZWNoLmNvbS9zb2Z0d2FyZS1hY3RpdmF0aW9u'));
+        // }
 
         // version_2.11.1
         Artisan::call('cache:table');

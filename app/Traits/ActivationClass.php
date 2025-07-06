@@ -115,5 +115,7 @@ trait ActivationClass
         $config[$app] = $response;
         $configContents = "<?php return " . var_export($config, true) . ";";
         file_put_contents(base_path('config/system-addons.php'), $configContents);
+        $cacheKey = $this->getSystemAddonCacheKey(app: $app);
+        Cache::forget($cacheKey);
     }
 }
