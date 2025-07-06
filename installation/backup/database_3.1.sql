@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 19, 2025 at 06:39 AM
+-- Generation Time: Apr 20, 2025 at 12:11 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -430,7 +430,8 @@ CREATE TABLE `brands` (
   `image` varchar(100) DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `module_id` bigint(20) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1971,7 +1972,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (185, '2024_12_31_170522_add_trip_id_col_to_expense_table', 53),
 (186, '2025_01_01_122538_add_trip_id_to_cash_back_histories', 53),
 (187, '2025_01_05_140000_add_module_type_col_to_store_notification_settings_table', 53),
-(188, '2025_02_06_163705_add_temp_product_id_col_to__ecommerce_item_details', 53);
+(188, '2025_02_06_163705_add_temp_product_id_col_to__ecommerce_item_details', 53),
+(189, '2025_03_09_102816_add_module_id_col_to_brands_table', 54),
+(190, '2025_03_12_101638_create_recent_searches_table', 54);
 
 -- --------------------------------------------------------
 
@@ -2780,6 +2783,25 @@ CREATE TABLE `react_testimonials` (
 
 INSERT INTO `react_testimonials` (`id`, `name`, `designation`, `review`, `reviewer_image`, `company_image`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'John Doe', 'CTO', 'Very good Service.', '2024-11-19-673c3d240ab31.png', 'def.png', 1, '2023-08-16 00:05:42', '2024-11-18 19:24:20');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `recent_searches`
+--
+
+CREATE TABLE `recent_searches` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `module_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `user_type` varchar(255) DEFAULT NULL,
+  `route_name` varchar(255) DEFAULT NULL,
+  `route_uri` varchar(255) DEFAULT NULL,
+  `route_full_url` varchar(255) DEFAULT NULL,
+  `keyword` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -4303,6 +4325,12 @@ ALTER TABLE `react_testimonials`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `recent_searches`
+--
+ALTER TABLE `recent_searches`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `refunds`
 --
 ALTER TABLE `refunds`
@@ -4888,7 +4916,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=189;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=191;
 
 --
 -- AUTO_INCREMENT for table `modules`
@@ -5057,6 +5085,12 @@ ALTER TABLE `provide_d_m_earnings`
 --
 ALTER TABLE `react_testimonials`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `recent_searches`
+--
+ALTER TABLE `recent_searches`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `refunds`
