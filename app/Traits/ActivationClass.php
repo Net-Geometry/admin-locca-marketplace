@@ -29,7 +29,8 @@ trait ActivationClass
 
     public function getSystemAddonCacheKey(string|null $app = 'default'): string
     {
-        return str_replace('-', '_', Str::slug('cache_system_addons_for_' . $app . '_' . $this->getDomain()));
+        $appName = env('APP_NAME').'_cache';
+        return str_replace('-', '_', Str::slug($appName.'cache_system_addons_for_' . $app . '_' . $this->getDomain()));
     }
 
     public function getAddonsConfig(): array
