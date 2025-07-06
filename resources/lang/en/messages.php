@@ -7882,4 +7882,5 @@ Smartly or Earn. ',
   'All Module Combine Tax Report' => 'All Module Combine Tax Report',
   'Separately from here' => 'Separately from here',
   'Please select items from' => 'Please select items from',
+  'The fcm token field is required.' => 'The fcm token field is required.',
 );
