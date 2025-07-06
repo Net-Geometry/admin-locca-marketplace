@@ -1737,11 +1737,13 @@ trait PlaceNewOrder
         $order_details = $order_details['order_details'];
 
         $totalDiscount = $store_discount_amount + $flash_sale_admin_discount_amount + $flash_sale_vendor_discount_amount;
+
+        $price = $product_price + $total_addon_price - $totalDiscount ?? 0;
         $finalCalculatedTax =  Helpers::getFinalCalculatedTax(
             $order_details,
             $additionalCharges,
             $totalDiscount,
-            $product_price + $total_addon_price,
+            $price,
             $store->id,
             $storeData
         );
