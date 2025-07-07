@@ -369,6 +369,7 @@
                             </div>
                         </div>
                     </div>
+                    @if ($store->tin)
                     <div class="col-lg-12">
                         <div class="card h-100">
                             <div class="card-header">
@@ -417,6 +418,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
