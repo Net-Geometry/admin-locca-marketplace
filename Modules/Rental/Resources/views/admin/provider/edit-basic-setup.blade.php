@@ -537,13 +537,13 @@
                                                         </div>
                                                     </div>
                                                     <div class="pdf-single" data-file-name="${file.name}" data-file-url="{{ $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png') }}">
-                                                        <div class="pdf-frame">
-                                                            @php($imgPath =  $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png'))
-                                                            @if(Str::endsWith($imgPath, ['.pdf', '.doc', '.docx']))
-                                                                <canvas class="pdf-preview"></canvas>
-                                                            @endif
-                                                            <img class="pdf-thumbnail" src="{{ $imgPath }}" alt="File Thumbnail">
-                                                        </div>
+                                                    <div class="pdf-frame">
+                                                        @php($imgPath =  $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png'))
+                                                        @if(Str::endsWith($imgPath, ['.pdf', '.doc', '.docx']))
+                                                            @php($imgPath =  asset('public/assets/admin/img/document.svg'))
+                                                        @endif
+                                                        <img class="pdf-thumbnail-alt" src="{{ $imgPath }}" alt="File Thumbnail">
+                                                    </div>
                                                         <div class="overlay">
                                                             <div class="pdf-info">
                                                                 @if(Str::endsWith($imgPath, ['.pdf', '.doc', '.docx']))

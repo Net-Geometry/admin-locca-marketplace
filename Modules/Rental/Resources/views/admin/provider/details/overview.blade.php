@@ -379,13 +379,13 @@
                             <div class="card-body">
                                 <div class="resturant--info-address">
                                     <div class="pdf-single" data-pdf-url="{{ $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png') }}">
-                                        <div class="pdf-frame">
-                                            @php($imgPath =  $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png'))
-                                            @if(Str::endsWith($imgPath, ['.pdf', '.doc', '.docx']))
-                                                <canvas class="pdf-preview"></canvas>
-                                            @endif
-                                            <img class="pdf-thumbnail" src="{{ $imgPath }}" alt="File Thumbnail">
-                                        </div>
+                                         <div class="pdf-frame">
+                                                        @php($imgPath =  $store->tin_certificate_image_full_url ?? asset('public/assets/admin/img/upload-cloud.png'))
+                                                        @if(Str::endsWith($imgPath, ['.pdf', '.doc', '.docx']))
+                                                            @php($imgPath =  asset('public/assets/admin/img/document.svg'))
+                                                        @endif
+                                                        <img class="pdf-thumbnail-alt" src="{{ $imgPath }}" alt="File Thumbnail">
+                                                    </div>
                                         <div class="overlay">
                                             <a href="javascript:void(0);" class="download-btn" title="">
                                                 <i class="tio-download-to"></i>
