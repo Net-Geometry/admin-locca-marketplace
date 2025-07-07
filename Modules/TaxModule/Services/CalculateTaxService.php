@@ -179,7 +179,6 @@ class CalculateTaxService
                 $dataType = self::getClassNames($taxType === 'product_wise' ? 'campaign_product' : 'category');
             }
             $dataId = $taxType === 'product_wise' ? $product['id'] : $product['category_id'];
-            info(['product' => $product, 'dataType' => $dataType, 'systemTaxVat' => $systemTaxVat,'dataId'=> $dataId]);
             $taxVatIds = Taxable::where('taxable_type', $dataType)
                 ->where('taxable_id', $dataId)
                 ->where('system_tax_setup_id', $systemTaxVat->id)
