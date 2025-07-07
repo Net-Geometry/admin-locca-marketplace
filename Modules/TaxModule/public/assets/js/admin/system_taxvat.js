@@ -17,10 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const input = checkbox.querySelector(".toggle-switch-sm input");
                 const isChecked = input.checked;
                 const url = checkbox.dataset.url;
-    
+
                 const title = checkbox.dataset[isChecked ? "off_title" : "on_title"];
                 const message = checkbox.dataset[isChecked ? "off_message" : "on_message"];
-    
+
                 $('#confirmationTitle').text(title);
                 $('#confirmationMessage').text(message);
                 document.getElementById('seturl').dataset.url = url;
@@ -80,7 +80,9 @@ document.getElementById('seturl').addEventListener('click', function () {
         } else if (value === 'exclude') {
             $('#tax_rate_setup').removeClass('disabled');
             $('#tax__rate1').attr('required', true);
-            $('#tax__rate').attr('required', true);
+            if($('#tax_type').val() == 'order_wise'){
+                $('#tax__rate').attr('required', true);
+            }
         }
     }
 
