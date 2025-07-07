@@ -3987,6 +3987,7 @@ input[type=text] ~ .show-password .icon-1 {
 .single-document-uploaderwrap .pdf-single .pdf-frame {
   overflow: hidden;
 }
+.single-document-uploaderwrap .pdf-single .pdf-thumbnail-alt,
 .single-document-uploaderwrap .pdf-single .pdf-thumbnail {
   height: 120px;
   -o-object-fit: cover;

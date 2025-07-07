@@ -14145,6 +14145,7 @@ ul.address-info .label {
     position: relative;
 }
 
+.pdf-single .pdf-thumbnail-alt,
 .pdf-single .pdf-thumbnail {
     height: 120px;
     object-fit: cover;
@@ -15592,6 +15593,7 @@ img{
 .single-document-uploaderwrap .pdf-single .pdf-frame {
     overflow: hidden;
 }
+.single-document-uploaderwrap .pdf-single .pdf-thumbnail-alt,
 .single-document-uploaderwrap .pdf-single .pdf-thumbnail {
     height: 120px;
     -o-object-fit: cover;
