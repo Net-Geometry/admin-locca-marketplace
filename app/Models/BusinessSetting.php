@@ -36,6 +36,7 @@ class BusinessSetting extends Model
     {
         parent::boot();
         static::saved(function ($model) {
+             Helpers::deleteCacheData('business_settings_all_data');
             $value = Helpers::getDisk();
 
             DB::table('storages')->updateOrInsert([
@@ -47,6 +48,20 @@ class BusinessSetting extends Model
                 'updated_at' => now(),
             ]);
         });
+
+        static::created(function ($item) {
+            $item->slug = $item->generateSlug($item->name);
+            $item->save();
+            Helpers::deleteCacheData('business_settings_all_data');
+        });
+        static::deleted(function(){
+            Helpers::deleteCacheData('business_settings_all_data');
+        });
+
+        static::updated(function(){
+            Helpers::deleteCacheData('business_settings_all_data');
+        });
+
     }
 
 }

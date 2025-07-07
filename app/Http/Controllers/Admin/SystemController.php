@@ -126,11 +126,9 @@ class SystemController extends Controller
                 'updated_at' => now(),
             ]);
         } else {
-            BusinessSetting::where(['key' => 'landing_page'])->update([
-                'key' => 'landing_page',
-                'value' => $landing_page->value == 1 ? 0 : 1,
-                'updated_at' => now(),
-            ]);
+            Helpers::businessUpdateOrInsert(['key' => 'landing_page'], [
+                   'value' => $landing_page->value == 1 ? 0 : 1
+               ]);
         }
 
         if (isset($landing_page) && $landing_page->value) {
