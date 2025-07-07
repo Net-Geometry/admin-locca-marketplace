@@ -41,6 +41,10 @@ class ProductLogic
         if($category_id != 0){
             $category_id = explode(',', $category_id);
         }
+        if($min == false){
+            $min = 0.00000001;
+        }
+        
         $query = Item::
         when($category_id != 0, function($q)use($category_id){
             $q->whereHas('category',function($q)use($category_id){
