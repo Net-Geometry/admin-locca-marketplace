@@ -64,6 +64,7 @@ class ItemController extends Controller
                 })
             ],
             'price' => 'required|numeric|between:.01,999999999999.99',
+            'weight' => 'required|numeric|between:.01,999999999999.99',
             'discount' => 'required|numeric|min:0',
             'store_id' => 'required',
             'description.*' => 'max:1000',
@@ -320,6 +321,7 @@ class ItemController extends Controller
         $item->food_variations = json_encode($food_variations);
         $item->variations = json_encode($variations);
         $item->price = $request->price;
+        $item->weight = $request->weight;
         $item->image =  $request->has('image') ? Helpers::upload('product/', 'png', $request->file('image')) : $newFileNamethumb ?? null;
         $item->available_time_starts = $request->available_time_starts ?? '00:00:00';
         $item->available_time_ends = $request->available_time_ends ?? '23:59:59';
@@ -439,6 +441,7 @@ class ItemController extends Controller
             'name.*' => 'max:191',
             'category_id' => 'required',
             'price' => 'required|numeric|between:.01,999999999999.99',
+            'weight' => 'required|numeric|between:.01,999999999999.99',
             'store_id' => 'required',
             'description' => 'array',
             'description.*' => 'max:1000',
@@ -651,6 +654,7 @@ class ItemController extends Controller
         $item->food_variations = json_encode($food_variations);
         $item->variations = $request->has('attribute_id') ? json_encode($variations) : json_encode([]);
         $item->price = $request->price;
+        $item->weight = $request->weight;
         $item->image = $request->has('image') ? Helpers::update('product/', $item->image, 'png', $request->file('image')) : $item->image;
         $item->available_time_starts = $request->available_time_starts ?? '00:00:00';
         $item->available_time_ends = $request->available_time_ends ?? '23:59:59';

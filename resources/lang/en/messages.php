@@ -7884,4 +7884,7 @@ Smartly or Earn. ',
   'Please select items from' => 'Please select items from',
   'The fcm token field is required.' => 'The fcm token field is required.',
   'SwiftMove Taxis' => 'SwiftMove Taxis',
+  'weight' => 'Weight',
+  'The weight field is required.' => 'The weight field is required.',
+  'Category required' => 'Category required',
 );
