@@ -102,8 +102,9 @@ class EasyParcelStateController extends Controller
             Toastr::error(translate('messages.state_not_found'));
             return redirect()->route('admin.business-settings.easy-parcel.state.index');
         }
+        $countries=EasyParcelCountry::all();
         $language = getWebConfig('language');
-        return view('admin-views.easyparcel.state.edit', compact('language','state'));
+        return view('admin-views.easyparcel.state.edit', compact('language','state','countries'));
     }
 
     public function stateUpdate(Request $request, $id)

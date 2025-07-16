@@ -13,6 +13,10 @@ class EasyParcelCountry extends Model
 {
     use HasFactory;
 
+    public function scopeActive($query): mixed
+    {
+        return $query->where('status', '=', 1);
+    }
     public function translations(): MorphMany
     {
         return $this->morphMany(Translation::class, 'translationable');

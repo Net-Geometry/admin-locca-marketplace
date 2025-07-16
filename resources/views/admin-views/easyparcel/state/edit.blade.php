@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Add new easy_percel_cites'))
+@section('title', translate('messages.Add new easy_percel_states'))
 
 @push('css_or_js')
 @endpush
@@ -14,7 +14,7 @@
                     <img src="{{ asset('public/assets/admin/img/category.png') }}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('easy_percel_cites') }}
+                    {{ translate('easy_percel_states') }}
                 </span>
             </h1>
         </div>
@@ -23,7 +23,7 @@
         <div class="card">
             <div class="card-body">
                 <form
-                    action="{{ route('admin.business-settings.easy-parcel.city.update', [$city['id']])}}"
+                    action="{{ isset($state) ? route('admin.business-settings.easy-parcel.state.update', [$state['id']]) : route('admin.business-settings.easy-parcel.state.store') }}"
                     method="post" enctype="multipart/form-data">
                     @csrf
                     @if ($language)
@@ -41,7 +41,7 @@
                         </ul>
                     @endif
                     <div class="row">
-                        <div class="col-md-6">
+                    <div class="col-md-4">
                             @if($language)
                                 <div class="form-group lang_form" id="default-form">
                                     <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{ translate('messages.default') }}) <span class="form-label-secondary text-danger"
@@ -49,14 +49,14 @@
                                         data-original-title="{{ translate('messages.Required.')}}"> *
                                         </span>
                                     </label>
-                                    <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_city')}}" maxlength="191" value="{{$city?->getRawOriginal('name')}}"  >
+                                    <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_city')}}" maxlength="191" value="{{$state?->getRawOriginal('name')}}"  >
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 @foreach($language as $lang)
                                     <?php
-                                        if(count($city['translations'])){
+                                        if(count($state['translations'])){
                                             $translate = [];
-                                            foreach($city['translations'] as $t)
+                                            foreach($state['translations'] as $t)
                                             {
                                                 if($t->locale == $lang && $t->key=="name"){
                                                     $translate[$lang]['name'] = $t->value;
@@ -73,28 +73,51 @@
                             @else
                                 <div class="form-group">
                                     <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}}</label>
-                                    <input type="text" name="name" class="form-control" placeholder="{{translate('messages.new_city')}}" value="{{$city['name']}}" maxlength="191">
+                                    <input type="text" name="name" class="form-control" placeholder="{{translate('messages.new_city')}}" value="{{$state['name']}}" maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="{{$lang}}">
                             @endif
                         
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                          <div class="form-group">
+                              <label class="input-label" for="country">
+                                  {{ translate('messages.country') }}
+                                  <span class="form-label-secondary text-danger" data-toggle="tooltip"
+                                        data-placement="right"
+                                        data-original-title="{{ translate('messages.Required.') }}"> *
+                                  </span>
+                              </label>
+                                            <select name="country_id_display" id="countrySelect" class="form-control js-select2-custom" disabled>
+                                                <option value="">{{ translate('messages.select_country_code') }}</option>
+                                                @foreach($countries as $country)
+                                                    <option value="{{ $country['id'] }}" 
+                                                            @if('MY' == $country['country_code']) selected @endif>
+                                                        {{ $country['name'] }} ({{ $country['country_code'] }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                    
+                                            <!-- Hidden input that submits the real value -->
+                                            <input type="hidden" name="country_id" value="{{ $countries->where('country_code', 'MY')?->first()?->id ?? '' }}">
+                                        </div>
+                                    </div>
+                    <div class="col-md-4">
                         <div class="form-group">
-                                  <label class="input-label" for="countryCodeSelect">
-                                      {{ translate('messages.country_code') }}
+                                  <label class="input-label" for="stateCodeSelect">
+                                      {{ translate('messages.state_code') }}
                                       <span class="form-label-secondary text-danger" data-toggle="tooltip"
                                             data-placement="right"
                                             data-original-title="{{ translate('messages.Required.') }}"> *
                                       </span>
                                   </label>
                                   
-                                  <select name="country_code" id="countryCodeSelect" class="form-control js-select2-custom">
-                                      <option value="">{{ translate('messages.select_country_code') }}</option>
-                                      @foreach(EASY_PARCEL_COUNTRY_CODE as $country)
-                                          <option value="{{ $country['code'] }}" 
-                                                  @if($city['country_code'] == $country['code']) selected @endif>
-                                              {{ $country['name'] }} ({{ $country['code'] }})
+                                  <select name="state_code" id="stateCodeSelect" class="form-control js-select2-custom">
+                                      <option value="">{{ translate('messages.select_state_code') }}</option>
+                                      @foreach(EASY_PARCEL_STATE_CODE as $current_state)
+                                          <option value="{{ $current_state['code'] }}" 
+                                                  @if($state['state_code'] == $current_state['code']) selected @endif>
+                                              {{ $current_state['name'] }} ({{ $current_state['code'] }})
                                           </option>
                                       @endforeach
                                   </select>
@@ -105,12 +128,14 @@
                         <button type="reset" id="reset_btn"
                             class="btn btn--reset">{{ translate('messages.reset') }}</button>
                         <button type="submit"
-                            class="btn btn--primary">{{ isset($city) ? translate('messages.update') : translate('messages.add') }}</button>
+                            class="btn btn--primary">{{ translate('messages.update') }}</button>
                     </div>
 
                 </form>
             </div>
         </div>
+
+       
 
     </div>
 
