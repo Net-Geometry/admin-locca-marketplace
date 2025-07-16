@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('easy_parcel_cities', function (Blueprint $table) {
+        Schema::create('easy_parcel_states', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->comment('State name');
+            $table->string('state_code');
             $table->boolean('status')->default(1);
-            $table->string('country_code')->nullable();
+            $table->foreignId('easy_parcel_country_id');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('easy_parcel_cities');
+        Schema::dropIfExists('easy_parcel_states');
     }
 };

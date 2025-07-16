@@ -348,24 +348,24 @@
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/easy-parcel*') || Request::is('admin/business-settings/fcm*') || Request::is('admin/business-settings/offline-payment*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
                                 title="{{ translate('messages.easy_parcel') }}">
-                                <span class="nav-icon tio-account-square-outlined"></span>
+                                <span class="nav-icon tio-departure"></span>
                                 <span
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.easy_parcel') }}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display:{{ Request::is('admin/business-settings/easy-parcel*') || Request::is('admin/business-settings/fcm*') || Request::is('admin/business-settings/login-url-setup*') || Request::is('admin/business-settings/offline-payment*') ? 'block' : 'none' }}">
                                 <li
-                                    class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/easy-parcel/city*') ? 'active' : '' }}">
+                                    class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/easy-parcel/country*') ? 'active' : '' }}">
                                     <a class="nav-link "
-                                        href="{{ route('admin.business-settings.easy-parcel.city.index') }}"
-                                        title="{{ translate('messages.add_city') }}">
+                                        href="{{ route('admin.business-settings.easy-parcel.country.index') }}"
+                                        title="{{ translate('messages.add_country') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.city') }}</span>
+                                        <span class="text-truncate">{{ translate('messages.country') }}</span>
                                     </a>
                                 </li>
                                 <li
-                                    class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/fcm*') ? 'active' : '' }}">
-                                    <a class="nav-link " href="{{ route('admin.business-settings.fcm-index') }}"
+                                    class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/easy-parcel/state*') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('admin.business-settings.easy-parcel.state.index') }}"
                                         title="{{ translate('messages.state') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span

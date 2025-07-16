@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Add new easy_percel_cites'))
+@section('title', translate('messages.Add new easy_percel_Countries'))
 
 @push('css_or_js')
 @endpush
@@ -14,7 +14,7 @@
                     <img src="{{ asset('public/assets/admin/img/category.png') }}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('easy_percel_cites') }}
+                    {{ translate('easy_percel_Countries') }}
                 </span>
             </h1>
         </div>
@@ -23,7 +23,7 @@
         <div class="card">
             <div class="card-body">
                 <form
-                    action="{{ isset($city) ? route('admin.business-settings.easy-parcel.city.update', [$city['id']]) : route('admin.business-settings.easy-parcel.city.store') }}"
+                    action="{{ route('admin.business-settings.easy-parcel.country.store') }}"
                     method="post" enctype="multipart/form-data">
                     @csrf
                     @if ($language)
@@ -54,7 +54,7 @@
 
                                     </label>
                                     <input type="text" name="name[]" value="{{ old('name.0') }}" class="form-control"
-                                        placeholder="{{ translate('messages.new_city') }}" maxlength="191">
+                                        placeholder="{{ translate('messages.new_Country') }}" maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 @foreach ($language as $key => $lang)
@@ -63,7 +63,7 @@
                                             for="exampleFormControlInput1">{{ translate('messages.name') }}
                                             ({{ strtoupper($lang) }})</label>
                                         <input type="text" name="name[]" value="{{ old('name.' . $key + 1) }}"
-                                            class="form-control" placeholder="{{ translate('messages.new_city') }}"
+                                            class="form-control" placeholder="{{ translate('messages.new_Country') }}"
                                             maxlength="191">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{ $lang }}">
@@ -73,7 +73,7 @@
                                     <label class="input-label"
                                         for="exampleFormControlInput1">{{ translate('messages.name') }}</label>
                                     <input type="text" name="name" class="form-control"
-                                        placeholder="{{ translate('messages.new_city') }}" value="{{ old('name') }}"
+                                        placeholder="{{ translate('messages.new_Country') }}" value="{{ old('name') }}"
                                         maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -108,7 +108,7 @@
                         <button type="reset" id="reset_btn"
                             class="btn btn--reset">{{ translate('messages.reset') }}</button>
                         <button type="submit"
-                            class="btn btn--primary">{{ isset($city) ? translate('messages.update') : translate('messages.add') }}</button>
+                            class="btn btn--primary">{{ isset($country) ? translate('messages.update') : translate('messages.add') }}</button>
                     </div>
 
                 </form>
@@ -118,16 +118,16 @@
         <div class="card mt-3">
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{ translate('messages.city_list') }}<span
-                            class="badge badge-soft-dark ml-2" id="itemCount">{{ $easyPercelCites->total() }}</span></h5>
+                    <h5 class="card-title">{{ translate('messages.Country_list') }}<span
+                            class="badge badge-soft-dark ml-2" id="itemCount">{{ $easyPercelCountries->total() }}</span></h5>
 
                     <form class="search-form">
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input type="search" name="search" value="{{ request()?->search ?? null }}"
                                 class="form-control min-height-45"
-                                placeholder="{{ translate('messages.search_cities') }}"
-                                aria-label="{{ translate('messages.ex_:_cities') }}">
+                                placeholder="{{ translate('messages.search_countries') }}"
+                                aria-label="{{ translate('messages.ex_:_countries') }}">
                             <input type="hidden" name="position" value="0">
                             <button type="submit" class="btn btn--secondary min-height-45"><i
                                     class="tio-search"></i></button>
@@ -162,24 +162,24 @@
                         </thead>
 
                         <tbody id="table-div">
-                            @foreach ($easyPercelCites as $key => $city)
+                            @foreach ($easyPercelCountries as $key => $country)
                                 <tr>
-                                    <td>{{ $key + $easyPercelCites->firstItem() }}</td>
-                                    <td>{{ $city->id }}</td>
+                                    <td>{{ $key + $easyPercelCountries->firstItem() }}</td>
+                                    <td>{{ $country->id }}</td>
                                     <td>
                                         <span class="d-block font-size-sm text-body">
-                                            {{ Str::limit($city['name'], 20, '...') }}
+                                            {{ Str::limit($country['name'], 20, '...') }}
                                         </span>
                                     </td>
-                                      <td>{{ $city->country_code }}</td>
+                                      <td>{{ $country->country_code }}</td>
                                       <td>
                                         <label class="toggle-switch toggle-switch-sm"
-                                            for="stocksCheckbox{{ $city->id }}">
+                                            for="stocksCheckbox{{ $country->id }}">
                                             <input type="checkbox"
-                                                data-url="{{ route('admin.business-settings.easy-parcel.city.status', [$city['id'], $city->status ? 0 : 1]) }}"
+                                                data-url="{{ route('admin.business-settings.easy-parcel.country.status', [$country['id'], $country->status ? 0 : 1]) }}"
                                                 class="toggle-switch-input redirect-url"
-                                                id="stocksCheckbox{{ $city->id }}"
-                                                {{ $city->status ? 'checked' : '' }}>
+                                                id="stocksCheckbox{{ $country->id }}"
+                                                {{ $country->status ? 'checked' : '' }}>
                                             <span class="toggle-switch-label mx-auto">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -189,18 +189,18 @@
                                     <td>
                                         <div class="btn--container justify-content-center">
                                             <a class="btn action-btn btn--primary btn-outline-primary"
-                                                href="{{ route('admin.business-settings.easy-parcel.city.edit', [$city['id']]) }}"
+                                                href="{{ route('admin.business-settings.easy-parcel.country.edit', [$country['id']]) }}"
                                                 title="{{ translate('messages.edit_category') }}"><i
                                                     class="tio-edit"></i>
                                             </a>
                                             <a class="btn action-btn btn--danger btn-outline-danger form-alert"
-                                                href="javascript:" data-id="category-{{ $city['id'] }}"
-                                                data-message="{{ translate('Want to delete this city') }}"
-                                                title="{{ translate('messages.delete_city') }}"><i
+                                                href="javascript:" data-id="category-{{ $country['id'] }}"
+                                                data-message="{{ translate('Want to delete this Country') }}"
+                                                title="{{ translate('messages.delete_Country') }}"><i
                                                     class="tio-delete-outlined"></i>
                                             </a>
-                                            <form action="{{ route('admin.business-settings.easy-parcel.city.delete', [$city['id']]) }}"
-                                                method="post" id="category-{{ $city['id'] }}">
+                                            <form action="{{ route('admin.business-settings.easy-parcel.country.delete', [$country['id']]) }}"
+                                                method="post" id="category-{{ $country['id'] }}">
                                                 @csrf @method('delete')
                                             </form>
                                         </div>
@@ -211,13 +211,13 @@
                     </table>
                 </div>
             </div>
-            @if (count($easyPercelCites) !== 0)
+            @if (count($easyPercelCountries) !== 0)
                 <hr>
             @endif
             <div class="page-area">
-                {!! $easyPercelCites->appends($_GET)->links() !!}
+                {!! $easyPercelCountries->appends($_GET)->links() !!}
             </div>
-            @if (count($easyPercelCites) === 0)
+            @if (count($easyPercelCountries) === 0)
                 <div class="empty--data">
                     <img src="{{ asset('/public/assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                     <h5>

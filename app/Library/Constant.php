@@ -1080,3 +1080,41 @@ const EASY_PARCEL_COUNTRY_CODE = [
     ["name" => 'Albania', "code" => 'AL'],
     ["name" => 'Afghanistan', "code" => 'AF']
 ];
+
+const EASY_PARCEL_STATE_CODE = [
+    ["code" => 'jhr', "name" => 'Johor'],
+    ["code" => 'kdh', "name" => 'Kedah'],
+    ["code" => 'ktn', "name" => 'Kelantan'],
+    ["code" => 'mlk', "name" => 'Melaka'],
+    ["code" => 'nsn', "name" => 'Negeri Sembilan'],
+    ["code" => 'phg', "name" => 'Pahang'],
+    ["code" => 'prk', "name" => 'Perak'],
+    ["code" => 'pls', "name" => 'Perlis'],
+    ["code" => 'png', "name" => 'Pulau Pinang'],
+    ["code" => 'sgr', "name" => 'Selangor'],
+    ["code" => 'trg', "name" => 'Terengganu'],
+    ["code" => 'kul', "name" => 'Kuala Lumpur'],
+    ["code" => 'pjy', "name" => 'Putra Jaya'],
+    ["code" => 'srw', "name" => 'Sarawak'],
+    ["code" => 'sbh', "name" => 'Sabah'],
+    ["code" => 'lbn', "name" => 'Labuan']
+];
+
+const EASY_PARCEL_COURIER_LIST = [
+    ["code" => 'EP-CR0H', "name" => 'KEX Express'],
+    ["code" => 'EP-CR01', "name" => 'UTS'],
+    ["code" => 'EP-CR03', "name" => 'Aramex'],
+    ["code" => 'EP-CR05', "name" => 'Skynet'],
+    ["code" => 'EP-CR0C', "name" => 'DHLeC'],
+    ["code" => 'EP-CR0DS', "name" => 'Flash Express'],
+    ["code" => 'EP-CR0A', "name" => 'Pos Laju'],
+    ["code" => 'EP-CR0DP', "name" => 'J&T Express'],
+    ["code" => 'EP-CR0DK', "name" => 'Pickupp'],
+    ["code" => 'EP-CR0DU', "name" => 'Ninjavan'],
+    ["code" => 'EP-CR0D3', "name" => 'J&T Cargo'],
+    ["code" => 'EP-CR0U', "name" => 'TNT'],
+    ["code" => 'EP-CR0DH', "name" => 'Best Express'],
+    ["code" => 'EP-CR0D1', "name" => 'City-Link Express'],
+    ["code" => 'EP-CR0T', "name" => 'FedEx'],
+    ["code" => 'EP-CR06', "name" => 'Aramex International']
+];

@@ -414,14 +414,23 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             //     Route::post('update-drivemond-configuration', 'ExternalConfigurationController@updateDrivemondConfiguration')->name('update-drivemond-configuration');
             // });
             Route::group(['prefix' => 'easy-parcel', 'as' => 'easy-parcel.'], function () {
-                Route::group(['prefix' => 'city', 'as' => 'city.'], function () {
-                    Route::get('/', 'EasyParcelController@city')->name('index');
-                    Route::post('store', 'EasyParcelController@cityStore')->name('store');
-                    Route::post('update/{id}', 'EasyParcelController@cityUpdate')->name('update');
-                    Route::get('edit/{id}', 'EasyParcelController@cityEdit')->name('edit');
-                    Route::get('status/{id}/{status}', 'EasyParcelController@cityStatusUpdate')->name('status');
-                    Route::delete('delete/{id}', 'EasyParcelController@cityDelete')->name('delete');
+                Route::group(['prefix' => 'country', 'as' => 'country.'], function () {
+                    Route::get('/', 'EasyParcelCountryController@country')->name('index');
+                    Route::post('store', 'EasyParcelCountryController@countryStore')->name('store');
+                    Route::post('update/{id}', 'EasyParcelCountryController@countryUpdate')->name('update');
+                    Route::get('edit/{id}', 'EasyParcelCountryController@countryEdit')->name('edit');
+                    Route::get('status/{id}/{status}', 'EasyParcelCountryController@countryStatusUpdate')->name('status');
+                    Route::delete('delete/{id}', 'EasyParcelCountryController@countryDelete')->name('delete');
                 });
+                Route::group(['prefix' => 'state', 'as' => 'state.'], function () {
+                    Route::get('/', 'EasyParcelStateController@state')->name('index');
+                    Route::post('store', 'EasyParcelStateController@stateStore')->name('store');
+                    Route::post('update/{id}', 'EasyParcelStateController@stateUpdate')->name('update');
+                    Route::get('edit/{id}', 'EasyParcelStateController@stateEdit')->name('edit');
+                    Route::get('status/{id}/{status}', 'EasyParcelStateController@stateStatusUpdate')->name('status');
+                    Route::delete('delete/{id}', 'EasyParcelStateController@stateDelete')->name('delete');
+                });
+     
        
             });
 
