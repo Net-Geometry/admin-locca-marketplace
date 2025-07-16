@@ -178,6 +178,7 @@
                                 <th class="border-0">{{ translate('sl') }}</th>
                                 <th class="border-0">{{ translate('messages.id') }}</th>
                                 <th class="border-0 w--1">{{ translate('messages.name') }}</th>
+                                <th class="border-0 w--1">{{ translate('messages.country_name') }}</th>
                                 <th class="border-0 w--1">{{ translate('messages.state_code') }}</th>
                                 <th class="border-0 text-center">{{ translate('messages.status') }}</th>
                                 <th class="border-0 text-center">{{ translate('messages.action') }}</th>
@@ -194,6 +195,7 @@
                                             {{ Str::limit($state['name'], 20, '...') }}
                                         </span>
                                     </td>
+                                      <td>{{ $state?->country?->name }}</td>
                                       <td>{{ $state->state_code }}</td>
                                       <td>
                                         <label class="toggle-switch toggle-switch-sm"

@@ -18,6 +18,11 @@ class EasyParcelState extends Model
     {
         return $query->where('status', '=', 1);
     }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(EasyParcelCountry::class, 'easy_parcel_country_id');
+    }
     public function translations(): MorphMany
     {
         return $this->morphMany(Translation::class, 'translationable');
