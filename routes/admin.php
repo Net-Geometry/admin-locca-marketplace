@@ -413,6 +413,18 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             //     Route::get('drivemond-configuration', 'ExternalConfigurationController@index')->name('drivemond-configuration');
             //     Route::post('update-drivemond-configuration', 'ExternalConfigurationController@updateDrivemondConfiguration')->name('update-drivemond-configuration');
             // });
+            Route::group(['prefix' => 'easy-parcel', 'as' => 'easy-parcel.'], function () {
+                Route::group(['prefix' => 'city', 'as' => 'city.'], function () {
+                    Route::get('/', 'EasyParcelController@city')->name('index');
+                    Route::post('store', 'EasyParcelController@cityStore')->name('store');
+                    Route::post('update/{id}', 'EasyParcelController@cityUpdate')->name('update');
+                    Route::get('edit/{id}', 'EasyParcelController@cityEdit')->name('edit');
+                    Route::get('status/{id}/{status}', 'EasyParcelController@cityStatusUpdate')->name('status');
+                    Route::delete('delete/{id}', 'EasyParcelController@cityDelete')->name('delete');
+                });
+       
+            });
+
             Route::group(['prefix' => 'third-party', 'as' => 'third-party.'], function () {
                 Route::get('sms-module', 'SMSModuleController@sms_index')->name('sms-module');
                 Route::post('sms-module-update/{sms_module}', 'SMSModuleController@sms_update')->name('sms-module-update');
