@@ -46,6 +46,7 @@ class ItemController extends Controller
                 })
             ],
             'price' => 'required|numeric|min:0.01',
+            'weight' => 'required|numeric|min:0.01',
             'discount' => 'required|numeric|min:0',
             'translations'=>'required',
         ], [
@@ -325,6 +326,7 @@ class ItemController extends Controller
         //combinations end
         $item->food_variations = json_encode($food_variations);
         $item->price = $request->price;
+        $item->weight = $request->weight;
         $item->image =  $request->has('image') ? Helpers::upload('product/', 'png', $request->file('image')) : $newFileNamethumb ?? null;
         $item->available_time_starts = $request->available_time_starts;
         $item->available_time_ends = $request->available_time_ends;
@@ -471,6 +473,7 @@ class ItemController extends Controller
             'id' => 'required',
             'category_id' => 'required',
             'price' => 'required|numeric|min:0.01',
+            'weight' => 'required|numeric|min:0.01',
             'discount' => 'required|numeric|min:0',
 
         ], [
@@ -674,6 +677,7 @@ class ItemController extends Controller
         $p->variations = json_encode($variations);
         $p->food_variations = json_encode($food_variations);
         $p->price = $request->price;
+        $p->weight = $request->weight;
         $p->available_time_starts = $request->available_time_starts;
         $p->available_time_ends = $request->available_time_ends;
         $p->discount = $request->discount_type == 'amount' ? $request->discount : $request->discount;
@@ -1010,6 +1014,7 @@ class ItemController extends Controller
         $item->attributes = $data->attributes;
 
         $item->price = $data->price;
+        $item->weight = $data->weight;
         $item->discount = $data->discount;
         $item->discount_type = $data->discount_type;
         $item->tag_ids =json_encode($tag_ids);

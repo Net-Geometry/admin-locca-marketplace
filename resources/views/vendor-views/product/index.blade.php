@@ -294,6 +294,12 @@
                                                 placeholder="{{ translate('messages.Ex:') }} 100" >
                                     </div>
                                 </div>
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="form-group mb-0">
+                                        <label class="input-label" for="weight">{{translate('messages.weight')}}</label>
+                                        <input type="number" class="form-control" name="weight" min="0" id="weight">
+                                    </div>
+                                </div>
                                 @if ($module_data['stock'])
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="form-group mb-0">

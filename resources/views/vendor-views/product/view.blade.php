@@ -170,7 +170,10 @@
                                             <h4 class="m-0 text-capitalize">{{ translate('Allergy') }}</h4>
                                         </th>
                                     @endif
-
+                                    
+                                    <th class="px-4 border-0">
+                                            <h4 class="m-0 text-capitalize">{{ translate('weight') }}</h4>
+                                     </th>
 
                                     @if ($store_data->module->module_type != 'food')
                                         <th class="px-4 border-0">
@@ -226,7 +229,7 @@
                                             @endif
                                         </td>
                                     @endif
-
+                                    <td class="px-4">{{ $product->weight }} {{ translate('kg') }}</td>
                                     @if ($product->module->module_type != 'food')
                                         <td class="px-4">{{ $product->stock }}</td>
                                     @endif

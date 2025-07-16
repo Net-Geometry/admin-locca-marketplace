@@ -178,6 +178,11 @@
                                     <strong> {{  $product->organic == 1 ?  translate('messages.yes') : translate('messages.no') }}</strong>
                                 </span>
                                 @endif
+                                <span class="d-block mb-1">
+                                    <span>{{ translate('messages.weight') }}</span>
+                                    <span>:</span>
+                                    <strong> {{  $product->weight  }} {{ translate("kg") }}</strong>
+                                </span>
                                 @if ($product->module->module_type == 'food')
                                 <span class="d-block mb-1">
                                     <span>{{ translate('messages.Item_type') }}</span>

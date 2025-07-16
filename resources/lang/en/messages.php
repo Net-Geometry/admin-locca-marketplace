@@ -7887,4 +7887,8 @@ Smartly or Earn. ',
   'weight' => 'Weight',
   'The weight field is required.' => 'The weight field is required.',
   'Category required' => 'Category required',
+  'Weight' => 'Weight',
+  'kg' => 'Kg',
+  'Discount can not be more than or equal' => 'Discount can not be more than or equal',
+  'Kg' => 'Kg',
 );
