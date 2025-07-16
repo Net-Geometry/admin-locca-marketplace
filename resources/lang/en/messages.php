@@ -7901,4 +7901,5 @@ Smartly or Earn. ',
   'Reverify' => 'Reverify',
   'Member number is required.' => 'Member number is required.',
   'Verified' => 'Verified',
+  'The nadi number field is required.' => 'The nadi number field is required.',
 );
