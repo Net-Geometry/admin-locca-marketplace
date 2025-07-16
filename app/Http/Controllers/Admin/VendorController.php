@@ -88,6 +88,7 @@ class VendorController extends Controller
             'tin' => 'required',
             'tin_expire_date' => 'required',
             'tin_certificate_image' => 'required',
+            'nadi_number' => 'required',
         ], [
             'f_name.required' => translate('messages.first_name_is_required'),
             'name.0.required'=>translate('default_name_is_required'),
@@ -112,6 +113,12 @@ class VendorController extends Controller
                 return back()->withErrors($validator)
                         ->withInput();
             }
+        }
+
+        if((session()->has('nadi_verified_number') && $request->nadi_number) && (session()->get('nadi_verified_number') != $request->nadi_number)){
+             $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_member_number_does_not_match'));
+                return back()->withErrors($validator)
+                        ->withInput();
         }
         if ($validator->fails()) {
             return back()
@@ -144,6 +151,8 @@ class VendorController extends Controller
         $store->tin_certificate_image = Helpers::upload('store/', $extension, $request->file('tin_certificate_image'));
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->module_id = Config::get('module.current_module_id');
+        $store->nadi_number = $request->nadi_number;
+        $store->is_nadi_verified = 1;
         try {
             $store->save();
             // $store->module->increment('stores_count');
@@ -238,7 +247,8 @@ class VendorController extends Controller
             },],
             'minimum_delivery_time' => 'required',
             'maximum_delivery_time' => 'required',
-            'delivery_time_type'=>'required'
+            'delivery_time_type'=>'required',
+            'nadi_number' => 'required',
         ], [
             'f_name.required' => translate('messages.first_name_is_required')
         ]);
@@ -259,6 +269,14 @@ class VendorController extends Controller
             $minimum_delivery_time = (int) $request->input('minimum_delivery_time');
             if ($minimum_delivery_time < 10) {
                 $validator->getMessageBag()->add('minimum_delivery_time', translate('messages.minimum_delivery_time_should_be_more_than_10_min'));
+                return back()->withErrors($validator)
+                        ->withInput();
+            }
+        }
+
+        if ((session()->has('nadi_verified_number') && session()->get('again_verify')) && session()->get('again_verify') == true) {
+            if (session()->get('nadi_verified_number') != $request->nadi_number ) {
+                $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_member_number_does_not_match'));
                 return back()->withErrors($validator)
                         ->withInput();
             }
@@ -293,6 +311,8 @@ class VendorController extends Controller
         $extension = $request->has('tin_certificate_image') ? $request->file('tin_certificate_image')->getClientOriginalExtension() : 'png';
         $store->tin_certificate_image = $request->has('tin_certificate_image') ? Helpers::update('store/', $store->tin_certificate_image, $extension, $request->file('tin_certificate_image')) : $store->tin_certificate_image;
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
+        $store->nadi_number = $request->nadi_number;
+        $store->is_nadi_verified = 1;
         $store->save();
         $default_lang = str_replace('_', '-', app()->getLocale());
         foreach($request->lang as $index=>$key)
