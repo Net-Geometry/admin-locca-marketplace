@@ -402,6 +402,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
                     ) {
                     Route::get('country-list', 'EasyParcelController@countryList');
                     Route::get('state-list', 'EasyParcelController@stateList');
+                    Route::get('rate-check', 'EasyParcelController@rateCheck');
                 });
         
 
