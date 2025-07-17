@@ -1,11 +1,11 @@
 <?php return array (
   'admin_panel' => 
   array (
-    'active' => '1',
+    'active' => '0',
     'username' => 'siptsgcr',
     'purchase_key' => '7a7b2216-4acb-4dc6-b243-99edabf3ba66',
     'software_id' => 'MzY3NzIxMTI=',
-    'domain' => 'localhost/Backend-6amMart/public',
+    'domain' => 'localhost:9100',
     'software_type' => 'product',
   ),
   'vendor_panel' => 

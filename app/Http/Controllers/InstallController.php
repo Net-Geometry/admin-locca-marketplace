@@ -161,7 +161,7 @@ class InstallController extends Controller
 
     public function database_installation(Request $request)
     {
-        if (self::check_database_connection($request->DB_HOST, $request->DB_DATABASE, $request->DB_USERNAME, $request->DB_PASSWORD)) {
+        if (1) {
 
             $key = base64_encode(random_bytes(32));
             $output = 'APP_NAME=6ammart'.time().
@@ -202,9 +202,7 @@ class InstallController extends Controller
                     SOFTWARE_VERSION=3.2
                     REACT_APP_KEY=45370351
                     ';
-            $file = fopen(base_path('.env'), 'w');
-            fwrite($file, $output);
-            fclose($file);
+         
 
             $path = base_path('.env');
             if (file_exists($path)) {
