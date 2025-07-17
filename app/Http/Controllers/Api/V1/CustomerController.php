@@ -37,7 +37,7 @@ class CustomerController extends Controller
         $limit = $request['limit'] ?? 10;
         $offset = $request['offset'] ?? 1;
 
-        $addresses = CustomerAddress::where('user_id', $request->user()->id)->latest()->paginate($limit, ['*'], 'page', $offset);
+        $addresses = CustomerAddress::with(["easy_parcel_country","easy_parcel_state"])->where('user_id', $request->user()->id)->latest()->paginate($limit, ['*'], 'page', $offset);
 
         $data = [
             'total_size' => $addresses->total(),
@@ -54,6 +54,7 @@ class CustomerController extends Controller
             'contact_person_name' => 'required',
             'address_type' => 'required',
             'contact_person_number' => 'required',
+            'easy_parcel_country_id' => 'required',
             'address' => 'required',
             'longitude' => 'required',
             'latitude' => 'required',
@@ -83,6 +84,8 @@ class CustomerController extends Controller
             'house' => $request->house,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
+            'easy_parcel_country_id' => $request->easy_parcel_country_id,
+            'easy_parcel_state_id' => $request->easy_parcel_state_id,
             'zone_id' => $zone[0]->id,
             'created_at' => now(),
             'updated_at' => now()
@@ -98,6 +101,7 @@ class CustomerController extends Controller
             'address_type' => 'required',
             'contact_person_number' => 'required',
             'address' => 'required',
+            'easy_parcel_country_id' => 'required',
             'longitude' => 'required',
             'latitude' => 'required'
         ]);
@@ -124,6 +128,8 @@ class CustomerController extends Controller
             'house' => $request->house,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
+            'easy_parcel_country_id' => $request->easy_parcel_country_id,
+            'easy_parcel_state_id' => $request->easy_parcel_state_id,
             'zone_id' => $zone[0]->id,
             'created_at' => now(),
             'updated_at' => now()

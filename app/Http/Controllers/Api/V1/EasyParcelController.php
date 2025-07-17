@@ -19,9 +19,14 @@ class EasyParcelController extends Controller{
     }
     public function stateList(Request $request)
     {
-     
+        $validator = Validator::make($request->all(), [
+            'easy_parcel_country_id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
 
-        $states = EasyParcelState::Active()->latest()->get();
+        $states = EasyParcelState::where('easy_parcel_country_id',$request->easy_parcel_country_id)->Active()->latest()->get();
         return response()->json($states, 200);
     }
 
