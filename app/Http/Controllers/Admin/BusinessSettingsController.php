@@ -104,6 +104,9 @@ class BusinessSettingsController extends Controller
 
             return view('admin-views.business-settings.automated_message', compact( 'messages','language'));
         }
+        else if ($tab == 'easy-parcel') {
+            return view('admin-views.business-settings.easy_parcel');
+        }
     }
 
     public function update_priority(Request $request)
@@ -655,6 +658,13 @@ class BusinessSettingsController extends Controller
 
         Helpers::businessUpdateOrInsert(['key' => 'delivery_charge_comission'], [
             'value' => $request['admin_comission_in_delivery_charge']
+        ]);
+
+        Helpers::businessUpdateOrInsert(['key' => 'easy_parcel_api_url'], [
+            'value' => $request['easy_parcel_api_url']
+        ]);
+        Helpers::businessUpdateOrInsert(['key' => 'easy_parcel_api_key'], [
+            'value' => $request['easy_parcel_api_key']
         ]);
 // dd( $request['commission_business_model']);
 

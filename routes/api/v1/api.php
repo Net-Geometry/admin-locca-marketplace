@@ -400,6 +400,18 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
                 Route::put('offline-payment', 'OrderController@offline_payment');
                 Route::put('offline-payment-update', 'OrderController@update_offline_payment_info');
 
+                Route::group(['prefix' => 'easy-parcel'], function (
+                    ) {
+                    Route::get('country-list', 'EasyParcelController@countryList');
+                    Route::get('state-list', 'EasyParcelController@stateList');
+                    Route::get('rate-check', 'EasyParcelController@rateCheck');
+                    Route::post('submit-order', 'EasyParcelController@submitOrder');
+                    Route::post('pay-for-sandbox-order', 'EasyParcelController@payOrder');
+                    Route::post('order-status', 'EasyParcelController@orderStatus');
+                    Route::post('track-parcel', 'EasyParcelController@trackParcel');
+                });
+        
+
             });
 
             Route::group(['prefix'=>'cart'], function() {

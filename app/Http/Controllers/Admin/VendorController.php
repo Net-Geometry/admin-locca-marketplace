@@ -14,6 +14,8 @@ use App\Models\UserInfo;
 use App\Scopes\StoreScope;
 use App\Models\AdminWallet;
 use App\Models\DataSetting;
+use App\Models\EasyParcelCountry;
+use App\Models\EasyParcelState;
 use App\Models\StoreConfig;
 use App\Models\StoreWallet;
 use App\Models\TempProduct;
@@ -456,7 +458,9 @@ class VendorController extends Controller
         }
         if($tab == 'settings')
         {
-            return view('admin-views.vendor.view.settings', compact('store'));
+            $easyParcelCountries=EasyParcelCountry::where('status',1)->get();
+            $easyParcelStates=EasyParcelState::where('status',1)->get();
+            return view('admin-views.vendor.view.settings', compact('store','easyParcelCountries','easyParcelStates'));
         }
         else if($tab == 'order')
         {
@@ -482,7 +486,7 @@ class VendorController extends Controller
                     })
                     ->StoreOrder()
             ->Notpos()->paginate(10);
-            return view('admin-views.vendor.view.order', compact('store','orders'));
+            return view('admin-views.vendor.view.order', compact('store','orders','easyParcelCountries','easyParcelStates'));
         }
         else if($tab == 'item')
         {
@@ -1056,6 +1060,8 @@ class VendorController extends Controller
         }
         $request->validate([
             'minimum_order'=>'required',
+            'postal_code'=>'required',
+            'easyparcel_country_id'=>'required',
             'minimum_delivery_time' => 'required|min:1|max:2',
             'maximum_delivery_time' => 'required|min:1|max:2|gt:minimum_delivery_time',
         ]);
@@ -1066,6 +1072,10 @@ class VendorController extends Controller
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->veg = (bool)($request->veg_non_veg == 'veg' || $request->veg_non_veg == 'both');
         $store->non_veg = (bool)($request->veg_non_veg == 'non_veg' || $request->veg_non_veg == 'both');
+
+        $store->postal_code = $request->postal_code;
+        $store->easyparcel_country_id = $request->easyparcel_country_id;
+        $store->easyparcel_state_id = $request->easyparcel_state_id;
 
         $store->save();
         Toastr::success(translate('messages.store_settings_updated'));
