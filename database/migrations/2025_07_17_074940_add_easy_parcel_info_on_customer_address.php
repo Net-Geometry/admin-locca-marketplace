@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('customer_addresses', function (Blueprint $table) {
             $table->foreignId('easy_parcel_country_id')->nullable();
             $table->foreignId('easy_parcel_state_id')->nullable();
+            $table->string("postal_code")->nullable()->after('easy_parcel_state_id');
             
         });
     }
@@ -25,6 +26,7 @@ return new class extends Migration
     {
         Schema::table('customer_addresses', function (Blueprint $table) {
             $table->dropColumn(['easy_parcel_country_id', 'easy_parcel_state_id']);
+            $table->dropColumn('postal_code');
         });
     }
 };
