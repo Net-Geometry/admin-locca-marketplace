@@ -35,6 +35,7 @@ const GATEWAYS_PAYMENT_METHODS = [
     ['key' => 'payfast', 'value' => 'Pay Fast'],
     ['key' => 'worldpay', 'value' => 'World Pay'],
     ['key' => 'sixcash', 'value' => 'Six Cash'],
+    ['key' => 'chip', 'value' => 'Chip'],
 ];
 
 //currencies

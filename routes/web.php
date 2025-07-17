@@ -195,6 +195,18 @@ if (!$is_published) {
             Route::any('callback', [PaytabsController::class, 'callback'])->name('callback');
             Route::any('response', [PaytabsController::class, 'response'])->name('response');
         });
+                //CHIP
+        Route::group(['prefix' => 'chip', 'as' => 'chip.'], function () {
+            Route::get('pay', [ChipPaymentController::class, 'index'])->name('pay');
+            Route::any('successUrl', [ChipPaymentController::class, 'successUrl'])->name('successUrl')
+                ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+            Route::any('failureUrl', [ChipPaymentController::class, 'failureUrl'])->name('failureUrl')
+                ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+            Route::any('cancelUrl', [ChipPaymentController::class, 'cancelUrl'])->name('cancelUrl')
+                ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+            Route::any('callback', [ChipPaymentController::class, 'callback'])->name('callback')
+                ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+        });
     });
 }
 
