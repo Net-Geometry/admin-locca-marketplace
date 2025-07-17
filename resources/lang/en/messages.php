@@ -7955,4 +7955,5 @@ Smartly or Earn. ',
   'The send state field is required.' => 'The send state field is required.',
   'The send country field is required.' => 'The send country field is required.',
   'country_name' => 'Country name',
+  'The collect date must be a date after or equal to today.' => 'The collect date must be a date after or equal to today.',
 );

@@ -48,6 +48,25 @@ trait EasyPercelEngineTrait
         return self::makeHttpsRequest($endpoint, $payload);
     }
 
+    public static function orderSubmitEngine(array $data): array
+    {
+        self::initialize();
+
+        if ($error = self::failIfNotConfigured()) {
+            return $error;
+        }
+
+        $endpoint = self::$baseUrl . '?ac=EPSubmitOrderBulk';
+
+        $payload = [
+            'api' => self::$apiKey,
+            'bulk' => [$data],
+        ];
+
+        return self::makeHttpsRequest($endpoint, $payload);
+    }
+
+
     private static function makeHttpsRequest(string $url, array $data, array $headers = []): array
     {
         self::initialize();
@@ -63,8 +82,8 @@ trait EasyPercelEngineTrait
 
         try {
             $response = Http::withHeaders(array_merge($defaultHeaders, $headers))
-                            ->timeout(200) 
-                            ->post($url, $data);
+                ->timeout(200)
+                ->post($url, $data);
 
             if ($response->successful()) {
                 return [

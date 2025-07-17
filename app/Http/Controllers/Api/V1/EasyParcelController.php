@@ -54,5 +54,56 @@ class EasyParcelController extends Controller{
         return response()->json($this->rateCheckEngine($data), 200);
     }
 
+    public function submitOrder(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'weight' => 'required|numeric|min:0.1',
+            'content' => 'required|string',
+            'value' => 'required|numeric|min:1',
+            'service_id' => 'required|string',
+
+            'pick_name' => 'required|string',
+            'pick_contact' => 'required|string',
+            'pick_addr1' => 'required|string',
+            'pick_city' => 'required|string',
+            'pick_state' => 'required|string',
+            'pick_code' => 'required|string',
+            'pick_country' => 'required|string',
+
+            'send_name' => 'required|string',
+            'send_contact' => 'required|string',
+            'send_addr1' => 'required|string',
+            'send_city' => 'required|string',
+            'send_state' => 'required|string',
+            'send_code' => 'required|string',
+            'send_country' => 'required|string',
+
+            'collect_date' => 'required|date|after_or_equal:today',
+            'send_email' => 'nullable|email',
+            'sms' => 'nullable|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => Helpers::error_processor($validator)
+            ], 403);
+        }
+
+        $orderData = $request->only([
+            'weight', 'content', 'value', 'service_id',
+            'pick_name', 'pick_contact', 'pick_addr1', 'pick_city', 'pick_state', 'pick_code', 'pick_country',
+            'send_name', 'send_contact', 'send_addr1', 'send_city', 'send_state', 'send_code', 'send_country',
+            'collect_date', 'send_email', 'sms'
+        ]);
+
+        $orderData['weight'] = (float) $orderData['weight'];
+        $orderData['value'] = (float) $orderData['value'];
+        $orderData['sms'] = filter_var($orderData['sms'], FILTER_VALIDATE_BOOLEAN);
+
+        $response = $this->orderSubmitEngine($orderData);
+
+        return response()->json($response, $response['success'] ? 200 : 500);
+    }
+
    
 }
