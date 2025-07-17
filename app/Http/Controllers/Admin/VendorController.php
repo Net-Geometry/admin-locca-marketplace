@@ -155,7 +155,7 @@ class VendorController extends Controller
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->module_id = Config::get('module.current_module_id');
         $store->nadi_number = $request->nadi_number;
-        $store->is_nadi_verified = 1;
+        $store->is_nadi_verified = !is_null($request->nadi_number) ? 1 : 0;
         try {
             $store->save();
             // $store->module->increment('stores_count');
@@ -379,9 +379,6 @@ class VendorController extends Controller
             $userinfo->image = $store->logo;
             $userinfo->save();
         }
-
-        //After store update nadi session forget
-        Session::forget(['nadi_verified_number', 'again_verify']);
 
         Toastr::success(translate('messages.store_updated_successfully'));
         return redirect('admin/store/list');

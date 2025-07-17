@@ -601,6 +601,39 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="p-20 mb-3" id="nadi-verification-card">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <h3 class="mb-2">{{translate('messages.Nadi Verification')}}</h3>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-12 col-xxl-12">
+                                            <div class="card __card bg-F8F9FC rounded p-20 h-100">
+                                                <div class="card-body">
+                                                    <div class="form-group mb-3">
+                                                        <label class="input-label mb-2 d-block title-clr fw-normal" for="nadi_number">{{translate('Member Number')}} <span class="text-danger">*</span></label>
+                                                        <div class="input-group">
+                                                            <input type="text" id="nadi_number" class="form-control" placeholder="{{translate('Enter Nadi member number')}}" {{ session('verified') ? 'readonly' : '' }}>
+                                                            <button class="cmn--btn rounded-md border-0 outline-0 d-flex align-items-center justify-content-center" type="button" id="verify_btn">
+                                                                <span class="btn-text">{{ session('verified') ? translate('Reverify') : translate('Verify') }}</span>
+                                                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                                <i class="tio-check-circle text-white ml-2 d-none" id="verified_icon"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="verification_status" class="mt-3">
+                                    @if(session('verified'))
+                                        <div class="alert alert-success">{{ session('verification_message') }}</div>
+                                    @endif
+                                </div>
+                                </div>
+                            </div>
+                            
                             <div class="text-end pt-4 d-flex flex-wrap justify-content-end gap-3">
                                 <button type="reset" id='reset-btn'
                                     class="cmn--btn btn--secondary shadow-none rounded-md border-0 outline-0">{{ translate('Reset') }}</button>
@@ -1242,5 +1275,63 @@
         });
     };
     $(".multiple-select2").select2DynamicDisplay();
+</script>
+
+
+<script>
+    document.getElementById('verify_btn').addEventListener('click', async function() {
+        const verifyBtn = this;
+        const card = document.getElementById('nadi-verification-card');
+        const identityNoInput = document.getElementById('nadi_number');
+        const identityNo = identityNoInput.value;
+        const statusDiv = document.getElementById('verification_status');
+        const spinner = verifyBtn.querySelector('.spinner-border');
+        const btnText = verifyBtn.querySelector('.btn-text');
+        const successIcon = document.getElementById('verified_icon');
+
+        if (!identityNo) {
+            toastr.error(card.dataset.enterMemberNumber || 'Please enter your member number.');
+            return;
+        }
+
+        spinner.classList.remove('d-none');
+        btnText.classList.add('d-none');
+        successIcon.classList.add('d-none');
+        verifyBtn.disabled = true;
+        statusDiv.innerHTML = '';
+
+        $.ajax({
+            url: '{{ route('nadi-verify-number') }}',
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: JSON.stringify({ nadi_number: identityNo }),
+            success: function(data, textStatus, jqXHR) {
+                if (data.status == 1) {
+                    toastr.success(data.message || card.dataset.verifiedSuccessfully);
+                    statusDiv.innerHTML = `<div class="alert alert-success">${data.message || 'Verification Successful'}</div>`;
+                    successIcon.classList.remove('d-none');
+                    btnText.textContent = '{{ translate("Verified") }}';
+                    identityNoInput.setAttribute('readonly', true);
+                } else {
+                    toastr.error(data.message || card.dataset.verificationFailed);
+                    statusDiv.innerHTML = `<div class="alert alert-danger">${data.message || 'Verification Failed'}</div>`;
+                }
+            },
+            error: function(jqXHR) {
+                let errorMsg = (jqXHR.responseJSON && jqXHR.responseJSON.message) ? jqXHR.responseJSON.message : (card.dataset.unexpectedError || 'An unexpected error occurred.');
+                toastr.error(errorMsg);
+                statusDiv.innerHTML = `<div class="alert alert-danger">${errorMsg}</div>`;
+            },
+            complete: function() {
+                spinner.classList.add('d-none');
+                verifyBtn.disabled = false;
+                btnText.classList.remove('d-none');
+            }
+        });
+    });
 </script>
 @endpush

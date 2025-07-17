@@ -564,7 +564,7 @@ document.getElementById('verify_btn').addEventListener('click', function() {
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        data: JSON.stringify({ identity_no: identityNo , again_verify: true }),
+        data: JSON.stringify({ nadi_number: identityNo }),
         success: function(data, textStatus, jqXHR) {
             if (data.status == 1) {
                 toastr.success(data.message || card.dataset.verifiedSuccessfully);

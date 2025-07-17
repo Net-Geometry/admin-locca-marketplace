@@ -151,6 +151,7 @@ class VendorLoginController extends Controller
             'tin' => 'required',
             'tin_expire_date' => 'required',
             'tin_certificate_image' => 'required',
+            'nadi_number' => 'required',
         ],[
             'password.required' => translate('The password is required'),
             'password.min_length' => translate('The password must be at least :min characters long'),
@@ -183,6 +184,11 @@ class VendorLoginController extends Controller
 
         if (count($data) < 1) {
             $validator->getMessageBag()->add('translations', translate('messages.Name and description in english is required'));
+        }
+        
+        $nadiVerification = Helpers::nadiVerificationStatus($request->nadi_number);
+        if(!$nadiVerification) {
+            $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_number_not_verified'));
         }
 
         if ($validator->fails()) {
@@ -217,6 +223,8 @@ class VendorLoginController extends Controller
         $store->status = 0;
         $store->store_business_model = 'none';
         $store->pickup_zone_id = $request['pickup_zone_id'] ?? json_encode([]);
+        $store->nadi_number = $request->nadi_number;
+        $store->is_nadi_verified = !is_null($request->nadi_number) ? 1 : 0; 
         $store->save();
         // $store->module->increment('stores_count');
         if(config('module.'.$store->module->module_type)['always_open'])

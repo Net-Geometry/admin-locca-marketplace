@@ -16,6 +16,7 @@ use App\Http\Controllers\FlutterwaveV3Controller;
 use App\Http\Controllers\PaypalPaymentController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\SslCommerzPaymentController;
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Http;
 
 /*
@@ -242,7 +243,7 @@ Route::get('/image-proxy', function () {
         ->header('Access-Control-Allow-Origin', '*');
 });
 
-// Nadi
-Route::post('/nadi-verify-number', [VendorController::class, 'nadi_verify'])->name('nadi-verify-number');
+// Nadi Verification
+Route::post('/nadi-verify-number', [VendorController::class, 'nadi_verify'])->name('nadi-verify-number')->withoutMiddleware(VerifyCsrfToken::class);
 
 

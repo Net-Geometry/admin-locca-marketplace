@@ -7910,4 +7910,7 @@ Smartly or Earn. ',
   'Nadi_configuration_updated' => 'Nadi configuration updated',
   'nadi_member_number_does_not_match' => 'Nadi member number does not match',
   'Nadi member number does not match' => 'Nadi member number does not match',
+  'NADI_Verification' => 'NADI Verification',
+  'nadi_number' => 'Nadi number',
+  'verify' => 'Verify',
 );

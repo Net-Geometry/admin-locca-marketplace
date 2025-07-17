@@ -778,12 +778,11 @@ document.getElementById('verify_btn').addEventListener('click', async function()
         url: '{{ route('nadi-verify-number') }}',
         type: 'POST',
         dataType: 'json',
-        contentType: 'application/json',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        data: {
+            nadi_number: identityNo,
+            _token: $('meta[name="csrf-token"]').attr('content')
         },
-        data: JSON.stringify({ identity_no: identityNo }),
-        success: function(data, textStatus, jqXHR) {
+        success: function(data) {
             if (data.status == 1) {
                 toastr.success(data.message || card.dataset.verifiedSuccessfully);
                 statusDiv.innerHTML = `<div class="alert alert-success">${data.message || 'Verification Successful'}</div>`;

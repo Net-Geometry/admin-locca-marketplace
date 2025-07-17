@@ -101,6 +101,7 @@ class VendorController extends Controller
             'tin_expire_date' => 'required',
             'tin_certificate_image' => 'required',
             'delivery_time_type'=>'required',
+            'nadi_number'=>'required',
         ],[
             'password.min_length' => translate('The password must be at least :min characters long'),
             'password.mixed' => translate('The password must contain both uppercase and lowercase letters'),
@@ -110,6 +111,14 @@ class VendorController extends Controller
             'password.uncompromised' => translate('The password is compromised. Please choose a different one'),
             'password.custom' => translate('The password cannot contain white spaces.'),
         ]);
+
+        $nadiVerification = Helpers::nadiVerificationStatus($request->nadi_number);
+        if (!$nadiVerification) {
+            $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_member_not_verified'));
+            return back()->withErrors($validator)
+                        ->withInput();
+        }
+
         if ($validator->fails()) {
             return back()
                 ->withErrors($validator)
@@ -170,6 +179,8 @@ class VendorController extends Controller
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->status = 0;
         $store->store_business_model = 'none';
+        $store->nadi_number = $request->nadi_number ?? null;
+        $store->is_nadi_verified = !is_null($request->nadi_number) ? 1 : 0;
         $store->save();
 
         Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Store', data_id: $store->id, data_value: $store->name);
@@ -287,8 +298,7 @@ class VendorController extends Controller
 
         return response()->json(['module_type' => '']);
     }
-
-
+    
     public function business_plan(Request $request){
         $store=Store::find($request->store_id);
 
@@ -380,7 +390,7 @@ class VendorController extends Controller
 
     public function nadi_verify(Request $request)
     {
-        $identityNo = $request->input('identity_no');
+        $identityNo = $request->input('nadi_number');
         if (!$identityNo) {
             return response()->json(['status' => 0, 'message' => 'Member number is required.'], 400);
         }
