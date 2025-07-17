@@ -4796,6 +4796,22 @@ class Helpers
         return [ 'productWiseTax' => $productWiseTax?? false ,'categoryWiseTax'=> $categoryWiseTax?? false,  'taxVats' => $taxVats ?? []];
     }
 
+    public static function nadiVerificationStatus($identityNo)
+    {
+        $config = json_decode(BusinessSetting::where('key', 'nadi_config')->value('value'), true) ?? [];
+
+        $response = Http::withHeaders(['Accept' => 'application/json'])
+            ->post($config['endpoint'] ?? '', [
+                'identity_no' => $identityNo,
+                'api_key'     => $config['api_key'] ?? '',
+            ]);
+
+        if ($response->status() === 200 && $response->json('status') == 1) {
+            return true;
+        }
+        return false;
+    }
+
 }
 
 

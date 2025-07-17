@@ -16,7 +16,7 @@ use Illuminate\Http\JsonResponse;
 use App\Models\SubscriptionPackage;
 use Gregwar\Captcha\CaptchaBuilder;
 use App\Mail\VendorSelfRegistration;
-use Brian2694\Toastr\Facades\Toastr;
+use Brian\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -381,78 +381,24 @@ class VendorController extends Controller
     public function nadi_verify(Request $request)
     {
         $identityNo = $request->input('identity_no');
-        $againVerify = $request->input('again_verify', false);
-        
         if (!$identityNo) {
-            return response()->json([
-                'status' => 0,
-                'message' => 'Member number is required.'
-            ], 400);
+            return response()->json(['status' => 0, 'message' => 'Member number is required.'], 400);
         }
 
-        $payload = json_encode([
-            'identity_no' => $identityNo,
-            'api_key' => 'member'
-        ]);
+        $config = json_decode(BusinessSetting::where('key', 'nadi_config')->value('value'), true) ?? [];
+        
+        $response = Http::withHeaders(['Accept' => 'application/json'])
+            ->post($config['endpoint'] ?? '', [
+                'identity_no' => $identityNo,
+                'api_key'     => $config['api_key'] ?? '',
+            ]);
 
-        $ch = curl_init('https://ruanewybqxrdfvrdyeqr.supabase.co/functions/v1/validate-member');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Accept: application/json'
-        ]);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        $success =  $response->status() === 200 && $response->json('status') == 1;
 
-        $result = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($ch);
-        curl_close($ch);
-
-        if ($curlError) {
-            return response()->json([
-                'status' => 0,
-                'message' => 'Verification service error: ' . $curlError
-            ], 500);
-        }
-
-        $response = json_decode($result, true);
-
-        return match(true) {
-            $httpCode === 200 && isset($response['status']) && $response['status'] == 1 =>
-                (function() use ($identityNo, $response, $againVerify) {
-                    Session::put(['nadi_verified_number', $identityNo, 'again_verify' => $againVerify]);
-                    return response()->json([
-                        'status' => 1,
-                        'message' => $response['message'] ?? 'Verification successful.'
-                    ]);
-                })(),
-            $httpCode === 404 =>
-                (function() {
-                    if (Session::has('nadi_verified_number')) {
-                        Session::forget('nadi_verified_number');
-                    }
-                    if (Session::has('again_verify')) {
-                        Session::forget('again_verify');
-                    }
-                    return response()->json([
-                        'status' => 0,
-                        'message' => $response['message'] ?? 'Verification failed.'
-                    ], 404);
-                })(),
-            default =>
-                (function() {
-                    if (Session::has('nadi_verified_number')) {
-                        Session::forget('nadi_verified_number');
-                    }
-                    if (Session::has('again_verify')) {
-                        Session::forget('again_verify');
-                    }
-                    return response()->json([
-                        'status' => 0,
-                        'message' => $response['message'] ?? 'Verification failed.'
-                    ], 400);
-                })(),
-        };
+        return response()->json(
+            ['status' => (int)$success, 'message' => $response->json('message') ?? ''],
+            $success ? 200 : $response->status()
+        );
     }
 }
+

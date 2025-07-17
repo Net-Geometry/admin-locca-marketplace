@@ -440,6 +440,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 //file_system
                 Route::get('storage-connection', 'BusinessSettingsController@storage_connection_index')->name('storage_connection_index');
                 Route::post('storage-connection-update/{name}', 'BusinessSettingsController@storage_connection_update')->name('storage_connection_update');
+                //nadi configuration
+                Route::get('nadi-config', 'BusinessSettingsController@nadi_config')->name('nadi_config');
+                Route::post('nadi-config-update', 'BusinessSettingsController@nadi_config_update')->name('nadi_config_update');
             });
             // Offline payment Methods
             Route::get('/offline-payment', 'OfflinePaymentMethodController@index')->name('offline');

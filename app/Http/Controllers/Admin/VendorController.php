@@ -52,6 +52,7 @@ use MatanYadaev\EloquentSpatial\Objects\Point;
 use App\Exports\StoreWithdrawTransactionExport;
 use App\Exports\StoreWiseWithdrawTransactionExport;
 use Modules\Rental\Emails\ProviderWithdrawRequestMail;
+use Session;
 
 
 class VendorController extends Controller
@@ -115,11 +116,13 @@ class VendorController extends Controller
             }
         }
 
-        if((session()->has('nadi_verified_number') && $request->nadi_number) && (session()->get('nadi_verified_number') != $request->nadi_number)){
-             $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_member_number_does_not_match'));
-                return back()->withErrors($validator)
+        $nadiVerification = Helpers::nadiVerificationStatus($request->nadi_number);
+        if (!$nadiVerification) {
+            $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_member_not_verified'));
+            return back()->withErrors($validator)
                         ->withInput();
         }
+
         if ($validator->fails()) {
             return back()
             ->withErrors($validator)
@@ -212,6 +215,7 @@ class VendorController extends Controller
         } catch (\Exception $ex) {
             info($ex->getMessage());
         }
+
         Toastr::success(translate('messages.store_added_successfully'));
         return redirect('admin/store/list');
     }
@@ -274,11 +278,12 @@ class VendorController extends Controller
             }
         }
 
-        if ((session()->has('nadi_verified_number') && session()->get('again_verify')) && session()->get('again_verify') == true) {
-            if (session()->get('nadi_verified_number') != $request->nadi_number ) {
-                $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_member_number_does_not_match'));
+        if (is_null($store->nadi_number) || ($request->nadi_number != $store->nadi_number)) {
+            $nadiVerification = Helpers::nadiVerificationStatus($request->nadi_number);
+            if (!$nadiVerification) {
+                $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_number_not_verified'));
                 return back()->withErrors($validator)
-                        ->withInput();
+                            ->withInput();
             }
         }
 
@@ -374,6 +379,10 @@ class VendorController extends Controller
             $userinfo->image = $store->logo;
             $userinfo->save();
         }
+
+        //After store update nadi session forget
+        Session::forget(['nadi_verified_number', 'again_verify']);
+
         Toastr::success(translate('messages.store_updated_successfully'));
         return redirect('admin/store/list');
     }
