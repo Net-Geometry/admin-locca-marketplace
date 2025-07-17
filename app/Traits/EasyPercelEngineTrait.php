@@ -66,6 +66,64 @@ trait EasyPercelEngineTrait
         return self::makeHttpsRequest($endpoint, $payload);
     }
 
+    public static function payEngine(array $data): array
+    { // This function is only for the sandbox environment
+        self::initialize();
+
+        if ($error = self::failIfNotConfigured()) {
+            return $error;
+        }
+
+        $endpoint = self::$baseUrl . '?ac=EPPayOrderBulk';
+
+        $payload = [
+            'api' => self::$apiKey,
+            'bulk' => [$data],
+        ];
+
+        return self::makeHttpsRequest($endpoint, $payload);
+    }
+
+
+    public static function orderStatusEngine(array $data): array
+    {
+        self::initialize();
+
+        if ($error = self::failIfNotConfigured()) {
+            return $error;
+        }
+
+        $endpoint = self::$baseUrl . '?ac=EPOrderStatusBulk';
+
+        $payload = [
+            'api' => self::$apiKey,
+            'bulk' => [$data],
+        ];
+
+        return self::makeHttpsRequest($endpoint, $payload);
+    }
+
+
+    public static function trackingEngine(array $data): array
+    {
+        self::initialize();
+
+        if ($error = self::failIfNotConfigured()) {
+            return $error;
+        }
+
+        $endpoint = self::$baseUrl . '?ac=EPTrackingBulk';
+
+        $payload = [
+            'api' => self::$apiKey,
+            'bulk' => [$data],
+        ];
+
+        return self::makeHttpsRequest($endpoint, $payload);
+    }
+
+
+
 
     private static function makeHttpsRequest(string $url, array $data, array $headers = []): array
     {

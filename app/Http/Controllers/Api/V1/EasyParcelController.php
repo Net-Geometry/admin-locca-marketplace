@@ -10,7 +10,8 @@ use App\Traits\EasyPercelEngineTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class EasyParcelController extends Controller{
+class EasyParcelController extends Controller
+{
     use EasyPercelEngineTrait;
     public function countryList(Request $request)
     {
@@ -26,7 +27,7 @@ class EasyParcelController extends Controller{
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        $states = EasyParcelState::where('easy_parcel_country_id',$request->easy_parcel_country_id)->Active()->latest()->get();
+        $states = EasyParcelState::where('easy_parcel_country_id', $request->easy_parcel_country_id)->Active()->latest()->get();
         return response()->json($states, 200);
     }
 
@@ -54,7 +55,7 @@ class EasyParcelController extends Controller{
             'send_country' => $request['send_country'],
             'weight' => (float)$request['weight']
         ];
-        
+
 
         return response()->json($this->rateCheckEngine($data), 200);
     }
@@ -95,10 +96,27 @@ class EasyParcelController extends Controller{
         }
 
         $orderData = $request->only([
-            'weight', 'content', 'value', 'service_id',
-            'pick_name', 'pick_contact', 'pick_addr1', 'pick_city', 'pick_state', 'pick_code', 'pick_country',
-            'send_name', 'send_contact', 'send_addr1', 'send_city', 'send_state', 'send_code', 'send_country',
-            'collect_date', 'send_email', 'sms'
+            'weight',
+            'content',
+            'value',
+            'service_id',
+            'pick_name',
+            'pick_contact',
+            'pick_addr1',
+            'pick_city',
+            'pick_state',
+            'pick_code',
+            'pick_country',
+            'send_name',
+            'send_contact',
+            'send_addr1',
+            'send_city',
+            'send_state',
+            'send_code',
+            'send_country',
+            'collect_date',
+            'send_email',
+            'sms'
         ]);
 
         $orderData['weight'] = (float) $orderData['weight'];
@@ -110,5 +128,67 @@ class EasyParcelController extends Controller{
         return response()->json($response, $response['success'] ? 200 : 500);
     }
 
-   
+    public function payOrder(Request $request)
+    { // This function is only for the sandbox environment
+        $validator = Validator::make($request->all(), [
+            'order_no' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => Helpers::error_processor($validator)
+            ], 403);
+        }
+
+        $payload = [
+            'order_no' => $request->order_no,
+        ];
+
+        $response = $this->payEngine($payload);
+
+        return response()->json($response, $response['success'] ? 200 : 500);
+    }
+
+
+    public function orderStatus(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_no' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => Helpers::error_processor($validator)
+            ], 403);
+        }
+
+        $payload = [
+            'order_no' => $request->order_no,
+        ];
+
+        $response = $this->orderStatusEngine($payload);
+
+        return response()->json($response, $response['success'] ? 200 : 500);
+    }
+
+    public function trackParcel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'awb_no' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => Helpers::error_processor($validator)
+            ], 403);
+        }
+
+        $payload = [
+            'awb_no' => $request->awb_no,
+        ];
+
+        $response = $this->trackingEngine($payload);
+
+        return response()->json($response, $response['success'] ? 200 : 500);
+    }
 }

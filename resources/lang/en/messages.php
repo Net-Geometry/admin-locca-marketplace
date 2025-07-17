@@ -7957,4 +7957,5 @@ Smartly or Earn. ',
   'country_name' => 'Country name',
   'The collect date must be a date after or equal to today.' => 'The collect date must be a date after or equal to today.',
   'The easy parcel country id field is required.' => 'The easy parcel country id field is required.',
+  'The awb no field is required.' => 'The awb no field is required.',
 );
