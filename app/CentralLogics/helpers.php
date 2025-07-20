@@ -833,6 +833,8 @@ class Helpers
                 }
                 $item['self_delivery_system'] = (int) $item->sub_self_delivery;
                 $item['current_opening_time'] = self::getNextOpeningTime($item['schedules']) ?? 'closed';
+                $item['easy_parcel_country'] = $item->easy_parcel_country;
+                $item['easy_parcel_state'] = $item->easy_parcel_state;
                 unset($item['items_count']);
                 unset($item['campaigns_count']);
                 unset($item['storeConfig']);
@@ -863,6 +865,8 @@ class Helpers
             $data['total_items'] = $data['items_count'];
             $data['total_campaigns'] = $data['campaigns_count'];
             $data['current_opening_time'] = self::getNextOpeningTime($data['schedules']) ?? 'closed';
+            $data['easy_parcel_country'] = $data->easy_parcel_country;
+            $data['easy_parcel_state'] = $data->easy_parcel_state;
             unset($data['items_count']);
             unset($data['campaigns_count']);
             unset($data['campaigns']);

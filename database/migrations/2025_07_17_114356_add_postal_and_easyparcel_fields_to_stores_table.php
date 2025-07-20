@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('stores', function (Blueprint $table) {
             $table->string('postal_code')->nullable()->after('address'); 
-            $table->unsignedBigInteger('easyparcel_country_id')->nullable()->after('postal_code');
-            $table->unsignedBigInteger('easyparcel_state_id')->nullable()->after('easyparcel_country_id');
+            $table->unsignedBigInteger('easy_parcel_country_id')->nullable()->after('postal_code');
+            $table->unsignedBigInteger('easy_parcel_state_id')->nullable()->after('easy_parcel_country_id');
         });
     }
 
@@ -24,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('stores', function (Blueprint $table) {
-            $table->dropColumn(['postal_code', 'easyparcel_country_id', 'easyparcel_state_id']);
+            $table->dropColumn(['postal_code', 'easy_parcel_country_id', 'easy_parcel_state_id']);
         });
     }
 };
