@@ -50,8 +50,6 @@ class BusinessSetting extends Model
         });
 
         static::created(function ($item) {
-            $item->slug = $item->generateSlug($item->name);
-            $item->save();
             Helpers::deleteCacheData('business_settings_all_data');
         });
         static::deleted(function(){
