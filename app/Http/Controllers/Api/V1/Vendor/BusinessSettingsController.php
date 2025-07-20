@@ -99,6 +99,9 @@ class BusinessSettingsController extends Controller
         $store->meta_title = $data[2]['value'];
         $store->meta_description = $data[3]['value'];
         $store->meta_image = $request->has('meta_image') ? Helpers::update('store/', $store->meta_image, 'png', $request->file('meta_image')) : $store->meta_image;
+        $store->postal_code = $request->postal_code;
+        $store->easyparcel_country_id = $request->easyparcel_country_id;
+        $store->easyparcel_state_id = $request->easyparcel_state_id;
 
         $store->save();
 
