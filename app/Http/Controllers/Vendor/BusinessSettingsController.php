@@ -70,8 +70,8 @@ class BusinessSettingsController extends Controller
         $store->order_place_to_schedule_interval = $request->order_place_to_schedule_interval;
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->postal_code = $request->postal_code;
-        $store->easyparcel_country_id = $request->easyparcel_country_id;
-        $store->easyparcel_state_id = $request->easyparcel_state_id;
+        $store->easy_parcel_country_id = $request->easy_parcel_country_id;
+        $store->easy_parcel_state_id = $request->easy_parcel_state_id;
         $store->save();
         $conf = StoreConfig::firstOrNew(
             ['store_id' =>  $store->id]

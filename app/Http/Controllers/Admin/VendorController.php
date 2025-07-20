@@ -1035,7 +1035,7 @@ class VendorController extends Controller
         $request->validate([
             'minimum_order'=>'required',
             'postal_code'=>'required',
-            'easyparcel_country_id'=>'required',
+            'easy_parcel_country_id'=>'required',
             'minimum_delivery_time' => 'required|min:1|max:2',
             'maximum_delivery_time' => 'required|min:1|max:2|gt:minimum_delivery_time',
         ]);
@@ -1048,8 +1048,8 @@ class VendorController extends Controller
         $store->non_veg = (bool)($request->veg_non_veg == 'non_veg' || $request->veg_non_veg == 'both');
 
         $store->postal_code = $request->postal_code;
-        $store->easyparcel_country_id = $request->easyparcel_country_id;
-        $store->easyparcel_state_id = $request->easyparcel_state_id;
+        $store->easy_parcel_country_id = $request->easy_parcel_country_id;
+        $store->easy_parcel_state_id = $request->easy_parcel_state_id;
 
         $store->save();
         Toastr::success(translate('messages.store_settings_updated'));

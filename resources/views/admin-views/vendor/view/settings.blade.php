@@ -234,15 +234,15 @@
 
                              
                             <div class="form-group col-sm-6 col-lg-4">
-                                 <label class="input-label text-capitalize" for="easyparcel_country_id">
+                                 <label class="input-label text-capitalize" for="easy_parcel_country_id">
                                      {{ translate('messages.select_country') }}
                                  </label>
-                                 <select name="easyparcel_country_id" id="easyparcel_country_id" class="form-control js-select2-custom">
+                                 <select name="easy_parcel_country_id" id="easy_parcel_country_id" class="form-control js-select2-custom">
                                      <option value="">{{ translate('messages.select_country_code') }}</option>
                                      @foreach($easyParcelCountries as $country)
                                          <option value="{{ $country->id }}"
                                              data-code="{{ $country->country_code }}"
-                                             @if($store->easyparcel_country_id == $country->id || $country->country_code == 'MY') selected @endif>
+                                             @if($store->easy_parcel_country_id == $country->id || $country->country_code == 'MY') selected @endif>
                                              {{ $country->name }} ({{ $country->country_code }})
                                          </option>
                                      @endforeach
@@ -251,14 +251,14 @@
                              
                              {{-- State dropdown: hidden + disabled by default --}}
                              <div id="state-wrapper" class="form-group col-sm-6 col-lg-4" style="display: none;">
-                                 <label class="input-label text-capitalize" for="easyparcel_state_id">
+                                 <label class="input-label text-capitalize" for="easy_parcel_state_id">
                                      {{ translate('messages.select_state') }}
                                  </label>
-                                 <select name="easyparcel_state_id" id="easyparcel_state_id" class="form-control js-select2-custom" disabled>
+                                 <select name="easy_parcel_state_id" id="easy_parcel_state_id" class="form-control js-select2-custom" disabled>
                                      <option value="">{{ translate('messages.select_state') }}</option>
                                      @foreach($easyParcelStates as $state)
                                          <option value="{{ $state->id }}"
-                                             @if($store->easyparcel_state_id == $state->id) selected @endif>
+                                             @if($store->easy_parcel_state_id == $state->id) selected @endif>
                                              {{ $state->name }}
                                          </option>
                                      @endforeach
@@ -488,18 +488,18 @@
           <script>
               $(document).ready(function () {
                   function toggleStateDropdown() {
-                      const selectedCode = $('#easyparcel_country_id').find('option:selected').data('code');
+                      const selectedCode = $('#easy_parcel_country_id').find('option:selected').data('code');
                       if (selectedCode === 'MY') {
                           $('#state-wrapper').show();
-                          $('#easyparcel_state_id').prop('disabled', false);
+                          $('#easy_parcel_state_id').prop('disabled', false);
                       } else {
                           $('#state-wrapper').hide();
-                          $('#easyparcel_state_id').prop('disabled', true).val(null).trigger('change');
+                          $('#easy_parcel_state_id').prop('disabled', true).val(null).trigger('change');
                       }
                   }
           
                   toggleStateDropdown(); 
-                  $('#easyparcel_country_id').on('change', toggleStateDropdown);
+                  $('#easy_parcel_country_id').on('change', toggleStateDropdown);
               });
           </script>
 @endpush
