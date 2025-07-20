@@ -331,7 +331,18 @@ trait PaymentGatewayTrait
                 "PLN" => "Polish Zloty",
                 "CZK" => "Czech Koruna",
                 "HUF" => "Hungarian Forint"
-            ]
+            ],
+               "chip" => [
+                "EUR" => "Euro",
+                "TRY" => "Turkish Lira",
+                "IDR" => "Indonesian Rupiah",
+                "PHP" => "Philippine Peso",
+                "VND" => "Vietnamese Dong",
+                "THB" => "Thai Baht",
+                "MYR" => "Malaysian Ringgit",
+                "SGD" => "Singapore Dollar",
+                "USD" => "United States Dollar"
+            ],
         ];
 
         if ($key) {
