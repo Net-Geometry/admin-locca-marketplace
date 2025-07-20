@@ -242,7 +242,7 @@
                                      @foreach($easyParcelCountries as $country)
                                          <option value="{{ $country->id }}"
                                              data-code="{{ $country->country_code }}"
-                                             @if(old('easyparcel_country_id') == $country->id || $country->country_code == 'MY') selected @endif>
+                                             @if($store->easyparcel_country_id == $country->id || $country->country_code == 'MY') selected @endif>
                                              {{ $country->name }} ({{ $country->country_code }})
                                          </option>
                                      @endforeach
@@ -258,7 +258,7 @@
                                      <option value="">{{ translate('messages.select_state') }}</option>
                                      @foreach($easyParcelStates as $state)
                                          <option value="{{ $state->id }}"
-                                             @if(old('easyparcel_state_id') == $state->id) selected @endif>
+                                             @if($store->easyparcel_state_id == $state->id) selected @endif>
                                              {{ $state->name }}
                                          </option>
                                      @endforeach
