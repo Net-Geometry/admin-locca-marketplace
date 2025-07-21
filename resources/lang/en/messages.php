@@ -7983,4 +7983,6 @@ Smartly or Earn. ',
   'The pick contact field is required.' => 'The pick contact field is required.',
   'The pick addr1 field is required.' => 'The pick addr1 field is required.',
   'The pick city field is required.' => 'The pick city field is required.',
+  'The order id field is required.' => 'The order id field is required.',
+  'awb_not_found' => 'Awb not found',
 );
