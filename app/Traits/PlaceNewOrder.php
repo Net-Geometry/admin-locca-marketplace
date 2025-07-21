@@ -55,6 +55,7 @@ trait PlaceNewOrder
             'contact_person_email' => $request->user ? 'nullable' : 'required',
             'password' => $request->create_new_user ? ['required', Password::min(8)] : 'nullable',
             'order_attachment' => $is_prescription ? ['required'] : 'nullable',
+            'delivery_charge'=> 'required',
 
             
             'weight' => 'required|numeric|min:0.1',
@@ -156,7 +157,7 @@ trait PlaceNewOrder
              ], 403);
          }
 
-        try {
+        // try {
             DB::beginTransaction();
             $createNewUser =  $this->createNewUser($request);
 
@@ -278,6 +279,7 @@ trait PlaceNewOrder
             $order->order_amount = $request['order_amount'] ?? 0;
             $order->payment_status = ($request->partial_payment ? 'partially_paid' : ($request['payment_method'] == 'wallet' ? 'paid' : 'unpaid'));
             $order->order_status = $order_status;
+            $order->easy_parcel_order_amount=$request->delivery_charge;
             $order->coupon_code = $request['coupon_code'];
             $order->payment_method = $request->partial_payment ? 'partial_payment' : $request->payment_method;
             $order->transaction_reference = null;
@@ -665,12 +667,12 @@ trait PlaceNewOrder
                 'created_at' => $order->created_at,
                 'user_id' => (int) $order->user_id,
             ], 200);
-        } catch (\Exception $exception) {
+        // } catch (\Exception $exception) {
 
-            info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
-            DB::rollBack();
-            return response()->json([$exception], 403);
-        }
+        //     info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
+        //     DB::rollBack();
+        //     return response()->json([$exception], 403);
+        // }
 
         return response()->json([
             'errors' => [
@@ -1001,20 +1003,15 @@ trait PlaceNewOrder
                 ];
             }
 
-            $original_delivery_charge = (($request->distance * $per_km_shipping_charge) > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge  : $minimum_shipping_charge;
-            if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $original_delivery_charge >  $maximum_shipping_charge) {
-                $original_delivery_charge = $maximum_shipping_charge;
-            } else {
-                $original_delivery_charge = $original_delivery_charge;
-            }
+            $original_delivery_charge = $request->delivery_charge;
+            // if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $original_delivery_charge >  $maximum_shipping_charge) {
+            //     $original_delivery_charge = $maximum_shipping_charge;
+            // } else {
+            //     $original_delivery_charge = $original_delivery_charge;
+            // }
 
             if (!isset($delivery_charge)) {
-                $delivery_charge = ($request->distance * $per_km_shipping_charge > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge : $minimum_shipping_charge;
-                if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $delivery_charge >  $maximum_shipping_charge) {
-                    $delivery_charge = $maximum_shipping_charge;
-                } else {
-                    $delivery_charge = $delivery_charge;
-                }
+                $delivery_charge = $request->delivery_charge;
             }
             $original_delivery_charge = $original_delivery_charge + $extra_charges;
             $delivery_charge = $delivery_charge + $extra_charges;

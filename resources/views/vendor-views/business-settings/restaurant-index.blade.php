@@ -107,7 +107,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                      {{--  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
                             <div class="">
                                 <label
                                     class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control"
@@ -125,7 +125,7 @@
                                     </span>
                                 </label>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
                             <div class="">
                                 <label
