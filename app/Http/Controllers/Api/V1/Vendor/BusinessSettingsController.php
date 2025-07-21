@@ -29,7 +29,11 @@ class BusinessSettingsController extends Controller
             'gst' => 'required_if:gst_status,1',
             'minimum_delivery_time' => 'required|numeric',
             'maximum_delivery_time' => 'required|numeric',
-            'delivery_time_type'=>'required|in:min,hours,days'
+            'delivery_time_type'=>'required|in:min,hours,days',
+            'pick_name'     => 'required|string',
+            'pick_contact'  => 'required|string',
+            'pick_addr1'    => 'required|string',
+            'pick_city'     => 'required|string',
 
         ],[
             'gst.required_if' => translate('messages.gst_can_not_be_empty'),
