@@ -282,6 +282,13 @@
                                     @endif
 
                                 </h6>
+                                <h6>
+                                    <span>{{ translate('easy_parcel_cost') }}</span> <span>:</span>
+                                    
+                                    <span class="badge badge-soft-success ml-sm-3">
+                                           {{ \App\CentralLogics\Helpers::format_currency($order?->easy_parcel_order_amount ?? 0) }}
+                                    </span>
+                                </h6>
                                 @if ($order->store && $order->store->module->module_type == 'food')
                                     <h6>
                                         <span>{{ translate('cutlery') }}</span> <span>:</span>
