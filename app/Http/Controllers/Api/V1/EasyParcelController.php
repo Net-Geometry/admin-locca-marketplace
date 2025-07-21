@@ -6,6 +6,7 @@ use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\EasyParcelCountry;
 use App\Models\EasyParcelState;
+use App\Models\Order;
 use App\Traits\EasyPercelEngineTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -174,7 +175,7 @@ class EasyParcelController extends Controller
     public function trackParcel(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'awb_no' => 'required|string',
+            'order_id' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -182,13 +183,32 @@ class EasyParcelController extends Controller
                 'errors' => Helpers::error_processor($validator)
             ], 403);
         }
+        $order=Order::find($request->order_id);
 
+         if(!$order){
+            return response()->json([
+                'errors' => [
+                    ['code' => 'order', 'message' => translate('messages.not_found')]
+                ]
+            ], 404);
+         }
         $payload = [
-            'awb_no' => $request->awb_no,
+            'awb_no' => $order->awb_no,
         ];
 
         $response = $this->trackingEngine($payload);
 
+        if (
+            isset($response['data']['result'][0]['awb']) &&
+            empty($response['data']['result'][0]['awb'])
+        ) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'awb', 'message' => translate('messages.awb_not_found')]
+                ]
+            ], 403);
+        }
+        
         return response()->json($response, $response['success'] ? 200 : 500);
     }
 }

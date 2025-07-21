@@ -75,7 +75,7 @@
                         </div>
                         @if ($store->store_business_model == 'commission')
 
-                        <div class="col-sm-6 col-lg-4">
+                  {{--      <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="self_delivery_system">
                                 <span class="pr-2 text-capitalize">{{translate('Store-managed_Delivery')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_this_option_is_enabled,_stores_must_deliver_orders_using_their_own_deliverymen._Plus,_stores_will_get_the_option_to_add_their_own_deliverymen_from_the_store_panel.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.self_delivery_hint')}}"></span></span>
@@ -85,7 +85,7 @@
                                     </span>
                                 </label>
                             </div>
-                        </div>
+                        </div> --}}
                         @endif
                         <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
@@ -264,6 +264,49 @@
                                      @endforeach
                                  </select>
                              </div>
+
+
+
+                             <div class="form-group col-sm-6 col-lg-4">
+                             <label class="input-label text-capitalize" for="pick_name">
+                                 {{ translate('messages.pick_name') }}
+                                 <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Enter_the_pickup_person_name.') }}">
+                                     <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}" alt="{{ translate('Enter_the_pickup_person_name.') }}">
+                                 </span>
+                             </label>
+                             <input type="text" name="pick_name" id="pick_name" class="form-control" value="{{ $store->pick_name ?? '' }}" placeholder="{{ translate('Alice') }}">
+                         </div>
+                         
+                         <div class="form-group col-sm-6 col-lg-4">
+                             <label class="input-label text-capitalize" for="pick_contact">
+                                 {{ translate('messages.pick_contact') }}
+                                 <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Enter_the_pickup_contact_number.') }}">
+                                     <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}" alt="{{ translate('Enter_the_pickup_contact_number.') }}">
+                                 </span>
+                             </label>
+                             <input type="text" name="pick_contact" id="pick_contact" class="form-control" value="{{ $store->pick_contact ?? '' }}" placeholder="{{ translate('0123456789') }}">
+                         </div>
+                         
+                         <div class="form-group col-sm-6 col-lg-4">
+                             <label class="input-label text-capitalize" for="pick_addr1">
+                                 {{ translate('messages.pick_address') }}
+                                 <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Enter_the_pickup_address_line_1.') }}">
+                                     <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}" alt="{{ translate('Enter_the_pickup_address_line_1.') }}">
+                                 </span>
+                             </label>
+                             <input type="text" name="pick_addr1" id="pick_addr1" class="form-control" value="{{ $store->pick_addr1 ?? '' }}" placeholder="{{ translate('123 Main Street') }}">
+                         </div>
+                         
+                         <div class="form-group col-sm-6 col-lg-4">
+                             <label class="input-label text-capitalize" for="pick_city">
+                                 {{ translate('messages.pick_city') }}
+                                 <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Enter_the_pickup_city.') }}">
+                                     <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}" alt="{{ translate('Enter_the_pickup_city.') }}">
+                                 </span>
+                             </label>
+                             <input type="text" name="pick_city" id="pick_city" class="form-control" value="{{ $store->pick_city ?? '' }}" placeholder="{{ translate('Kuala Lumpur') }}">
+</div>
+
 
 
                           

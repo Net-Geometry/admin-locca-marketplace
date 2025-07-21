@@ -56,6 +56,7 @@ class CustomerController extends Controller
             'contact_person_number' => 'required',
             'easy_parcel_country_id' => 'required',
             'postal_code' => 'required',
+            'city'     => 'required',
             'address' => 'required',
             'longitude' => 'required',
             'latitude' => 'required',
@@ -88,6 +89,7 @@ class CustomerController extends Controller
             'easy_parcel_country_id' => $request->easy_parcel_country_id,
             'easy_parcel_state_id' => $request->easy_parcel_state_id,
             'postal_code' => $request->postal_code,
+            'city' => $request->city,
             'zone_id' => $zone[0]->id,
             'created_at' => now(),
             'updated_at' => now()
@@ -105,6 +107,7 @@ class CustomerController extends Controller
             'address' => 'required',
             'easy_parcel_country_id' => 'required',
             'postal_code' => 'required',
+            'city'     => 'required',
             'longitude' => 'required',
             'latitude' => 'required'
         ]);
@@ -134,6 +137,7 @@ class CustomerController extends Controller
             'easy_parcel_country_id' => $request->easy_parcel_country_id,
             'easy_parcel_state_id' => $request->easy_parcel_state_id,
             'postal_code' => $request->postal_code,
+            'city' => $request->city,
             'zone_id' => $zone[0]->id,
             'created_at' => now(),
             'updated_at' => now()

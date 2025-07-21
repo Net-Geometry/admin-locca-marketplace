@@ -27,12 +27,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use  App\Mail\CustomerRegistration;
+use App\Traits\EasyPercelEngineTrait;
 use App\Mail\PlaceOrder;
 use App\Models\AddOn;
 
 trait PlaceNewOrder
 {
-
+    use EasyPercelEngineTrait;
     public function new_place_order(Request $request, $is_prescription = false)
     {
         $validator = Validator::make($request->all(), [
@@ -54,12 +55,109 @@ trait PlaceNewOrder
             'contact_person_email' => $request->user ? 'nullable' : 'required',
             'password' => $request->create_new_user ? ['required', Password::min(8)] : 'nullable',
             'order_attachment' => $is_prescription ? ['required'] : 'nullable',
+            'delivery_charge'=> 'required',
+
+            
+            'weight' => 'required|numeric|min:0.1',
+        
+
+            'send_name' => 'required|string',
+            'send_contact' => 'required|string',
+            'send_addr1' => 'required|string',
+            'send_city' => 'required|string',
+            'send_state' => 'required|string',
+            'send_code' => 'required|string',
+            'send_country' => 'required|string',
+
+            'send_email' => 'nullable|email',
+
+
         ]);
+
 
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        try {
+
+     
+        $orderData = $request->only([
+            'weight',
+            'service_id',
+            'send_name',
+            'send_contact',
+            'send_addr1',
+            'send_city',
+            'send_state',
+            'send_code',
+            'send_country',
+            'send_email',
+        ]);
+        $currentStore = Store::find($request->store_id);
+
+        $orderData['pick_name']    = $currentStore->pick_name;
+        $orderData['pick_contact'] = $currentStore->pick_contact;
+        $orderData['pick_addr1']   = $currentStore->pick_addr1;
+        $orderData['pick_city']    = $currentStore->pick_city;
+        $orderData['pick_state']   = $currentStore->easy_parcel_state->state_code??null;
+        $orderData['pick_code']    = $currentStore->postal_code ?? null;
+        $orderData['pick_country'] = $currentStore->easy_parcel_country->country_code ?? null;
+        //for development start
+        $orderData['send_contact']="0198765432";
+        $orderData['send_code']="11950";
+        //for development  end
+        $orderData['collect_date'] = now()->format('Y-m-d');
+        $orderData['sms']          = false;
+        $orderData['content']      = 'Books';
+        $orderData['value']        = 1;
+        
+
+
+        $orderData['weight'] = (float) $orderData['weight'];
+        $orderData['value'] = (float) $orderData['value'];
+        $orderData['sms'] = filter_var($orderData['sms'], FILTER_VALIDATE_BOOLEAN);
+
+        $response = $this->orderSubmitEngine($orderData);
+        $status  = $response['data']['result'][0]['status'] ?? null;
+        $remarks = $response['data']['result'][0]['remarks'] ?? 'Order submission failed.';
+        
+        if (empty($status) || $status !== 'Success') {
+            info(['EasyParcel Blocked', 'status' => $status, 'remarks' => $remarks]);
+        
+            return response()->json([
+                'message' => $remarks,
+            ], 403);
+        }
+   
+
+        $orderNumber = $response['data']['result'][0]['order_number'] ?? null;
+
+        $payload = [
+            'order_no' => $orderNumber,
+        ];
+        
+
+        $response = $this->payEngine($payload);
+
+        $responseData = $response['data']['result'][0] ?? [];
+         
+         $orderno = $responseData['orderno'] ?? null;
+         
+        //  $parcelData = $responseData['parcel'][0] ?? [];
+         
+         $awb         = $parcelData['awb'] ?? null;
+         $awbIdLink   = $parcelData['awb_id_link'] ?? null;
+         $trackingUrl = $parcelData['tracking_url'] ?? null;
+
+         // Block if status is "Fail", empty, or anything other than "Success"
+         if (empty($status) || strtolower($status) === 'fail' || $status !== 'Success') {
+             info(['EasyParcel Blocked', 'status' => $status, 'remarks' => $remarks]);
+         
+             return response()->json([
+                 'message' => $remarks,
+             ], 403);
+         }
+
+        // try {
             DB::beginTransaction();
             $createNewUser =  $this->createNewUser($request);
 
@@ -181,6 +279,7 @@ trait PlaceNewOrder
             $order->order_amount = $request['order_amount'] ?? 0;
             $order->payment_status = ($request->partial_payment ? 'partially_paid' : ($request['payment_method'] == 'wallet' ? 'paid' : 'unpaid'));
             $order->order_status = $order_status;
+            $order->easy_parcel_order_amount=$request->delivery_charge;
             $order->coupon_code = $request['coupon_code'];
             $order->payment_method = $request->partial_payment ? 'partial_payment' : $request->payment_method;
             $order->transaction_reference = null;
@@ -453,6 +552,10 @@ trait PlaceNewOrder
             }
             $order->flash_admin_discount_amount = round($flash_sale_admin_discount_amount, config('round_up_to_digit'));
             $order->flash_store_discount_amount = round($flash_sale_vendor_discount_amount, config('round_up_to_digit'));
+            $order->awb_no=$awb;
+            $order->easy_parcel_order_no=$orderno;
+            $order->awb_id_link=$awbIdLink;
+            $order->tracking_url=$trackingUrl;
 
             //DM TIPS
             $order->order_amount = $order->order_amount + $order->dm_tips + $order->additional_charge + $order->extra_packaging_amount;
@@ -564,12 +667,12 @@ trait PlaceNewOrder
                 'created_at' => $order->created_at,
                 'user_id' => (int) $order->user_id,
             ], 200);
-        } catch (\Exception $exception) {
+        // } catch (\Exception $exception) {
 
-            info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
-            DB::rollBack();
-            return response()->json([$exception], 403);
-        }
+        //     info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
+        //     DB::rollBack();
+        //     return response()->json([$exception], 403);
+        // }
 
         return response()->json([
             'errors' => [
@@ -900,20 +1003,15 @@ trait PlaceNewOrder
                 ];
             }
 
-            $original_delivery_charge = (($request->distance * $per_km_shipping_charge) > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge  : $minimum_shipping_charge;
-            if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $original_delivery_charge >  $maximum_shipping_charge) {
-                $original_delivery_charge = $maximum_shipping_charge;
-            } else {
-                $original_delivery_charge = $original_delivery_charge;
-            }
+            $original_delivery_charge = $request->delivery_charge;
+            // if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $original_delivery_charge >  $maximum_shipping_charge) {
+            //     $original_delivery_charge = $maximum_shipping_charge;
+            // } else {
+            //     $original_delivery_charge = $original_delivery_charge;
+            // }
 
             if (!isset($delivery_charge)) {
-                $delivery_charge = ($request->distance * $per_km_shipping_charge > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge : $minimum_shipping_charge;
-                if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $delivery_charge >  $maximum_shipping_charge) {
-                    $delivery_charge = $maximum_shipping_charge;
-                } else {
-                    $delivery_charge = $delivery_charge;
-                }
+                $delivery_charge = $request->delivery_charge;
             }
             $original_delivery_charge = $original_delivery_charge + $extra_charges;
             $delivery_charge = $delivery_charge + $extra_charges;

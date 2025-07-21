@@ -29,7 +29,11 @@ class BusinessSettingsController extends Controller
             'gst' => 'required_if:gst_status,1',
             'minimum_delivery_time' => 'required|numeric',
             'maximum_delivery_time' => 'required|numeric',
-            'delivery_time_type'=>'required|in:min,hours,days'
+            'delivery_time_type'=>'required|in:min,hours,days',
+            'pick_name'     => 'required|string',
+            'pick_contact'  => 'required|string',
+            'pick_addr1'    => 'required|string',
+            'pick_city'     => 'required|string',
 
         ],[
             'gst.required_if' => translate('messages.gst_can_not_be_empty'),
@@ -102,6 +106,10 @@ class BusinessSettingsController extends Controller
         $store->postal_code = $request->postal_code;
         $store->easy_parcel_country_id = $request->easy_parcel_country_id;
         $store->easy_parcel_state_id = $request->easy_parcel_state_id;
+        $store->pick_name = $request->pick_name;
+        $store->pick_contact = $request->pick_contact;
+        $store->pick_addr1 = $request->pick_addr1;
+        $store->pick_city = $request->pick_city;
 
         $store->save();
 

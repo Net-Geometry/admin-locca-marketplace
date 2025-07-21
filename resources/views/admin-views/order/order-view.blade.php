@@ -1284,14 +1284,14 @@
                                         </div>
                                     </div>
                                 @endif
-                                @if (!in_array($order->order_status, [ 'refunded','delivered', 'canceled']) &&  ( !$order->delivery_man && $order['order_type'] != 'take_away' && (($order->store && !$order?->store?->sub_self_delivery) || $parcel_order)))
+                               {{-- @if (!in_array($order->order_status, [ 'refunded','delivered', 'canceled']) &&  ( !$order->delivery_man && $order['order_type'] != 'take_away' && (($order->store && !$order?->store?->sub_self_delivery) || $parcel_order)))
                                     <div class="w-100 text-center mt-3">
                                         <button type="button" class="btn btn--primary w-100" data-toggle="modal"
                                                 data-target="#myModal" data-lat='21.03' data-lng='105.85'>
                                             {{ translate('messages.assign_delivery_man_manually') }}
                                         </button>
                                     </div>
-                                @endif
+                                @endif --}}
                             @endif
                         </div>
                     </div>
