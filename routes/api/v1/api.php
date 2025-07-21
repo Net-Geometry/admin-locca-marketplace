@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EasyParcelWebhookController;
 use App\WebSockets\Handler\DMLocationSocketHandler;
 use Illuminate\Support\Facades\Route;
 use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
@@ -14,6 +15,8 @@ use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('/easy-parcel-webhook', [EasyParcelWebhookController::class,'trackingHook']);
 
 Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function () {
     Route::group(['prefix' => 'configurations'], function () {
