@@ -41,6 +41,8 @@ trait PlaceNewOrder
             'order_type' => 'required|in:take_away,delivery,parcel',
             'store_id' => 'required_unless:order_type,parcel',
             'distance' => 'required_unless:order_type,take_away',
+            'awb_no' => 'required_unless:order_type,take_away',
+            'easy_parcel_order_no' => 'required_unless:order_type,take_away',
             'address' => 'required_unless:order_type,take_away',
             'longitude' => 'required_unless:order_type,take_away',
             'latitude' => 'required_unless:order_type,take_away',
@@ -453,6 +455,8 @@ trait PlaceNewOrder
             }
             $order->flash_admin_discount_amount = round($flash_sale_admin_discount_amount, config('round_up_to_digit'));
             $order->flash_store_discount_amount = round($flash_sale_vendor_discount_amount, config('round_up_to_digit'));
+            $order->awb_no=$request->awb_no;
+            $order->easy_parcel_order_no=$request->easy_parcel_order_no;
 
             //DM TIPS
             $order->order_amount = $order->order_amount + $order->dm_tips + $order->additional_charge + $order->extra_packaging_amount;
