@@ -36,10 +36,10 @@ class EasyParcelController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'pick_code' => 'required',
-            'pick_state' => 'required',
+            'pick_state' => 'nullable',
             'pick_country' => 'required',
             'send_code' => 'required',
-            'send_state' => 'required',
+            'send_state' => 'nullable',
             'send_country' => 'required',
             'weight' => 'required|numeric|min:0.1',
         ]);
