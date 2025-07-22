@@ -279,7 +279,7 @@ trait PlaceNewOrder
             $order->order_amount = $request['order_amount'] ?? 0;
             $order->payment_status = ($request->partial_payment ? 'partially_paid' : ($request['payment_method'] == 'wallet' ? 'paid' : 'unpaid'));
             $order->order_status = $order_status;
-            $order->easy_parcel_order_amount=$request->delivery_charge;
+            $order->easy_parcel_order_amount=round($request->delivery_charge, config('round_up_to_digit'));
             $order->coupon_code = $request['coupon_code'];
             $order->payment_method = $request->partial_payment ? 'partial_payment' : $request->payment_method;
             $order->transaction_reference = null;
