@@ -444,6 +444,84 @@ class VendorLoginController extends Controller
         return null ;
     }
 
+
+    // Send OTP for vendor login for Nadi Verification
+    public function resend_otp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $vendor = Vendor::Where(['email' => $request['email']])->first();
+
+        if (!$vendor) {
+            return response()->json([
+                'errors' => [['code' => 'auth-001', 'message' => translate('messages.vendor_not_found')]]
+            ], 401);
+        }
+
+        if(env('APP_ENV')!='live')
+        {
+            return response()->json(['message' => translate('messages.otp_sent_successfull')], 200);
+        }
+
+        //Send OTP for Phone verification
+        $otp_interval_time= 60; //seconds
+        $verification_data= DB::table('phone_verifications')->where('phone', $request['phone'])->first();
+        if(isset($verification_data) &&  Carbon::parse($verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
+            $time= $otp_interval_time - Carbon::parse($verification_data->updated_at)->DiffInSeconds();
+            $errors = [];
+            array_push($errors, ['code' => 'otp', 'message' =>  translate('messages.please_try_again_after_').$time.' '.translate('messages.seconds')]);
+            return response()->json([
+                'errors' => $errors
+            ], 405);
+        }
+
+
+        $otp = rand(100000, 999999);
+        if(env('APP_MODE') == 'test'){
+            $otp = '123456';
+        }
+
+        DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
+            [
+                'token' => $otp,
+                'otp_hit_count' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+        $published_status = 0;
+        $payment_published_status = config('get_payment_publish_status');
+        if (isset($payment_published_status[0]['is_published'])) {
+            $published_status = $payment_published_status[0]['is_published'];
+        }
+
+        if($published_status == 1){
+            $response = SmsGateway::send($request['phone'],$otp);
+        }else{
+            $response = SMS_module::send($request['phone'],$otp);
+        }
+
+        if(env('APP_MODE') != 'test' && $response !== 'success') {
+            $errors = [];
+            array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
+            return response()->json([
+                'errors' => $errors
+            ], 405);
+        }
+
+        return response()->json([
+            'message' => translate('messages.otp_sent_successfull')
+        ], 200);
+
+    }
+
+
     // Verify vendor OTP after register Nadi verified vendor
     public function verify_otp(Request $request)
     {
@@ -478,19 +556,6 @@ class VendorLoginController extends Controller
     
         $token = $this->genarate_token($vendor->email);
         $store = $vendor->stores[0] ?? null;
-        
-        // Check store subscription
-        $subscriptionCheck = $this->storeSubscriptionCheck($store, $vendor, $token);
-        if (data_get($subscriptionCheck, 'type') !== null) {
-            return response()->json(data_get($subscriptionCheck, 'data'), data_get($subscriptionCheck, 'code'));
-        }
-    
-        // Check rental module
-        if ($store?->module?->module_type === 'rental' && !addon_published_status('Rental')) {
-            return response()->json([
-                'errors' => [['code' => 'auth-001', 'message' => translate('rental_module_is_not_available')]]
-            ], 401);
-        }
     
         // Update vendor and cleanup
         $vendor->auth_token = $token;
@@ -506,5 +571,4 @@ class VendorLoginController extends Controller
             'module_type' => $store->module->module_type
         ], 200);
     }
-
 }
