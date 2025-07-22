@@ -270,7 +270,7 @@ class VendorLoginController extends Controller
             }
             //Send OTP for Phone verification
             $otp_interval_time= 60; //seconds
-            $verification_data= DB::table('phone_verifications')->where('phone', $request['phone'])->first();
+            $verification_data= DB::table('phone_verifications')->where('phone', $vendor->phone)->first();
             if(isset($verification_data) &&  Carbon::parse($verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
                 $time= $otp_interval_time - Carbon::parse($verification_data->updated_at)->DiffInSeconds();
                 $errors = [];
@@ -281,11 +281,11 @@ class VendorLoginController extends Controller
             }
 
             $otp = rand(100000, 999999);
-            if(env('APP_MODE') == 'test'){
-                $otp = '123456';
+            if(env('APP_ENV')!='live'){
+                $otp = '1234';
             }
 
-            DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
+            DB::table('phone_verifications')->updateOrInsert(['phone' => $vendor->phone],
                 [
                     'token' => $otp,
                     'otp_hit_count' => 0,
@@ -299,13 +299,15 @@ class VendorLoginController extends Controller
                 $published_status = $payment_published_status[0]['is_published'];
             }
 
-            if($published_status == 1){
-                $response = SmsGateway::send($request['phone'],$otp);
-            }else{
-                $response = SMS_module::send($request['phone'],$otp);
+            if (env('APP_ENV') =='live') {
+                if($published_status == 1){
+                    $response = SmsGateway::send($vendor->phone,$otp);
+                }else{
+                    $response = SMS_module::send($vendor->phone,$otp);
+                }    
             }
 
-            if(env('APP_MODE') != 'test' && $response !== 'success') {
+            if(env('APP_ENV')!='live' && $response !== 'success') {
                 $errors = [];
                 array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
                 return response()->json([
@@ -464,14 +466,9 @@ class VendorLoginController extends Controller
             ], 401);
         }
 
-        if(env('APP_ENV')!='live')
-        {
-            return response()->json(['message' => translate('messages.otp_sent_successfull')], 200);
-        }
-
         //Send OTP for Phone verification
         $otp_interval_time= 60; //seconds
-        $verification_data= DB::table('phone_verifications')->where('phone', $request['phone'])->first();
+        $verification_data= DB::table('phone_verifications')->where('phone', $vendor->phone)->first();
         if(isset($verification_data) &&  Carbon::parse($verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
             $time= $otp_interval_time - Carbon::parse($verification_data->updated_at)->DiffInSeconds();
             $errors = [];
@@ -483,11 +480,11 @@ class VendorLoginController extends Controller
 
 
         $otp = rand(100000, 999999);
-        if(env('APP_MODE') == 'test'){
-            $otp = '123456';
+        if(env('APP_ENV')!='live'){
+            $otp = '1234';
         }
 
-        DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
+        DB::table('phone_verifications')->updateOrInsert(['phone' => $vendor->phone],
             [
                 'token' => $otp,
                 'otp_hit_count' => 0,
@@ -501,13 +498,15 @@ class VendorLoginController extends Controller
             $published_status = $payment_published_status[0]['is_published'];
         }
 
-        if($published_status == 1){
-            $response = SmsGateway::send($request['phone'],$otp);
-        }else{
-            $response = SMS_module::send($request['phone'],$otp);
+        if (env('APP_ENV') =='live') {
+            if($published_status == 1){
+                $response = SmsGateway::send($vendor->phone,$otp);
+            }else{
+                $response = SMS_module::send($vendor->phone,$otp);
+            }
         }
 
-        if(env('APP_MODE') != 'test' && $response !== 'success') {
+        if(env('APP_ENV') != 'live' && $response !== 'success') {
             $errors = [];
             array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
             return response()->json([
