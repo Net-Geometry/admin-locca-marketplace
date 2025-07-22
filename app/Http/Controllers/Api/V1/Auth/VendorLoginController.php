@@ -53,10 +53,6 @@ class VendorLoginController extends Controller
                 $token = $this->genarate_token($request['email']);
                 $vendor = Vendor::where(['email' => $request['email']])->first();
 
-                if($vendor->is_phone_verified == 0){
-                    $token = null;
-                    return response()->json(['token' => $token, 'is_phone_verified'=> 0, 'zone_wise_topic'=> $vendor->stores[0]->zone->store_wise_topic, 'module_type' => $vendor?->stores[0]?->module?->module_type], 200);
-                }
                     
                 $storeSubscriptionCheck=  $this->storeSubscriptionCheck($vendor?->stores[0],$vendor,$token);
 
@@ -73,6 +69,12 @@ class VendorLoginController extends Controller
                             ], 401);
                         }
                     }
+                
+                if($vendor->is_phone_verified == 0){
+                    $token = null;
+                    return response()->json(['token' => $token, 'is_phone_verified'=> 0, 'zone_wise_topic'=> $vendor->stores[0]->zone->store_wise_topic, 'module_type' => $vendor?->stores[0]?->module?->module_type], 200);
+                }
+                
                 $vendor->auth_token = $token;
                 $vendor->save();
                 return response()->json(['token' => $token, 'is_phone_verified'=> 1,  'zone_wise_topic'=> $vendor->stores[0]->zone->store_wise_topic, 'module_type' => $vendor?->stores[0]?->module?->module_type], 200);
