@@ -73,8 +73,7 @@ trait PlaceNewOrder
 
 
         ]);
-
-
+ 
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
@@ -92,6 +91,8 @@ trait PlaceNewOrder
             'send_country',
             'send_email',
         ]);
+
+        if($request->order_type!="parcel"){
         $currentStore = Store::find($request->store_id);
 
         $orderData['pick_name']    = $currentStore->pick_name;
@@ -101,6 +102,19 @@ trait PlaceNewOrder
         $orderData['pick_state']   = $currentStore->easy_parcel_state->state_code??null;
         $orderData['pick_code']    = $currentStore->postal_code ?? null;
         $orderData['pick_country'] = $currentStore->easy_parcel_country->country_code ?? null;
+
+        }
+        else{
+          $receiver_details=json_decode($request->receiver_details,true);
+           $orderData['pick_name']    = $receiver_details['contact_person_name'];
+           $orderData['pick_contact'] = $receiver_details['contact_person_number'];
+           $orderData['pick_addr1']   = $receiver_details['address'];
+           $orderData['pick_city']    = $receiver_details['city'];
+           $orderData['pick_state']   = $receiver_details['easy_parcel_state']['state_code']??null;
+           $orderData['pick_code']    = $receiver_details['postal_code']?? null;
+           $orderData['pick_country'] = $receiver_details['easy_parcel_country']['country_code']?? null;
+        }
+
         //for development start
         $orderData['send_contact']="0198765432";
         $orderData['send_code']="11950";

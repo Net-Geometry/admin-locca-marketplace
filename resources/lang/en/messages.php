@@ -7986,4 +7986,6 @@ Smartly or Earn. ',
   'The order id field is required.' => 'The order id field is required.',
   'awb_not_found' => 'Awb not found',
   'easy_parcel_cost' => 'Easy parcel cost',
+  'The send state field is required unless country code is in MY.' => 'The send state field is required unless country code is in MY.',
+  'The send state field is required unless country code is in bd.' => 'The send state field is required unless country code is in bd.',
 );
