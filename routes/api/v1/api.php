@@ -406,9 +406,9 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
 
                 Route::group(['prefix' => 'easy-parcel'], function (
                     ) {
-                    Route::get('country-list', 'EasyParcelController@countryList');
-                    Route::get('state-list', 'EasyParcelController@stateList');
-                    Route::get('rate-check', 'EasyParcelController@rateCheck');
+                    Route::get('country-list', 'EasyParcelController@countryList')->withoutMiddleware('apiGuestCheck');
+                    Route::get('state-list', 'EasyParcelController@stateList')->withoutMiddleware('apiGuestCheck');
+                    Route::get('rate-check', 'EasyParcelController@rateCheck')->withoutMiddleware('apiGuestCheck');
                     Route::post('submit-order', 'EasyParcelController@submitOrder');
                     Route::post('pay-for-sandbox-order', 'EasyParcelController@payOrder');
                     Route::post('order-status', 'EasyParcelController@orderStatus');
