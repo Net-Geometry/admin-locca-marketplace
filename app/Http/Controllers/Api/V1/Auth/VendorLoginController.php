@@ -280,43 +280,40 @@ class VendorLoginController extends Controller
                 ], 405);
             }
 
-            $otp = rand(100000, 999999);
-            if(env('APP_ENV')!='live'){
-                $otp = '1234';
-            }
-
-            DB::table('phone_verifications')->updateOrInsert(['phone' => $vendor->phone],
-                [
-                    'token' => $otp,
-                    'otp_hit_count' => 0,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-
-            $published_status = 0;
-            $payment_published_status = config('get_payment_publish_status');
-            if (isset($payment_published_status[0]['is_published'])) {
-                $published_status = $payment_published_status[0]['is_published'];
-            }
-
-            if (env('APP_ENV') =='live') {
-                if($published_status == 1){
-                    $response = SmsGateway::send($vendor->phone,$otp);
-                }else{
-                    $response = SMS_module::send($vendor->phone,$otp);
-                }
-
-                if(env('APP_ENV')!='live' && $response !== 'success') {
-                    $errors = [];
-                    array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
-                    return response()->json([
-                        'errors' => $errors
-                    ], 405);
-                }
-            }
-
         }catch(\Exception $ex){
             info($ex->getMessage());
+        }
+
+
+        $otp = rand(1000, 9999);
+        if(env('APP_ENV')!='live'){
+            $otp = '1234';
+        }
+
+        DB::table('phone_verifications')->updateOrInsert(['phone' => $vendor->phone],
+            [
+                'token' => $otp,
+                'otp_hit_count' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+        $published_status = 0;
+        $payment_published_status = config('get_payment_publish_status');
+        if (isset($payment_published_status[0]['is_published'])) {
+            $published_status = $payment_published_status[0]['is_published'];
+        }
+
+        if (env('APP_ENV') =='live') {
+            if($published_status == 1){
+                $response = SmsGateway::send($vendor->phone,$otp);
+            }else{
+                $response = SMS_module::send($vendor->phone,$otp);
+            }
+
+            if(env('APP_ENV')!='live' && $response !== 'success') {
+                info(['vendor_register_otp_failed' => $response]);
+            }
         }
 
 
@@ -479,7 +476,7 @@ class VendorLoginController extends Controller
         }
 
 
-        $otp = rand(100000, 999999);
+        $otp = rand(1000, 9999);
         if(env('APP_ENV')!='live'){
             $otp = '1234';
         }

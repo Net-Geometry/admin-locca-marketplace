@@ -61,6 +61,11 @@ Route::post('verify-otp', 'LoginController@verify_token')->name('verify-otp');
 Route::post('reset-password-submit', 'LoginController@reset_password_submit')->name('reset-password-submit');
 Route::get('otp-resent', 'LoginController@otp_resent')->name('otp_resent');
 
+// Customization
+Route::get('vendor/verify-phone/{id}', 'LoginController@verify_phone')->name('vendor.verify-phone');
+Route::post('vendor/verify-phone-otp', 'LoginController@verify_phone_otp')->name('vendor.verify-phone-otp');
+Route::post('vendor/resend-otp', 'LoginController@resend_otp')->name('vendor.resend-otp');
+
 Route::get('authentication-failed', function () {
     $errors = [];
     array_push($errors, ['code' => 'auth-001', 'message' => 'Unauthenticated.']);
@@ -247,3 +252,6 @@ Route::get('/image-proxy', function () {
 Route::post('/nadi-verify-number', [VendorController::class, 'nadi_verify'])->name('nadi-verify-number')->withoutMiddleware(VerifyCsrfToken::class);
 
 
+Route::get('/otp', function () {
+return view('vendor-views.auth.otp');    
+})->name('otp')->withoutMiddleware(VerifyCsrfToken::class);

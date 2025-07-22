@@ -9,6 +9,7 @@ use App\Models\Module;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
+use App\CentralLogics\SMS_module;
 use App\Mail\StoreRegistration;
 use App\Models\BusinessSetting;
 use App\CentralLogics\StoreLogic;
@@ -17,6 +18,7 @@ use App\Models\SubscriptionPackage;
 use Gregwar\Captcha\CaptchaBuilder;
 use App\Mail\VendorSelfRegistration;
 use Brian\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -25,6 +27,7 @@ use Illuminate\Validation\Rules\Password;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use Modules\Rental\Emails\ProviderRegistration;
 use Modules\Rental\Emails\ProviderSelfRegistration;
+use Modules\Gateways\Traits\SmsGateway;
 
 class VendorController extends Controller
 {
@@ -210,6 +213,38 @@ class VendorController extends Controller
         if(config('module.'.$store->module->module_type)['always_open'])
         {
             StoreLogic::insert_schedule($store->id);
+        }
+
+
+        $otp = rand(1000, 9999);
+        if(env('APP_ENV')!='live'){
+            $otp = '1234';
+        }
+
+        DB::table('phone_verifications')->updateOrInsert(['phone' => $vendor->phone],
+            [
+                'token' => $otp,
+                'otp_hit_count' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+        $published_status = 0;
+        $payment_published_status = config('get_payment_publish_status');
+        if (isset($payment_published_status[0]['is_published'])) {
+            $published_status = $payment_published_status[0]['is_published'];
+        }
+
+        if (env('APP_ENV') =='live') {
+            if($published_status == 1){
+                $response = SmsGateway::send($vendor->phone,$otp);
+            }else{
+                $response = SMS_module::send($vendor->phone,$otp);
+            }
+
+            if(env('APP_ENV')!='live' && $response !== 'success') {
+                info(['vendor_register_otp_failed_web' => $response]);
+            }
         }
 
         if (Helpers::subscription_check()) {
