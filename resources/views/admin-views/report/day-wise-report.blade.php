@@ -320,7 +320,7 @@
                                     {{\App\CentralLogics\Helpers::number_format_short($store_earned) }}</h4>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <!-- <div class="col-md-12">
                             <div class="__card-vertical">
                                 <div class="__card-vertical-img">
                                     <img class="img"
@@ -336,7 +336,7 @@
                                 <h4 class="earning text-FF7500">
                                     {{ \App\CentralLogics\Helpers::number_format_short($deliveryman_earned) }}</h4>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -421,7 +421,7 @@
                                 <th class="border-0">{{ translate('messages.admin_commission') }}</th>
                                 <th class="border-0">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</th>
                                 <th class="border-0">{{ translate('messages.extra_packaging_amount') }}</th>
-                                <th class="min-w-140 text-capitalize">{{ translate('commision_on_delivery_charge') }}</th>
+                                <!-- <th class="min-w-140 text-capitalize">{{ translate('commision_on_delivery_charge') }}</th> -->
                                 <th class="min-w-140 text-capitalize">{{ translate('admin_net_income') }}</th>
                                 <th class="min-w-140 text-capitalize">{{ translate('store_net_income') }}</th>
                                 <th class="border-0 min-w-120">{{ translate('messages.amount_received_by') }}</th>
@@ -488,7 +488,7 @@
 
                                     <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency(($ot->additional_charge)) }}</td>
                                     <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency(($ot->extra_packaging_amount)) }}</td>
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->delivery_fee_comission) }}</td>
+                                    <!-- <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->delivery_fee_comission) }}</td> -->
                                     {{-- admin_net_income --}}
                                     <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency(($ot->admin_commission - $ot->order['flash_admin_discount_amount'])) }}</td>
 
