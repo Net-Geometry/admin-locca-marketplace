@@ -304,15 +304,15 @@ class VendorLoginController extends Controller
                     $response = SmsGateway::send($vendor->phone,$otp);
                 }else{
                     $response = SMS_module::send($vendor->phone,$otp);
-                }    
-            }
+                }
 
-            if(env('APP_ENV')!='live' && $response !== 'success') {
-                $errors = [];
-                array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
-                return response()->json([
-                    'errors' => $errors
-                ], 405);
+                if(env('APP_ENV')!='live' && $response !== 'success') {
+                    $errors = [];
+                    array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
+                    return response()->json([
+                        'errors' => $errors
+                    ], 405);
+                }
             }
 
         }catch(\Exception $ex){
@@ -504,14 +504,14 @@ class VendorLoginController extends Controller
             }else{
                 $response = SMS_module::send($vendor->phone,$otp);
             }
-        }
 
-        if(env('APP_ENV') != 'live' && $response !== 'success') {
-            $errors = [];
-            array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
-            return response()->json([
-                'errors' => $errors
-            ], 405);
+            if(env('APP_ENV') != 'live' && $response !== 'success') {
+                $errors = [];
+                array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
+                return response()->json([
+                    'errors' => $errors
+                ], 405);
+            }
         }
 
         return response()->json([
