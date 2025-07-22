@@ -24,7 +24,7 @@
 
         <div class="card mb-3 mt-0">
              <div class="card-body mb-3">
-                 <form action="{{ route('admin.business-settings.update-setup') }}" method="POST">
+                 <form action="{{ route('admin.business-settings.easy-parcel-setting-update') }}" method="POST">
                     @csrf
                      <div class="mb-3">
                      @php($easy_parcel_api_url = \App\Models\BusinessSetting::where('key', 'easy_parcel_api_url')?->first()?->value)
