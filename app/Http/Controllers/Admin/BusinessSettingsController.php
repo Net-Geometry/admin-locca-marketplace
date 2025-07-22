@@ -505,6 +505,17 @@ class BusinessSettingsController extends Controller
             'storeCronCommand' => $storeCronCommand
         ];
     }
+    public function update_easy_parcel_settings(Request $request){
+
+        Helpers::businessUpdateOrInsert(['key' => 'easy_parcel_api_url'], [
+            'value' => $request['easy_parcel_api_url']
+        ]);
+        Helpers::businessUpdateOrInsert(['key' => 'easy_parcel_api_key'], [
+            'value' => $request['easy_parcel_api_key']
+        ]);
+        Toastr::success(translate('messages.configuration_updated_successfully'));
+        return back();
+    }
 
     public function business_setup(Request $request)
     {
@@ -658,13 +669,6 @@ class BusinessSettingsController extends Controller
 
         Helpers::businessUpdateOrInsert(['key' => 'delivery_charge_comission'], [
             'value' => $request['admin_comission_in_delivery_charge']
-        ]);
-
-        Helpers::businessUpdateOrInsert(['key' => 'easy_parcel_api_url'], [
-            'value' => $request['easy_parcel_api_url']
-        ]);
-        Helpers::businessUpdateOrInsert(['key' => 'easy_parcel_api_key'], [
-            'value' => $request['easy_parcel_api_key']
         ]);
 // dd( $request['commission_business_model']);
 

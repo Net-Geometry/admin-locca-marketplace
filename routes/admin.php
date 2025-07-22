@@ -289,6 +289,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('business-setup/{tab?}', 'BusinessSettingsController@business_index')->name('business-setup');
             Route::get('react-setup', 'BusinessSettingsController@react_setup')->name('react-setup');
             Route::post('react-update', 'BusinessSettingsController@react_update')->name('react-update');
+            Route::post('easy-parcel-setting-update', 'BusinessSettingsController@update_easy_parcel_settings')->name('easy-parcel-setting-update');
             Route::post('update-setup', 'BusinessSettingsController@business_setup')->name('update-setup');
             Route::post('update-landing-setup', 'BusinessSettingsController@landing_page_settings_update')->name('update-landing-setup');
             Route::delete('delete-custom-landing-page', 'BusinessSettingsController@delete_custom_landing_page')->name('delete-custom-landing-page');
