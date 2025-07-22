@@ -7985,4 +7985,5 @@ Smartly or Earn. ',
   'The pick city field is required.' => 'The pick city field is required.',
   'The order id field is required.' => 'The order id field is required.',
   'awb_not_found' => 'Awb not found',
+  'easy_parcel_cost' => 'Easy parcel cost',
 );

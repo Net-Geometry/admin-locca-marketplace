@@ -54,6 +54,7 @@ use MatanYadaev\EloquentSpatial\Objects\Point;
 use App\Exports\StoreWithdrawTransactionExport;
 use App\Exports\StoreWiseWithdrawTransactionExport;
 use Modules\Rental\Emails\ProviderWithdrawRequestMail;
+use Session;
 
 
 class VendorController extends Controller
@@ -90,6 +91,7 @@ class VendorController extends Controller
             'tin' => 'required',
             'tin_expire_date' => 'required',
             'tin_certificate_image' => 'required',
+            'nadi_number' => 'required',
         ], [
             'f_name.required' => translate('messages.first_name_is_required'),
             'name.0.required'=>translate('default_name_is_required'),
@@ -115,6 +117,14 @@ class VendorController extends Controller
                         ->withInput();
             }
         }
+
+        $nadiVerification = Helpers::nadiVerificationStatus($request->nadi_number);
+        if (!$nadiVerification) {
+            $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_member_not_verified'));
+            return back()->withErrors($validator)
+                        ->withInput();
+        }
+
         if ($validator->fails()) {
             return back()
             ->withErrors($validator)
@@ -146,6 +156,8 @@ class VendorController extends Controller
         $store->tin_certificate_image = Helpers::upload('store/', $extension, $request->file('tin_certificate_image'));
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->module_id = Config::get('module.current_module_id');
+        $store->nadi_number = $request->nadi_number;
+        $store->is_nadi_verified = !is_null($request->nadi_number) ? 1 : 0;
         try {
             $store->save();
             // $store->module->increment('stores_count');
@@ -205,6 +217,7 @@ class VendorController extends Controller
         } catch (\Exception $ex) {
             info($ex->getMessage());
         }
+
         Toastr::success(translate('messages.store_added_successfully'));
         return redirect('admin/store/list');
     }
@@ -240,7 +253,8 @@ class VendorController extends Controller
             },],
             'minimum_delivery_time' => 'required',
             'maximum_delivery_time' => 'required',
-            'delivery_time_type'=>'required'
+            'delivery_time_type'=>'required',
+            'nadi_number' => 'required',
         ], [
             'f_name.required' => translate('messages.first_name_is_required')
         ]);
@@ -263,6 +277,15 @@ class VendorController extends Controller
                 $validator->getMessageBag()->add('minimum_delivery_time', translate('messages.minimum_delivery_time_should_be_more_than_10_min'));
                 return back()->withErrors($validator)
                         ->withInput();
+            }
+        }
+
+        if (is_null($store->nadi_number) || ($request->nadi_number != $store->nadi_number)) {
+            $nadiVerification = Helpers::nadiVerificationStatus($request->nadi_number);
+            if (!$nadiVerification) {
+                $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_number_not_verified'));
+                return back()->withErrors($validator)
+                            ->withInput();
             }
         }
 
@@ -295,6 +318,8 @@ class VendorController extends Controller
         $extension = $request->has('tin_certificate_image') ? $request->file('tin_certificate_image')->getClientOriginalExtension() : 'png';
         $store->tin_certificate_image = $request->has('tin_certificate_image') ? Helpers::update('store/', $store->tin_certificate_image, $extension, $request->file('tin_certificate_image')) : $store->tin_certificate_image;
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
+        $store->nadi_number = $request->nadi_number;
+        $store->is_nadi_verified = 1;
         $store->save();
         $default_lang = str_replace('_', '-', app()->getLocale());
         foreach($request->lang as $index=>$key)
@@ -356,6 +381,7 @@ class VendorController extends Controller
             $userinfo->image = $store->logo;
             $userinfo->save();
         }
+
         Toastr::success(translate('messages.store_updated_successfully'));
         return redirect('admin/store/list');
     }

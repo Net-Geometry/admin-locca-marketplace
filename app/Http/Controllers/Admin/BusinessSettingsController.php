@@ -7688,4 +7688,33 @@ class BusinessSettingsController extends Controller
         return back();
     }
 
+    public function nadi_config()
+    {
+        $config = BusinessSetting::where('key', 'nadi_config')->value('value') ?? [];
+        
+        if (is_string($config)) {
+            $config = json_decode($config, true) ?? [];
+        }
+
+        return view('admin-views.business-settings.nadi-config', [
+            'nadi_config' => array_merge(['api_key' => '', 'endpoint' => ''], $config)
+        ]);
+    }
+
+    public function nadi_config_update(Request $request)
+    {
+        $validated = $request->validate([
+            'api_key' => 'required|string|max:255',
+            'endpoint' => 'required|url|max:255',
+        ]);
+
+        BusinessSetting::updateOrInsert(
+            ['key' => 'nadi_config'],
+            ['value' => json_encode($validated)]
+        );
+
+        Toastr::success(translate('messages.Nadi_configuration_updated'));
+        return back();
+    }
+
 }

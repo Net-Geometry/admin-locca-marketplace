@@ -68,6 +68,9 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             Route::post('verify-token', 'VendorPasswordResetController@verify_token');
             Route::put('reset-password', 'VendorPasswordResetController@reset_password_submit');
             Route::post('register','VendorLoginController@register');
+            // Vendor OTP Verification
+            Route::post('verify-otp', 'VendorLoginController@verify_otp');
+            Route::post('resend-otp', 'VendorLoginController@resend_otp');
         });
 
         Route::post('social-login', 'SocialAuthController@social_login');
