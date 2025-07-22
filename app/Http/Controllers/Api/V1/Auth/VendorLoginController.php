@@ -561,7 +561,7 @@ class VendorLoginController extends Controller
         $vendor->is_phone_verified = 1;
         $vendor->save();
         
-        DB::table('phone_verifications')->where('email', $request['email'])->delete();
+        DB::table('phone_verifications')->where('phone', $vendor->phone)->delete();
     
         return response()->json([
             'token' => $token,
