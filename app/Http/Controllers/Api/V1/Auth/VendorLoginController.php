@@ -547,7 +547,7 @@ class VendorLoginController extends Controller
             return response()->json(['message' => translate('messages.otp_does_not_match')], 403);
         }
     
-        if (!auth('vendor')->attempt(['email' => $vendor->email, 'password' => $vendor->password])) {
+        if (!auth('vendor')->attempt(['email' => $request['email'], 'password' => $request['password']])) {
             return response()->json([
                 'errors' => [['code' => 'auth-001', 'message' => translate('Credential_do_not_match,_please_try_again')]]
             ], 401);
@@ -561,7 +561,7 @@ class VendorLoginController extends Controller
         $vendor->is_phone_verified = 1;
         $vendor->save();
         
-        DB::table('phone_verifications')->where('email', $request->email)->delete();
+        DB::table('phone_verifications')->where('email', $request['email'])->delete();
     
         return response()->json([
             'token' => $token,
