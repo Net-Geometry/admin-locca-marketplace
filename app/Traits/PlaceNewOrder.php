@@ -102,7 +102,7 @@ trait PlaceNewOrder
         $orderData['pick_state']   = $currentStore->easy_parcel_state->state_code??null;
         $orderData['pick_code']    = $currentStore->postal_code ?? null;
         $orderData['pick_country'] = $currentStore->easy_parcel_country->country_code ?? null;
-
+        $orderData['send_email'] = $request->send_email;
         }
         else{
           $receiver_details=json_decode($request->receiver_details,true);
@@ -113,6 +113,7 @@ trait PlaceNewOrder
            $orderData['pick_state']   = $receiver_details['easy_parcel_state']['state_code']??null;
            $orderData['pick_code']    = $receiver_details['postal_code']?? null;
            $orderData['pick_country'] = $receiver_details['easy_parcel_country']['country_code']?? null;
+           $orderData['send_email'] = $receiver_details['contact_person_email']?? null;
         }
 
         //for development start
