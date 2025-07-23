@@ -64,7 +64,7 @@ Route::get('otp-resent', 'LoginController@otp_resent')->name('otp_resent');
 // Customization
 Route::get('vendor/verify-phone/{id}', 'LoginController@verify_phone')->name('vendor.verify-phone');
 Route::post('vendor/verify-phone-otp', 'LoginController@verify_phone_otp')->name('vendor.verify-phone-otp');
-Route::post('vendor/resend-otp', 'LoginController@resend_otp')->name('vendor.resend-otp');
+Route::get('veuri: ndor/resend-otp', 'LoginController@resend_otp')->name('vendor.resend-otp');
 
 Route::get('authentication-failed', function () {
     $errors = [];
