@@ -75,7 +75,7 @@
                         </div>
                         @if ($store->store_business_model == 'commission')
 
-                  {{--      <div class="col-sm-6 col-lg-4">
+                  <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="self_delivery_system">
                                 <span class="pr-2 text-capitalize">{{translate('Store-managed_Delivery')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_this_option_is_enabled,_stores_must_deliver_orders_using_their_own_deliverymen._Plus,_stores_will_get_the_option_to_add_their_own_deliverymen_from_the_store_panel.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.self_delivery_hint')}}"></span></span>
@@ -85,7 +85,7 @@
                                     </span>
                                 </label>
                             </div>
-                        </div> --}}
+                        </div> 
                         @endif
                         <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">

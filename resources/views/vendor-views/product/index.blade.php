@@ -297,7 +297,7 @@
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="weight">{{translate('messages.weight')}}</label>
-                                        <input type="number" class="form-control" name="weight" min="0" id="weight">
+                                        <input type="number" class="form-control" name="weight" min="0"   step="0.01"  id="weight">
                                     </div>
                                 </div>
                                 @if ($module_data['stock'])

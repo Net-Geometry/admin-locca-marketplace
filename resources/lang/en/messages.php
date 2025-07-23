@@ -8014,4 +8014,5 @@ Smartly or Earn. ',
   'otp_fail' => 'Otp fail',
   'Otp_successfull_sent' => 'Otp successfull sent',
   'otp_doesnt_match' => 'Otp doesnt match',
+  'The weight must be between .01 and 999999999999.99.' => 'The weight must be between .01 and 999999999999.99.',
 );
