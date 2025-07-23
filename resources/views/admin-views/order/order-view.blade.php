@@ -1627,6 +1627,56 @@
                         <!-- End Body -->
                     </div>
                     <!-- End Card -->
+
+                    <div class="card mb-4 shadow-sm mt-3">
+                        <div class="card-header bg-primary text-white">
+                          <h5 class="mb-0 text-white">{{ translate('messages.easy_parcel_information') }}</h5>
+                        </div>
+                        <div class="card-body">
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_rate_id') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_rate_id ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_service_id') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_service_id ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_courier_id') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_courier_id ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_delivery') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_delivery ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_service_name') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_service_name ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_courier_name') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_courier_name ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-1">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_courier_logo') }}</div>
+                            <div class="col-md-8">
+                              @if (!empty($order->easy_parcel_courier_logo_link))
+                                <img src="{{ $order->easy_parcel_courier_logo_link }}" alt="Courier Logo" class="img-fluid" style="max-height: 40px;">
+                              @else
+                                <span>-</span>
+                              @endif
+                            </div>
+                          </div>
+                      
+                        </div>
+                      </div>
                 @endif
             </div>
         </div>

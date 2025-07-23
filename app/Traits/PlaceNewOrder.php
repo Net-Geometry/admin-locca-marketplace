@@ -316,6 +316,14 @@ trait PlaceNewOrder
             $order->parcel_category_id = $request->parcel_category_id;
             $order->receiver_details = json_decode($request->receiver_details);
 
+            $order->easy_parcel_rate_id=$request->easy_parcel_rate_id;
+            $order->easy_parcel_service_id=$request->easy_parcel_service_id;
+            $order->easy_parcel_courier_id=$request->easy_parcel_courier_id;
+            $order->easy_parcel_delivery=$request->easy_parcel_delivery;
+            $order->easy_parcel_service_name=$request->easy_parcel_service_name;
+            $order->easy_parcel_courier_name=$request->easy_parcel_courier_name;
+            $order->easy_parcel_courier_logo_link=$request->easy_parcel_courier_logo_link;
+
             if ($order_status == 'confirmed') {
                 $order->confirmed = now();
             }
