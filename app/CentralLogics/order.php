@@ -83,10 +83,6 @@ class OrderLogic
             Helpers::expenseCreate(amount:$ref_bonus_amount,type:'referral_discount',datetime:now(),created_by:'admin',order_id:$order->id);
         }
 
-         //for the easy parcel
-         if($order->is_store_manage_delivery){
-            Helpers::expenseCreate(amount:$order->easy_parcel_order_amount,type:'easy_parcel_cost',datetime:now(),created_by:'admin',order_id:$order->id);
-         }
 
         // coupon discount by store
         if($order->coupon_created_by == 'vendor')
