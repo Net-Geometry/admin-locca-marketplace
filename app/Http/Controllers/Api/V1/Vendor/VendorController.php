@@ -518,6 +518,21 @@ class VendorController extends Controller
         if ($details != null && $details->count() > 0) {
             $details = $details = Helpers::order_details_data_formatting($details);
             $details[0]['is_guest'] = (int)$order->is_guest;
+            $details[0]['third_party_delivery_info'] = [
+                'awb_no' => $order->awb_no,
+                'easy_parcel_order_no' => $order->easy_parcel_order_no,
+                'awb_id_link' => $order->awb_id_link,
+                'tracking_url' => $order->tracking_url ?? null,
+                'easy_parcel_order_amount' => $order->easy_parcel_order_amount ?? null,
+                'easy_parcel_rate_id' => $order->easy_parcel_rate_id ?? null,
+                'easy_parcel_service_id' => $order->easy_parcel_service_id ?? null,
+                'easy_parcel_courier_id' => $order->easy_parcel_courier_id ?? null,
+                'easy_parcel_courier_logo_link' => $order->easy_parcel_courier_logo_link ?? null,
+                'easy_parcel_delivery' => $order->easy_parcel_delivery ?? null,
+                'easy_parcel_service_name' => $order->easy_parcel_service_name ?? null,
+                'easy_parcel_courier_name' => $order->easy_parcel_courier_name ?? null,
+            ];
+            $details[0][ 'is_store_manage_delivery']=$order->is_store_manage_delivery ?? null;
             return response()->json($details, 200);
         } else if ($order->order_type == 'parcel' || $order->prescription_order == 1) {
             $order->delivery_address = json_decode($order->delivery_address, true);
