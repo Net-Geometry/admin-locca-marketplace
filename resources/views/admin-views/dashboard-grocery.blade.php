@@ -353,13 +353,13 @@
                 <!-- End Card -->
             </div>
 
-            <div class="col-lg-4 col-md-6">
+            {{--<div class="col-lg-4 col-md-6">
                 <!-- Card -->
                 <div class="card h-100" id="top-deliveryman-view">
                     @include('admin-views.partials._top-deliveryman',['top_deliveryman'=>$data['top_deliveryman']])
                 </div>
                 <!-- End Card -->
-            </div>
+            </div>--}}
 
             <div class="col-lg-4 col-md-6">
                 <!-- Card -->
