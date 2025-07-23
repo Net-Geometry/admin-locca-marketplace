@@ -202,6 +202,16 @@
                                         </span>
                                     @endif
                                 </h6>
+                                @if(!$order->is_store_manage_delivery)
+                                <h6>
+                                    <span>{{ translate('easy_parcel_cost') }}</span> <span>:</span>
+                                    
+                                    <span class="badge badge-soft-success ml-sm-3">
+                                           {{ \App\CentralLogics\Helpers::format_currency($order?->easy_parcel_order_amount ?? 0) }}
+                                    </span>
+                                </h6>
+
+                                @endif
                                 @if ($order->order_attachment)
                                         @php
                                             $order_images = json_decode($order->order_attachment,true);
@@ -765,6 +775,7 @@
                         <!-- End Header -->
 
                         <!-- Body -->
+                        @if($order->is_store_manage_delivery)
                         <div class="card-body">
                             @if ($order->delivery_man)
                                 <div class="media align-items-center customer--information-single" href="javascript:">
@@ -819,10 +830,50 @@
                                 <span class="badge badge-soft-danger py-2 d-block qcont">
                                     {{ translate('messages.deliveryman_not_found') }}
                                 </span>
-                            @endif
+                         @endif
                         </div>
+                        @endif
                         <!-- End Body -->
                     </div>
+
+                    @if(!$order->is_store_manage_delivery)
+
+                    <div class="card mb-4 shadow-sm mt-3">
+                        <div class="card-header bg-primary text-white">
+                          <h5 class="mb-0 text-white">{{ translate('messages.easy_parcel_information') }}</h5>
+                        </div>
+                        <div class="card-body">
+                      
+                        
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_delivery') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_delivery ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_service_name') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_service_name ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_courier_name') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_courier_name ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-1">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_courier_logo') }}</div>
+                            <div class="col-md-8">
+                              @if (!empty($order->easy_parcel_courier_logo_link))
+                                <img src="{{ $order->easy_parcel_courier_logo_link }}" alt="Courier Logo" class="img-fluid" style="max-height: 40px;">
+                              @else
+                                <span>-</span>
+                              @endif
+                            </div>
+                          </div>
+                      
+                        </div>
+                      </div>
+                    @endif  
                 @endif
                 <!-- End Card -->
 

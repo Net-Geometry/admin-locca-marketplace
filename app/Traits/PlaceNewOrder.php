@@ -315,7 +315,9 @@ trait PlaceNewOrder
             $order->module_id = $request->header('moduleId');
             $order->parcel_category_id = $request->parcel_category_id;
             $order->receiver_details = json_decode($request->receiver_details);
-
+            if($store?->sub_self_delivery == 1){
+               $order->is_store_manage_delivery=1;
+            }
             $order->easy_parcel_rate_id=$request->easy_parcel_rate_id;
             $order->easy_parcel_service_id=$request->easy_parcel_service_id;
             $order->easy_parcel_courier_id=$request->easy_parcel_courier_id;

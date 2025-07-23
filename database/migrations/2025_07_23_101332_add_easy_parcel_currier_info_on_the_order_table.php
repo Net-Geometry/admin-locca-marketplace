@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('easy_parcel_delivery')->nullable();
             $table->string('easy_parcel_service_name')->nullable();
             $table->string('easy_parcel_courier_name')->nullable();
+            $table->string('is_store_manage_delivery')->default('0');
         });
     }
 
@@ -35,7 +36,8 @@ return new class extends Migration
                 'easy_parcel_courier_logo_link',
                 'easy_parcel_delivery',
                 'easy_parcel_service_name',
-                'easy_parcel_courier_name'
+                'easy_parcel_courier_name',
+                'is_store_manage_delivery'
             ]);
         });
     }

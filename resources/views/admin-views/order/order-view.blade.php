@@ -282,6 +282,8 @@
                                     @endif
 
                                 </h6>
+
+                            @if(!$order->is_store_manage_delivery)
                                 <h6>
                                     <span>{{ translate('easy_parcel_cost') }}</span> <span>:</span>
                                     
@@ -289,6 +291,8 @@
                                            {{ \App\CentralLogics\Helpers::format_currency($order?->easy_parcel_order_amount ?? 0) }}
                                     </span>
                                 </h6>
+
+                                @endif
                                 @if ($order->store && $order->store->module->module_type == 'food')
                                     <h6>
                                         <span>{{ translate('cutlery') }}</span> <span>:</span>
@@ -1627,7 +1631,8 @@
                         <!-- End Body -->
                     </div>
                     <!-- End Card -->
-
+                 
+                    @if(!$order->is_store_manage_delivery)
                     <div class="card mb-4 shadow-sm mt-3">
                         <div class="card-header bg-primary text-white">
                           <h5 class="mb-0 text-white">{{ translate('messages.easy_parcel_information') }}</h5>
@@ -1677,6 +1682,7 @@
                       
                         </div>
                       </div>
+                      @endif
                 @endif
             </div>
         </div>
