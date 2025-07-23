@@ -119,6 +119,7 @@ trait PlaceNewOrder
         //for development start
         $orderData['send_contact']="0198765432";
         $orderData['send_code']="11950";
+        $orderData['service_id']="EP-CS0AIM";
         //for development  end
         $orderData['collect_date'] = now()->format('Y-m-d');
         $orderData['sms']          = false;
