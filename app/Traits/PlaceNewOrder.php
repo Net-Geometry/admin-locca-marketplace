@@ -1038,17 +1038,35 @@ trait PlaceNewOrder
                     'delivery_charge' => $delivery_charge,
                 ];
             }
-
+           if($request->is_store_manage_delivery){
+            $original_delivery_charge = (($request->distance * $per_km_shipping_charge) > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge  : $minimum_shipping_charge;
+           }else{
             $original_delivery_charge = $request->delivery_charge;
-            // if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $original_delivery_charge >  $maximum_shipping_charge) {
-            //     $original_delivery_charge = $maximum_shipping_charge;
-            // } else {
-            //     $original_delivery_charge = $original_delivery_charge;
-            // }
+           }
 
-            if (!isset($delivery_charge)) {
-                $delivery_charge = $request->delivery_charge;
+           if($request->is_store_manage_delivery){
+            if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $original_delivery_charge >  $maximum_shipping_charge) {
+                $original_delivery_charge = $maximum_shipping_charge;
+            } else {
+                $original_delivery_charge = $original_delivery_charge;
             }
+             }
+
+
+             if($request->is_store_manage_delivery){
+            if (!isset($delivery_charge)) {
+                $delivery_charge = ($request->distance * $per_km_shipping_charge > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge : $minimum_shipping_charge;
+                if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $delivery_charge >  $maximum_shipping_charge) {
+                    $delivery_charge = $maximum_shipping_charge;
+                } else {
+                    $delivery_charge = $delivery_charge;
+                }
+            }}else{
+                if (!isset($delivery_charge)) {
+                    $delivery_charge = $request->delivery_charge;
+                }
+            }
+            
             $original_delivery_charge = $original_delivery_charge + $extra_charges;
             $delivery_charge = $delivery_charge + $extra_charges;
         } else {
@@ -1065,8 +1083,12 @@ trait PlaceNewOrder
                 $per_km_shipping_charge = (float) ($businessSetting['parcel_per_km_shipping_charge'] ?? 0);
                 $minimum_shipping_charge = (float) ($businessSetting['parcel_minimum_shipping_charge'] ?? 0);
             }
-
+            if($request->is_store_manage_delivery){
             $original_delivery_charge = (($request->distance * $per_km_shipping_charge) > $minimum_shipping_charge) ? ($request->distance * $per_km_shipping_charge) + $extra_charges : ($minimum_shipping_charge + $extra_charges);
+            }
+            else{
+                $original_delivery_charge =$request->delivery_charge;
+            }
         }
 
         if ($increased > 0) {
