@@ -23,7 +23,7 @@
                         <div class="form-group mb-0">
                         <label class="form-label" for="type">{{translate('messages.collect_from')}}<span class="input-label-secondary"></span></label>
                             <select name="type" id="type" class="form-control">
-                                <option value="deliveryman">{{translate('messages.deliveryman')}}</option>
+                               {{-- <option value="deliveryman">{{translate('messages.deliveryman')}}</option>--}}
                                 <option value="store">{{translate('messages.store')}}</option>
                             </select>
                         </div>
@@ -31,19 +31,19 @@
                     <div class="col-lg-4 col-sm-6">
                         <div class="form-group mb-0">
                             <label class="form-label" for="store">{{translate('messages.store')}}<span class="input-label-secondary"></span></label>
-                            <select id="store" name="store_id" data-placeholder="{{translate('messages.select_store')}}" class="form-control" title="Select Restaurant" disabled>
+                            <select id="store" name="store_id" data-placeholder="{{translate('messages.select_store')}}" class="form-control" title="Select Restaurant">
 
                             </select>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-sm-6">
+                    {{--<div class="col-lg-4 col-sm-6">
                         <div class="form-group mb-0">
                             <label class="form-label" for="deliveryman">{{translate('messages.deliveryman')}}<span class="input-label-secondary"></span></label>
                             <select id="deliveryman" name="deliveryman_id" data-placeholder="{{translate('messages.select_deliveryman')}}" class="form-control" title="Select deliveryman">
 
                             </select>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-lg-4 col-sm-6">
                         <div class="form-group mb-0">
                             <label class="form-label" for="method">{{translate('messages.payment_method')}}<span class="input-label-secondary"></span></label>

@@ -8018,4 +8018,5 @@ Smartly or Earn. ',
   'The delivery charge field is required.' => 'The delivery charge field is required.',
   'The weight must be at least 0.1.' => 'The weight must be at least 0.1.',
   'The send city field is required.' => 'The send city field is required.',
+  'Insufficient balance' => 'Insufficient balance',
 );
