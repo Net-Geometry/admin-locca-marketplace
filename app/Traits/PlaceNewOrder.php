@@ -55,124 +55,132 @@ trait PlaceNewOrder
             'contact_person_email' => $request->user ? 'nullable' : 'required',
             'password' => $request->create_new_user ? ['required', Password::min(8)] : 'nullable',
             'order_attachment' => $is_prescription ? ['required'] : 'nullable',
-            'delivery_charge'=> 'required',
+           
+           
+            'is_store_manage_delivery' => 'required|in:0,1',
 
-            
-            'weight' => 'required|numeric|min:0.1',
+            'delivery_charge'=> 'required_if:is_store_manage_delivery,0',
         
-
-            'send_name' => 'required|string',
-            'send_contact' => 'required|string',
-            'send_addr1' => 'required|string',
-            'send_city' => 'required|string',
-            'send_state' => 'required|string',
-            'send_code' => 'required|string',
-            'send_country' => 'required|string',
-
+            'send_name'    => 'required_if:is_store_manage_delivery,0|string',
+            'send_contact' => 'required_if:is_store_manage_delivery,0|string',
+            'send_addr1'   => 'required_if:is_store_manage_delivery,0|string',
+            'send_city'    => 'required_if:is_store_manage_delivery,0|string',
+            'send_state'   => 'required_if:is_store_manage_delivery,0|string',
+            'send_code'    => 'required_if:is_store_manage_delivery,0|string',
+            'send_country' => 'required_if:is_store_manage_delivery,0|string',
+           
+           
             'send_email' => 'nullable|email',
 
 
         ]);
+
+        if ($request->is_store_manage_delivery == 1) {
+            $rules['weight'] = 'required|numeric';
+        } else {
+            $rules['weight'] = 'nullable|numeric|min:0.1';
+        }
  
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-     
-        $orderData = $request->only([
-            'weight',
-            'service_id',
-            'send_name',
-            'send_contact',
-            'send_addr1',
-            'send_city',
-            'send_state',
-            'send_code',
-            'send_country',
-            'send_email',
-        ]);
-
-        if($request->order_type!="parcel"){
-        $currentStore = Store::find($request->store_id);
-
-        $orderData['pick_name']    = $currentStore->pick_name;
-        $orderData['pick_contact'] = $currentStore->pick_contact;
-        $orderData['pick_addr1']   = $currentStore->pick_addr1;
-        $orderData['pick_city']    = $currentStore->pick_city;
-        $orderData['pick_state']   = $currentStore->easy_parcel_state->state_code??null;
-        $orderData['pick_code']    = $currentStore->postal_code ?? null;
-        $orderData['pick_country'] = $currentStore->easy_parcel_country->country_code ?? null;
-        $orderData['send_email'] = $request->send_email;
-        }
-        else{
-          $receiver_details=json_decode($request->receiver_details,true);
-           $orderData['pick_name']    = $receiver_details['contact_person_name'];
-           $orderData['pick_contact'] = $receiver_details['contact_person_number'];
-           $orderData['pick_addr1']   = $receiver_details['address'];
-           $orderData['pick_city']    = $receiver_details['city'];
-           $orderData['pick_state']   = $receiver_details['easy_parcel_state']['state_code']??null;
-           $orderData['pick_code']    = $receiver_details['postal_code']?? null;
-           $orderData['pick_country'] = $receiver_details['easy_parcel_country']['country_code']?? null;
-           $orderData['send_email'] = $receiver_details['contact_person_email']?? null;
-        }
-
-        //for development start
-        $orderData['send_contact']="0198765432";
-        $orderData['send_code']="11950";
-        $orderData['service_id']="EP-CS0AIM";
-        //for development  end
-        $orderData['collect_date'] = now()->format('Y-m-d');
-        $orderData['sms']          = false;
-        $orderData['content']      = 'Books';
-        $orderData['value']        = 1;
-        
-
-
-        $orderData['weight'] = (float) $orderData['weight'];
-        $orderData['value'] = (float) $orderData['value'];
-        $orderData['sms'] = filter_var($orderData['sms'], FILTER_VALIDATE_BOOLEAN);
-
-        $response = $this->orderSubmitEngine($orderData);
-        $status  = $response['data']['result'][0]['status'] ?? null;
-        $remarks = $response['data']['result'][0]['remarks'] ?? 'Order submission failed.';
-        
-        if (empty($status) || $status !== 'Success') {
-            info(['EasyParcel Blocked', 'status' => $status, 'remarks' => $remarks]);
-        
-            return response()->json([
-                'message' => $remarks,
-            ], 403);
-        }
-   
-
-        $orderNumber = $response['data']['result'][0]['order_number'] ?? null;
-
-        $payload = [
-            'order_no' => $orderNumber,
-        ];
-        
-
-        $response = $this->payEngine($payload);
-
-        $responseData = $response['data']['result'][0] ?? [];
+          if(!$request->is_store_manage_delivery){
+              
+                 $orderData = $request->only([
+                     'weight',
+                     'service_id',
+                     'send_name',
+                     'send_contact',
+                     'send_addr1',
+                     'send_city',
+                     'send_state',
+                     'send_code',
+                     'send_country',
+                     'send_email',
+                 ]);
          
-         $orderno = $responseData['orderno'] ?? null;
+                 if($request->order_type!="parcel"){
+                 $currentStore = Store::find($request->store_id);
          
-        //  $parcelData = $responseData['parcel'][0] ?? [];
+                 $orderData['pick_name']    = $currentStore->pick_name;
+                 $orderData['pick_contact'] = $currentStore->pick_contact;
+                 $orderData['pick_addr1']   = $currentStore->pick_addr1;
+                 $orderData['pick_city']    = $currentStore->pick_city;
+                 $orderData['pick_state']   = $currentStore->easy_parcel_state->state_code??null;
+                 $orderData['pick_code']    = $currentStore->postal_code ?? null;
+                 $orderData['pick_country'] = $currentStore->easy_parcel_country->country_code ?? null;
+                 $orderData['send_email'] = $request->send_email;
+                 }
+                 else{
+                   $receiver_details=json_decode($request->receiver_details,true);
+                    $orderData['pick_name']    = $receiver_details['contact_person_name'];
+                    $orderData['pick_contact'] = $receiver_details['contact_person_number'];
+                    $orderData['pick_addr1']   = $receiver_details['address'];
+                    $orderData['pick_city']    = $receiver_details['city'];
+                    $orderData['pick_state']   = $receiver_details['easy_parcel_state']['state_code']??null;
+                    $orderData['pick_code']    = $receiver_details['postal_code']?? null;
+                    $orderData['pick_country'] = $receiver_details['easy_parcel_country']['country_code']?? null;
+                    $orderData['send_email'] = $receiver_details['contact_person_email']?? null;
+                 }
          
-         $awb         = $parcelData['awb'] ?? null;
-         $awbIdLink   = $parcelData['awb_id_link'] ?? null;
-         $trackingUrl = $parcelData['tracking_url'] ?? null;
-
-         // Block if status is "Fail", empty, or anything other than "Success"
-         if (empty($status) || strtolower($status) === 'fail' || $status !== 'Success') {
-             info(['EasyParcel Blocked', 'status' => $status, 'remarks' => $remarks]);
+                 //for development start
+                 $orderData['send_contact']="0198765432";
+                 $orderData['send_code']="11950";
+                 $orderData['service_id']="EP-CS0AIM";
+                 //for development  end
+                 $orderData['collect_date'] = now()->format('Y-m-d');
+                 $orderData['sms']          = false;
+                 $orderData['content']      = 'Books';
+                 $orderData['value']        = 1;
+                 
          
-             return response()->json([
-                 'message' => $remarks,
-             ], 403);
-         }
-
+         
+                 $orderData['weight'] = (float) $orderData['weight'];
+                 $orderData['value'] = (float) $orderData['value'];
+                 $orderData['sms'] = filter_var($orderData['sms'], FILTER_VALIDATE_BOOLEAN);
+         
+                 $response = $this->orderSubmitEngine($orderData);
+                 $status  = $response['data']['result'][0]['status'] ?? null;
+                 $remarks = $response['data']['result'][0]['remarks'] ?? 'Order submission failed.';
+                 
+                 if (empty($status) || $status !== 'Success') {
+                     info(['EasyParcel Blocked', 'status' => $status, 'remarks' => $remarks]);
+                 
+                     return response()->json([
+                         'message' => $remarks,
+                     ], 403);
+                 }
+            
+         
+                 $orderNumber = $response['data']['result'][0]['order_number'] ?? null;
+         
+                 $payload = [
+                     'order_no' => $orderNumber,
+                 ];
+                 
+         
+                  $response = $this->payEngine($payload);
+         
+                   $responseData = $response['data']['result'][0] ?? [];
+                  
+                  $orderno = $responseData['orderno'] ?? null;
+                  
+                  //  $parcelData = $responseData['parcel'][0] ?? [];
+                  
+                  $awb         = $parcelData['awb'] ?? null;
+                  $awbIdLink   = $parcelData['awb_id_link'] ?? null;
+                  $trackingUrl = $parcelData['tracking_url'] ?? null;
+         
+                  // Block if status is "Fail", empty, or anything other than "Success"
+                  if (empty($status) || strtolower($status) === 'fail' || $status !== 'Success') {
+                      info(['EasyParcel Blocked', 'status' => $status, 'remarks' => $remarks]);
+                  
+                      return response()->json([
+                          'message' => $remarks,
+                      ], 403);
+                  }
+                 }    
         // try {
             DB::beginTransaction();
             $createNewUser =  $this->createNewUser($request);
@@ -319,13 +327,6 @@ trait PlaceNewOrder
             if($store?->sub_self_delivery == 1){
                $order->is_store_manage_delivery=1;
             }
-            $order->easy_parcel_rate_id=$request->easy_parcel_rate_id;
-            $order->easy_parcel_service_id=$request->easy_parcel_service_id;
-            $order->easy_parcel_courier_id=$request->easy_parcel_courier_id;
-            $order->easy_parcel_delivery=$request->easy_parcel_delivery;
-            $order->easy_parcel_service_name=$request->easy_parcel_service_name;
-            $order->easy_parcel_courier_name=$request->easy_parcel_courier_name;
-            $order->easy_parcel_courier_logo_link=$request->easy_parcel_courier_logo_link;
 
             if ($order_status == 'confirmed') {
                 $order->confirmed = now();
@@ -578,10 +579,19 @@ trait PlaceNewOrder
             }
             $order->flash_admin_discount_amount = round($flash_sale_admin_discount_amount, config('round_up_to_digit'));
             $order->flash_store_discount_amount = round($flash_sale_vendor_discount_amount, config('round_up_to_digit'));
-            $order->awb_no=$awb;
-            $order->easy_parcel_order_no=$orderno;
-            $order->awb_id_link=$awbIdLink;
-            $order->tracking_url=$trackingUrl;
+            if(!$request->is_store_manage_delivery){
+                $order->awb_no=$awb;
+                $order->easy_parcel_order_no=$orderno;
+                $order->awb_id_link=$awbIdLink;
+                $order->tracking_url=$trackingUrl;
+                $order->easy_parcel_rate_id=$request->easy_parcel_rate_id;
+                $order->easy_parcel_service_id=$request->easy_parcel_service_id;
+                $order->easy_parcel_courier_id=$request->easy_parcel_courier_id;
+                $order->easy_parcel_delivery=$request->easy_parcel_delivery;
+                $order->easy_parcel_service_name=$request->easy_parcel_service_name;
+                $order->easy_parcel_courier_name=$request->easy_parcel_courier_name;
+                $order->easy_parcel_courier_logo_link=$request->easy_parcel_courier_logo_link;
+            }
 
             //DM TIPS
             $order->order_amount = $order->order_amount + $order->dm_tips + $order->additional_charge + $order->extra_packaging_amount;
