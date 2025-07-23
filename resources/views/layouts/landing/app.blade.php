@@ -144,17 +144,17 @@ $countryCode= strtolower($country?$country->value:'auto');
                                     {{ translate('messages.vendor_registration') }}
                                 </a>
                             </li>
-                            @if ($toggle_dm_registration)
+                            {{--@if ($toggle_dm_registration)
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                            @endif
+                            @endif --}}
                         @endif
-                        @if ($toggle_dm_registration)
+                       {{-- @if ($toggle_dm_registration)
                             <li><a class=""
                                     href="{{ route('deliveryman.create') }}">{{ translate('messages.deliveryman_registration') }}</a>
                             </li>
-                        @endif
+                        @endif --}}
                         </ul>
                     </div>
                     @endif
