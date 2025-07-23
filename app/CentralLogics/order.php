@@ -168,7 +168,7 @@ class OrderLogic
                     $comission_on_actual_delivery_fee = ($order->original_delivery_charge > 0) ? $comission_on_delivery : 0;
                 }
             }
-
+            $comission_on_actual_delivery_fee=0;
             //final comission
             if($store->store_business_model == 'subscription' && isset($store_sub)){
                 $comission_on_store_amount =0;
