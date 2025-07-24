@@ -10,6 +10,8 @@ use App\Models\StoreSchedule;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
 use App\Http\Controllers\Controller;
+use App\Models\EasyParcelCountry;
+use App\Models\EasyParcelState;
 use Brian2694\Toastr\Facades\Toastr;
 use App\Models\StoreNotificationSetting;
 use App\Models\Zone;
@@ -31,7 +33,9 @@ class BusinessSettingsController extends Controller
             $zones=Zone::active()->get(['id','name']);
             return view('rental::provider.settings.settings', compact('store','zones'));
         }
-        return view('vendor-views.business-settings.restaurant-index', compact('store'));
+        $easyParcelCountries=EasyParcelCountry::Active()->get();
+        $easyParcelStates=EasyParcelState::Active()->get();
+        return view('vendor-views.business-settings.restaurant-index', compact('store','easyParcelCountries','easyParcelStates'));
     }
 
     public function store_setup(Store $store, Request $request)
@@ -65,6 +69,13 @@ class BusinessSettingsController extends Controller
         $store->maximum_shipping_charge = $store->sub_self_delivery?$request->maximum_shipping_charge??0: $store->maximum_shipping_charge;
         $store->order_place_to_schedule_interval = $request->order_place_to_schedule_interval;
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
+        $store->postal_code = $request->postal_code;
+        $store->easy_parcel_country_id = $request->easy_parcel_country_id;
+        $store->easy_parcel_state_id = $request->easy_parcel_state_id;
+        $store->pick_name = $request->pick_name;
+        $store->pick_contact = $request->pick_contact;
+        $store->pick_addr1 = $request->pick_addr1;
+        $store->pick_city = $request->pick_city;
         $store->save();
         $conf = StoreConfig::firstOrNew(
             ['store_id' =>  $store->id]

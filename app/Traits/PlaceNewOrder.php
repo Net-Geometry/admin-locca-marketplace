@@ -27,12 +27,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use  App\Mail\CustomerRegistration;
+use App\Traits\EasyPercelEngineTrait;
 use App\Mail\PlaceOrder;
 use App\Models\AddOn;
 
 trait PlaceNewOrder
 {
-
+    use EasyPercelEngineTrait;
     public function new_place_order(Request $request, $is_prescription = false)
     {
         $validator = Validator::make($request->all(), [
@@ -54,12 +55,133 @@ trait PlaceNewOrder
             'contact_person_email' => $request->user ? 'nullable' : 'required',
             'password' => $request->create_new_user ? ['required', Password::min(8)] : 'nullable',
             'order_attachment' => $is_prescription ? ['required'] : 'nullable',
+           
+           
+            'is_store_manage_delivery' => 'required|in:0,1',
+
+            'delivery_charge'=> 'required_if:is_store_manage_delivery,0',
+        
+            'send_name'    => 'required_if:is_store_manage_delivery,0|string',
+            'send_contact' => 'required_if:is_store_manage_delivery,0|string',
+            'send_addr1'   => 'required_if:is_store_manage_delivery,0|string',
+            'send_city'    => 'required_if:is_store_manage_delivery,0|string',
+            'send_state'   => 'required_if:is_store_manage_delivery,0|string',
+            'send_code'    => 'required_if:is_store_manage_delivery,0|string',
+            'send_country' => 'required_if:is_store_manage_delivery,0|string',
+           
+           
+            'send_email' => 'nullable|email',
+
+
         ]);
 
+        if ($request->is_store_manage_delivery == 1) {
+            $rules['weight'] = 'required|numeric';
+        } else {
+            $rules['weight'] = 'nullable|numeric|min:0.1';
+        }
+ 
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        try {
+
+          if(!$request->is_store_manage_delivery){
+              
+                 $orderData = $request->only([
+                     'weight',
+                     'service_id',
+                     'send_name',
+                     'send_contact',
+                     'send_addr1',
+                     'send_city',
+                     'send_state',
+                     'send_code',
+                     'send_country',
+                     'send_email',
+                 ]);
+         
+                 if($request->order_type!="parcel"){
+                 $currentStore = Store::find($request->store_id);
+         
+                 $orderData['pick_name']    = $currentStore->pick_name;
+                 $orderData['pick_contact'] = $currentStore->pick_contact;
+                 $orderData['pick_addr1']   = $currentStore->pick_addr1;
+                 $orderData['pick_city']    = $currentStore->pick_city;
+                 $orderData['pick_state']   = $currentStore->easy_parcel_state->state_code??null;
+                 $orderData['pick_code']    = $currentStore->postal_code ?? null;
+                 $orderData['pick_country'] = $currentStore->easy_parcel_country->country_code ?? null;
+                 $orderData['send_email'] = $request->send_email;
+                 }
+                 else{
+                   $receiver_details=json_decode($request->receiver_details,true);
+                    $orderData['pick_name']    = $receiver_details['contact_person_name'];
+                    $orderData['pick_contact'] = $receiver_details['contact_person_number'];
+                    $orderData['pick_addr1']   = $receiver_details['address'];
+                    $orderData['pick_city']    = $receiver_details['city'];
+                    $orderData['pick_state']   = $receiver_details['easy_parcel_state']['state_code']??null;
+                    $orderData['pick_code']    = $receiver_details['postal_code']?? null;
+                    $orderData['pick_country'] = $receiver_details['easy_parcel_country']['country_code']?? null;
+                    $orderData['send_email'] = $receiver_details['contact_person_email']?? null;
+                 }
+         
+                 //for development start
+                 $orderData['send_contact']="0198765432";
+                 $orderData['send_code']="11950";
+                 $orderData['service_id']="EP-CS0AIM";
+                 //for development  end
+                 $orderData['collect_date'] = now()->format('Y-m-d');
+                 $orderData['sms']          = false;
+                 $orderData['content']      = 'Books';
+                 $orderData['value']        = 1;
+                 
+         
+         
+                 $orderData['weight'] = (float) $orderData['weight'];
+                 $orderData['value'] = (float) $orderData['value'];
+                 $orderData['sms'] = filter_var($orderData['sms'], FILTER_VALIDATE_BOOLEAN);
+         
+                 $response = $this->orderSubmitEngine($orderData);
+                 $status  = $response['data']['result'][0]['status'] ?? null;
+                 $remarks = $response['data']['result'][0]['remarks'] ?? 'Order submission failed.';
+                 
+                 if (empty($status) || $status !== 'Success') {
+                     info(['EasyParcel Blocked', 'status' => $status, 'remarks' => $remarks]);
+                 
+                     return response()->json([
+                         'message' => $remarks,
+                     ], 403);
+                 }
+            
+         
+                 $orderNumber = $response['data']['result'][0]['order_number'] ?? null;
+         
+                 $payload = [
+                     'order_no' => $orderNumber,
+                 ];
+                 
+         
+                  $response = $this->payEngine($payload);
+         
+                   $responseData = $response['data']['result'][0] ?? [];
+                  
+                  $orderno = $responseData['orderno'] ?? null;
+                  
+                  //  $parcelData = $responseData['parcel'][0] ?? [];
+                  
+                  $awb         = $parcelData['awb'] ?? null;
+                  $awbIdLink   = $parcelData['awb_id_link'] ?? null;
+                  $trackingUrl = $parcelData['tracking_url'] ?? null;
+         
+                  // Block if status is "Fail", empty, or anything other than "Success"
+                  if (empty($status) || strtolower($status) === 'fail' || $status !== 'Success') {
+                      info(['EasyParcel Blocked', 'status' => $status, 'remarks' => $remarks]);
+                  
+                      return response()->json([
+                          'message' => $remarks,
+                      ], 403);
+                  }
+                 }    
+        // try {
             DB::beginTransaction();
             $createNewUser =  $this->createNewUser($request);
 
@@ -181,6 +303,7 @@ trait PlaceNewOrder
             $order->order_amount = $request['order_amount'] ?? 0;
             $order->payment_status = ($request->partial_payment ? 'partially_paid' : ($request['payment_method'] == 'wallet' ? 'paid' : 'unpaid'));
             $order->order_status = $order_status;
+            $order->easy_parcel_order_amount=round($request->delivery_charge, config('round_up_to_digit'));
             $order->coupon_code = $request['coupon_code'];
             $order->payment_method = $request->partial_payment ? 'partial_payment' : $request->payment_method;
             $order->transaction_reference = null;
@@ -201,6 +324,9 @@ trait PlaceNewOrder
             $order->module_id = $request->header('moduleId');
             $order->parcel_category_id = $request->parcel_category_id;
             $order->receiver_details = json_decode($request->receiver_details);
+            if($store?->sub_self_delivery == 1){
+               $order->is_store_manage_delivery=1;
+            }
 
             if ($order_status == 'confirmed') {
                 $order->confirmed = now();
@@ -453,6 +579,19 @@ trait PlaceNewOrder
             }
             $order->flash_admin_discount_amount = round($flash_sale_admin_discount_amount, config('round_up_to_digit'));
             $order->flash_store_discount_amount = round($flash_sale_vendor_discount_amount, config('round_up_to_digit'));
+            if(!$request->is_store_manage_delivery){
+                $order->awb_no=$awb;
+                $order->easy_parcel_order_no=$orderno;
+                $order->awb_id_link=$awbIdLink;
+                $order->tracking_url=$trackingUrl;
+                $order->easy_parcel_rate_id=$request->easy_parcel_rate_id;
+                $order->easy_parcel_service_id=$request->easy_parcel_service_id;
+                $order->easy_parcel_courier_id=$request->easy_parcel_courier_id;
+                $order->easy_parcel_delivery=$request->easy_parcel_delivery;
+                $order->easy_parcel_service_name=$request->easy_parcel_service_name;
+                $order->easy_parcel_courier_name=$request->easy_parcel_courier_name;
+                $order->easy_parcel_courier_logo_link=$request->easy_parcel_courier_logo_link;
+            }
 
             //DM TIPS
             $order->order_amount = $order->order_amount + $order->dm_tips + $order->additional_charge + $order->extra_packaging_amount;
@@ -564,12 +703,12 @@ trait PlaceNewOrder
                 'created_at' => $order->created_at,
                 'user_id' => (int) $order->user_id,
             ], 200);
-        } catch (\Exception $exception) {
+        // } catch (\Exception $exception) {
 
-            info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
-            DB::rollBack();
-            return response()->json([$exception], 403);
-        }
+        //     info([$exception->getFile(), $exception->getLine(), $exception->getMessage()]);
+        //     DB::rollBack();
+        //     return response()->json([$exception], 403);
+        // }
 
         return response()->json([
             'errors' => [
@@ -899,14 +1038,22 @@ trait PlaceNewOrder
                     'delivery_charge' => $delivery_charge,
                 ];
             }
-
+           if($request->is_store_manage_delivery){
             $original_delivery_charge = (($request->distance * $per_km_shipping_charge) > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge  : $minimum_shipping_charge;
+           }else{
+            $original_delivery_charge = $request->delivery_charge;
+           }
+
+           if($request->is_store_manage_delivery){
             if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $original_delivery_charge >  $maximum_shipping_charge) {
                 $original_delivery_charge = $maximum_shipping_charge;
             } else {
                 $original_delivery_charge = $original_delivery_charge;
             }
+             }
 
+
+             if($request->is_store_manage_delivery){
             if (!isset($delivery_charge)) {
                 $delivery_charge = ($request->distance * $per_km_shipping_charge > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge : $minimum_shipping_charge;
                 if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $delivery_charge >  $maximum_shipping_charge) {
@@ -914,7 +1061,12 @@ trait PlaceNewOrder
                 } else {
                     $delivery_charge = $delivery_charge;
                 }
+            }}else{
+                if (!isset($delivery_charge)) {
+                    $delivery_charge = $request->delivery_charge;
+                }
             }
+            
             $original_delivery_charge = $original_delivery_charge + $extra_charges;
             $delivery_charge = $delivery_charge + $extra_charges;
         } else {
@@ -931,8 +1083,12 @@ trait PlaceNewOrder
                 $per_km_shipping_charge = (float) ($businessSetting['parcel_per_km_shipping_charge'] ?? 0);
                 $minimum_shipping_charge = (float) ($businessSetting['parcel_minimum_shipping_charge'] ?? 0);
             }
-
+            if($request->is_store_manage_delivery){
             $original_delivery_charge = (($request->distance * $per_km_shipping_charge) > $minimum_shipping_charge) ? ($request->distance * $per_km_shipping_charge) + $extra_charges : ($minimum_shipping_charge + $extra_charges);
+            }
+            else{
+                $original_delivery_charge =$request->delivery_charge;
+            }
         }
 
         if ($increased > 0) {

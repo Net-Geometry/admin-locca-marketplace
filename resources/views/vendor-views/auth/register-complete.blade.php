@@ -50,7 +50,8 @@
                     <div class="card-body p-4 pb-5">
                         <div class="register-congrats-txt">
                             @if (isset($type) && $type == 'commission')
-                            {{ translate('You’ve opted for our commission-based plan. Admin will review the details and activate your account shortly. To explore the site.') }}
+                            {{ translate('You’ve opted for our commission-based plan. Admin will review the details and activate your account shortly') }}
+                            <br>{{ translate('Kindly_verify_your_phone_number_to_complete_your_registration. We have already sent a verification code to your phone number. To explore the site.') }}
                             <a href="{{ route('home',['new_user'=> true]) }}" class="text-base font-bold">{{ translate('visit_here') }}</a>
 
                             @elseif( isset($payment_status) && $payment_status == 'fail')

@@ -38,7 +38,7 @@
         <!-- End Page Header -->
 
         <div class="row g-2 pb-4 mb-0">
-            <div class="col-sm-6 col-lg-4">
+            <div class="col-sm-6 col-lg-6">
                 <a href="{{ route('admin.users.customer.list',['zone_id' => $params['zone_id'] ?? null]) }}">
                     <div class="__user-dashboard-card">
                         <div class="__user-dashboard-card-thumbs">
@@ -56,6 +56,7 @@
                 </div>
                     </a>
             </div>
+            {{--
             <div class="col-sm-6 col-lg-4">
                 <a href="{{ route('admin.users.delivery-man.list',['zone_id' => $params['zone_id'] ?? null]) }}">
                 <div class="__user-dashboard-card" style="--theme-clr:#006AB4">
@@ -75,8 +76,8 @@
                     <h5 class="subtitle text-capitalize">{{translate('messages.total_delivery_man')}}</h5>
                 </div>
             </a>
-            </div>
-            <div class="col-sm-6 col-lg-4">
+            </div> --}}
+            <div class="col-sm-6 col-lg-6">
                 <a href="{{ route('admin.users.employee.list',['zone_id' => $params['zone_id'] ?? null]) }}">
                 <div class="__user-dashboard-card" style="--theme-clr:#FFA800">
                     <div class="__user-dashboard-card-thumbs">
@@ -329,9 +330,9 @@
                 </div>
             </div>
         </div>
-        <h4 class="mb-md-3">{{ translate('Deliveryman Statistics') }}</h4>
+        {{--<h4 class="mb-md-3">{{ translate('Deliveryman Statistics') }}</h4>
         <div class="row g-2">
-            <div class="col-lg-8">
+           <div class="col-lg-8">
                 <div class="row gap__10">
                     <div class="col-md-3 col-sm-6">
                           <a href="{{ route('admin.users.delivery-man.list',['zone_id' => $params['zone_id'] ?? null , 'filter' => 'active']) }}">
@@ -378,6 +379,7 @@
                     </a>
                     </div>
                 </div>
+             
                 <div class="__map-wrapper-2 mt-3">
                     <div class="map-pop-deliveryman">
                         <form action="javascript:" id="search-form" class="map-pop-deliveryman-inner">
@@ -394,11 +396,12 @@
                     </div>
                 </div>
             </div>
+            
             <div class="col-lg-4">
                 <div class="card h-100" id="top-deliveryman-view">
                     @include('admin-views.partials._top-deliveryman',['top_deliveryman'=>$data['top_deliveryman']])
                 </div>
-            </div>
+            </div> --}}
         </div>
         @else
         <!-- Page Header -->

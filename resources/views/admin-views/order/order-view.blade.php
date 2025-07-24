@@ -282,6 +282,17 @@
                                     @endif
 
                                 </h6>
+
+                            @if(!$order->is_store_manage_delivery)
+                                <h6>
+                                    <span>{{ translate('easy_parcel_cost') }}</span> <span>:</span>
+                                    
+                                    <span class="badge badge-soft-success ml-sm-3">
+                                           {{ \App\CentralLogics\Helpers::format_currency($order?->easy_parcel_order_amount ?? 0) }}
+                                    </span>
+                                </h6>
+
+                                @endif
                                 @if ($order->store && $order->store->module->module_type == 'food')
                                     <h6>
                                         <span>{{ translate('cutlery') }}</span> <span>:</span>
@@ -1284,14 +1295,14 @@
                                         </div>
                                     </div>
                                 @endif
-                                @if (!in_array($order->order_status, [ 'refunded','delivered', 'canceled']) &&  ( !$order->delivery_man && $order['order_type'] != 'take_away' && (($order->store && !$order?->store?->sub_self_delivery) || $parcel_order)))
+                               {{-- @if (!in_array($order->order_status, [ 'refunded','delivered', 'canceled']) &&  ( !$order->delivery_man && $order['order_type'] != 'take_away' && (($order->store && !$order?->store?->sub_self_delivery) || $parcel_order)))
                                     <div class="w-100 text-center mt-3">
                                         <button type="button" class="btn btn--primary w-100" data-toggle="modal"
                                                 data-target="#myModal" data-lat='21.03' data-lng='105.85'>
                                             {{ translate('messages.assign_delivery_man_manually') }}
                                         </button>
                                     </div>
-                                @endif
+                                @endif --}}
                             @endif
                         </div>
                     </div>
@@ -1620,6 +1631,58 @@
                         <!-- End Body -->
                     </div>
                     <!-- End Card -->
+                 
+                    @if(!$order->is_store_manage_delivery)
+                    <div class="card mb-4 shadow-sm mt-3">
+                        <div class="card-header bg-primary text-white">
+                          <h5 class="mb-0 text-white">{{ translate('messages.easy_parcel_information') }}</h5>
+                        </div>
+                        <div class="card-body">
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_rate_id') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_rate_id ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_service_id') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_service_id ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_courier_id') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_courier_id ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_delivery') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_delivery ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_service_name') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_service_name ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-3">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_courier_name') }}</div>
+                            <div class="col-md-8">{{ $order->easy_parcel_courier_name ?? '-' }}</div>
+                          </div>
+                      
+                          <div class="row mb-1">
+                            <div class="col-md-4 text-muted">{{ translate('messages.easy_parcel_courier_logo') }}</div>
+                            <div class="col-md-8">
+                              @if (!empty($order->easy_parcel_courier_logo_link))
+                                <img src="{{ $order->easy_parcel_courier_logo_link }}" alt="Courier Logo" class="img-fluid" style="max-height: 40px;">
+                              @else
+                                <span>-</span>
+                              @endif
+                            </div>
+                          </div>
+                      
+                        </div>
+                      </div>
+                      @endif
                 @endif
             </div>
         </div>

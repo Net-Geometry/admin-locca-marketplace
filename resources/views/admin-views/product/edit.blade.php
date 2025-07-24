@@ -527,6 +527,14 @@
                                             placeholder="{{ translate('messages.Ex:') }} 100" required>
                                     </div>
                                 </div>
+                                <div class="col-sm-6 col-lg-3" id="weight">
+                                   <div class="form-group mb-0">
+                                       <label class="input-label" for="weight">{{ translate('messages.weight') }}</label>
+                                       <input type="number" class="form-control" name="weight" min="0" step="0.01"
+                                           value="{{ $product->weight }}" id="weight">
+                                   </div>
+                               </div>
+
                                 <div class="col-sm-6 col-lg-3" id="stock_input">
                                     <div class="form-group mb-0">
                                         <label class="input-label"

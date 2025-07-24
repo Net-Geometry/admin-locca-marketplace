@@ -9,6 +9,7 @@ use App\Models\Module;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
+use App\CentralLogics\SMS_module;
 use App\Mail\StoreRegistration;
 use App\Models\BusinessSetting;
 use App\CentralLogics\StoreLogic;
@@ -16,7 +17,8 @@ use Illuminate\Http\JsonResponse;
 use App\Models\SubscriptionPackage;
 use Gregwar\Captcha\CaptchaBuilder;
 use App\Mail\VendorSelfRegistration;
-use Brian2694\Toastr\Facades\Toastr;
+use Brian\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -25,6 +27,7 @@ use Illuminate\Validation\Rules\Password;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use Modules\Rental\Emails\ProviderRegistration;
 use Modules\Rental\Emails\ProviderSelfRegistration;
+use Modules\Gateways\Traits\SmsGateway;
 
 class VendorController extends Controller
 {
@@ -101,6 +104,7 @@ class VendorController extends Controller
             'tin_expire_date' => 'required',
             'tin_certificate_image' => 'required',
             'delivery_time_type'=>'required',
+            'nadi_number'=>'required',
         ],[
             'password.min_length' => translate('The password must be at least :min characters long'),
             'password.mixed' => translate('The password must contain both uppercase and lowercase letters'),
@@ -110,6 +114,14 @@ class VendorController extends Controller
             'password.uncompromised' => translate('The password is compromised. Please choose a different one'),
             'password.custom' => translate('The password cannot contain white spaces.'),
         ]);
+
+        $nadiVerification = Helpers::nadiVerificationStatus($request->nadi_number);
+        if (!$nadiVerification) {
+            $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_member_not_verified'));
+            return back()->withErrors($validator)
+                        ->withInput();
+        }
+
         if ($validator->fails()) {
             return back()
                 ->withErrors($validator)
@@ -170,6 +182,8 @@ class VendorController extends Controller
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->status = 0;
         $store->store_business_model = 'none';
+        $store->nadi_number = $request->nadi_number ?? null;
+        $store->is_nadi_verified = !is_null($request->nadi_number) ? 1 : 0;
         $store->save();
 
         Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Store', data_id: $store->id, data_value: $store->name);
@@ -199,6 +213,38 @@ class VendorController extends Controller
         if(config('module.'.$store->module->module_type)['always_open'])
         {
             StoreLogic::insert_schedule($store->id);
+        }
+
+
+        $otp = rand(1000, 9999);
+        if(env('APP_ENV')!='live'){
+            $otp = '1234';
+        }
+
+        DB::table('phone_verifications')->updateOrInsert(['phone' => $vendor->phone],
+            [
+                'token' => $otp,
+                'otp_hit_count' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+        $published_status = 0;
+        $payment_published_status = config('get_payment_publish_status');
+        if (isset($payment_published_status[0]['is_published'])) {
+            $published_status = $payment_published_status[0]['is_published'];
+        }
+
+        if (env('APP_ENV') =='live') {
+            if($published_status == 1){
+                $response = SmsGateway::send($vendor->phone,$otp);
+            }else{
+                $response = SMS_module::send($vendor->phone,$otp);
+            }
+
+            if(env('APP_ENV')!='live' && $response !== 'success') {
+                info(['vendor_register_otp_failed_web' => $response]);
+            }
         }
 
         if (Helpers::subscription_check()) {
@@ -287,8 +333,7 @@ class VendorController extends Controller
 
         return response()->json(['module_type' => '']);
     }
-
-
+    
     public function business_plan(Request $request){
         $store=Store::find($request->store_id);
 
@@ -348,34 +393,57 @@ class VendorController extends Controller
         return to_route('restaurant.final_step');
     }
 
-public function back(Request $request){
-    $admin_commission= BusinessSetting::where('key','admin_commission')->first();
-    $business_name= BusinessSetting::where('key','business_name')->first();
-    $store=Store::where('id',$request->store_id)->with('module')->first();
-    $module=$store?->module?->module_type ?? 'all';
-    $packages= SubscriptionPackage::where('status',1)->where('module_type',  $module == 'rental' ? 'rental' : 'all')->get();
-    return view('vendor-views.auth.register-step-2',[
-        'admin_commission'=> $admin_commission?->value,
-        'business_name'=> $business_name?->value,
-        'packages'=> $packages,
-        'store_id' => $request->store_id,
-        'module' => $module
-        ]);
-}
-
-
-public function final_step(Request $request){
-
-
-    $store_id= null;
-    $payment_status= null;
-    if($request?->store_id && is_string($request?->store_id)){
-        $data = explode('?', $request?->store_id);
-        $store_id = $data[0];
-        $payment_status = $data[1]  != 'flag=success' ? 'fail': 'success';
+    public function back(Request $request){
+        $admin_commission= BusinessSetting::where('key','admin_commission')->first();
+        $business_name= BusinessSetting::where('key','business_name')->first();
+        $store=Store::where('id',$request->store_id)->with('module')->first();
+        $module=$store?->module?->module_type ?? 'all';
+        $packages= SubscriptionPackage::where('status',1)->where('module_type',  $module == 'rental' ? 'rental' : 'all')->get();
+        return view('vendor-views.auth.register-step-2',[
+            'admin_commission'=> $admin_commission?->value,
+            'business_name'=> $business_name?->value,
+            'packages'=> $packages,
+            'store_id' => $request->store_id,
+            'module' => $module
+            ]);
     }
 
-    return view('vendor-views.auth.register-complete',['store_id' =>$store_id,'payment_status'=> $payment_status]);
+
+    public function final_step(Request $request){
+
+
+        $store_id= null;
+        $payment_status= null;
+        if($request?->store_id && is_string($request?->store_id)){
+            $data = explode('?', $request?->store_id);
+            $store_id = $data[0];
+            $payment_status = $data[1]  != 'flag=success' ? 'fail': 'success';
+        }
+
+        return view('vendor-views.auth.register-complete',['store_id' =>$store_id,'payment_status'=> $payment_status]);
+    }
+
+    public function nadi_verify(Request $request)
+    {
+        $identityNo = $request->input('nadi_number');
+        if (!$identityNo) {
+            return response()->json(['status' => 0, 'message' => 'Member number is required.'], 400);
+        }
+
+        $config = json_decode(BusinessSetting::where('key', 'nadi_config')->value('value'), true) ?? [];
+        
+        $response = Http::withHeaders(['Accept' => 'application/json'])
+            ->post($config['endpoint'] ?? '', [
+                'identity_no' => $identityNo,
+                'api_key'     => $config['api_key'] ?? '',
+            ]);
+
+        $success =  $response->status() === 200 && $response->json('status') == 1;
+
+        return response()->json(
+            ['status' => (int)$success, 'message' => $response->json('message') ?? ''],
+            $success ? 200 : $response->status()
+        );
+    }
 }
 
-}

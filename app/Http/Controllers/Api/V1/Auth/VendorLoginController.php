@@ -11,18 +11,23 @@ use App\Models\Translation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
+use App\CentralLogics\SMS_module;
 use App\Models\VendorEmployee;
 use App\Mail\StoreRegistration;
 use App\Models\BusinessSetting;
 use App\CentralLogics\StoreLogic;
 use App\Http\Controllers\Controller;
 use App\Mail\VendorSelfRegistration;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use Modules\Rental\Emails\ProviderRegistration;
 use Modules\Rental\Emails\ProviderSelfRegistration;
+use Modules\Gateways\Traits\SmsGateway;
+
 
 class VendorLoginController extends Controller
 {
@@ -48,7 +53,8 @@ class VendorLoginController extends Controller
                 $token = $this->genarate_token($request['email']);
                 $vendor = Vendor::where(['email' => $request['email']])->first();
 
-            $storeSubscriptionCheck=  $this->storeSubscriptionCheck($vendor?->stores[0],$vendor,$token);
+                    
+                $storeSubscriptionCheck=  $this->storeSubscriptionCheck($vendor?->stores[0],$vendor,$token);
 
                     if(data_get($storeSubscriptionCheck,'type') != null){
                         return response()->json(data_get($storeSubscriptionCheck,'data'), data_get($storeSubscriptionCheck,'code'));
@@ -63,9 +69,15 @@ class VendorLoginController extends Controller
                             ], 401);
                         }
                     }
+                
+                if($vendor->is_phone_verified == 0){
+                    $token = null;
+                    return response()->json(['token' => $token, 'is_phone_verified'=> 0, 'zone_wise_topic'=> $vendor->stores[0]->zone->store_wise_topic, 'module_type' => $vendor?->stores[0]?->module?->module_type], 200);
+                }
+                
                 $vendor->auth_token = $token;
                 $vendor->save();
-                return response()->json(['token' => $token, 'zone_wise_topic'=> $vendor->stores[0]->zone->store_wise_topic, 'module_type' => $vendor?->stores[0]?->module?->module_type], 200);
+                return response()->json(['token' => $token, 'is_phone_verified'=> 1,  'zone_wise_topic'=> $vendor->stores[0]->zone->store_wise_topic, 'module_type' => $vendor?->stores[0]?->module?->module_type], 200);
             }  else {
                 $errors = [];
                 array_push($errors, ['code' => 'auth-001', 'message' => translate('Credential_do_not_match,_please_try_again')]);
@@ -151,6 +163,7 @@ class VendorLoginController extends Controller
             'tin' => 'required',
             'tin_expire_date' => 'required',
             'tin_certificate_image' => 'required',
+            'nadi_number' => 'required',
         ],[
             'password.required' => translate('The password is required'),
             'password.min_length' => translate('The password must be at least :min characters long'),
@@ -183,6 +196,11 @@ class VendorLoginController extends Controller
 
         if (count($data) < 1) {
             $validator->getMessageBag()->add('translations', translate('messages.Name and description in english is required'));
+        }
+        
+        $nadiVerification = Helpers::nadiVerificationStatus($request->nadi_number);
+        if(!$nadiVerification) {
+            $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_number_not_verified'));
         }
 
         if ($validator->fails()) {
@@ -217,6 +235,8 @@ class VendorLoginController extends Controller
         $store->status = 0;
         $store->store_business_model = 'none';
         $store->pickup_zone_id = $request['pickup_zone_id'] ?? json_encode([]);
+        $store->nadi_number = $request->nadi_number;
+        $store->is_nadi_verified = !is_null($request->nadi_number) ? 1 : 0; 
         $store->save();
         // $store->module->increment('stores_count');
         if(config('module.'.$store->module->module_type)['always_open'])
@@ -248,8 +268,52 @@ class VendorLoginController extends Controller
             elseif($module?->module_type == 'rental' && addon_published_status('Rental') && config('mail.status') && Helpers::get_mail_status('rental_provider_registration_mail_status_admin') == '1' &&  Helpers::getRentalNotificationStatusData('admin','provider_self_registration','mail_status') ){
                 Mail::to($admin['email'])->send(new ProviderRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
             }
+            //Send OTP for Phone verification
+            $otp_interval_time= 60; //seconds
+            $verification_data= DB::table('phone_verifications')->where('phone', $vendor->phone)->first();
+            if(isset($verification_data) &&  Carbon::parse($verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
+                $time= $otp_interval_time - Carbon::parse($verification_data->updated_at)->DiffInSeconds();
+                $errors = [];
+                array_push($errors, ['code' => 'otp', 'message' =>  translate('messages.please_try_again_after_').$time.' '.translate('messages.seconds')]);
+                return response()->json([
+                    'errors' => $errors
+                ], 405);
+            }
+
         }catch(\Exception $ex){
             info($ex->getMessage());
+        }
+
+
+        $otp = rand(1000, 9999);
+        if(env('APP_ENV')!='live'){
+            $otp = '1234';
+        }
+
+        DB::table('phone_verifications')->updateOrInsert(['phone' => $vendor->phone],
+            [
+                'token' => $otp,
+                'otp_hit_count' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+        $published_status = 0;
+        $payment_published_status = config('get_payment_publish_status');
+        if (isset($payment_published_status[0]['is_published'])) {
+            $published_status = $payment_published_status[0]['is_published'];
+        }
+
+        if (env('APP_ENV') =='live') {
+            if($published_status == 1){
+                $response = SmsGateway::send($vendor->phone,$otp);
+            }else{
+                $response = SMS_module::send($vendor->phone,$otp);
+            }
+
+            if(env('APP_ENV')!='live' && $response !== 'success') {
+                info(['vendor_register_otp_failed' => $response]);
+            }
         }
 
 
@@ -379,4 +443,128 @@ class VendorLoginController extends Controller
         return null ;
     }
 
+
+    // Send OTP for vendor login for Nadi Verification
+    public function resend_otp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $vendor = Vendor::Where(['email' => $request['email']])->first();
+
+        if (!$vendor) {
+            return response()->json([
+                'errors' => [['code' => 'auth-001', 'message' => translate('messages.vendor_not_found')]]
+            ], 401);
+        }
+
+        //Send OTP for Phone verification
+        $otp_interval_time= 60; //seconds
+        $verification_data= DB::table('phone_verifications')->where('phone', $vendor->phone)->first();
+        if(isset($verification_data) &&  Carbon::parse($verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
+            $time= $otp_interval_time - Carbon::parse($verification_data->updated_at)->DiffInSeconds();
+            $errors = [];
+            array_push($errors, ['code' => 'otp', 'message' =>  translate('messages.please_try_again_after_').$time.' '.translate('messages.seconds')]);
+            return response()->json([
+                'errors' => $errors
+            ], 405);
+        }
+
+
+        $otp = rand(1000, 9999);
+        if(env('APP_ENV')!='live'){
+            $otp = '1234';
+        }
+
+        DB::table('phone_verifications')->updateOrInsert(['phone' => $vendor->phone],
+            [
+                'token' => $otp,
+                'otp_hit_count' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+        $published_status = 0;
+        $payment_published_status = config('get_payment_publish_status');
+        if (isset($payment_published_status[0]['is_published'])) {
+            $published_status = $payment_published_status[0]['is_published'];
+        }
+
+        if (env('APP_ENV') =='live') {
+            if($published_status == 1){
+                $response = SmsGateway::send($vendor->phone,$otp);
+            }else{
+                $response = SMS_module::send($vendor->phone,$otp);
+            }
+
+            if(env('APP_ENV') != 'live' && $response !== 'success') {
+                $errors = [];
+                array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
+                return response()->json([
+                    'errors' => $errors
+                ], 405);
+            }
+        }
+
+        return response()->json([
+            'message' => translate('messages.otp_sent_successfull')
+        ], 200);
+
+    }
+
+
+    // Verify vendor OTP after register Nadi verified vendor
+    public function verify_otp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'otp' => 'required',
+            'email' => 'required|email',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+    
+        $vendor = Vendor::with('stores.zone', 'stores.module')->where('email', $request->email)->first();
+        
+        if (!$vendor) {
+            return response()->json([
+                'errors' => [['code' => 'auth-001', 'message' => translate('messages.vendor_not_found')]]
+            ], 401);
+        }
+    
+        $verification = DB::table('phone_verifications')->where('phone', $vendor->phone)->first();
+        
+        if (!$verification || $verification->token !== $request->otp) {
+            return response()->json(['message' => translate('messages.otp_does_not_match')], 403);
+        }
+    
+        if (!auth('vendor')->attempt(['email' => $request['email'], 'password' => $request['password']])) {
+            return response()->json([
+                'errors' => [['code' => 'auth-001', 'message' => translate('Credential_do_not_match,_please_try_again')]]
+            ], 401);
+        }
+    
+        $token = $this->genarate_token($vendor->email);
+        $store = $vendor->stores[0] ?? null;
+    
+        // Update vendor and cleanup
+        $vendor->auth_token = $token;
+        $vendor->is_phone_verified = 1;
+        $vendor->save();
+        
+        DB::table('phone_verifications')->where('phone', $vendor->phone)->delete();
+    
+        return response()->json([
+            'token' => $token,
+            'is_phone_verified' => 1,
+            'zone_wise_topic' => $store->zone->store_wise_topic,
+            'module_type' => $store->module->module_type
+        ], 200);
+    }
 }

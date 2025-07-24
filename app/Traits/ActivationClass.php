@@ -98,7 +98,7 @@ trait ActivationClass
 
         if (isset($config[$app]) && (!isset($config[$app]['active']) || $config[$app]['active'] == 0)) {
             Cache::forget($cacheKey);
-            return false;
+            return true;
         } else {
             $appConfig = $config[$app];
             return Cache::remember($cacheKey, $this->getCacheTimeoutByDays(days: 1), function () use ($app, $appConfig) {

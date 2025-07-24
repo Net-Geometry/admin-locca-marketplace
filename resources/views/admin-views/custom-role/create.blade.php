@@ -141,13 +141,13 @@
                                     <label class="form-check-label qcont text-dark" for="customer_management">{{translate('messages.customer_management')}}</label>
                                 </div>
                             </div>
-                            <div class="check-item">
+                            {{--<div class="check-item">
                                 <div class="form-group form-check form--check">
                                     <input type="checkbox" name="modules[]" value="deliveryman" class="form-check-input"
                                            id="deliveryman">
                                     <label class="form-check-label qcont text-dark" for="deliveryman">{{translate('messages.deliveryman')}}</label>
                                 </div>
-                            </div>
+                            </div>--}}
                             <div class="check-item">
                                 <div class="form-group form-check form--check">
                                     <input type="checkbox" name="modules[]" value="disbursement" class="form-check-input"
@@ -155,13 +155,13 @@
                                     <label class="form-check-label qcont text-dark" for="disbursement">{{translate('messages.disbursement')}}</label>
                                 </div>
                             </div>
-                            <div class="check-item">
+                           {{-- <div class="check-item">
                                 <div class="form-group form-check form--check">
                                     <input type="checkbox" name="modules[]" value="provide_dm_earning" class="form-check-input"
                                            id="provide_dm_earning">
                                     <label class="form-check-label qcont text-dark" for="provide_dm_earning">{{translate('messages.provide_dm_earning')}}</label>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="check-item">
                                 <div class="form-group form-check form--check">
                                     <input type="checkbox" name="modules[]" value="employee" class="form-check-input"

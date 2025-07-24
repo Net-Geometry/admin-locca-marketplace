@@ -289,6 +289,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('business-setup/{tab?}', 'BusinessSettingsController@business_index')->name('business-setup');
             Route::get('react-setup', 'BusinessSettingsController@react_setup')->name('react-setup');
             Route::post('react-update', 'BusinessSettingsController@react_update')->name('react-update');
+            Route::post('easy-parcel-setting-update', 'BusinessSettingsController@update_easy_parcel_settings')->name('easy-parcel-setting-update');
             Route::post('update-setup', 'BusinessSettingsController@business_setup')->name('update-setup');
             Route::post('update-landing-setup', 'BusinessSettingsController@landing_page_settings_update')->name('update-landing-setup');
             Route::delete('delete-custom-landing-page', 'BusinessSettingsController@delete_custom_landing_page')->name('delete-custom-landing-page');
@@ -413,6 +414,27 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             //     Route::get('drivemond-configuration', 'ExternalConfigurationController@index')->name('drivemond-configuration');
             //     Route::post('update-drivemond-configuration', 'ExternalConfigurationController@updateDrivemondConfiguration')->name('update-drivemond-configuration');
             // });
+            Route::group(['prefix' => 'easy-parcel', 'as' => 'easy-parcel.'], function () {
+                Route::group(['prefix' => 'country', 'as' => 'country.'], function () {
+                    Route::get('/', 'EasyParcelCountryController@country')->name('index');
+                    Route::post('store', 'EasyParcelCountryController@countryStore')->name('store');
+                    Route::post('update/{id}', 'EasyParcelCountryController@countryUpdate')->name('update');
+                    Route::get('edit/{id}', 'EasyParcelCountryController@countryEdit')->name('edit');
+                    Route::get('status/{id}/{status}', 'EasyParcelCountryController@countryStatusUpdate')->name('status');
+                    Route::delete('delete/{id}', 'EasyParcelCountryController@countryDelete')->name('delete');
+                });
+                Route::group(['prefix' => 'state', 'as' => 'state.'], function () {
+                    Route::get('/', 'EasyParcelStateController@state')->name('index');
+                    Route::post('store', 'EasyParcelStateController@stateStore')->name('store');
+                    Route::post('update/{id}', 'EasyParcelStateController@stateUpdate')->name('update');
+                    Route::get('edit/{id}', 'EasyParcelStateController@stateEdit')->name('edit');
+                    Route::get('status/{id}/{status}', 'EasyParcelStateController@stateStatusUpdate')->name('status');
+                    Route::delete('delete/{id}', 'EasyParcelStateController@stateDelete')->name('delete');
+                });
+     
+       
+            });
+
             Route::group(['prefix' => 'third-party', 'as' => 'third-party.'], function () {
                 Route::get('sms-module', 'SMSModuleController@sms_index')->name('sms-module');
                 Route::post('sms-module-update/{sms_module}', 'SMSModuleController@sms_update')->name('sms-module-update');
@@ -440,6 +462,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 //file_system
                 Route::get('storage-connection', 'BusinessSettingsController@storage_connection_index')->name('storage_connection_index');
                 Route::post('storage-connection-update/{name}', 'BusinessSettingsController@storage_connection_update')->name('storage_connection_update');
+                //nadi configuration
+                Route::get('nadi-config', 'BusinessSettingsController@nadi_config')->name('nadi_config');
+                Route::post('nadi-config-update', 'BusinessSettingsController@nadi_config_update')->name('nadi_config_update');
             });
             // Offline payment Methods
             Route::get('/offline-payment', 'OfflinePaymentMethodController@index')->name('offline');

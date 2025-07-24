@@ -83,7 +83,7 @@
                         </li>
                     @endif
                     @if (\App\CentralLogics\Helpers::module_permission_check('disbursement'))
-                        <li
+                        {{--<li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/dm-disbursement*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.transactions.dm-disbursement.list', ['status' => 'all']) }}"
@@ -92,7 +92,7 @@
                                 <span
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.delivery_man_disbursement') }}</span>
                             </a>
-                        </li>
+                        </li>--}}
                     @endif
                     <!-- account -->
                     @if (\App\CentralLogics\Helpers::module_permission_check('collect_cash'))
@@ -111,7 +111,7 @@
 
                     <!-- provide_dm_earning -->
                     @if (\App\CentralLogics\Helpers::module_permission_check('provide_dm_earning'))
-                        <li
+                       {{-- <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/provide-deliveryman-earnings*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.transactions.provide-deliveryman-earnings.index') }}"
@@ -120,7 +120,7 @@
                                 <span
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('Delivery Man Payments') }}</span>
                             </a>
-                        </li>
+                        </li> --}}
                     @endif
                     <!-- End provide_dm_earning -->
 

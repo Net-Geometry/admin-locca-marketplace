@@ -14,6 +14,8 @@ use App\Models\UserInfo;
 use App\Scopes\StoreScope;
 use App\Models\AdminWallet;
 use App\Models\DataSetting;
+use App\Models\EasyParcelCountry;
+use App\Models\EasyParcelState;
 use App\Models\StoreConfig;
 use App\Models\StoreWallet;
 use App\Models\TempProduct;
@@ -52,6 +54,7 @@ use MatanYadaev\EloquentSpatial\Objects\Point;
 use App\Exports\StoreWithdrawTransactionExport;
 use App\Exports\StoreWiseWithdrawTransactionExport;
 use Modules\Rental\Emails\ProviderWithdrawRequestMail;
+use Session;
 
 
 class VendorController extends Controller
@@ -88,6 +91,7 @@ class VendorController extends Controller
             'tin' => 'required',
             'tin_expire_date' => 'required',
             'tin_certificate_image' => 'required',
+            'nadi_number' => 'required',
         ], [
             'f_name.required' => translate('messages.first_name_is_required'),
             'name.0.required'=>translate('default_name_is_required'),
@@ -113,6 +117,14 @@ class VendorController extends Controller
                         ->withInput();
             }
         }
+
+        $nadiVerification = Helpers::nadiVerificationStatus($request->nadi_number);
+        if (!$nadiVerification) {
+            $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_member_not_verified'));
+            return back()->withErrors($validator)
+                        ->withInput();
+        }
+
         if ($validator->fails()) {
             return back()
             ->withErrors($validator)
@@ -144,6 +156,8 @@ class VendorController extends Controller
         $store->tin_certificate_image = Helpers::upload('store/', $extension, $request->file('tin_certificate_image'));
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->module_id = Config::get('module.current_module_id');
+        $store->nadi_number = $request->nadi_number;
+        $store->is_nadi_verified = !is_null($request->nadi_number) ? 1 : 0;
         try {
             $store->save();
             // $store->module->increment('stores_count');
@@ -203,6 +217,7 @@ class VendorController extends Controller
         } catch (\Exception $ex) {
             info($ex->getMessage());
         }
+
         Toastr::success(translate('messages.store_added_successfully'));
         return redirect('admin/store/list');
     }
@@ -238,7 +253,8 @@ class VendorController extends Controller
             },],
             'minimum_delivery_time' => 'required',
             'maximum_delivery_time' => 'required',
-            'delivery_time_type'=>'required'
+            'delivery_time_type'=>'required',
+            'nadi_number' => 'required',
         ], [
             'f_name.required' => translate('messages.first_name_is_required')
         ]);
@@ -261,6 +277,15 @@ class VendorController extends Controller
                 $validator->getMessageBag()->add('minimum_delivery_time', translate('messages.minimum_delivery_time_should_be_more_than_10_min'));
                 return back()->withErrors($validator)
                         ->withInput();
+            }
+        }
+
+        if (is_null($store->nadi_number) || ($request->nadi_number != $store->nadi_number)) {
+            $nadiVerification = Helpers::nadiVerificationStatus($request->nadi_number);
+            if (!$nadiVerification) {
+                $validator->getMessageBag()->add('nadi_number', translate('messages.nadi_number_not_verified'));
+                return back()->withErrors($validator)
+                            ->withInput();
             }
         }
 
@@ -293,6 +318,8 @@ class VendorController extends Controller
         $extension = $request->has('tin_certificate_image') ? $request->file('tin_certificate_image')->getClientOriginalExtension() : 'png';
         $store->tin_certificate_image = $request->has('tin_certificate_image') ? Helpers::update('store/', $store->tin_certificate_image, $extension, $request->file('tin_certificate_image')) : $store->tin_certificate_image;
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
+        $store->nadi_number = $request->nadi_number;
+        $store->is_nadi_verified = 1;
         $store->save();
         $default_lang = str_replace('_', '-', app()->getLocale());
         foreach($request->lang as $index=>$key)
@@ -354,6 +381,7 @@ class VendorController extends Controller
             $userinfo->image = $store->logo;
             $userinfo->save();
         }
+
         Toastr::success(translate('messages.store_updated_successfully'));
         return redirect('admin/store/list');
     }
@@ -430,7 +458,9 @@ class VendorController extends Controller
         }
         if($tab == 'settings')
         {
-            return view('admin-views.vendor.view.settings', compact('store'));
+            $easyParcelCountries=EasyParcelCountry::where('status',1)->get();
+            $easyParcelStates=EasyParcelState::where('status',1)->get();
+            return view('admin-views.vendor.view.settings', compact('store','easyParcelCountries','easyParcelStates'));
         }
         else if($tab == 'order')
         {
@@ -1030,6 +1060,12 @@ class VendorController extends Controller
         }
         $request->validate([
             'minimum_order'=>'required',
+            'postal_code'=>'required',
+            'pick_name'     => 'required|string',
+            'pick_contact'  => 'required|string',
+            'pick_addr1'    => 'required|string',
+            'pick_city'     => 'required|string',
+            'easy_parcel_country_id'=>'required',
             'minimum_delivery_time' => 'required|min:1|max:2',
             'maximum_delivery_time' => 'required|min:1|max:2|gt:minimum_delivery_time',
         ]);
@@ -1040,6 +1076,14 @@ class VendorController extends Controller
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->veg = (bool)($request->veg_non_veg == 'veg' || $request->veg_non_veg == 'both');
         $store->non_veg = (bool)($request->veg_non_veg == 'non_veg' || $request->veg_non_veg == 'both');
+
+        $store->postal_code = $request->postal_code;
+        $store->easy_parcel_country_id = $request->easy_parcel_country_id;
+        $store->easy_parcel_state_id = $request->easy_parcel_state_id;
+        $store->pick_name = $request->pick_name;
+        $store->pick_contact = $request->pick_contact;
+        $store->pick_addr1 = $request->pick_addr1;
+        $store->pick_city = $request->pick_city;
 
         $store->save();
         Toastr::success(translate('messages.store_settings_updated'));

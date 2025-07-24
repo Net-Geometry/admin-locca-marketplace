@@ -75,6 +75,7 @@ class ItemController extends Controller
                 })
             ],
             'price' => 'required|numeric|between:.01,999999999999.99',
+            'weight' => 'required|numeric|between:.01,999999999999.99',
             'description.*' => 'max:1000',
             'description.0' => 'required',
             'discount' => 'required|numeric|min:0',
@@ -360,6 +361,7 @@ class ItemController extends Controller
 
         $food->variations = json_encode($variations);
         $food->price = $request->price;
+        $food->weight = $request->weight;
         $food->veg = $request->veg ?? 0;
         $food->image =  $request->has('image') ? Helpers::upload('product/', 'png', $request->file('image')) : $newFileNamethumb ?? null;
         $food->available_time_starts = $request->available_time_starts ?? '00:00:00';
@@ -530,6 +532,7 @@ class ItemController extends Controller
             'name.*' => 'max:191',
             'category_id' => 'required',
             'price' => 'required|numeric|between:0.01,999999999999.99',
+            'weight' => 'required|numeric|between:0.01,999999999999.99',
             'description.*' => 'max:1000',
             'description.0' => 'required',
             'discount' => 'required|numeric|min:0',
@@ -729,6 +732,7 @@ class ItemController extends Controller
         $p->food_variations = json_encode($food_variations);
         $p->variations = json_encode($variations);
         $p->price = $request->price;
+        $p->weight = $request->weight;
         $p->veg = $request->veg ?? 0;
         $p->available_time_starts = $request->available_time_starts ?? '00:00:00';
         $p->available_time_ends = $request->available_time_ends ?? '23:59:59';
@@ -1685,6 +1689,7 @@ class ItemController extends Controller
         $temp_item->attributes = $data->attributes;
 
         $temp_item->price = $data->price;
+        $temp_item->weight = $data->weight;
         $temp_item->discount = $data->discount;
         $temp_item->discount_type = $data->discount_type;
         $temp_item->tag_ids = json_encode($tag_ids);

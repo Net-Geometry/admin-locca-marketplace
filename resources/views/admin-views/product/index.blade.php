@@ -458,6 +458,20 @@
                                             placeholder="{{ translate('messages.Ex:') }} 100" required>
                                     </div>
                                 </div>
+                                <div class="col-sm-{{ Config::get('module.current_module_type') == 'food' ? '4' :'3' }} col-6" id="weight">
+                                    <div class="form-group mb-0">
+                                        <label class="input-label"
+                                            for="weight">{{ translate('messages.weight') }}</label>
+                                            <input type="number" 
+                                               placeholder="{{ translate('messages.Ex:_10') }}" 
+                                               class="form-control" 
+                                               name="weight" 
+                                               min="0" 
+                                               step="0.01" 
+                                               id="weight"
+                                               value="{{ old('weight') }}">
+                                    </div>
+                                </div>
                                 <div class="col-sm-{{ Config::get('module.current_module_type') == 'food' ? '4' :'3' }} col-6" id="stock_input">
                                     <div class="form-group mb-0">
                                         <label class="input-label"

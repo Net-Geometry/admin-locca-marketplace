@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EasyParcelWebhookController;
 use App\WebSockets\Handler\DMLocationSocketHandler;
 use Illuminate\Support\Facades\Route;
 use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
@@ -14,6 +15,8 @@ use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('/easy-parcel-webhook', [EasyParcelWebhookController::class,'trackingHook']);
 
 Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function () {
     Route::group(['prefix' => 'configurations'], function () {
@@ -65,6 +68,9 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             Route::post('verify-token', 'VendorPasswordResetController@verify_token');
             Route::put('reset-password', 'VendorPasswordResetController@reset_password_submit');
             Route::post('register','VendorLoginController@register');
+            // Vendor OTP Verification
+            Route::post('verify-otp', 'VendorLoginController@verify_otp');
+            Route::post('resend-otp', 'VendorLoginController@resend_otp');
         });
 
         Route::post('social-login', 'SocialAuthController@social_login');
@@ -397,6 +403,18 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
                 Route::put('payment-method', 'OrderController@update_payment_method');
                 Route::put('offline-payment', 'OrderController@offline_payment');
                 Route::put('offline-payment-update', 'OrderController@update_offline_payment_info');
+
+                Route::group(['prefix' => 'easy-parcel'], function (
+                    ) {
+                    Route::get('country-list', 'EasyParcelController@countryList')->withoutMiddleware('apiGuestCheck');
+                    Route::get('state-list', 'EasyParcelController@stateList')->withoutMiddleware('apiGuestCheck');
+                    Route::get('rate-check', 'EasyParcelController@rateCheck')->withoutMiddleware('apiGuestCheck');
+                    Route::post('submit-order', 'EasyParcelController@submitOrder');
+                    Route::post('pay-for-sandbox-order', 'EasyParcelController@payOrder');
+                    Route::post('order-status', 'EasyParcelController@orderStatus');
+                    Route::post('track-parcel', 'EasyParcelController@trackParcel');
+                });
+        
 
             });
 

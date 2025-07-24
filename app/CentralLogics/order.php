@@ -82,6 +82,8 @@ class OrderLogic
             $ref_bonus_amount = $order->ref_bonus_amount;
             Helpers::expenseCreate(amount:$ref_bonus_amount,type:'referral_discount',datetime:now(),created_by:'admin',order_id:$order->id);
         }
+
+
         // coupon discount by store
         if($order->coupon_created_by == 'vendor')
         {
@@ -166,7 +168,7 @@ class OrderLogic
                     $comission_on_actual_delivery_fee = ($order->original_delivery_charge > 0) ? $comission_on_delivery : 0;
                 }
             }
-
+            $comission_on_actual_delivery_fee=0;
             //final comission
             if($store->store_business_model == 'subscription' && isset($store_sub)){
                 $comission_on_store_amount =0;
@@ -203,7 +205,7 @@ class OrderLogic
                 'dm_tips'=> $dm_tips,
                 'created_at' => now(),
                 'updated_at' => now(),
-                'delivery_fee_comission'=>isset($comission_on_actual_delivery_fee)?$comission_on_actual_delivery_fee: 0,
+                'delivery_fee_comission'=>$order->is_store_manage_delivery?(isset($comission_on_actual_delivery_fee)?$comission_on_actual_delivery_fee: 0):0,
                 'discount_amount_by_store' => $store_coupon_discount_subsidy + $store_d_amount + $store_subsidy,
                 'additional_charge' => $order->additional_charge,
                 'extra_packaging_amount' => $order->extra_packaging_amount,

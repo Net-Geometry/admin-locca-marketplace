@@ -214,12 +214,12 @@
                                     {{translate('messages.customer')}} {{$data['customer']}}
                                 </span>
                             </div>
-                            <div class="chart--label">
+                           {{-- <div class="chart--label">
                                 <span class="indicator chart-bg-3"></span>
                                 <span class="info">
                                     {{translate('messages.delivery_man')}} {{$data['delivery_man']}}
                                 </span>
-                            </div>
+                            </div>--}}
                         </div>
 
                     </div>
@@ -279,12 +279,12 @@
         let options;
         let chart;
         options = {
-            series: [{{ $data['customer']}}, {{$data['delivery_man']}}],
+            series: [{{ $data['customer']}}],
             chart: {
                 width: 320,
                 type: 'donut',
             },
-            labels: ['{{ translate('Customer') }}', '{{ translate('Delivery man') }}'],
+            labels: ['{{ translate('Customer') }}'],
             dataLabels: {
                 enabled: false,
                 style: {
@@ -319,9 +319,6 @@
             },{
                 name: '{{ translate('Admin Comission') }}',
                 data: [{{ implode(",",$commission) }}]
-            },{
-                name: '{{ translate('Delivery Comission') }}',
-                data: [{{ implode(",",$delivery_commission) }}]
             }],
             chart: {
                 height: 350,

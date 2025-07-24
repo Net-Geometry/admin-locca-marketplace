@@ -833,6 +833,8 @@ class Helpers
                 }
                 $item['self_delivery_system'] = (int) $item->sub_self_delivery;
                 $item['current_opening_time'] = self::getNextOpeningTime($item['schedules']) ?? 'closed';
+                $item['easy_parcel_country'] = $item->easy_parcel_country;
+                $item['easy_parcel_state'] = $item->easy_parcel_state;
                 unset($item['items_count']);
                 unset($item['campaigns_count']);
                 unset($item['storeConfig']);
@@ -863,6 +865,8 @@ class Helpers
             $data['total_items'] = $data['items_count'];
             $data['total_campaigns'] = $data['campaigns_count'];
             $data['current_opening_time'] = self::getNextOpeningTime($data['schedules']) ?? 'closed';
+            $data['easy_parcel_country'] = $data->easy_parcel_country;
+            $data['easy_parcel_state'] = $data->easy_parcel_state;
             unset($data['items_count']);
             unset($data['campaigns_count']);
             unset($data['campaigns']);
@@ -4794,6 +4798,22 @@ class Helpers
             }
         }
         return [ 'productWiseTax' => $productWiseTax?? false ,'categoryWiseTax'=> $categoryWiseTax?? false,  'taxVats' => $taxVats ?? []];
+    }
+
+    public static function nadiVerificationStatus($identityNo)
+    {
+        $config = json_decode(BusinessSetting::where('key', 'nadi_config')->value('value'), true) ?? [];
+
+        $response = Http::withHeaders(['Accept' => 'application/json'])
+            ->post($config['endpoint'] ?? '', [
+                'identity_no' => $identityNo,
+                'api_key'     => $config['api_key'] ?? '',
+            ]);
+
+        if ($response->status() === 200 && $response->json('status') == 1) {
+            return true;
+        }
+        return false;
     }
 
 }

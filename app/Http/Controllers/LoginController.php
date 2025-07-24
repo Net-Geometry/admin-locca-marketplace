@@ -33,6 +33,7 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
@@ -237,6 +238,11 @@ class LoginController extends Controller
                 return redirect()->back()->withInput($request->only('email', 'remember'))
                 ->withErrors(['Email does not match.']);
             }
+
+            if(!$vendor->is_phone_verified){
+                return redirect()->route('vendor.verify-phone', ['id' => $vendor->id]);
+            }
+                
         } elseif ($request->role == 'vendor_employee') {
             $employee = VendorEmployee::where('email', $request->email)->first();
                 if($employee?->store?->module?->module_type == 'rental'){
@@ -562,4 +568,91 @@ class LoginController extends Controller
 
         }
     }
+
+
+    // CUSTOMIZATION
+
+    // Verify Phone for vendor login for Nadi Verification
+    function verify_phone(Request $request){
+        $vendor = Vendor::Where('id', $request['id'])->first();
+        $site_direction = session()?->get('vendor_site_direction') ?? $direction ?? 'ltr';
+        $locale = session()?->get('vendor_local') ?? $lang ?? 'en';
+        App::setLocale($locale);
+        return view('vendor-views.auth.otp', compact('vendor', 'site_direction', 'locale'));
+    }
+
+     // Send OTP for vendor login for Nadi Verification
+     public function resend_otp(Request $request)
+     {  
+         $vendor = Vendor::Where('phone', $request['phone'])->first();
+ 
+         if (!$vendor) {
+            return response()->json(['vendor_not_found' => 'vendor_not_found']);
+        }
+
+        if ($vendor->is_phone_verified) {
+            return response()->json(['phone_verified' => 'phone_verified_already']);
+        }
+ 
+         $otp = rand(1000, 9999);
+         if(env('APP_ENV')!='live'){
+             $otp = '1234';
+         }
+
+         DB::table('phone_verifications')->updateOrInsert(['phone' => $vendor->phone],
+             [
+                 'token' => $otp,
+                 'otp_hit_count' => 0,
+                 'created_at' => now(),
+                 'updated_at' => now(),
+             ]);
+
+         if (env('APP_ENV') =='live') {
+            $published_status = addon_published_status('Gateways');
+
+            if ($published_status == 1) {
+                $response = SmsGateway::send($vendor->phone, $otp);
+            } else {
+                $response = SMS_module::send($vendor->phone, $otp);
+            }
+ 
+             if ($response !== 'success') {
+                return response()->json(['otp_fail' => 'otp_sending_failed']);
+            }
+         }
+ 
+        return response()->json(['success' => 'otp_send']);
+     }
+ 
+     // Verify vendor OTP after register Nadi verified vendor
+     public function verify_phone_otp(Request $request)
+     {
+        $request->validate([
+            'opt-value' => 'required',
+        ]);
+
+        $vendor = Vendor::where('phone', $request['phone'])->first();
+        $user_link = Helpers::get_login_url('store_login_url');
+
+        if ($vendor->is_phone_verified) {
+            Toastr::error(translate('messages.phone_verified_already'));
+            return redirect()->route('login', [$user_link]);
+        }
+
+        $data = PhoneVerification::where([
+            'phone' => $vendor->phone,
+            'token' => $request['opt-value'],
+        ])->first();
+
+        if (isset($data)) {
+            $data?->delete();
+            $vendor->is_phone_verified = 1;
+            $vendor->save();
+            Toastr::success(translate('messages.phone_verified_successfully'));
+            return redirect()->route('login', [$user_link]);
+        }
+
+        Toastr::error(translate('messages.otp_doesnt_match'));
+        return back();
+     }
 }

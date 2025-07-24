@@ -26,6 +26,9 @@
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/third-party/storage-connection*') ? 'active' : '' }}" href="{{route('admin.business-settings.third-party.storage_connection_index')}}"  aria-disabled="true">{{translate('Storage_Connection')}}</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('admin/business-settings/third-party/nadi-config*') ? 'active' : '' }}" href="{{route('admin.business-settings.third-party.nadi_config')}}"  aria-disabled="true">{{translate('Nadi Configuration')}}</a>
+            </li>
         </ul>
         <!-- End Nav -->
     </div>

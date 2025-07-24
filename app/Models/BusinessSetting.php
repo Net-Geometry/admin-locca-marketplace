@@ -49,7 +49,7 @@ class BusinessSetting extends Model
             ]);
         });
 
-        static::created(function ($item) {
+        static::created(function ($item) {  
             Helpers::deleteCacheData('business_settings_all_data');
         });
         static::deleted(function(){

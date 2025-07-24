@@ -126,7 +126,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-12">
+            {{--<div class="col-lg-12">
                 <div class="__map-wrapper-2 mt-3">
                     <div class="map-pop-deliveryman">
                         <form action="javascript:" id="search-form" class="map-pop-deliveryman-inner">
@@ -142,7 +142,7 @@
                         <div id="map-canvas" width="900px" class="rounded"></div>
                     </div>
                 </div>
-            </div>
+            </div>--}}
         </div>
     </div>
     
