@@ -246,6 +246,7 @@ class UpdateController extends Controller
                 'liqpay',
                 'paytm',
                 'bkash',
+                'chip',
                 'paytabs' ];
 
             $data= BusinessSetting::whereIn('key',$gateway)->pluck('value','key')->toArray();
@@ -350,6 +351,12 @@ class UpdateController extends Controller
                         'app_secret' => $decoded_value['api_secret'],
                         'username' => $decoded_value['username'],
                         'password' => $decoded_value['password'],
+                    ];
+                } elseif ($gateway == 'chip') {
+                    $additional_data = [
+                        'status' => $decoded_value['status'],
+                        'api_key' => $decoded_value['api_key'],
+                        'brand_id' => $decoded_value['brand_id'],
                     ];
                 }
 

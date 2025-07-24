@@ -17,6 +17,7 @@ use App\Http\Controllers\PaypalPaymentController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\SslCommerzPaymentController;
 use App\Http\Middleware\VerifyCsrfToken;
+use App\Http\Controllers\ChipPaymentController;
 use Illuminate\Support\Facades\Http;
 
 /*
@@ -201,6 +202,18 @@ if (!$is_published) {
             Route::any('pay', [PaytabsController::class, 'payment'])->name('pay');
             Route::any('callback', [PaytabsController::class, 'callback'])->name('callback');
             Route::any('response', [PaytabsController::class, 'response'])->name('response');
+        });
+                //CHIP
+        Route::group(['prefix' => 'chip', 'as' => 'chip.'], function () {
+            Route::get('pay', [ChipPaymentController::class, 'index'])->name('pay');
+            Route::any('successUrl', [ChipPaymentController::class, 'successUrl'])->name('successUrl')
+                ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+            Route::any('failureUrl', [ChipPaymentController::class, 'failureUrl'])->name('failureUrl')
+                ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+            Route::any('cancelUrl', [ChipPaymentController::class, 'cancelUrl'])->name('cancelUrl')
+                ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+            Route::any('callback', [ChipPaymentController::class, 'callback'])->name('callback')
+                ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
         });
     });
 }
