@@ -486,7 +486,7 @@ class VendorController extends Controller
                     })
                     ->StoreOrder()
             ->Notpos()->paginate(10);
-            return view('admin-views.vendor.view.order', compact('store','orders','easyParcelCountries','easyParcelStates'));
+            return view('admin-views.vendor.view.order', compact('store','orders'));
         }
         else if($tab == 'item')
         {
