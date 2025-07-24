@@ -17,6 +17,7 @@ use App\Http\Controllers\PaypalPaymentController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\SslCommerzPaymentController;
 use App\Http\Middleware\VerifyCsrfToken;
+use App\Http\Controllers\ChipPaymentController;
 use Illuminate\Support\Facades\Http;
 
 /*
