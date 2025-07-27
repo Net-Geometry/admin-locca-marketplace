@@ -299,7 +299,7 @@ class VendorController extends Controller
     public function get_all_modules(Request $request){
         $module_data = Module::Active()->whereHas('zones', function($query)use ($request){
             $query->where('zone_id', $request->zone_id);
-        })->notParcel()
+        })->notParcel()->notRental()
         ->where('modules.module_name', 'like', '%'.$request->q.'%')
         ->limit(8)->get()->map(function($module) {
             return [

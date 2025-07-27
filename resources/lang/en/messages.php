@@ -8019,4 +8019,5 @@ Smartly or Earn. ',
   'The weight must be at least 0.1.' => 'The weight must be at least 0.1.',
   'The send city field is required.' => 'The send city field is required.',
   'Insufficient balance' => 'Insufficient balance',
+  'Verified' => 'Verified',
 );
