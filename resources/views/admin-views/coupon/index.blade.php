@@ -84,7 +84,7 @@
                                             <option disabled selected>---{{translate('messages.Select_coupon_type')}}---</option>
                                             <option value="store_wise">{{translate('messages.store_wise')}}</option>
                                             <option value="zone_wise">{{translate('messages.zone_wise')}}</option>
-                                            <option value="free_delivery">{{translate('messages.free_delivery')}}</option>
+                                            {{--<option value="free_delivery">{{translate('messages.free_delivery')}}</option>--}}
                                             <option value="first_order">{{translate('messages.first_order')}}</option>
                                             <option value="default">{{translate('messages.default')}}</option>
                                         </select>

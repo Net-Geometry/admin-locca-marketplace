@@ -1043,7 +1043,7 @@
                                 {{-- free_delivery_over_status --}}
 
                             </div>
-                            <div class="__bg-F8F9FC-card p-0 mt-4">
+                           {{-- <div class="__bg-F8F9FC-card p-0 mt-4">
                                 @php($admin_free_delivery_status = \App\Models\BusinessSetting::where('key', 'admin_free_delivery_status')->first())
 
                                 <div class="border-bottom d-flex justify-content-between p-3">
@@ -1136,7 +1136,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>--}}
 
 
                             <div class="__bg-F8F9FC-card p-0 mt-4">
