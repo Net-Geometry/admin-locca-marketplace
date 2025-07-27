@@ -51,6 +51,7 @@ class ConfigController extends Controller
 
 
         $cacheKey = 'business_settings_config_keys';
+        Cache::forget($cacheKey);
         $settings = Cache::rememberForever($cacheKey, function () use ($key) {
             return array_column(BusinessSetting::whereIn('key', $key)->get()->toArray(), 'value', 'key');
         });
