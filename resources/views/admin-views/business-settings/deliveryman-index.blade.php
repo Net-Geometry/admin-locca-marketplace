@@ -27,7 +27,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row g-3">
-                                <div class="col-sm-6 col-lg-4">
+                                <div class="col-sm-6 col-lg-6">
                                     @php($dm_tips_status = \App\Models\BusinessSetting::where('key', 'dm_tips_status')->first())
                                     @php($dm_tips_status = $dm_tips_status ? $dm_tips_status->value : 'deliveryman')
                                     <div class="form-group mb-0">
@@ -63,7 +63,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-lg-4">
+                                <div class="col-sm-6 col-lg-6">
                                     @php($show_dm_earning = \App\Models\BusinessSetting::where('key', 'show_dm_earning')->first())
                                     @php($show_dm_earning = $show_dm_earning ? $show_dm_earning->value : 0)
                                     <div class="form-group mb-0">
@@ -101,9 +101,8 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-lg-4">
+                                {{--<div class="col-sm-6 col-lg-4">
                                     @php($dm_self_registration = \App\Models\BusinessSetting::where('key', 'toggle_dm_registration')->first())
-                                    {{-- {{ dd($dm_self_registration) }} --}}
                                     @php($dm_self_registration = $dm_self_registration ? $dm_self_registration->value : 0)
                                     <div class="form-group mb-0">
 
@@ -138,7 +137,7 @@
                                             </span>
                                         </label>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="col-sm-6 col-lg-4">
                                     @php($dm_maximum_orders = \App\Models\BusinessSetting::where('key', 'dm_maximum_orders')->first())
                                     <div class="form-group mb-0">
