@@ -829,7 +829,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-4 col-sm-6">
+                               {{--- <div class="col-lg-4 col-sm-6">
                                     @php($order_confirmation_model = \App\Models\BusinessSetting::where('key', 'order_confirmation_model')->first())
                                     @php($order_confirmation_model = $order_confirmation_model ? $order_confirmation_model->value : 'deliveryman')
                                     <div class="form-group mb-0">
@@ -859,7 +859,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                </div>
+                                </div>--}}
 
                                 <div class="col-sm-6 col-lg-4">
                                     @php($vnv = \App\Models\BusinessSetting::where('key', 'toggle_veg_non_veg')->first())
@@ -1231,7 +1231,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row g-3 align-items-end">
-                                        <div class="col-sm-6 col-lg-4">
+                                        <div class="col-sm-6 col-lg-6">
                                             @php($partial_payment = \App\Models\BusinessSetting::where('key', 'partial_payment_status')->first())
                                             @php($partial_payment = $partial_payment ? $partial_payment->value : 0)
                                             <div class="form-group mb-0">
@@ -1267,7 +1267,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 col-lg-4">
+                                        <div class="col-sm-6 col-lg-6">
                                             @php($partial_payment_method = \App\Models\BusinessSetting::where('key', 'partial_payment_method')->first())
                                             <div class="form-group mb-0">
                                                 <label class="input-label text-capitalize d-flex alig-items-center"><span
