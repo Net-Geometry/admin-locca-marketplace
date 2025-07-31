@@ -17,7 +17,7 @@ use Illuminate\Http\JsonResponse;
 use App\Models\SubscriptionPackage;
 use Gregwar\Captcha\CaptchaBuilder;
 use App\Mail\VendorSelfRegistration;
-use Brian\Toastr\Facades\Toastr;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
