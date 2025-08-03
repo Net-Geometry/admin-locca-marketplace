@@ -109,6 +109,25 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="form-group mb-0">
+                                <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="is_easy_parcel_delivery">
+                                    <span class="pr-2 text-capitalize">
+                                        {{ translate('messages.Is_delivery_by_easy_parcel') }}
+                                        <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.When_enabled,_orders_will_be_delivered_using_easy_parcel_service.') }}">
+                                            <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.easy_parcel_hint') }}">
+                                        </span>
+                                    </span>
+                                    <input type="checkbox" class="toggle-switch-input redirect-url"
+                                           data-url="{{ route('admin.store.toggle-settings', [$store->id, $store->is_easy_parcel_delivery ? 0 : 1, 'is_easy_parcel_delivery']) }}"
+                                           id="is_easy_parcel_delivery" {{ $store->is_easy_parcel_delivery ? 'checked' : '' }}>
+                                    <span class="toggle-switch-label">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
                         @if ($store->module->module_type == 'grocery' || $store->module->module_type == 'food')
                         <div class="col-xl-4 col-md-4 col-sm-6">
                             <div class="form-group mb-0">

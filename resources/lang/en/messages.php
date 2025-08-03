@@ -8020,4 +8020,7 @@ Smartly or Earn. ',
   'The send city field is required.' => 'The send city field is required.',
   'Insufficient balance' => 'Insufficient balance',
   'Verified' => 'Verified',
+  'Is_delivery_by_easy_parcel' => 'Is delivery by easy parcel',
+  'When_enabled,_orders_will_be_delivered_using_easy_parcel_service.' => 'When enabled, orders will be delivered using easy parcel service.',
+  'easy_parcel_hint' => 'Easy parcel hint',
 );
