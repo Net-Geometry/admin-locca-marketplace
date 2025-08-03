@@ -205,7 +205,7 @@ class OrderLogic
                 'dm_tips'=> $dm_tips,
                 'created_at' => now(),
                 'updated_at' => now(),
-                'delivery_fee_comission'=>$order->is_store_manage_delivery?(isset($comission_on_actual_delivery_fee)?$comission_on_actual_delivery_fee: 0):0,
+                'delivery_fee_comission'=>$order->is_store_manage_delivery && !$order->is_easy_parcel_delivery?(isset($comission_on_actual_delivery_fee)?$comission_on_actual_delivery_fee: 0):0,
                 'discount_amount_by_store' => $store_coupon_discount_subsidy + $store_d_amount + $store_subsidy,
                 'additional_charge' => $order->additional_charge,
                 'extra_packaging_amount' => $order->extra_packaging_amount,

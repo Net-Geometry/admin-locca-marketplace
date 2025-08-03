@@ -327,6 +327,9 @@ trait PlaceNewOrder
             if($store?->sub_self_delivery == 1){
                $order->is_store_manage_delivery=1;
             }
+            if($store?->is_easy_parcel_delivery == 1){
+               $order->is_easy_parcel_delivery=1;
+            }
 
             if ($order_status == 'confirmed') {
                 $order->confirmed = now();
