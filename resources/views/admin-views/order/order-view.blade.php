@@ -283,7 +283,7 @@
 
                                 </h6>
 
-                            @if(!$order->is_store_manage_delivery && $order->is_easy_parcel_delivery)
+                            @if(!$order->is_store_manage_delivery || $order->is_easy_parcel_delivery)
                                 <h6>
                                     <span>{{ translate('easy_parcel_cost') }}</span> <span>:</span>
                                     
@@ -1632,7 +1632,7 @@
                     </div>
                     <!-- End Card -->
                  
-                    @if(!$order->is_store_manage_delivery && $order->is_easy_parcel_delivery)
+                    @if(!$order->is_store_manage_delivery || $order->is_easy_parcel_delivery)
                     <div class="card mb-4 shadow-sm mt-3">
                         <div class="card-header bg-primary text-white">
                           <h5 class="mb-0 text-white">{{ translate('messages.easy_parcel_information') }}</h5>

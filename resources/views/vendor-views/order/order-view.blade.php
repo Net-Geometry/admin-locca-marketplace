@@ -202,7 +202,7 @@
                                         </span>
                                     @endif
                                 </h6>
-                                @if(!$order->is_store_manage_delivery && $order->is_easy_parcel_delivery)
+                                @if(!$order->is_store_manage_delivery || $order->is_easy_parcel_delivery)
                                 <h6>
                                     <span>{{ translate('easy_parcel_cost') }}</span> <span>:</span>
                                     
@@ -775,7 +775,7 @@
                         <!-- End Header -->
 
                         <!-- Body -->
-                        @if($order->is_store_manage_delivery && !$order->is_easy_parcel_delivery)
+                        @if($order->is_store_manage_delivery || !$order->is_easy_parcel_delivery)
                         <div class="card-body">
                             @if ($order->delivery_man)
                                 <div class="media align-items-center customer--information-single" href="javascript:">
@@ -836,7 +836,7 @@
                         <!-- End Body -->
                     </div>
 
-                    @if(!$order->is_store_manage_delivery && $order->is_easy_parcel_delivery)
+                    @if(!$order->is_store_manage_delivery || $order->is_easy_parcel_delivery)
 
                     <div class="card mb-4 shadow-sm mt-3">
                         <div class="card-header bg-primary text-white">
