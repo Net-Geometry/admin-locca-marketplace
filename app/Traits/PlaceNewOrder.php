@@ -59,15 +59,15 @@ trait PlaceNewOrder
            
             'is_store_manage_delivery' => 'required|in:0,1',
 
-            'delivery_charge'=> 'required_if:is_store_manage_delivery,0',
+            // 'delivery_charge'=> 'required_if:is_store_manage_delivery,0',
         
-            'send_name'    => 'required_if:is_store_manage_delivery,0|string',
-            'send_contact' => 'required_if:is_store_manage_delivery,0|string',
-            'send_addr1'   => 'required_if:is_store_manage_delivery,0|string',
-            'send_city'    => 'required_if:is_store_manage_delivery,0|string',
-            'send_state'   => 'required_if:is_store_manage_delivery,0|string',
-            'send_code'    => 'required_if:is_store_manage_delivery,0|string',
-            'send_country' => 'required_if:is_store_manage_delivery,0|string',
+            // 'send_name'    => 'required_if:is_store_manage_delivery,0|string',
+            // 'send_contact' => 'required_if:is_store_manage_delivery,0|string',
+            // 'send_addr1'   => 'required_if:is_store_manage_delivery,0|string',
+            // 'send_city'    => 'required_if:is_store_manage_delivery,0|string',
+            // 'send_state'   => 'required_if:is_store_manage_delivery,0|string',
+            // 'send_code'    => 'required_if:is_store_manage_delivery,0|string',
+            // 'send_country' => 'required_if:is_store_manage_delivery,0|string',
            
            
             'send_email' => 'nullable|email',
@@ -582,7 +582,7 @@ trait PlaceNewOrder
             }
             $order->flash_admin_discount_amount = round($flash_sale_admin_discount_amount, config('round_up_to_digit'));
             $order->flash_store_discount_amount = round($flash_sale_vendor_discount_amount, config('round_up_to_digit'));
-            if(!$request->is_store_manage_delivery){
+            if(!$request->is_store_manage_delivery && $currentStore->is_easy_parcel_delivery){
                 $order->awb_no=$awb;
                 $order->easy_parcel_order_no=$orderno;
                 $order->awb_id_link=$awbIdLink;

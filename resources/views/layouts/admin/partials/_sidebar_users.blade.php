@@ -68,7 +68,7 @@
                         </a>
                     </li>
                     @endif
-{{--
+
                 <!-- DeliveryMan -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('deliveryman'))
                 <li class="nav-item">
@@ -128,7 +128,7 @@
                 </li>
                 @endif
                 <!-- End DeliveryMan -->
---}}
+
                 <!-- Customer Section -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('customer_management'))
                 <li class="nav-item">
