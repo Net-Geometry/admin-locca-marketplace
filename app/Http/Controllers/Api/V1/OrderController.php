@@ -184,6 +184,7 @@ class OrderController extends Controller
                 'easy_parcel_courier_name' => $order->easy_parcel_courier_name ?? null,
             ];
             $details[0][ 'is_store_manage_delivery']=$order->is_store_manage_delivery ?? null;
+            $details[0][ 'is_easy_parcel_delivery']=$order->is_easy_parcel_delivery ?? null;
             return response()->json($details, 200);
         } else if ($order->order_type == 'parcel' || $order->prescription_order == 1) {
             $order->delivery_address = json_decode($order->delivery_address, true);

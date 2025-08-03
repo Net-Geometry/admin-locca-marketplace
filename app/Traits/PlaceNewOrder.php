@@ -85,7 +85,9 @@ trait PlaceNewOrder
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-          if(!$request->is_store_manage_delivery){
+        $currentStore= Store::find($request->store_id);
+
+          if(!$request->is_store_manage_delivery && $currentStore->is_easy_parcel_delivery){
               
                  $orderData = $request->only([
                      'weight',
@@ -101,8 +103,6 @@ trait PlaceNewOrder
                  ]);
          
                  if($request->order_type!="parcel"){
-                 $currentStore = Store::find($request->store_id);
-         
                  $orderData['pick_name']    = $currentStore->pick_name;
                  $orderData['pick_contact'] = $currentStore->pick_contact;
                  $orderData['pick_addr1']   = $currentStore->pick_addr1;
@@ -1038,13 +1038,13 @@ trait PlaceNewOrder
                     'delivery_charge' => $delivery_charge,
                 ];
             }
-           if($request->is_store_manage_delivery){
+           if($request->is_store_manage_delivery || !$store->is_easy_parcel_delivery){
             $original_delivery_charge = (($request->distance * $per_km_shipping_charge) > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge  : $minimum_shipping_charge;
            }else{
             $original_delivery_charge = $request->delivery_charge;
            }
 
-           if($request->is_store_manage_delivery){
+           if($request->is_store_manage_delivery || !$store->is_easy_parcel_delivery){
             if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $original_delivery_charge >  $maximum_shipping_charge) {
                 $original_delivery_charge = $maximum_shipping_charge;
             } else {
@@ -1053,7 +1053,7 @@ trait PlaceNewOrder
              }
 
 
-             if($request->is_store_manage_delivery){
+             if($request->is_store_manage_delivery || !$store->is_easy_parcel_delivery){
             if (!isset($delivery_charge)) {
                 $delivery_charge = ($request->distance * $per_km_shipping_charge > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge : $minimum_shipping_charge;
                 if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $delivery_charge >  $maximum_shipping_charge) {
@@ -1083,7 +1083,7 @@ trait PlaceNewOrder
                 $per_km_shipping_charge = (float) ($businessSetting['parcel_per_km_shipping_charge'] ?? 0);
                 $minimum_shipping_charge = (float) ($businessSetting['parcel_minimum_shipping_charge'] ?? 0);
             }
-            if($request->is_store_manage_delivery){
+            if($request->is_store_manage_delivery || !$store->is_easy_parcel_delivery){
             $original_delivery_charge = (($request->distance * $per_km_shipping_charge) > $minimum_shipping_charge) ? ($request->distance * $per_km_shipping_charge) + $extra_charges : ($minimum_shipping_charge + $extra_charges);
             }
             else{
