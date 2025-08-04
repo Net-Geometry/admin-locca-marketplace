@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\DB;
 use App\CentralLogics\ProductLogic;
 use App\CentralLogics\CategoryLogic;
 use App\Http\Controllers\Controller;
+use App\Models\Allergy;
+use App\Models\GenericName;
+use App\Models\Nutrition;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -993,5 +996,17 @@ class ItemController extends Controller
         return response()->json($items, 200);
     }
 
+    public function getGenericNameList(){
+        $names= GenericName::select(['generic_name'])->pluck('generic_name');
+        return response()->json($names, 200);
+    }
+    public function getAllergyNameList(){
+        $names= Allergy::select(['allergy'])->pluck('allergy');
+        return response()->json($names, 200);
+    }
+    public function getNutritionNameList(){
+        $names= Nutrition::select(['nutrition'])->pluck('nutrition');
+        return response()->json($names, 200);
+    }
 
 }
