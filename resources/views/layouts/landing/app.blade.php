@@ -38,6 +38,20 @@ $countryCode= strtolower($country?$country->value:'auto');
             }
         </style>
     @endif
+
+    <!-- Load the Poppins font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Apply the font globally -->
+<style>
+    html, body, * {
+        font-family: "Poppins", sans-serif !important;
+    }
+</style>
+
+
 </head>
 
 <body>
