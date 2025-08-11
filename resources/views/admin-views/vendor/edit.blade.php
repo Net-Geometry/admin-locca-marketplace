@@ -480,7 +480,7 @@
                                                 $nadiVerified = session('verified') || (isset($store->is_nadi_verified) && $store->is_nadi_verified);
                                                 $nadiNumber = old('nadi_number', $store->nadi_number ?? '');
                                             ?>
-                                            <input type="text" name="nadi_number" id="nadi_number" class="form-control" placeholder="{{translate('Enter Nadi member number')}}" value="{{ $nadiNumber }}" @if($nadiVerified) readonly @endif >
+                                            <input type="text" name="nadi_number" id="nadi_number" class="form-control" placeholder="{{translate('Enter Nadi member number')}}" value="{{ $nadiNumber }}" @if($nadiVerified) readonly @endif required>
                                         </div>
                                     </div>
                                 </div>

@@ -427,7 +427,7 @@
                                         <div class="bg--secondary rounded p-20 h-100">
                                             <div class="form-group mb-0">
                                                 <label class="input-label mb-2 d-block title-clr fw-normal" for="identity_no">{{translate('Member Number')}} <span class="text-danger">*</span></label>
-                                                <input type="text" name="nadi_number" id="nadi_number" class="form-control" placeholder="{{translate('Enter Nadi member number')}}" {{ session('verified') ? 'readonly' : '' }}>
+                                                <input type="text" name="nadi_number" id="nadi_number" class="form-control" placeholder="{{translate('Enter Nadi member number')}}" {{ session('verified') ? 'readonly' : '' }} required>
                                             </div>
                                         </div>
                                     </div>
