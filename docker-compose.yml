@@ -7,11 +7,14 @@ services:
     ports:
       - "${APP_PORT}:80"
     volumes:
-      - .:/var/www/html
+      - volume:/var/www/html
     container_name: "${CONTAINER_NAME_PREFIX}-app"
     restart: unless-stopped
     networks:
       - net-geometry-mart-admin-network
+
+volumes:
+  volume:
 
 networks:
   net-geometry-mart-admin-network:
