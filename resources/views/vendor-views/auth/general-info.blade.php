@@ -614,7 +614,7 @@
                                                     <div class="form-group mb-3">
                                                         <label class="input-label mb-2 d-block title-clr fw-normal" for="nadi_number">{{translate('Member Number')}} <span class="text-danger">*</span></label>
                                                         <div class="input-group">
-                                                            <input type="text" id="nadi_number" name="nadi_number" class="form-control" placeholder="{{translate('Enter Nadi member number')}}" {{ session('verified') ? 'readonly' : '' }}>
+                                                            <input type="text" id="nadi_number" name="nadi_number" class="form-control" placeholder="{{translate('Enter Nadi member number')}}" {{ session('verified') ? 'readonly' : '' }} required>
                                                             <button class="cmn--btn rounded-md border-0 outline-0 d-flex align-items-center justify-content-center" type="button" id="verify_btn">
                                                                 <span class="btn-text">{{ session('verified') ? translate('Reverify') : translate('Verify') }}</span>
                                                                 <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
