@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use App\Traits\AddonHelper;
 use Illuminate\Pagination\Paginator;
@@ -27,8 +28,9 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {
-
+    {   
+        
+       // URL::forceScheme('https');
         try
         {
             Config::set('addon_admin_routes',$this->get_addon_admin_routes());
