@@ -130,8 +130,13 @@ class ChipPaymentController extends Controller
         $response = curl_exec($curl);
         curl_close($curl);
         $result = json_decode($response,true);
+        $data = $this->payment::where(['id' => $request['payment_id']])->first();
+        if($data->is_paid == 1){
+            return $this->payment_response($data, 'success');
 
-        if (isset($result['status']) && $result['status'] == "paid") {
+        }
+
+        if (isset($result['status']) && $result['status'] == "paid" && $data->is_paid == 0) {
             $this->payment::where(['id' => $request['payment_id']])->update([
                 'payment_method' => 'chip',
                 'is_paid' => 1,
