@@ -1891,16 +1891,16 @@
                     <div class="col-lg-6 col-md-9">
                         <div class="download-app-content wow fadeInUp">
                             <h2 class="title">
-                                {{-- {{ $landing_data['download_user_app_title'] }} --}}
-                                <div class="primary-color">
+                                {{ $landing_data['download_user_app_title'] }}
+                                {{-- <div class="primary-color">
                                     {{ translate('Lets') }}
                                 </div>
                                 {{ translate('Manage_your_business') }}
                                 <div class="primary-color">
                                     {{ translate('Smartly_or_Earn') }}
-                                </div>
+                                </div> --}}
                             </h2>
-                            {{-- <h3 class="subtitle">{{ $landing_data['download_user_app_sub_title'] }}</h3> --}}
+                            <h3 class="subtitle">{{ $landing_data['download_user_app_sub_title'] }}</h3>
                             <div class="btn-grp">
                             </div>
                             <div class="position-relative dropdown text-capitalize">
